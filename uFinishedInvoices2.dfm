@@ -126,8 +126,8 @@ object frmFinishedInvoices2: TfrmFinishedInvoices2
     object chkShowPackage: TsCheckBox
       Left = 5
       Top = 47
-      Width = 148
-      Height = 17
+      Width = 140
+      Height = 20
       Caption = 'Show Package on invoice'
       TabOrder = 4
       SkinData.SkinSection = 'CHECKBOX'

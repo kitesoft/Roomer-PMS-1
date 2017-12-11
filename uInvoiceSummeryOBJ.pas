@@ -22,7 +22,7 @@ uses
   , cmpRoomerDataSet
   , cmpRoomerConnection
   , uUtils
-  , Generics.Collections
+  , Generics.Collections, uInvoiceDefinitions
   ;
 
 type
@@ -188,7 +188,7 @@ type
 {$M+}
   TInvoiceInfo = class(TObject)
   private
-    FivhSplitNumber : integer;
+    FivhSplitNumber : TInvoiceType;
 
     FCurrency : string;
     FLocalCurrency : string;
@@ -362,7 +362,7 @@ type
 
   published
 
-    property ivhSplitNumber : integer read FivhSplitNumber write FivhSplitNumber;
+    property ivhSplitNumber : TInvoiceType read FivhSplitNumber write FivhSplitNumber;
     property ivhReservation : integer read FivhReservation write FivhReservation;
     property ivhRoomReservation : integer read FivhRoomReservation write FivhRoomReservation;
     property ivhRoomNumber : string read FivhRoomNumber write FivhRoomNumber;
@@ -716,7 +716,7 @@ begin
   FivhTotal_VAT := 0;
   FivhCreditInvoice := 0;
   FivhOriginalInvoice := 0;
-  FivhSplitNumber := - 1;
+  FivhSplitNumber := TInvoiceType.itDebitInvoice;
   FivhPrintText := '';
   FIvhShowpackage := false;
   FIvhPackage     := '';
@@ -1255,7 +1255,7 @@ begin
     FivhTotal_VAT := 0;
     FivhCreditInvoice := 0;
     FivhOriginalInvoice := 0;
-    FivhSplitNumber := - 1;
+    FivhSplitNumber := TInvoiceType.itDebitInvoice;
     FivhPrintText := '';
 
     FIvhShowpackage := false;
@@ -1292,7 +1292,7 @@ begin
       FivhTotal_VAT       := invoicedata.TotalVAT;
       FivhCreditInvoice   := invoicedata.CreditInvoice;
       FivhOriginalInvoice := invoicedata.OriginalInvoice;
-      FivhSplitNumber     := invoicedata.SplitNumber;
+      FivhSplitNumber     := TInvoiceType(invoicedata.SplitNumber);
       FIvhShowpackage     := invoiceData.ShowPackage;
 
       sql := format(select_ivh_otherInfo, [InvoiceNumber]);
@@ -1325,7 +1325,7 @@ begin
         FivhTotal_VAT := rSet.fieldbyname('TotalVAT').AsFloat;
         FivhCreditInvoice := rSet.fieldbyname('CreditInvoice').asInteger;
         FivhOriginalInvoice := rSet.fieldbyname('OriginalInvoice').asInteger;
-        FivhSplitNumber := rSet.fieldbyname('SplitNumber').asInteger;
+        FivhSplitNumber := TInvoiceType(rSet.fieldbyname('SplitNumber').asInteger);
 
         FivhTotalStayTax       := rSet.fieldbyname('TotalStayTax').asFloat;
         FivhTotalStayTaxNights := rSet.fieldbyname('TotalStayTaxNights').asInteger;
@@ -1334,7 +1334,7 @@ begin
         FivhAggregateCityTax   := rSet.fieldByName('AggregateCityTax').AsBoolean;
 
         FKreditType := ktDebit;
-        if FivhTotal < 0 then
+        if (FivhSplitNumber = TInvoiceType.itCreditInvoice) then
         begin
           FKreditType := ktKredit;
         end;
@@ -1346,8 +1346,6 @@ begin
 
   rSet := CreateNewDataSet;
   try
-//    lstParams.Clear;
-//    S_execute(rSet, '_GET_ctrl_CompanyInfo', lstParams);
     sql := format(select_ctrl_CompanyInfo, []);
     if hData.rSet_bySQL(rSet,sql) then
   	begin

@@ -88,9 +88,6 @@ type
   TCreditType = (ctManual, ctReference, ctErr);
   TInvoiceSaveType = (stProvisionally, stProforma, stDefinitive);
 
-  // Type of invoice, used to be called SplitNumber (and still is int he db)
-  TInvoiceType = (itDebitInvoice = 0, itCreditInvoice = 1, itCashInvoice = 2);
-
 
   EInvocieException = class(ERoomerUserException);
 {$M+}
@@ -674,7 +671,7 @@ type
     property ShowRentPerDay: boolean read FShowRentPerDay write FShowRentPerDay;
   end;
 
-procedure EditInvoice(reservation, RoomReservation, InvoiceType, InvoiceIndex: integer; bCredit: boolean);
+procedure EditInvoice(reservation, RoomReservation: integer; InvoiceType: TInvoicetype; InvoiceIndex: integer; bCredit: boolean);
 
 implementation
 
@@ -763,7 +760,7 @@ const
     'DELETE FROM invoiceaddressees WHERE (SplitNumber = 1 AND InvoiceNumber = -1) OR (InvoiceNumber > 1000000000)',
     'DELETE FROM payments WHERE InvoiceNumber > 1000000000');
 
-procedure EditInvoice(reservation, RoomReservation, InvoiceType, InvoiceIndex: integer; bCredit: boolean);
+procedure EditInvoice(reservation, RoomReservation: integer; InvoiceType: TInvoicetype; InvoiceIndex: integer; bCredit: boolean);
 var
   _frmInvoice: TfrmInvoiceEdit;
   lRentPerDay: boolean;
@@ -771,7 +768,7 @@ var
 begin
   lRentPerDay := false;
 
-  if TInvoiceType(InvoiceType) = itDebitInvoice then
+  if TInvoiceType(InvoiceType) = TInvoiceType.itDebitInvoice then
     case glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice of
       rpdAlways:  lRentPerDay := true;
       rpdNever:   lRentPerDay := False;
@@ -789,7 +786,7 @@ begin
   try
     _frmInvoice.reservation := reservation;
     _frmInvoice.RoomReservation := RoomReservation;
-    _frmInvoice.FInvoiceType := TInvoiceType(InvoiceType);
+    _frmInvoice.FInvoiceType := InvoiceType;
     _frmInvoice.FInvoiceIndex := InvoiceIndex;
     _frmInvoice.FIsCredit := bCredit;
     _frmInvoice.ShowRentPerDay := lRentPerDay;
@@ -875,7 +872,7 @@ var
 begin
   result := True;
 
-  if FInvoiceType <> itCreditInvoice then
+  if FInvoiceType <> TInvoiceType.itCreditInvoice then
   begin
     if chkChanged then
     begin
@@ -2252,7 +2249,7 @@ begin
       if lInvoiceHeadSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
         GetReservationHeader(FReservation, FRoomReservation);
 
-      if FInvoiceType = itCreditInvoice then // Kreditinvoice
+      if FInvoiceType = TInvoiceType.itCreditInvoice then // Kreditinvoice
       begin
         GetInvoiceHeader(FReservation, FRoomReservation);
         SetInvoiceAddressTypeIndex(3);
@@ -2815,7 +2812,7 @@ end;
 procedure TfrmInvoiceEdit.FormShow(Sender: TObject);
 begin
 
-  if (TInvoiceType(FInvoiceType) in [itCashInvoice, itCreditInvoice]) and DirectInvoiceLinesExist then
+  if (TInvoiceType(FInvoiceType) in [TInvoiceType.itCashInvoice, TInvoiceType.itCreditInvoice]) and DirectInvoiceLinesExist then
     if MessageDlg(GetTranslatedText('shEditInvoice_CashInvoiceExists'), mtWarning, mbOKCancel, 0) = mrOk then
       d.RemoveDirectInvoiceRemnants(ord(FinvoiceType))
     else
@@ -2825,6 +2822,8 @@ begin
   actToggleLodgingTax.Visible := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
   actDeleteDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
   actEditDownPayment.Visible := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
+
+  pnlInvoiceIndices.Visible := FInvoiceType = TinvoiceType.itDebitInvoice;
 
   fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
   fraInvoiceCurrency.Enabled := not IsDirectInvoice;
@@ -3024,19 +3023,9 @@ begin
   end
   else
   begin
-    if FRoomReservation > 0 then
-      clabInvoice.Caption := GetTranslatedText('shUI_InvoiceCaption')
-    else
-      clabInvoice.Caption := GetTranslatedText('shUI_GroupInvoiceCaption')
+    if (FinvoiceType = TInvoiceType.itDebitInvoice) and (FRoomReservation = 0) then
+      clabInvoice.Caption := GetTranslatedText('shUI_GroupInvoiceCaption');
   end;
-
-//  if (agrLines.ColCount >= col_TotalPrice) then
-//  begin
-//    agrLines.ColWidths[col_ItemCount] := 100;
-//    agrLines.ColWidths[col_ItemPrice] := 100;
-//    agrLines.ColWidths[col_TotalPrice] := 100;
-//  end;
-
 end;
 
 procedure TfrmInvoiceEdit.agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -4198,6 +4187,13 @@ begin
       CanEdit := false;
       exit;
     end;
+
+    if (lInvoiceLine.ItemKind = ikStayTax) and assigned(lInvoiceLine.Parent) then
+    begin
+      CanEdit := false;
+      exit;
+    end;
+
   end;
 
   if (agrLines.Cells[col_Item, ARow] = '') and not(ACol in [col_Description]) then
@@ -4860,7 +4856,6 @@ begin
 
         col_ItemCount:
           begin
-
             chkChanged;
             lAmountMutation := (FCellDoubleBeforeEdit - lNewValue) * lInvoiceLine.Price;
 
@@ -5407,7 +5402,7 @@ var
 begin
   // Ekki fyrir sta�grei�slureikninga
   result := false;
-  if FInvoiceType = itCashInvoice then
+  if FInvoiceType = TInvoiceType.itCashInvoice then
     exit;
   if FReservation = -1 then
     exit;
@@ -5456,7 +5451,7 @@ var
 begin
   result := false;
 
-  if FInvoiceType = itCashInvoice then
+  if FInvoiceType = TInvoiceType.itCashInvoice then
     exit;
 
   result := false;
@@ -5535,7 +5530,7 @@ var
 begin
   result := false;
 
-  if FInvoiceType = itCashInvoice then
+  if FInvoiceType = TInvoiceType.itCashInvoice then
     exit;
 
   result := false;
@@ -5603,7 +5598,7 @@ var
 begin
   result := false;
 
-  if FInvoiceType = itCashInvoice then
+  if FInvoiceType = TInvoiceType.itCashInvoice then
     exit;
 
   if FReservation = -1 then
@@ -5676,7 +5671,7 @@ var
 
 begin
   result := false;
-  if FInvoiceType = itCashInvoice then
+  if FInvoiceType = TInvoiceType.itCashInvoice then
     exit;
 
   if FReservation = -1 then
@@ -5737,7 +5732,7 @@ begin
   result := '';
   if FReservation = -1 then
     exit;
-  if FInvoiceType = itCashInvoice then
+  if FInvoiceType = TInvoiceType.itCashInvoice then
     exit;
 
   rSet := CreateNewDataSet;

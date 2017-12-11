@@ -149,7 +149,7 @@ uses
   , uReservationStateChangeHandler
   , uReservationStateDefinitions
   , uDataSetFilterUtils
-  , ufrmInvoiceEdit;
+  , ufrmInvoiceEdit, uInvoiceDefinitions;
 
 const
   cSQL = 'SELECT DISTINCT '#10 +
@@ -282,7 +282,7 @@ end;
 
 procedure TfrmInHouseReport.mnuGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmInHouseList['RoomerReservationID'], 0, 0, 0, false);
+  EditInvoice(kbmInHouseList['RoomerReservationID'], 0, TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 procedure TfrmInHouseReport.grInHouseListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
@@ -314,7 +314,7 @@ end;
 
 procedure TfrmInHouseReport.mnuRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmInHouseList['RoomerReservationID'], kbmInHouseList['RoomerRoomReservationID'], 0, 0, false);
+  EditInvoice(kbmInHouseList['RoomerReservationID'], kbmInHouseList['RoomerRoomReservationID'], TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 procedure TfrmInHouseReport.rbRadioButtonClick(Sender: TObject);

@@ -296,6 +296,10 @@ object frmRptDownPayments: TfrmRptDownPayments
     object sTabSheet1: TsTabSheet
       Caption = 'sTabSheet1'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grPayments: TcxGrid
         Left = 0
         Top = 43

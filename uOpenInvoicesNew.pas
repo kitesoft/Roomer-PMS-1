@@ -181,7 +181,7 @@ uses
   , uRoomerDefinitions
   , uReservationStateDefinitions
   , UITypes
-  , uSQLUtils, ufrmInvoiceEdit;
+  , uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
 {$R *.dfm}
 
 procedure TfrmOpenInvoicesNew.FormCreate(Sender : TObject);
@@ -362,7 +362,7 @@ var
 begin
   Reservation := kbmRoomsDate_.FieldByName('Reservation').AsInteger;
 
-  EditInvoice(Reservation, 0, 0, 0, false);
+  EditInvoice(Reservation, 0, TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 procedure TfrmOpenInvoicesNew.sButton8Click(Sender: TObject);
@@ -372,7 +372,7 @@ var
 begin
   Reservation := kbmRoomsDate_.FieldByName('Reservation').AsInteger;
   RoomReservation := kbmRoomsDate_.FieldByName('RoomReservation').AsInteger;
-  EditInvoice(Reservation, RoomReservation, 0, 0, false);
+  EditInvoice(Reservation, RoomReservation, TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 procedure TfrmOpenInvoicesNew.sButton9Click(Sender: TObject);

@@ -27,7 +27,7 @@ object frmDayNotes: TfrmDayNotes
     Top = 328
     Width = 56
     Height = 13
-    Caption = '24-10-2017'
+    Caption = '11-12-2017'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
@@ -267,10 +267,9 @@ object frmDayNotes: TfrmDayNotes
         TabOrder = 1
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
-        ClientRectBottom = 461
-        ClientRectLeft = 2
-        ClientRectRight = 926
-        ClientRectTop = 2
+        ClientRectBottom = 463
+        ClientRectRight = 928
+        ClientRectTop = 0
       end
       object Panel4: TsPanel
         Left = 0
@@ -550,13 +549,15 @@ object frmDayNotes: TfrmDayNotes
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
         OnPageChanging = pageLogPageChanging
-        ClientRectBottom = 564
-        ClientRectLeft = 2
-        ClientRectRight = 926
-        ClientRectTop = 22
+        ClientRectBottom = 566
+        ClientRectRight = 928
+        ClientRectTop = 24
         object tabActionLog: TcxTabSheet
           Caption = 'Actions'
           ImageIndex = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object memLog: TsMemo
             Left = 0
             Top = 41
@@ -652,26 +653,27 @@ object frmDayNotes: TfrmDayNotes
         object tabImportLog: TcxTabSheet
           Caption = 'Import'
           ImageIndex = 1
-          ExplicitLeft = 0
           ExplicitTop = 0
           ExplicitWidth = 0
           ExplicitHeight = 0
           object Panel6: TsPanel
             Left = 0
             Top = 0
-            Width = 924
+            Width = 928
             Height = 65
             Align = alTop
             TabOrder = 0
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 924
             object pnlTopRow: TsPanel
               Left = 1
               Top = 1
-              Width = 922
+              Width = 926
               Height = 32
               Align = alTop
               BevelOuter = bvNone
               TabOrder = 0
+              ExplicitWidth = 922
               object cxLabel5: TsLabel
                 AlignWithMargins = True
                 Left = 126
@@ -813,7 +815,7 @@ object frmDayNotes: TfrmDayNotes
               end
               object cxButton5: TsButton
                 AlignWithMargins = True
-                Left = 832
+                Left = 836
                 Top = 3
                 Width = 87
                 Height = 26
@@ -822,16 +824,18 @@ object frmDayNotes: TfrmDayNotes
                 TabOrder = 2
                 OnClick = cxButton5Click
                 SkinData.SkinSection = 'BUTTON'
+                ExplicitLeft = 832
               end
             end
             object sPanel1: TsPanel
               Left = 1
               Top = 33
-              Width = 922
+              Width = 926
               Height = 31
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 1
+              ExplicitWidth = 922
               object cxButton10: TsButton
                 AlignWithMargins = True
                 Left = 8
@@ -909,11 +913,12 @@ object frmDayNotes: TfrmDayNotes
           object Panel7: TsPanel
             Left = 0
             Top = 65
-            Width = 924
+            Width = 928
             Height = 326
             Align = alTop
             TabOrder = 1
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 924
             object gridImportLogs: TcxGrid
               Left = 1
               Top = 1
@@ -1069,7 +1074,7 @@ object frmDayNotes: TfrmDayNotes
           object cxSplitter1: TcxSplitter
             Left = 0
             Top = 391
-            Width = 924
+            Width = 928
             Height = 8
             HotZoneClassName = 'TcxMediaPlayer9Style'
             AlignSplitter = salTop
@@ -1079,19 +1084,21 @@ object frmDayNotes: TfrmDayNotes
           object Panel8: TsPanel
             Left = 0
             Top = 399
-            Width = 924
+            Width = 928
             Height = 143
             Align = alClient
             TabOrder = 3
             SkinData.SkinSection = 'PANEL'
+            ExplicitWidth = 924
             object Panel9: TsPanel
               Left = 425
               Top = 1
-              Width = 498
+              Width = 502
               Height = 141
               Align = alClient
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
+              ExplicitWidth = 498
               object Panel10: TsPanel
                 Left = 1
                 Top = 1

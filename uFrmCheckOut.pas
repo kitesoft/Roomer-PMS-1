@@ -96,7 +96,7 @@ uses
   , uUtils
   , uCurrencyHandler
   , Math
-  , ufrmInvoiceEdit;
+  , ufrmInvoiceEdit, uInvoiceDefinitions;
 
 procedure CheckoutGuestWithDialog(Reservation, RoomReservation: Integer; RoomNumber: String);
 var
@@ -240,13 +240,13 @@ end;
 
 procedure TFrmCheckOut.btnGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(Reservation, 0, 0, 0, false);
+  EditInvoice(Reservation, 0, TInvoiceType.itDebitInvoice, 0, false);
   ReloadInvoiceStatuses;
 end;
 
 procedure TFrmCheckOut.btnRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(Reservation, RoomReservation, 0, 0, false);
+  EditInvoice(Reservation, RoomReservation, TInvoiceType.itDebitInvoice, 0, false);
   ReloadInvoiceStatuses;
 end;
 

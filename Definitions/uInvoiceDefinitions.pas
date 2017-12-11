@@ -14,6 +14,11 @@ const
 type
   EInvoiceIndexException = class(Exception);
 
+  {$SCOPEDENUMS ON}
+  // Type of invoice, used to be called SplitNumber (and still is in the db)
+  TInvoiceType = (itDebitInvoice = 0, itCreditInvoice = 1, itCashInvoice = 2);
+
+
   TInvoiceIndex = integer;
 (*  TInvoiceIndex = record
   type

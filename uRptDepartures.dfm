@@ -3,7 +3,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
   ClientHeight = 585
   ClientWidth = 1103
   Font.Height = -11
-  Position = poDesigned
   ExplicitWidth = 1119
   ExplicitHeight = 624
   PixelsPerInch = 96
@@ -567,6 +566,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grDeparturesList
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -588,13 +588,14 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43061.380454143520000000
+      ReportDocument.CreationDate = 43080.429989895830000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

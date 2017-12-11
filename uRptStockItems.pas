@@ -147,7 +147,7 @@ uses
   , PrjConst
   , uReservationProfile
   , uRptbViewer
-  , uOpenAPICaller, ufrmInvoiceEdit;
+  , uOpenAPICaller, ufrmInvoiceEdit, uInvoiceDefinitions;
 
 const
   WM_REFRESH_DATA = WM_User + 51;
@@ -376,12 +376,12 @@ end;
 
 procedure TfrmRptStockItems.mnuRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmStockItemsReservation.AsInteger, kbmStockItemsRoomReservation.AsInteger, 0, 0, false);
+  EditInvoice(kbmStockItemsReservation.AsInteger, kbmStockItemsRoomReservation.AsInteger, TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 procedure TfrmRptStockItems.mnuGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmStockItemsReservation.AsInteger, 0, 0, 0, false);
+  EditInvoice(kbmStockItemsReservation.AsInteger, 0, TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 end.

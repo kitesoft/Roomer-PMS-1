@@ -495,7 +495,7 @@ begin
     begin
       SelectedInvoiceIndex := 0;
       d.copyInvoiceToInvoiceLinesTmp(OrginalInvoice, true, hasPackage, SelectedInvoiceIndex);
-      EditInvoice(Reservation, Roomreservation, 0, SelectedInvoiceIndex, NOT hasPackage);
+      EditInvoice(Reservation, Roomreservation, TInvoiceType.itDebitInvoice, SelectedInvoiceIndex, NOT hasPackage);
     end;
   end;
 end;
@@ -736,7 +736,7 @@ begin
    //**
 EditInvoice(0, // Reservation,
       0, // RoomReservation,
-      1, // SplitNumber : integer;
+      TInvoiceType.itCreditInvoice, // SplitNumber : integer;
       0, // InvoiceIndex
       true // bCredit,
     );

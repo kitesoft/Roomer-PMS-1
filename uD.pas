@@ -855,7 +855,7 @@ uses
     , uFrmCheckOut
     , UITypes
     , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit,
-    Math;
+    Math, uInvoiceDefinitions;
 
 {$R *.dfm}
 
@@ -1401,12 +1401,12 @@ begin
         begin
           if RoomReservation = 0 then
           begin
-            EditInvoice(reservation, 0, 0, 0, False);
+            EditInvoice(reservation, 0, TInvoiceType.itDebitInvoice, 0, False);
           end
           else
           begin
             // This is not groupinvoice
-            EditInvoice(reservation, RoomReservation, 0, 0, False);
+            EditInvoice(reservation, RoomReservation, TInvoiceType.itDebitInvoice, 0, False);
           end;
         end;
       end;

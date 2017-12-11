@@ -316,7 +316,7 @@ uses
   , PrjConst
   , uAssignPayment
   , DateUtils
-  , uDImages, uSQLUtils, ufrmInvoiceEdit;
+  , uDImages, uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
 
 
 procedure AddGroupToReport(aBreakName: String; aDataPipeline: TppDataPipeline;   aReport: TppCustomReport);
@@ -706,7 +706,7 @@ begin
   begin
     iReservation := kbmPayments_.FieldByName('Reservation').AsInteger;
     iRoomReservation := kbmPayments_.FieldByName('RoomReservation').AsInteger;
-    EditInvoice(iReservation, iRoomReservation, 0, 0, false);
+    EditInvoice(iReservation, iRoomReservation, TInvoiceType.itDebitInvoice, 0, false);
   end;
 end;
 

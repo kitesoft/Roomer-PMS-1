@@ -204,7 +204,7 @@ uses
   , uSQLUtils
   , uFrmOptInMessage
   , uDateUtils
-  , ufrmInvoiceEdit;
+  , ufrmInvoiceEdit, uInvoiceDefinitions;
 
 
 {$R *.dfm}
@@ -423,11 +423,11 @@ begin
 
   if (mTrxListInvoiceNumber.AsInteger <= 0) AND
      (mTrxListGroupInvoice.AsBoolean) then
-    EditInvoice(mTrxListReservation.AsInteger, 0, 0, 0, false)
+    EditInvoice(mTrxListReservation.AsInteger, 0, TInvoiceType.itDebitInvoice, 0, false)
   else
   if (mTrxListInvoiceNumber.AsInteger <= 0) AND
      (NOT mTrxListGroupInvoice.AsBoolean) then
-    EditInvoice(mTrxListReservation.AsInteger, mTrxListRoomReservation.AsInteger, 0, 0, false)
+    EditInvoice(mTrxListReservation.AsInteger, mTrxListRoomReservation.AsInteger, TInvoiceType.itDebitInvoice, 0, false)
   else
   if (mTrxListInvoiceNumber.AsInteger > 0) AND
      (NOT mTrxListGroupInvoice.AsBoolean) then

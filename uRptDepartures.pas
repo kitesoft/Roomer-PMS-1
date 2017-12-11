@@ -152,7 +152,7 @@ uses
   , uInvoiceContainer
   , uSQLUtils
   , uDataSetFilterUtils
-  , ufrmInvoiceEdit;
+  , ufrmInvoiceEdit, uInvoiceDefinitions;
 
 
 const
@@ -416,7 +416,7 @@ end;
 
 procedure TfrmDeparturesReport.mnuGroupInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmDeparturesList['RoomerReservationID'], 0, 0, 0, false);
+  EditInvoice(kbmDeparturesList['RoomerReservationID'], 0, TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 procedure TfrmDeparturesReport.grDeparturessListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
@@ -432,7 +432,7 @@ end;
 
 procedure TfrmDeparturesReport.mnuRoomInvoiceClick(Sender: TObject);
 begin
-  EditInvoice(kbmDeparturesList['RoomerReservationID'], kbmDeparturesList['RoomerRoomReservationID'], 0, 0, false);
+  EditInvoice(kbmDeparturesList['RoomerReservationID'], kbmDeparturesList['RoomerRoomReservationID'], TInvoiceType.itDebitInvoice, 0, false);
 end;
 
 procedure TfrmDeparturesReport.rbRadioButtonClick(Sender: TObject);
