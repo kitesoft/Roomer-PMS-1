@@ -4870,8 +4870,14 @@ begin
               exit;
             end;
 
+            // TODO: Refactor this into RoomRent-implementation of TInvoiceline, which adjusts tax when the number of nights changes
             lInvoiceLine.Number := lNewValue;
             lInvoiceLine.Changed := True;
+            if (lInvoiceLine.ItemKind = ikRoomRent) then
+            begin
+              linvoiceLine.RoomEntity.UnpaidNights := trunc(lNewValue);
+              UpdateTaxinvoiceLinesForRoomItem(linvoiceLine);
+            end;
             agrLines.Cells[col_System, ARow] := '';
           end;
 
@@ -4889,6 +4895,11 @@ begin
 
             lInvoiceLine.Price := TAmount.Create(lNewValue, lInvoiceLine.Currency);
             lInvoiceLine.Changed := True;
+            if (lInvoiceLine.ItemKind = ikRoomRent) then
+            begin
+              linvoiceLine.RoomEntity.Price := lInvoiceLine.Price;
+              UpdateTaxinvoiceLinesForRoomItem(linvoiceLine);
+            end;
             agrLines.Cells[col_System, ARow] := '';
           end;
       end;
@@ -4897,9 +4908,7 @@ begin
 
     finally
       agrLines.EndUpdate;
-      PostMessage(handle, WM_REDRAW_LINE, 0, agrLines.row);
-      if lInvoiceLine is TPackageInvoiceLine then
-        UpdateGrid;
+      UpdateGrid;
       chkChanged;
     end;
   except
