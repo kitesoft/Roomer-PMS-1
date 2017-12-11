@@ -2326,8 +2326,6 @@ begin
 
     DisplayMainGuestName;
 
-//    RetrieveTaxesforRoomReservation(FReservation, FRoomreservation);
-
     if ShowRentPerDay then
       GenerateRoomRentLinesPerDay
     else
@@ -2407,13 +2405,6 @@ begin
           Price := eSet.FieldByName('Price').AsFloat;
 
         // Manually added roomrent
-        if Item_isRoomRent(ItemId) then
-        begin
-          if CurrencyRate <> 0 then
-          begin
-            Price := Price / CurrencyRate
-          end;
-        end;
         Room := '';
         lRoomReservation := eSet.FieldByName('roomreservationAlias').asinteger;
         if mRoomRes.Locate('roomreservation', lRoomReservation, []) then
@@ -2433,6 +2424,9 @@ begin
           lParentLine := FInvoiceLinesList.FindLineByGUID(lParentlineGUID)
         else
           lParentLine := nil;
+
+        if Item_isRoomRent(ItemId) and (CurrencyRate <> 0) then
+            Price := Price / CurrencyRate;
 
         AddLine(
           LineId,
@@ -4176,15 +4170,16 @@ begin
       exit;
     end;
 
-    if (lInvoiceLine.ItemKind = ikRoomRent) and (aCol in [col_Select]) then
-    begin
-      CanEdit := True;
-      exit;
-    end;
 
     if lInvoiceLine.IsGeneratedLine and not(ACol in [col_Description]) then
     begin
       CanEdit := false;
+      exit;
+    end;
+
+    if (lInvoiceLine.ItemKind = ikRoomRent) then
+    begin
+      CanEdit := aCol in [col_Select, col_Description, col_ItemPrice];
       exit;
     end;
 
@@ -4525,18 +4520,15 @@ begin
 
           isPackage := not package.IsEmpty;
 
-//          if ABS(AverageRate) > 0 then
-//          begin
-//
-            if allIsPercentage and (AvrageDiscountPerc <> 0) then
-              DiscountText := '(' + floattostr(RoundDecimals(AvrageDiscountPerc, 2)) + '%)'
-            else
-              DiscountText := '';
+          if allIsPercentage and (AvrageDiscountPerc <> 0) then
+            DiscountText := '(' + floattostr(RoundDecimals(AvrageDiscountPerc, 2)) + '%)'
+          else
+            DiscountText := '';
 
-            AddRoom(Room, AverageRate, InvoiceCurrencyCode, Arrival, Departure, UnpaidDays, zRoomRSet.FieldByName('rrDescription').asString,
-                    lRoomReservation,
-                    AverageDiscountAmount, AllisPercentage, DiscountText,
-                    GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean, true);
+          AddRoom(Room, AverageRate, InvoiceCurrencyCode, Arrival, Departure, UnpaidDays, zRoomRSet.FieldByName('rrDescription').asString,
+                  lRoomReservation,
+                  AverageDiscountAmount, AllisPercentage, DiscountText,
+                  GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean, true);
 
 //          end
 
@@ -4865,14 +4857,8 @@ begin
               exit;
             end;
 
-            // TODO: Refactor this into RoomRent-implementation of TInvoiceline, which adjusts tax when the number of nights changes
             lInvoiceLine.Number := lNewValue;
             lInvoiceLine.Changed := True;
-            if (lInvoiceLine.ItemKind = ikRoomRent) then
-            begin
-              linvoiceLine.RoomEntity.UnpaidNights := trunc(lNewValue);
-              UpdateTaxinvoiceLinesForRoomItem(linvoiceLine);
-            end;
             agrLines.Cells[col_System, ARow] := '';
           end;
 
@@ -4890,11 +4876,6 @@ begin
 
             lInvoiceLine.Price := TAmount.Create(lNewValue, lInvoiceLine.Currency);
             lInvoiceLine.Changed := True;
-            if (lInvoiceLine.ItemKind = ikRoomRent) then
-            begin
-              linvoiceLine.RoomEntity.Price := lInvoiceLine.Price;
-              UpdateTaxinvoiceLinesForRoomItem(linvoiceLine);
-            end;
             agrLines.Cells[col_System, ARow] := '';
           end;
       end;
