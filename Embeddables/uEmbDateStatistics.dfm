@@ -84,7 +84,6 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
       TabOrder = 0
-      ExplicitWidth = 534
       object cpnlRoomtypes: TCategoryPanel
         Top = 438
         Height = 221
@@ -93,6 +92,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         ParentColor = True
         TabOrder = 0
         ExplicitTop = 473
+        ExplicitWidth = 185
         object grdRoomStates: TAdvStringGrid
           Left = 0
           Top = 0
@@ -256,7 +256,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         Caption = 'Chart'
         ParentColor = True
         TabOrder = 1
-        ExplicitTop = 233
+        ExplicitWidth = 486
         object chrtRoomStats: TChart
           Left = 0
           Top = 0
@@ -331,6 +331,7 @@ inherited frmEmbDateStatistics: TfrmEmbDateStatistics
         ParentBackground = True
         ParentColor = True
         TabOrder = 2
+        ExplicitWidth = 185
         object grdRoomClasses: TAdvStringGrid
           Left = 0
           Top = 0
