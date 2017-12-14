@@ -437,6 +437,7 @@ type
     procedure memExtraTextChange(Sender: TObject);
     procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
     procedure acAggregateCityTaxExecute(Sender: TObject);
+    procedure agrLinesSelectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
   private
     { Private declarations }
 
@@ -593,7 +594,7 @@ type
     function GetSelectedRowNrs: TList<integer>;
     function IndexOfAutoGen(AutoGen: String): integer;
     procedure RemoveAllCheckboxes;
-    function IsRoomSelected: boolean;
+    function IsReservationRoomSelected: boolean;
     procedure RemoveProformaInvoice(ProformaInvoiceNumber: integer);
     procedure DeleteLinesInList(ExecutionPlan: TRoomerExecutionPlan);
     procedure LoadRoomListForOtherRoomReservations(RoomReservation: integer);
@@ -2650,13 +2651,15 @@ procedure TfrmInvoiceEdit.DoUpdateControls;
 var
   lRow:integer;
   sCurrentItem, sRoomRentItem, sDiscountItem: String;
+  linvLine: TInvoiceLine;
 begin
   lRow := agrLines.Row;
 
   actToggleLodgingTax.Enabled := not IsDirectInvoice;
   btnReservationNotes.Enabled := not IsDirectInvoice;
 
-  if (lRow > 0) then
+  lInvLine := GetInvoiceLineByRow(lRow);
+  if (lRow > 0) and assigned(lInvLine) then
   begin
     sCurrentItem := _trimlower(agrLines.Cells[col_Item, lRow ]);
     sRoomRentItem := _trimlower(g.qRoomRentItem);
@@ -2666,16 +2669,20 @@ begin
     actSave.Enabled := not IsDirectInvoice;
     btnReservationNotes.Enabled := not IsDirectInvoice;
 
-    btnMoveRoom.Enabled := (not IsDirectInvoice) and ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem)) OR (AnyRowChecked AND IsRoomSelected);
+    btnMoveRoom.Enabled := (not IsDirectInvoice) and
+                           (not lInvline.IsManuallyAddedRoom) and
+                           ((sCurrentItem = sRoomRentItem) OR (sCurrentItem = sDiscountItem) OR (AnyRowChecked AND IsReservationRoomSelected));
 
     actMoveItemToGroupInvoice.Enabled := (not IsDirectInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
     actRemoveSelected.Enabled := AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> ''));
-    btnMoveItem.Enabled := (not IsDirectInvoice) and (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
+    btnMoveItem.Enabled := (not IsDirectInvoice) and
+                           (not lInvline.IsManuallyAddedRoom) and
+                           (AnyRowChecked OR ((NOT isSystemLine(lRow)) AND (sCurrentItem <> '')));
   end
   else
   begin
     actMoveItemToGroupInvoice.Enabled := (not IsDirectInvoice) and AnyRowChecked;
-    btnMoveRoom.Enabled := (not IsDirectInvoice) and AnyRowChecked AND IsRoomSelected;
+    btnMoveRoom.Enabled := (not IsDirectInvoice) and AnyRowChecked AND IsReservationRoomSelected;
     actRemoveSelected.Enabled := AnyRowChecked;
     btnMoveItem.Enabled := (not IsDirectInvoice) and AnyRowChecked;
   end;
@@ -3027,6 +3034,7 @@ procedure TfrmInvoiceEdit.agrLinesMouseDown(Sender: TObject; Button: TMouseButto
 var
   ACol: integer;
   ARow: integer;
+  lInvLine: TInvoiceLine;
 begin
   // Start dragging when Ctrl is pressed
   // or start edit room prices if on a roomrent or discount item
@@ -3036,7 +3044,8 @@ begin
   begin
     agrLines.row := ARow;
     agrLines.Col := ACol;
-    if (ARow >= 0) AND (ARow < agrLines.RowCount) then
+    lInvLine := GetInvoiceLineByRow(aRow);
+    if (ARow >= 0) AND (ARow < agrLines.RowCount) and not lInvLine.IsManuallyAddedRoom then
       agrLines.BeginDrag(True);
   end;
 end;
@@ -3112,6 +3121,12 @@ end;
 
 procedure TfrmInvoiceEdit.agrLinesRowChanging(Sender: TObject; OldRow, NewRow: Integer; var Allow: Boolean);
 begin
+//  UpdateControls;
+end;
+
+procedure TfrmInvoiceEdit.agrLinesSelectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+begin
+  inherited;
   UpdateControls;
 end;
 
@@ -4998,7 +5013,7 @@ begin
   end;
 end;
 
-function TfrmInvoiceEdit.IsRoomSelected: boolean;
+function TfrmInvoiceEdit.IsReservationRoomSelected: boolean;
 var
   i: integer;
   check: boolean;
@@ -6087,7 +6102,7 @@ end;
 procedure TfrmInvoiceEdit.actAddRoomExecute(Sender: TObject);
 begin
   agrLines.row := agrLines.RowCount - 1;
-  AddARoom;;
+  AddARoom;
 end;
 
 procedure TfrmInvoiceEdit.actDeleteDownPaymentExecute(Sender: TObject);

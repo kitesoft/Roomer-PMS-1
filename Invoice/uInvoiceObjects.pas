@@ -101,6 +101,8 @@ type
     /// </summary>
     function CanBeHiddenFromInvoice: boolean; virtual;
 
+    function IsManuallyAddedRoom: boolean;
+
     /// <summary>
     ///   Returns the depth of this invoiceline in the hierarchy with 0 being a root element
     /// </summary>
@@ -519,6 +521,13 @@ begin
     inc(Result);
     lLine := lLine.Parent;
   end;
+end;
+
+function TInvoiceLine.IsManuallyAddedRoom: boolean;
+begin
+  Result := not IsGeneratedLine and
+              ((ItemKind = ikRoomRent) or
+               ((ItemKind = ikStayTax) and assigned(Parent)));
 end;
 
 procedure TInvoiceLine.MoveToInvoiceIndex(aInvoiceIndex: integer; aMoveAllDates: boolean);
