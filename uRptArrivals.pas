@@ -93,6 +93,7 @@ type
     btnClear: TsSpeedButton;
     edFilter: TsEdit;
     timFilter: TTimer;
+    btnAllocateRoom: TsButton;
     procedure rbRadioButtonClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -113,6 +114,7 @@ type
     procedure timFilterTimer(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
+    procedure btnAllocateRoomClick(Sender: TObject);
   private
     FRefreshingdata: boolean;
     FCurrencyhandler: TCurrencyHandler;
@@ -213,6 +215,13 @@ begin
   finally
     frm.Free;
   end;
+end;
+
+procedure TfrmArrivalsReport.btnAllocateRoomClick(Sender: TObject);
+begin
+  inherited;
+  if ProvideARoom2(kbmArrivalsListRoomerRoomReservationID.AsInteger) <> '' then
+    RefreshData;
 end;
 
 procedure TfrmArrivalsReport.btnCheckInClick(Sender: TObject);
@@ -438,6 +447,8 @@ begin
   btnCheckIn.Enabled := lDataAvailable;
   btnProfile.Enabled := lDataAvailable;
   btnInvoice.Enabled := lDataAvailable;
+  btnAllocateRoom.Enabled := lDataAvailable;
+  btnExcel.Enabled := lDataAvailable;
 end;
 
 

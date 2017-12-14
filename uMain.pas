@@ -10384,7 +10384,8 @@ end;
 procedure TfrmMain.btnRepArrivalsClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  ShowArrivalsReport;
+  ShowArrivalsReport(true);
+  _Refresh;
 end;
 
 procedure TfrmMain.btnReDownloadRoomerClick(Sender: TObject);

@@ -55,6 +55,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -1653,10 +1654,6 @@ object frmMain: TfrmMain
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
@@ -1688,7 +1685,7 @@ object frmMain: TfrmMain
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
-          Width = 73
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1706,11 +1703,12 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 73
         end
         object lblCacheNotification: TsLabel
           Left = 0
           Top = 145
-          Width = 86
+          Width = 304
           Height = 13
           Margins.Left = 10
           Margins.Top = 0
@@ -1728,6 +1726,7 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           UseSkinColor = False
+          ExplicitWidth = 86
         end
         object pnlStatistics: TsScrollBox
           Left = 0
@@ -1867,8 +1866,8 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 158
           Top = 3
-          Width = 94
-          Height = 23
+          Width = 286
+          Height = 27
           Margins.Left = 5
           Align = alClient
           Caption = '12-12-2012'
@@ -1882,6 +1881,8 @@ object frmMain: TfrmMain
           Font.Height = -17
           Font.Name = 'Segoe UI'
           Font.Style = [fsBold]
+          ExplicitWidth = 94
+          ExplicitHeight = 23
         end
         object sPanel3: TsPanel
           Left = 447
@@ -2557,8 +2558,8 @@ object frmMain: TfrmMain
       object lblTimeMessage: TsLabel
         Left = 0
         Top = 0
-        Width = 265
-        Height = 24
+        Width = 1035
+        Height = 41
         Align = alClient
         Alignment = taCenter
         Caption = '<Timely messages panel>'
@@ -2570,6 +2571,8 @@ object frmMain: TfrmMain
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         UseSkinColor = False
+        ExplicitWidth = 265
+        ExplicitHeight = 24
       end
     end
     object pnlOffline: TsPanel

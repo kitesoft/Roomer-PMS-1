@@ -171,7 +171,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       end
       object btnInvoice: TsButton
         AlignWithMargins = True
-        Left = 405
+        Left = 539
         Top = 3
         Width = 128
         Height = 41
@@ -181,9 +181,10 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         ImageIndex = 62
         Images = DImages.PngImageList1
         Style = bsSplitButton
-        TabOrder = 3
+        TabOrder = 4
         OnClick = mnuRoomInvoiceClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 405
       end
       object btnReport: TsButton
         AlignWithMargins = True
@@ -195,7 +196,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         Caption = 'Report'
         ImageIndex = 69
         Images = DImages.PngImageList1
-        TabOrder = 4
+        TabOrder = 5
         OnClick = btnReportClick
         SkinData.SkinSection = 'BUTTON'
       end
@@ -206,7 +207,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
         Height = 31
         Align = alBottom
         BevelOuter = bvNone
-        TabOrder = 5
+        TabOrder = 6
         object cLabFilter: TsLabel
           Left = 19
           Top = 6
@@ -248,6 +249,20 @@ inherited frmArrivalsReport: TfrmArrivalsReport
           OnChange = edFilterChange
           SkinData.SkinSection = 'EDIT'
         end
+      end
+      object btnAllocateRoom: TsButton
+        AlignWithMargins = True
+        Left = 405
+        Top = 3
+        Width = 128
+        Height = 41
+        Align = alLeft
+        Caption = 'Allocate Room'
+        ImageIndex = 47
+        Images = DImages.PngImageList1
+        TabOrder = 3
+        OnClick = btnAllocateRoomClick
+        SkinData.SkinSection = 'BUTTON'
       end
     end
   end
@@ -559,7 +574,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grArrivalsList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -581,14 +595,13 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43080.429687094900000000
+      ReportDocument.CreationDate = 43083.663664490740000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
