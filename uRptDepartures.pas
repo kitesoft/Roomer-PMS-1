@@ -144,7 +144,6 @@ uses
   , PrjConst
   , hData
   , uAlerts
-  , uProvideARoom2
   , uGuestCheckInForm
   , uReservationProfile
   , uReservationStateDefinitions

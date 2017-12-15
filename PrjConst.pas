@@ -256,6 +256,7 @@ begin
   constants.Add('shRooms', 'Rooms');
   constants.Add('shMainFormStatisticsRooms', 'Rooms');
   constants.Add('shRoom', 'Room');
+  constants.Add('shNoRoom', 'No room');
   constants.Add('shCheckRoom', 'Check in room %s');
   constants.Add('shType', 'Type');
   constants.Add('shGuestReservation', 'Guest/reservation');

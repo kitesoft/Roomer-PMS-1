@@ -834,7 +834,6 @@ implementation
 
 uses
   uPriceOBJ
-    , uProvideARoom2
     , uAppGlobal
     , uDayNotes
     , uInvoiceSummeryOBJ
@@ -855,7 +854,7 @@ uses
     , uFrmCheckOut
     , UITypes
     , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit,
-    Math, uInvoiceDefinitions;
+    Math, uInvoiceDefinitions, uProvideARoom2;
 
 {$R *.dfm}
 

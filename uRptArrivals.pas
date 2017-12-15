@@ -220,7 +220,7 @@ end;
 procedure TfrmArrivalsReport.btnAllocateRoomClick(Sender: TObject);
 begin
   inherited;
-  if ProvideARoom2(kbmArrivalsListRoomerRoomReservationID.AsInteger) <> '' then
+  if ProvideARoom2(kbmArrivalsListRoomerRoomReservationID.AsInteger) = mrOk then
     RefreshData;
 end;
 

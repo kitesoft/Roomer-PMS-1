@@ -5118,8 +5118,7 @@ begin
 
     if ViewMode = vmOneDay then
     begin
-      sNewRoom := ProvideARoom2(_iRoomReservation);
-      if sNewRoom <> '' then
+      if ProvideARoom2(_iRoomReservation, sNewRoom) = mrOK then
       begin
         RefreshGrid;
         result := true;
@@ -5130,8 +5129,7 @@ begin
     end
     else if ViewMode = vmPeriod then
     begin
-      sNewRoom := ProvideARoom2(_iRoomReservation);
-      if sNewRoom <> '' then
+      if ProvideARoom2(_iRoomReservation) = mrOK then
       begin
         RefreshGrid;
         result := true;

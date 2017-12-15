@@ -46,15 +46,21 @@ type
     Panel2: TsPanel;
     rgrOptions: TsRadioGroup;
     sGroupBox1: TsGroupBox;
-    sLabel1: TsLabel;
+    lblArrivalCaption: TsLabel;
     lblArrival: TsLabel;
-    sLabel2: TsLabel;
+    lblDepartureCaption: TsLabel;
     lblDeparture: TsLabel;
     panBtn: TsPanel;
     btnCancel: TsButton;
     BtnOk: TsButton;
     btnRemoveRoomNumber: TsBitBtn;
     cbIncludeNonCleanRooms: TsCheckBox;
+    lblResnrCaption: TsLabel;
+    lblReservationNr: TsLabel;
+    lbCurrentRoomCaption: TsLabel;
+    lblCurrentRoom: TsLabel;
+    lblRoomTypeCaption: TsLabel;
+    lblRoomtype: TsLabel;
     procedure FormShow(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure agrRoomsGetCellColor(Sender : TObject; ARow, ACol : Integer; AState : TGridDrawState; ABrush : TBrush; AFont : TFont);
@@ -80,10 +86,12 @@ type
     zOpList : tstringList;
 
     procedure Display;
+    function SelectedRoom: string;
   end;
 
 
-function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = true): String;
+function ProvideARoom2(RoomReservation : Integer; var newRoom: string; aShowUncleanRooms: boolean = True) : integer; overload;
+function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = true): integer; overload;
 function MoveToRoomEnh2(RoomReservation : Integer; newRoom : string) : boolean;
 
 implementation
@@ -102,10 +110,16 @@ uses
 
 {$R *.DFM}
 
-function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = True) : String;
+function ProvideARoom2(RoomReservation : Integer; aShowUncleanRooms: boolean = true): integer;
+var
+  dummy: string;
+begin
+  Result := ProvideARoom2(RoomReservation, dummy, aShowUncleanRooms);
+end;
+
+function ProvideARoom2(RoomReservation : Integer; var newRoom: string; aShowUncleanRooms: boolean = True) : integer;
 var
   frm: TfrmProvideARoom2;
-  btn : Word;
 
   status : TReservationState;
 
@@ -121,10 +135,8 @@ var
   isNoRoom : boolean;
   blockMove : Boolean;
 
-  newRoom : string;
-
 begin
-  result := '';
+  Result := mrCancel;
   rSet := CreateNewDataSet;
   try
     s := format(select_ProvideARoom2_MoveToRoomEnh2 , [RoomReservation]);
@@ -148,13 +160,7 @@ begin
     freeandnil(rSet);
   end;
 
-  if sRoom = '' then
-  begin
-    isNoRoom := true;
-  end else
-  begin
-    isNoRoom := pos('<', sRoom) = 1;
-  end;
+  isNoRoom := sROom.IsEmpty or sROom.StartsWith('<');
 
   // -- Check if the status allows for a move without interference...
   status := TReservationState.fromResStatus(sStatus);
@@ -180,15 +186,17 @@ begin
     frm.btnRemoveRoomNumber.enabled := not isNoRoom;
     frm.cbIncludeNonCleanRooms.Checked := aShowUncleanRooms;
 
-    btn := frm.ShowModal;
-    if (btn in [mrOK, mrYes]) then
+    Result := frm.ShowModal;
+    if (Result in [mrOK, mrYes]) then
     begin
-      if btn = mrYes then
+      if Result = mrYes then // set to NoRoom
         newRoom := ''
       else
-        newRoom := frm.agrRooms.Cells[1, frm.agrRooms.Row];
+        newRoom := frm.SelectedRoom;
       if MoveToRoomEnh2(RoomReservation, newRoom) then
-        result := newRoom;
+        Result := mrOk
+      else
+        result := mrCancel;
     end;
   finally
     frm.free;
@@ -241,8 +249,6 @@ begin
     agrRooms.Cells[25, 0] := GetTranslatedText('shTxProvideRoom_Status1');
     agrRooms.Cells[26, 0] := GetTranslatedText('shTxProvideRoom_Status');
 
-    lblArrival.Caption := DateToStr(zDateFrom);
-    lblDeparture.Caption := DateToStr(zDateTo);
 
     if d.GetRoomList_Occupied(zDateFrom, zDateTo, zRoomReservation, zOpList) then
     begin
@@ -264,6 +270,15 @@ begin
             orStr := '';
           end;
     end;
+
+    lblReservationNr.Caption := IntToStr(zRoomReservation);
+    if zRoom.StartsWith('<') then
+      lblCurrentRoom.Caption := GetTranslatedText('shNoROom')
+    else
+      lblCurrentRoom.Caption := zRoom;
+    lblRoomtype.Caption := zRoomType;
+    lblArrival.Caption := DateToStr(zDateFrom);
+    lblDeparture.Caption := DateToStr(zDateTo);
 
     if not cbIncludeNonCleanRooms.Checked then
       orStr := orStr + ' AND (rooms.status = ''C'') '#10;
@@ -352,6 +367,11 @@ end;
 procedure TfrmProvideARoom2.rgrOptionsClick(Sender: TObject);
 begin
   Display;
+end;
+
+function TfrmProvideARoom2.SelectedRoom: string;
+begin
+  Result := agrRooms.Cells[1, agrRooms.Row];
 end;
 
 procedure TfrmProvideARoom2.FormCreate(Sender : TObject);

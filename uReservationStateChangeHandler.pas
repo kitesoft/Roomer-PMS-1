@@ -363,13 +363,12 @@ begin
 end;
 
 function TRoomReservationStateChangeHandler.Checkin(aReservationId: integer; aRoomReservationId: integer ): boolean;
+var
+  newRoom: string;
 begin
   Result := false;
   // Allocate room if needed
-  if FRoom.StartsWith('<') then
-    FRoom := ProvideARoom2(aRoomReservationId, False); // clean rooms only
-
-  if FRoom = '' then
+  if FRoom.StartsWith('<') and (ProvideARoom2(aRoomReservationId, FRoom, False) <> mrOK) then
     Exit;
 
   // warn dirty room

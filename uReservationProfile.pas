@@ -2190,7 +2190,7 @@ end;
 
 procedure TfrmReservationProfile.MoveGuestToNewRoom2;
 begin
-  if ProvideARoom2(mRoomsRoomReservation.AsInteger) <> '' then
+  if ProvideARoom2(mRoomsRoomReservation.AsInteger) = mrOK then
   begin
     getGuestData(mRoomsRoomReservation.AsInteger);
     Display_rGrid(mRoomsRoomReservation.AsInteger);
