@@ -367,7 +367,8 @@ uses   dbTables
      , RegularExpressions
      , uCurrencymanager
      , uRoomerCurrencymanager
-     , uFileDependencyManager, uCachedDataHandler;
+     , uFileDependencyManager
+     , uCachedDataHandler;
 
 procedure FilterRoom( RoomNumber : string );
 begin

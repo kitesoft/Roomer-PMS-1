@@ -687,7 +687,6 @@ type
     btnItemTransations: TdxBarLargeButton;
     actHotelStatusApp: TAction;
     dxBarButton7: TdxBarButton;
-    dxBarButton8: TdxBarButton;
     dxbtnReleaseNotes: TdxBarButton;
     btnFinanceMutationTraces: TdxBarLargeButton;
     btnDailySalesAndStatistics: TdxBarLargeButton;
@@ -1651,12 +1650,12 @@ uses
     , uFrmTokenChargeHistory
     , uFrmManagePCIConnection
     , uItemTransactionsReport
-	, ufrmInvoiceEdit
-	, uInvoiceDefinitions
+  	, ufrmInvoiceEdit
+	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-	;
-		, ufrmInvoiceEdit, uInvoiceDefinitions, uCachedDataHandler, uReleaseNotes;
+    , uCachedDataHandler
+    , uReleaseNotes;
 
 {$R *.DFM}
 {$R Cursors.res}

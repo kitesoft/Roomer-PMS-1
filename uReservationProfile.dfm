@@ -568,10 +568,6 @@ object frmReservationProfile: TfrmReservationProfile
     object TabSheet3: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0

@@ -307,7 +307,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -1094,7 +1094,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1454,7 +1454,7 @@ object frmMain: TfrmMain
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -2496,7 +2496,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.8'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2626,7 +2626,6 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
-      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -4376,7 +4375,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 1128
+      DockedLeft = 1112
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4615,7 +4614,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1337
+      DockedLeft = 1302
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5698,12 +5697,6 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 70
       OnClick = btnDailySalesAndStatisticsClick
-    end
-    object dxBarButton8: TdxBarButton
-      Caption = 'New Button'
-      Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
     end
     object dxbtnReleaseNotes: TdxBarButton
       Caption = 'Release Notes'

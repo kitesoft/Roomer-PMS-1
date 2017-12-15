@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">preReleaseAcceptance</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -201,7 +201,7 @@
         <PostBuildEvent><![CDATA[$(OUTPUTDIR)DeployOnDev.bat
 $(PostBuildEvent)]]></PostBuildEvent>
         <VerInfo_Release>18</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.18.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.18.0;Comments=;ExtraBuild=171215Acc;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.18.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.18.0;Comments=;ExtraBuild=171215Acc2;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>
@@ -979,14 +979,14 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="RoomerVCLs\Source\uCurrencyDefinition.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uCurrencyConstants.pas"/>
         <DCCReference Include="Definitions\uTaxCalcDefinitions.pas"/>
-        <DCCReference Include="TableCache\uCachedDataHandler.pas"/>
-        <DCCReference Include="VersionManagement\uReleaseNotes.pas"/>
         <DCCReference Include="uFinanceTransactionReport.pas">
             <Form>frmFinanceTransactionReport</Form>
         </DCCReference>
         <DCCReference Include="uDailyTotalsReport.pas">
             <Form>frmDailyTotalsReport</Form>
         </DCCReference>
+        <DCCReference Include="TableCache\uCachedDataHandler.pas"/>
+        <DCCReference Include="VersionManagement\uReleaseNotes.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>
