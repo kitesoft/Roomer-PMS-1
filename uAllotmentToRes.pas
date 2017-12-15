@@ -1929,7 +1929,7 @@ begin
   oNewReservation.HomeCustomer.customer := customer;
 
   oNewReservation.HomeCustomer.GuestName := ''; // edGuestName.text;
-  oNewReservation.HomeCustomer.invRefrence := zReservationInfo.invRefrence; // edinvRefrence.Text;
+  oNewReservation.HomeCustomer.invRefrence := IIF(TRIM(zReservationInfo.invRefrence) = '', format('ALOT:%d', [zReservationInfo.Reservation]), zReservationInfo.invRefrence); // edinvRefrence.Text;
   oNewReservation.HomeCustomer.Country := zReservationInfo.Country; // edCountry.text;
   oNewReservation.HomeCustomer.ReservationName := zReservationInfo.Name; // edReservationName.text;
   oNewReservation.HomeCustomer.RoomStatus := 'P';; // RoomstatusToInfo(cbxRoomStatus.ItemIndex);

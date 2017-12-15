@@ -21,16 +21,12 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     Top = 0
     Width = 866
     Height = 528
-    ActivePage = tsMappings
+    ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
     OnChange = pgMainChange
     object tsSettings: TsTabSheet
       Caption = 'Settings'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -141,6 +137,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Alignment = taRightJustify
           Caption = 'Company code:'
           ParentFont = False
+          Visible = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -183,19 +180,19 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           ImgChecked = 0
           ImgUnchecked = 0
         end
-        object edServiceUrl: TsEdit
+        object __edServiceUrl: TsEdit
           Left = 200
           Top = 80
           Width = 505
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
           TabOrder = 2
-          Text = 'https://<finance_system_endpoints>'
           OnChange = HandleChange
         end
         object edUsername: TsEdit
@@ -203,8 +200,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 109
           Width = 505
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -217,8 +215,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 138
           Width = 505
           Height = 24
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -232,8 +231,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 168
           Width = 505
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -246,8 +246,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 196
           Width = 505
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -260,13 +261,15 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 225
           Width = 505
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
           TabOrder = 7
+          Visible = False
         end
       end
       object gbxBookkeeping: TsGroupBox
@@ -356,8 +359,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 25
           Width = 169
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -371,8 +375,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 52
           Width = 169
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -386,8 +391,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 80
           Width = 169
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -399,8 +405,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 108
           Width = 169
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -412,8 +419,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Top = 136
           Width = 169
           Height = 21
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -425,10 +433,6 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     end
     object tsMappings: TsTabSheet
       Caption = 'Mappings'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object tabsMappings: TsTabControl
         AlignWithMargins = True
         Left = 3

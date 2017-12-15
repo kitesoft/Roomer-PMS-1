@@ -22,7 +22,7 @@ inherited frmStaffComm: TfrmStaffComm
     Width = 648
     Height = 495
     TabOrder = 0
-    ExplicitTop = 105
+    ExplicitTop = 103
     ExplicitWidth = 648
     ExplicitHeight = 463
     inherited tvData: TcxGridDBBandedTableView
@@ -355,6 +355,7 @@ inherited frmStaffComm: TfrmStaffComm
       PrinterPage.Margins.Left = 12700
       PrinterPage.Margins.Right = 12700
       PrinterPage.Margins.Top = 12700
+      PrinterPage.Orientation = poLandscape
       PrinterPage.PageSize.X = 210820
       PrinterPage.PageSize.Y = 297180
       PrinterPage._dxMeasurementUnits_ = 0

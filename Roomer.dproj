@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">DebugBas</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -979,6 +979,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="RoomerVCLs\Source\uCurrencyDefinition.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uCurrencyConstants.pas"/>
         <DCCReference Include="Definitions\uTaxCalcDefinitions.pas"/>
+        <DCCReference Include="uFinanceTransactionReport.pas">
+            <Form>frmFinanceTransactionReport</Form>
+        </DCCReference>
+        <DCCReference Include="uDailyTotalsReport.pas">
+            <Form>frmDailyTotalsReport</Form>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

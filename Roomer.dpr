@@ -323,7 +323,9 @@ uses
   uRoomerCurrencyDefinition in 'Currencies\uRoomerCurrencyDefinition.pas',
   uCurrencyDefinition in 'RoomerVCLs\Source\uCurrencyDefinition.pas',
   uCurrencyConstants in 'RoomerVCLs\Source\uCurrencyConstants.pas',
-  uTaxCalcDefinitions in 'Definitions\uTaxCalcDefinitions.pas';
+  uTaxCalcDefinitions in 'Definitions\uTaxCalcDefinitions.pas',
+  uFinanceTransactionReport in 'uFinanceTransactionReport.pas' {frmFinanceTransactionReport},
+  uDailyTotalsReport in 'uDailyTotalsReport.pas' {frmDailyTotalsReport};
 
 {$R *.RES}
 

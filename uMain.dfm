@@ -307,7 +307,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.4.1'
+            Version = '8.2.5.2'
             ColWidths = (
               47
               49
@@ -1098,7 +1098,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.4.1'
+              Version = '8.2.5.2'
               ColWidths = (
                 73
                 20
@@ -1458,7 +1458,7 @@ object frmMain: TfrmMain
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.4.1'
+              Version = '8.2.5.2'
               ColWidths = (
                 64
                 64
@@ -2500,7 +2500,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.7'
+        Version = '1.9.2.8'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2684,6 +2684,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2767,7 +2768,6 @@ object frmMain: TfrmMain
       Index = 5
     end
     object rbTabChannels: TdxRibbonTab
-      Active = True
       Caption = 'Channels'
       Groups = <
         item
@@ -4311,6 +4311,14 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnItemTransations'
+        end
+        item
+          Visible = True
+          ItemName = 'btnFinanceMutationTraces'
+        end
+        item
+          Visible = True
+          ItemName = 'btnDailySalesAndStatistics'
         end>
       OneOnRow = False
       Row = 0
@@ -4369,7 +4377,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 1142
+      DockedLeft = 1128
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4608,7 +4616,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1351
+      DockedLeft = 1337
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5675,6 +5683,22 @@ object frmMain: TfrmMain
     object dxBarButton7: TdxBarButton
       Action = actHotelStatusApp
       Category = 0
+    end
+    object btnFinanceMutationTraces: TdxBarLargeButton
+      Caption = 'Finance mutation traces'
+      Category = 0
+      Hint = 'Finance mutation traces'
+      Visible = ivAlways
+      LargeImageIndex = 30
+      OnClick = btnFinanceMutationTracesClick
+    end
+    object btnDailySalesAndStatistics: TdxBarLargeButton
+      Caption = 'Daily Sales && Statistics'
+      Category = 0
+      Hint = 'Daily Sales & Statistics'
+      Visible = ivAlways
+      LargeImageIndex = 70
+      OnClick = btnDailySalesAndStatisticsClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'

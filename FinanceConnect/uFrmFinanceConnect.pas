@@ -95,7 +95,7 @@ type
     sLabel7: TsLabel;
     cbxSystemSelection: TsComboBox;
     cbxActive: TsCheckBox;
-    edServiceUrl: TsEdit;
+    __edServiceUrl: TsEdit;
     edUsername: TsEdit;
     edPassword: TsEdit;
     edOrg: TsEdit;
@@ -127,6 +127,7 @@ type
     procedure ClearAllTableViewFilters;
     procedure ReStartDataPreparation;
     function CheckEnableSaveButton: Boolean;
+    procedure NewTypeSelection;
     { Private declarations }
   protected
     procedure DoUpdateControls; override;
@@ -177,13 +178,25 @@ end;
 
 procedure TFrmFinanceConnect.cbxSystemSelectionCloseUp(Sender: TObject);
 begin
+  NewTypeSelection;
   UpdateControls;
+end;
+
+procedure TFrmFinanceConnect.NewTypeSelection;
+begin
+  if __edServiceUrl.Text='' then
+    if cbxSystemSelection.ItemIndex > 0 then
+      if SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value = 'TWINFIELD' then
+      begin
+        __edServiceUrl.Text := '{cluster}/webservices/';
+        __edServiceUrl.ReadOnly := True;
+      end;
 end;
 
 function TFrmFinanceConnect.CheckEnableSaveButton : Boolean;
 begin
   result := (cbxSystemSelection.ItemIndex > 0) AND
-    (Length(edServiceUrl.Text) > 5) AND
+    (Length(__edServiceUrl.Text) > 5) AND
     (Length(edUsername.Text) > 0) AND
     (Length(edPassword.Text) > 0) AND
     (Length(edOrg.Text) > 0) AND
@@ -567,7 +580,7 @@ begin
   with FinanceConnectService.FinanceConnectConfiguration do
   begin
     cbxActive.Checked := systemActive;
-    edServiceUrl.Text := serviceUri;
+    __edServiceUrl.Text := serviceUri;
     edUsername.Text := username;
     edPassword.Text := password;
     edOrg.Text := organizationId;
@@ -600,7 +613,7 @@ begin
     systemCode := KeyAndValue.Key;
 
     hotelId := d.roomerMainDataSet.hotelId;
-    serviceUri := edServiceUrl.Text;
+    serviceUri := __edServiceUrl.Text;
     username := edUsername.Text;
     password := edPassword.Text;
     organizationId := edOrg.Text;

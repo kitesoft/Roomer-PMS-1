@@ -193,8 +193,8 @@ object frmRptManagment: TfrmRptManagment
     object chkCompareLasYear: TsCheckBox
       Left = 306
       Top = 56
-      Width = 116
-      Height = 17
+      Width = 108
+      Height = 20
       Caption = 'Compare last year'
       TabOrder = 3
       Visible = False
@@ -222,10 +222,6 @@ object frmRptManagment: TfrmRptManagment
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0

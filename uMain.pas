@@ -687,6 +687,8 @@ type
     btnItemTransations: TdxBarLargeButton;
     actHotelStatusApp: TAction;
     dxBarButton7: TdxBarButton;
+    btnFinanceMutationTraces: TdxBarLargeButton;
+    btnDailySalesAndStatistics: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -981,6 +983,8 @@ type
     procedure btnManagePaycardsClick(Sender: TObject);
     procedure btnItemTransationsClick(Sender: TObject);
     procedure actHotelStatusAppExecute(Sender: TObject);
+    procedure btnFinanceMutationTracesClick(Sender: TObject);
+    procedure btnDailySalesAndStatisticsClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1633,8 +1637,8 @@ uses
     , uSQLUtils
     , uMasterRateDefaults
     , uRptUserActivity
-		, uResourceTypeDefinitions
-		, uOpenInvoicesNew
+	, uResourceTypeDefinitions
+	, uOpenInvoicesNew
     , uRptReservationStatusPerDay
     , uRoomerInstanceManagement
     , uFrontDeskPageButton
@@ -1644,7 +1648,11 @@ uses
     , uFrmTokenChargeHistory
     , uFrmManagePCIConnection
     , uItemTransactionsReport
-		, ufrmInvoiceEdit, uInvoiceDefinitions;
+	, ufrmInvoiceEdit
+	, uInvoiceDefinitions
+    , uFinanceTransactionReport
+    , uDailyTotalsReport
+	;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -10898,6 +10906,12 @@ begin
   ShowDailyRevenuesReport;
 end;
 
+procedure TfrmMain.btnDailySalesAndStatisticsClick(Sender: TObject);
+begin
+  LogUserClickedButton(Sender);
+  ShowDailySalesReport;
+end;
+
 procedure TfrmMain.btnCommunicationTestClick(Sender: TObject);
 begin
   CommunicationTest;
@@ -10965,6 +10979,7 @@ end;
 
 procedure TfrmMain.btnItemTransationsClick(Sender: TObject);
 begin
+  LogUserClickedButton(Sender);
   ShowItemTransactionsReport;
 end;
 
@@ -11141,6 +11156,12 @@ procedure TfrmMain.dxBarLargeButton4Click(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   StaticResources('Files', [TResourceType.rtAnyFile], TResourceAccessType.ratRestricted);
+end;
+
+procedure TfrmMain.btnFinanceMutationTracesClick(Sender: TObject);
+begin
+  LogUserClickedButton(Sender);
+  ShowFinanceMutationsReport;
 end;
 
 procedure TfrmMain.btnPayCardsClick(Sender: TObject);
