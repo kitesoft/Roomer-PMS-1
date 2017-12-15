@@ -29,7 +29,6 @@ type
     procedure RefreshLocally(ForceRefresh : Boolean = true);
     procedure RefreshIfNeeded;
     property TableName : String read FTableName;
-    property sql : String read FSql write FSql;
     property RSet : TRoomerDataSet read FRSet;
     property RefreshEnabled : Boolean read FRefreshEnabled write FRefreshEnabled;
     property LocalFileDate: TDateTime read FileTimeStamp;
@@ -65,7 +64,7 @@ uses
   , uStringUtils
   , uFileSystemUtils, uAppGlobal
   , PrjConst
-  ;
+  , uCachedDataHandler;
 { TTableDictionary }
 
 constructor TTableDictionary.Create;
@@ -154,6 +153,7 @@ begin
   FTableName := tableName;
   FRSet := CreateNewDataSet;
   FRSet.CommandType := cmdText;
+  FRSet.CommandText := FSql;
   FRefreshEnabled := True;
 end;
 
@@ -169,13 +169,11 @@ begin
     exit;
 
   FRSet.Close;
-
-  FRSet.CommandText := FSql;
   try
     FRSet.Open(true, false, True); // Open(doLowerCase: Boolean = true; setLastAccess: Boolean = true; Threaded: Boolean = False);
     SaveToFile(FRSet.SavedLastResult);
     FRSet.First;
-    RoomerMessages.MarkTableAsRefreshed(FTableName);
+    CachedDataHandler.MarkTableAsRefreshed(FTableName);
   except
     raise ERefreshTableException.CreateFmt('Error while refreshing table [%s] from server', [FTableName]);
   end;
@@ -187,12 +185,11 @@ begin
   if NOT FRefreshEnabled then
     exit;
   if FRSet.Active then FRSet.Close;
-  FRSet.CommandText := FSql;
   localData := ReadFromFile;
   if localData <> '' then
   try
     FRSet.OpenDataset(localData);
-    RoomerMessages.MarkTableAsRefreshed(FTableName, FileTimeStamp);
+    CachedDataHandler.MarkTableAsRefreshed(FTableName, FileTimeStamp);
   except
     RefreshFromServer;
   end
@@ -203,7 +200,7 @@ end;
 procedure TTableEntity.SaveToFile(data : String);
 begin
   SaveToTextFile(GetFilename, data);
-  SetFileDateTime(GetFilename, RoomerMessages.CurrentTableDate(FTableName));
+  SetFileDateTime(GetFilename, CachedDataHandler.CurrentTableDate(FTableName));
 end;
 
 function TTableEntity.ReadFromFile : String;
@@ -217,14 +214,8 @@ begin
 end;
 
 function TTableEntity.GetFilename : String;
-//var sPath : String;
 begin
-//  sPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  sPath := TPath.Combine(sPath, format('%s\datacache',[d.roomerMainDataSet.hotelId]));
   Result := TPath.Combine(glb.GetDataCacheLocation, format(cRoomerTableFileName, [FTableName]));
-//  forceDirectories(sPath);
-//
-//  result := TPath.Combine(sPath, format(cRoomerTableFileName, [FTableName]));
 end;
 
 
@@ -233,7 +224,7 @@ procedure TTableEntity.RefreshIfNeeded;
 begin
   if d.roomerMainDataSet.OfflineMode OR (NOT d.roomerMainDataSet.LoggedIn) then
     exit;
-  if (NOT FileExists(GetFilename)) OR (RoomerMessages.TableNeedsRefresh(FTableName)) then
+  if (NOT FileExists(GetFilename)) OR (CachedDataHandler.TableNeedsRefresh(FTableName)) then
     RefreshFromServer;
 end;
 

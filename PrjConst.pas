@@ -1772,6 +1772,14 @@ begin
   constants.Add('shBaseGridForm_NoDataToDisplay', '<No data to display>');
 end;
 
+procedure AddReleaseNotesConstants;
+begin
+  // Identifier should consist of shReleaseNotes_ followed by the English name of the language
+  constants.Add('shReleaseNotes_English', 'https://promoir.atlassian.net/wiki/x/BIB9C');
+  constants.Add('shReleaseNotes_Icelandic', 'https://promoir.atlassian.net/wiki/x/gQB9C');
+  constants.Add('shReleaseNotes_Dutch', 'https://promoir.atlassian.net/wiki/x/vAB9C');
+end;
+
 procedure prepareConstants;
 begin
   constants := TDictionary<String, String>.Create(TCaseInsensitiveEqualityComparer.Create());
@@ -1791,6 +1799,8 @@ begin
   AddConstants_NewUIConstants;
 
   AddBaseFormConstants;
+
+  AddReleaseNotesConstants;
 end;
 
 function GetTranslatedText(nameOfConstant : String) : String;

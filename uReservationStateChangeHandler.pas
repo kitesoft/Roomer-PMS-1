@@ -363,8 +363,6 @@ begin
 end;
 
 function TRoomReservationStateChangeHandler.Checkin(aReservationId: integer; aRoomReservationId: integer ): boolean;
-var
-  newRoom: string;
 begin
   Result := false;
   // Allocate room if needed

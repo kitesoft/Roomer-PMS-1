@@ -326,6 +326,8 @@ uses
   uTaxCalcDefinitions in 'Definitions\uTaxCalcDefinitions.pas',
   uFinanceTransactionReport in 'uFinanceTransactionReport.pas' {frmFinanceTransactionReport},
   uDailyTotalsReport in 'uDailyTotalsReport.pas' {frmDailyTotalsReport};
+  uCachedDataHandler in 'TableCache\uCachedDataHandler.pas',
+  uReleaseNotes in 'VersionManagement\uReleaseNotes.pas';
 
 {$R *.RES}
 

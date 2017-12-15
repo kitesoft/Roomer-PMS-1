@@ -367,7 +367,7 @@ uses   dbTables
      , RegularExpressions
      , uCurrencymanager
      , uRoomerCurrencymanager
-     , uFileDependencyManager;
+     , uFileDependencyManager, uCachedDataHandler;
 
 procedure FilterRoom( RoomNumber : string );
 begin
@@ -830,7 +830,7 @@ end;
 
 procedure TGlobalSettings.ForceTableRefresh;
 begin
-  RoomerMessages.RefreshTabelStateList;
+  CachedDataHandler.RefreshTabelStateList;
   tablesList.RefreshAllIfNeeded;
 end;
 
@@ -1722,6 +1722,7 @@ begin
   FreeAndNil(glb);
   ClearFileDependencyManager;
   ClearGlobalCurrencyManager;
+  ClearCachedDataHandler;
 end;
 
 { TSet_Of_Integer }

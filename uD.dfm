@@ -2,28 +2,8 @@ object d: Td
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Height = 886
-  Width = 1315
-  object Items_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM Items'#13#10
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 184
-    Top = 111
-  end
-  object ItemsDS: TDataSource
-    DataSet = Items_
-    Left = 604
-    Top = 132
-  end
+  Height = 672
+  Width = 1101
   object wRooms_: TRoomerDataSet
     CommandText = 'SELECT * FROM wRooms'#13#10
     CommandType = cmdUnknown
@@ -35,92 +15,8 @@ object d: Td
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
     PrimaryKeyField = 'ID'
-    Left = 40
-    Top = 180
-  end
-  object viewRoomPrices1_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM viewRoomPrices1'#13#10
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 160
-    Top = 284
-  end
-  object viewRoomPrices1DS: TDataSource
-    DataSet = viewRoomPrices1_
-    Left = 228
-    Top = 281
-  end
-  object rpt: TfrxReport
-    Version = '4.13.2'
-    DotMatrixReport = False
-    EngineOptions.DoublePass = True
-    IniFile = '\Software\Fast Reports'
-    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
-    PreviewOptions.Zoom = 1.000000000000000000
-    PrintOptions.Printer = 'Default'
-    PrintOptions.PrintOnSheet = 0
-    ReportOptions.CreateDate = 39582.595856111100000000
-    ReportOptions.LastChange = 39582.597950474530000000
-    ScriptLanguage = 'PascalScript'
-    ScriptText.Strings = (
-      'begin'
-      ''
-      'end.')
-    Left = 464
-    Top = 591
-    Datasets = <
-      item
-      end>
-    Variables = <>
-    Style = <>
-    object Data: TfrxDataPage
-      Height = 1000.000000000000000000
-      Width = 1000.000000000000000000
-    end
-    object Page1: TfrxReportPage
-      PaperWidth = 215.900000000000000000
-      PaperHeight = 279.400000000000000000
-      PaperSize = 1
-      LeftMargin = 10.000000000000000000
-      RightMargin = 10.000000000000000000
-      TopMargin = 10.000000000000000000
-      BottomMargin = 10.000000000000000000
-      object ReportTitle1: TfrxReportTitle
-        Height = 20.000000000000000000
-        Top = 18.897650000000000000
-        Width = 740.409927000000000000
-      end
-      object PageHeader1: TfrxPageHeader
-        Height = 20.000000000000000000
-        Top = 60.472480000000000000
-        Width = 740.409927000000000000
-      end
-      object PageFooter1: TfrxPageFooter
-        Height = 20.000000000000000000
-        Top = 260.787570000000000000
-        Width = 740.409927000000000000
-      end
-      object MasterData1: TfrxMasterData
-        Height = 20.000000000000000000
-        Top = 139.842610000000000000
-        Width = 740.409927000000000000
-        RowCount = 0
-      end
-      object DetailData1: TfrxDetailData
-        Height = 20.000000000000000000
-        Top = 181.417440000000000000
-        Width = 740.409927000000000000
-        RowCount = 0
-      end
-    end
+    Left = 168
+    Top = 76
   end
   object rptDesign: TfrxDesigner
     DefaultScriptLanguage = 'PascalScript'
@@ -142,7 +38,7 @@ object d: Td
     RTLLanguage = False
     MemoParentFont = False
     Left = 28
-    Top = 636
+    Top = 484
   end
   object frxPDFExport1: TfrxPDFExport
     UseFileCache = True
@@ -165,7 +61,7 @@ object d: Td
     CenterWindow = False
     PrintScaling = False
     Left = 177
-    Top = 588
+    Top = 436
   end
   object frxHTMLExport1: TfrxHTMLExport
     UseFileCache = True
@@ -179,7 +75,7 @@ object d: Td
     Print = False
     PictureType = gpPNG
     Left = 101
-    Top = 592
+    Top = 440
   end
   object frxRTFExport1: TfrxRTFExport
     UseFileCache = True
@@ -193,7 +89,7 @@ object d: Td
     HeaderFooterMode = hfText
     AutoSize = False
     Left = 33
-    Top = 588
+    Top = 436
   end
   object frxJPEGExport1: TfrxJPEGExport
     UseFileCache = True
@@ -202,112 +98,6 @@ object d: Td
     DataOnly = False
     Left = 373
     Top = 592
-  end
-  object swSystem_People_Places_Things_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = ''
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 248
-    Top = 456
-  end
-  object swARCustomers_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = ''
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 140
-    Top = 456
-  end
-  object swItems_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = ''
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 292
-    Top = 392
-  end
-  object MaidActions_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM tblMaidActions'#13#10
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 248
-    Top = 111
-  end
-  object MaidActionsDS: TDataSource
-    DataSet = MaidActions_
-    Left = 252
-    Top = 48
-  end
-  object mCompanyInfo_: TkbmMemTable
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'CompanyID'
-      end
-      item
-        Name = 'CompanyName'
-      end
-      item
-        Name = 'Address1'
-      end
-      item
-        Name = 'Address2'
-      end
-      item
-        Name = 'Address3'
-      end
-      item
-        Name = 'Address4'
-      end
-      item
-        Name = 'mCompanyInfo_Field11'
-      end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 604
-    Top = 24
   end
   object mtPayments_: TkbmMemTable
     Active = True
@@ -333,7 +123,7 @@ object d: Td
     SubLanguageID = 1
     LocaleID = 1024
     Left = 25
-    Top = 533
+    Top = 381
   end
   object mtHead_: TkbmMemTable
     Active = True
@@ -359,7 +149,7 @@ object d: Td
     SubLanguageID = 1
     LocaleID = 1024
     Left = 173
-    Top = 533
+    Top = 381
   end
   object mtVAT_: TkbmMemTable
     DesignActivation = True
@@ -379,7 +169,7 @@ object d: Td
     SubLanguageID = 1
     LocaleID = 1024
     Left = 33
-    Top = 469
+    Top = 317
   end
   object mtLines_: TkbmMemTable
     Active = True
@@ -406,7 +196,7 @@ object d: Td
     SubLanguageID = 1
     LocaleID = 1024
     Left = 101
-    Top = 533
+    Top = 381
   end
   object mtCompany_: TkbmMemTable
     DesignActivation = True
@@ -426,7 +216,7 @@ object d: Td
     SubLanguageID = 1
     LocaleID = 1024
     Left = 317
-    Top = 533
+    Top = 381
   end
   object mtCaptions_: TkbmMemTable
     DesignActivation = True
@@ -446,84 +236,19 @@ object d: Td
     SubLanguageID = 1
     LocaleID = 1024
     Left = 245
-    Top = 533
-  end
-  object mRoomTypeCountDS: TDataSource
-    Left = 376
-    Top = 232
-  end
-  object memImportTypes: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 368
-    Top = 96
-    object memImportTypesID: TIntegerField
-      FieldName = 'ID'
-    end
-    object memImportTypesDescription: TStringField
-      FieldName = 'Description'
-      Size = 30
-    end
-  end
-  object memImportResults: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 432
-    Top = 32
-    object IntegerField1: TIntegerField
-      FieldName = 'ID'
-    end
-    object StringField1: TStringField
-      FieldName = 'Description'
-      Size = 30
-    end
-  end
-  object ImportLogs_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM tblImportLogs'#13#10
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 96
-    Top = 104
+    Top = 381
   end
   object inPosMonitor: TTimer
     Enabled = False
     Interval = 5000
-    Left = 824
-    Top = 24
-  end
-  object telPriceGroups_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM TelPriceGroups'#13#10
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 152
-    Top = 339
-  end
-  object telPriceGroupsDS: TDataSource
-    DataSet = telPriceGroups_
-    Left = 220
-    Top = 340
+    Left = 32
+    Top = 144
   end
   object mQuickRes: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 368
-    Top = 160
+    Left = 168
+    Top = 16
     object mQuickResRoom: TStringField
       FieldName = 'Room'
       Size = 10
@@ -579,48 +304,8 @@ object d: Td
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
     PrimaryKeyField = 'ID'
-    Left = 136
-    Top = 24
-  end
-  object telPriceRules_: TRoomerDataSet
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM TelPriceRules'#13#10
-    CommandType = cmdUnknown
-    Parameters = <>
-    DataActive = False
-    RoomerStoreUri = 'http://localhost:8080/services/'
-    RoomerUri = 'http://localhost:8080/services/'
-    RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
-    RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
-    SessionLengthSeconds = 0
-    PrimaryKeyField = 'ID'
-    Left = 152
-    Top = 395
-  end
-  object telPriceRulesDS: TDataSource
-    DataSet = telPriceRules_
-    Left = 228
-    Top = 396
-  end
-  object kbmTemp1_: TkbmMemTable
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 604
-    Top = 85
+    Left = 24
+    Top = 16
   end
   object kbmInvoiceLines: TkbmMemTable
     Active = True
@@ -807,8 +492,8 @@ object d: Td
     Top = 21
   end
   object cxEditRepository1: TcxEditRepository
-    Left = 640
-    Top = 224
+    Left = 32
+    Top = 216
     object currencyEUR2d: TcxEditRepositoryCurrencyItem
       Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 2
@@ -1783,14 +1468,8 @@ object d: Td
   object confirmMonitor: TTimer
     Interval = 120000
     OnTimer = confirmMonitorTimer
-    Left = 896
-    Top = 24
-  end
-  object dxMemData: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 120
-    Top = 176
+    Left = 160
+    Top = 144
   end
   object ALWinInetHTTPClient1: TALWinInetHTTPClient
     Left = 640
@@ -2432,130 +2111,5 @@ object d: Td
     LocaleID = 1024
     Left = 1042
     Top = 221
-  end
-  object mGuests: TdxMemData
-    Active = True
-    Indexes = <>
-    SortOptions = []
-    Left = 496
-    Top = 112
-    object mGuestsRoomReservation: TIntegerField
-      FieldName = 'RoomReservation'
-    end
-    object mGuestsReservation: TIntegerField
-      FieldName = 'Reservation'
-    end
-    object mGuestsReservationName: TWideStringField
-      FieldName = 'ReservationName'
-      Size = 200
-    end
-    object mGuestsArrival: TDateTimeField
-      FieldName = 'Arrival'
-    end
-    object mGuestsDeparture: TDateTimeField
-      FieldName = 'Departure'
-    end
-    object mGuestsAdults: TIntegerField
-      FieldName = 'Adults'
-    end
-    object mGuestsChildren: TIntegerField
-      FieldName = 'Children'
-    end
-    object mGuestsInfants: TIntegerField
-      FieldName = 'Infants'
-    end
-    object mGuestsCurrencyRate: TFloatField
-      FieldName = 'CurrencyRate'
-    end
-    object mGuestsCurrency: TStringField
-      FieldName = 'Currency'
-      Size = 5
-    end
-    object mGuestsAverageRate: TFloatField
-      FieldName = 'AverageRate'
-    end
-    object mGuestsNumDays: TIntegerField
-      FieldName = 'NumDays'
-    end
-    object mGuestsTotalStayRate: TFloatField
-      FieldName = 'TotalStayRate'
-    end
-    object mGuestsroom: TWideStringField
-      FieldName = 'room'
-      Size = 30
-    end
-    object mGuestsroomtype: TWideStringField
-      DisplayWidth = 30
-      FieldName = 'roomtype'
-      Size = 30
-    end
-    object mGuestscustomer: TWideStringField
-      FieldName = 'customer'
-      Size = 30
-    end
-    object mGuestsPersonalID: TWideStringField
-      FieldName = 'PersonalID'
-    end
-    object mGuestsCustomerName: TWideStringField
-      FieldName = 'CustomerName'
-      Size = 200
-    end
-    object mGuestsBreakfast: TBooleanField
-      FieldName = 'Breakfast'
-    end
-    object mGuestsRoomDescription: TWideStringField
-      FieldName = 'RoomDescription'
-      Size = 200
-    end
-    object mGuestsfloor: TIntegerField
-      FieldName = 'floor'
-    end
-    object mGuestsLocationDescription: TWideStringField
-      FieldName = 'LocationDescription'
-      Size = 200
-    end
-    object mGuestsmarketSegmentDescription: TWideStringField
-      FieldName = 'marketSegmentDescription'
-      Size = 100
-    end
-    object mGuestsemail: TWideStringField
-      FieldName = 'email'
-      Size = 200
-    end
-    object mGuestsStatusText: TWideStringField
-      FieldName = 'StatusText'
-      Size = 100
-    end
-    object mGuestsresInfo: TWideStringField
-      FieldName = 'resInfo'
-      Size = 200
-    end
-    object mGuestsRoomCount: TIntegerField
-      FieldName = 'RoomCount'
-    end
-    object mGuestsRvGuestCount: TIntegerField
-      FieldName = 'RvGuestCount'
-    end
-    object mGuestsRRGuestCount: TIntegerField
-      FieldName = 'RRGuestCount'
-    end
-    object mGuestsGuestName: TStringField
-      FieldName = 'GuestName'
-      Size = 150
-    end
-    object mGuestsisMain: TBooleanField
-      FieldName = 'isMain'
-    end
-    object mGuestschannel: TWideStringField
-      FieldName = 'channel'
-      Size = 30
-    end
-    object mGuestsBookingId: TWideStringField
-      FieldName = 'BookingId'
-      Size = 30
-    end
-    object mGuestsTotalStayRateNative: TFloatField
-      FieldName = 'TotalStayRateNative'
-    end
   end
 end

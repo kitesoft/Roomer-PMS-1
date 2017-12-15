@@ -45,40 +45,25 @@ Type
       property Hidden : Boolean read FHidden write SetHidden;
     end;
 
-    TDatePair = class
-    public
-      LocalFileDate : TDateTime;
-      LastUpdateOnServerUTC : TDateTime;
-      function IsChanged: boolean;
-    end;
-
     TRoomerMessageList = TObjectList<TRoomermessage>;
 
     TMessageList = class
     private
       MessageList : TRoomerMessageList;
-      LastTableCheckStamp : TDateTime;
-      TableStatusses : TObjectDictionary<String, TDatePair>;
 
       function getActiveCount: integer;
       function getCount: integer;
-    function GetMessage(index: integer): TRoomerMessage;
-    function GetActiveMessage(index: integer): TRoomerMessage;
-    procedure GetMessages(aRSet: TROomerDataset);
-    function GetTableUpdateTimeStamps(aRSet: TRoomerDataset): boolean;
+      function GetMessage(index: integer): TRoomerMessage;
+      function GetActiveMessage(index: integer): TRoomerMessage;
+      procedure GetMessages(aRSet: TROomerDataset);
     public
       constructor Create;
       destructor Destroy; override;
 
       function MessageById(id : integer) : TRoomerMessage;
-      function TableNeedsRefresh(TableName : String) : Boolean;
-      procedure MarkTableAsRefreshed(TableName: String); overload;
-      procedure MarkTableAsRefreshed(TableName: String; dt : TDateTime); overload;
       procedure Delete(idx : Integer);
-      function CurrentTableDate(TableName: String): TDateTime;
       procedure Clear;
       procedure Refresh;
-      procedure RefreshTabelStateList;
       property Count : integer read getCount;
       property ActiveCount : integer read getActiveCount;
       property RoomerMessage[index : integer] : TRoomerMessage read GetMessage;
@@ -142,8 +127,6 @@ constructor TMessageList.Create;
 begin
   inherited;
   MessageList := TRoomerMessageList.Create(True);
-  LastTableCheckStamp := now;
-  TableStatusses := TObjectDictionary<String, TDatePair>.Create([doOwnsValues], TCaseInsensitiveEqualityComparer.Create);
 end;
 
 procedure TMessageList.Delete(idx: Integer);
@@ -154,7 +137,6 @@ end;
 destructor TMessageList.Destroy;
 begin
   MessageList.Free;
-  TableStatusses.Free;
   inherited;
 end;
 
@@ -257,115 +239,6 @@ begin
   finally
     freeandnil(rset);
   end;
-
-  RefreshTabelStateList;
-end;
-
-function TMessageList.GetTableUpdateTimeStamps(aRSet: TRoomerDataset): boolean;
-begin
-  Result := true;
-  try
-    if NOT aRSet.OfflineMode then
-      aRSet.OpenDatasetFromUrlAsString('messaging/lastchanges', false, 0, '');
-  except
-    // Ignore ...
-    Result := false;
-  end;
-end;
-
-
-procedure TMessageList.RefreshTabelStateList;
-var TableRefreshSet : TRoomerDataset;
-
-    i : integer;
-    datePair : TDatePair;
-    key : String;
-    tablename: string;
-begin
-  if d.roomerMainDataSet.OfflineMode then
-    exit;
-  TableRefreshSet := CreateNewDataSet;
-  try
-    TableRefreshSet.RoomerDataSet := nil;
-    if GetTableUpdateTimeStamps(TableRefreshSet) then
-    begin
-      TableRefreshSet.First;
-      if not TableRefreshSet.Eof then
-      begin
-        for i := 0 to TableRefreshSet.Fields.Count - 1 do
-        begin
-          key := TableRefreshSet.Fields[i].FieldName;
-          if TableStatusses.TryGetValue(key, datePair) then
-            datePair.LastUpdateOnServerUTC := TableRefreshSet.fieldByName(key).AsDateTime
-          else
-          begin
-            datePair := TDatePair.Create;
-            try
-//              datePair.LocalFileDate := TableRefreshSet.fieldByName(key).AsDateTime;
-              tablename := copy(key, 0, key.length -length('_lastupdate'));
-              datePair.LocalFileDate := glb.TableList.TableEntity[tableName].LocalFileDate;
-              datePair.LastUpdateOnServerUTC := TableRefreshSet.fieldByName(key).AsDateTime;
-              TableStatusses.Add(key, datePair);
-            except
-              datePair.Free;
-            end;
-          end;
-        end;
-      end;
-    end;
-  finally
-    freeandnil(TableRefreshSet);
-  end;
-end;
-
-function TMessageList.TableNeedsRefresh(TableName: String): Boolean;
-var datePair : TDatePair;
-    key : String;
-begin
-  result := true;
-
-  key := format('%s_lastUpdate', [TableName]);
-  if TableStatusses.TryGetValue(key, datePair) then
-    result := datePair.IsChanged;
-end;
-
-function TMessageList.CurrentTableDate(TableName: String): TDateTime;
-var datePair : TDatePair;
-    key : String;
-begin
-  result := 0;
-  key := format('%s_lastUpdate', [TableName]).tolower;
-  if TableStatusses.TryGetValue(key, datePair) then
-    result := datePair.LastUpdateOnServerUTC;
-end;
-
-procedure TMessageList.MarkTableAsRefreshed(TableName: String);
-var datePair : TDatePair;
-    key : String;
-begin
-  key := format('%s_lastUpdate', [TableName]);
-  if TableStatusses.TryGetValue(key, datePair) then
-    datePair.LocalFileDate := datePair.LastUpdateOnServerUTC;
-end;
-
-procedure TMessageList.MarkTableAsRefreshed(TableName: String; dt : TDateTime);
-var datePair : TDatePair;
-    key : String;
-begin
-  key := format('%s_lastUpdate', [TableName]);
-  if TableStatusses.TryGetValue(key, datePair) then
-  begin
-    datePair.LocalFileDate := dt;
-    datePair.LastUpdateOnServerUTC := dt;
-  end;
-end;
-
-
-{ TDatePair }
-
-function TDatePair.IsChanged: boolean;
-begin
-  result := TTimeZone.Local.ToUniversalTime(LocalFileDate) <> LastUpdateOnServerUTC;
 end;
 
 initialization

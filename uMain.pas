@@ -687,6 +687,8 @@ type
     btnItemTransations: TdxBarLargeButton;
     actHotelStatusApp: TAction;
     dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxbtnReleaseNotes: TdxBarButton;
     btnFinanceMutationTraces: TdxBarLargeButton;
     btnDailySalesAndStatistics: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
@@ -985,6 +987,7 @@ type
     procedure actHotelStatusAppExecute(Sender: TObject);
     procedure btnFinanceMutationTracesClick(Sender: TObject);
     procedure btnDailySalesAndStatisticsClick(Sender: TObject);
+    procedure dxbtnReleaseNotesClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1653,6 +1656,7 @@ uses
     , uFinanceTransactionReport
     , uDailyTotalsReport
 	;
+		, ufrmInvoiceEdit, uInvoiceDefinitions, uCachedDataHandler, uReleaseNotes;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -3191,6 +3195,7 @@ begin
     timMessagesTimer(timMessages);
 
     TSplashFormManager.UpdateProgress('Preparing datacache...');
+    // TODO Isnt this a duplicate of the cacheddata tables??
     d.PrepareFixedTables;
 
     if g.qUserLanguage <> tmpUserLang then
@@ -9268,7 +9273,8 @@ end;
 
 procedure TfrmMain.ApplicationCancelGuestHint;
 begin
-  FrmReservationHintHolder.CancelHint;
+  if assigned(FrmReservationHintHolder) then
+    FrmReservationHintHolder.CancelHint;
 end;
 
 procedure TfrmMain.grPeriodRoomsMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
@@ -11232,6 +11238,11 @@ procedure TfrmMain.dxBarSubItem1Click(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   ShowChannelAvailabilityManager();
+end;
+
+procedure TfrmMain.dxbtnReleaseNotesClick(Sender: TObject);
+begin
+  TReleaseNotesViewer.OpenReleaseNotes(g.qUserLanguage);
 end;
 
 procedure TfrmMain.dxRptStockitemsClick(Sender: TObject);

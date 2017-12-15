@@ -127,49 +127,25 @@ type
   TRoomPackageLineEntryList = TObjectList<TRoomPackageLineEntry>;
 
   Td = class(TDataModule)
-    ItemsDS: TDataSource;
-    viewRoomPrices1DS: TDataSource;
-    rpt: TfrxReport;
     rptDesign: TfrxDesigner;
     frxPDFExport1: TfrxPDFExport;
     frxHTMLExport1: TfrxHTMLExport;
     frxRTFExport1: TfrxRTFExport;
     frxJPEGExport1: TfrxJPEGExport;
-    MaidActionsDS: TDataSource;
-    mCompanyInfo_: TkbmMemTable;
     mtPayments_: TkbmMemTable;
     mtHead_: TkbmMemTable;
     mtVAT_: TkbmMemTable;
     mtLines_: TkbmMemTable;
     mtCompany_: TkbmMemTable;
     mtCaptions_: TkbmMemTable;
-    mRoomTypeCountDS: TDataSource;
-    memImportTypes: TdxMemData;
-    memImportTypesID: TIntegerField;
-    memImportTypesDescription: TStringField;
-    memImportResults: TdxMemData;
-    IntegerField1: TIntegerField;
-    StringField1: TStringField;
     inPosMonitor: TTimer;
-    telPriceGroupsDS: TDataSource;
     mQuickRes: TdxMemData;
     mQuickResRoom: TStringField;
     mQuickResDateFrom: TDateField;
     mQuickResDateTo: TDateField;
     mQuickRes2: TkbmMemTable;
     roomerMainDataSet: TRoomerDataSet;
-    Items_: TRoomerDataSet;
     wRooms_: TRoomerDataSet;
-    viewRoomPrices1_: TRoomerDataSet;
-    swSystem_People_Places_Things_: TRoomerDataSet;
-    swARCustomers_: TRoomerDataSet;
-    swItems_: TRoomerDataSet;
-    MaidActions_: TRoomerDataSet;
-    ImportLogs_: TRoomerDataSet;
-    telPriceGroups_: TRoomerDataSet;
-    telPriceRules_: TRoomerDataSet;
-    telPriceRulesDS: TDataSource;
-    kbmTemp1_: TkbmMemTable;
     kbmInvoiceLines: TkbmMemTable;
     cxEditRepository1: TcxEditRepository;
     currencyEUR2d: TcxEditRepositoryCurrencyItem;
@@ -200,48 +176,12 @@ type
     currencyUSD2d: TcxEditRepositoryCurrencyItem;
     currencyCAD2d: TcxEditRepositoryCurrencyItem;
     currencyGBP2d: TcxEditRepositoryCurrencyItem;
-    dxMemData: TdxMemData;
     ALWinInetHTTPClient1: TALWinInetHTTPClient;
     CurrencyMXN2d: TcxEditRepositoryCurrencyItem;
     mlogInvoicelines: TkbmMemTable;
     mInvoicelines_before: TkbmMemTable;
     mInvoicelines_after: TkbmMemTable;
     mInvoicelog: TkbmMemTable;
-    mGuests: TdxMemData;
-    mGuestsRoomReservation: TIntegerField;
-    mGuestsReservation: TIntegerField;
-    mGuestsReservationName: TWideStringField;
-    mGuestsArrival: TDateTimeField;
-    mGuestsDeparture: TDateTimeField;
-    mGuestsAdults: TIntegerField;
-    mGuestsChildren: TIntegerField;
-    mGuestsInfants: TIntegerField;
-    mGuestsCurrencyRate: TFloatField;
-    mGuestsCurrency: TStringField;
-    mGuestsAverageRate: TFloatField;
-    mGuestsNumDays: TIntegerField;
-    mGuestsTotalStayRate: TFloatField;
-    mGuestsroom: TWideStringField;
-    mGuestsroomtype: TWideStringField;
-    mGuestscustomer: TWideStringField;
-    mGuestsPersonalID: TWideStringField;
-    mGuestsCustomerName: TWideStringField;
-    mGuestsBreakfast: TBooleanField;
-    mGuestsRoomDescription: TWideStringField;
-    mGuestsfloor: TIntegerField;
-    mGuestsLocationDescription: TWideStringField;
-    mGuestsmarketSegmentDescription: TWideStringField;
-    mGuestsemail: TWideStringField;
-    mGuestsStatusText: TWideStringField;
-    mGuestsresInfo: TWideStringField;
-    mGuestsRoomCount: TIntegerField;
-    mGuestsRvGuestCount: TIntegerField;
-    mGuestsRRGuestCount: TIntegerField;
-    mGuestsGuestName: TStringField;
-    mGuestsisMain: TBooleanField;
-    mGuestschannel: TWideStringField;
-    mGuestsBookingId: TWideStringField;
-    mGuestsTotalStayRateNative: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure RoomTypes_NewRecord(DataSet: TDataSet);
@@ -258,9 +198,6 @@ type
 
   private
     { Private declarations }
-    lstVaribles: tstringList;
-    lstValues: tstringList;
-
     procedure SetMainRoomerDataSet(ds: TRoomerDataSet; ConnectAllDatasets: boolean = True);
     function LocateWRoom(Room: String): boolean;
     procedure SelectCloudConfig;
@@ -272,37 +209,14 @@ type
     { Public declarations }
     qConnected: boolean;
     qRes, qRres: Integer;
-    RoomsDateSetWork: TRoomerDataSet;
-
-    zTelPriceGroupsFilter: string;
-    zTelPriceGroupsSortField: string;
-    zTelPriceGroupsSortDir: string;
-
-    zTelPriceRulesFilter: string;
-    zTelPriceRulesSortField: string;
-    zTelPriceRulesSortDir: string;
 
     zRptInitFilter: string;
     zRptInitSortField: string;
     zRptInitSortDir: string;
 
-    zItemsFilter: string;
-    zItemsSortField: string;
-    zItemsSortDir: string;
-
     zItemTypesFilter: string;
     zItemTypesSortField: string;
     zItemTypesSortDir: string;
-
-    zRoomPricesFilter_1: string;
-    zRoomPricesSortField_1: string;
-    zRoomPricesSortDir_1: string;
-
-    zMaidActionsFilter: string;
-    zMaidActionsSortField: string;
-    zMaidActionsSortDir: string;
-
-    lstCollect: tstringList;
 
     function RetrieveFinancesKeypair(keyPairType: TKeyPairType): TKeyPairList;
     function KeyExists(keyList: TKeyPairList; Key: String): boolean;
@@ -322,17 +236,14 @@ type
 
     // MaidActions Table
     function qryGetMaidActions(Orderstr: string): string;
-    function OpenMaidActionsQuery(var SortField, SortDir: string): boolean;
     function Del_MaidActionByMaidAction(sAction: string): boolean;
     function MaidActionExist(sCode: string): boolean;
 
     function qryGetTelPriceGroups(Orderstr: string): string;
-    function OpenTelPriceGroupsQuery(var SortField, SortDir: string): boolean;
     function GET_telPriceGroupsName_byCode(Code: string): string;
     function Del_PriceGroupByCode(Code: string): boolean;
     function PriceGroupExist(Code: string): boolean;
     function qryGetTelPriceRules(Orderstr: string): string;
-    function OpenTelPriceRulesQuery(var SortField, SortDir: string): boolean;
     function GET_telPriceRulesName_byCode(Code: string): string;
     function Del_PriceRuleByCode(Code: string): boolean;
     function PriceRuleExist(Code: string): boolean;
@@ -381,7 +292,6 @@ type
 
     // Items Table
     function qryGetItems(Orderstr: string): string;
-    function OpenItemsQuery(var SortField, SortDir: string): boolean;
 
     // StaffMembers Table
     function GET_StaffMemberName_byInitials(sInitials: string): string;
@@ -391,9 +301,6 @@ type
     function qryGetRoomPrices_1(Orderstr: string; priceCodeID, seasonId: Integer; RoomType, Currency: string;
       seEndDate: TdateTime): string;
 
-    function OpenRoomPricesQuery_1(var SortField, SortDir: string; priceCodeID, seasonId: Integer;
-      RoomType, Currency: string;
-      seEndDate: TdateTime): boolean;
     function Del_RoomPricesByID_1(Id: Integer): boolean;
     function Get_LastRoomPriceID_1: Integer;
 
@@ -607,13 +514,6 @@ type
     function hiddenInfo_getData(Id: Integer): recHiddenInfoHolder;
     function hiddenInfo_Append(Id: Integer; newText: string; res: Integer): boolean;
 
-    Procedure memImportResults_Fill;
-    procedure memImportTypes_Fill;
-
-    function imPortLog_getLastID: Integer;
-    function imPortLog_InvoiceNumber: Integer;
-
-    function imPortLog_isNewAvailable: boolean;
     procedure chkInPosMonitor;
 
     function IH_GetRefrence(InvoiceNumber, reservation, RoomReservation: Integer): string;
@@ -1062,12 +962,6 @@ end;
 procedure Td.DataModuleDestroy(Sender: TObject);
 begin
   roomerMainDataSet.Logout;
-  lstVaribles.Free;
-  lstValues.Free;
-  lstCollect.Free;
-  freeandnil(RoomsDateSetWork);
-  memImportResults.Close;
-  memImportTypes.Close;
 end;
 
 // ******************************************************************************
@@ -1649,22 +1543,6 @@ begin
   result := format(select_qryGetMaidActions, [Orderstr]);
 end;
 
-function Td.OpenMaidActionsQuery(var SortField, SortDir: string): boolean;
-begin
-  zMaidActionsFilter := '';
-
-  if MaidActions_.Active then
-    MaidActions_.Close;
-
-  MaidActions_.CommandText := qryGetMaidActions(SortField + ' ' + SortDir);
-  try
-    MaidActions_.Open;
-  except
-    showmessage(GetTranslatedText('shTx_D_MaidActionsUnavailable'));
-  end;
-  result := True;
-end;
-
 function Td.Del_MaidActionByMaidAction(sAction: string): boolean;
 var
   s: string;
@@ -1699,15 +1577,6 @@ end;
 function Td.qryGetTelPriceGroups(Orderstr: string): string;
 begin
   result := format(select_qryGetTelPriceGroups, [Orderstr]);
-end;
-
-function Td.OpenTelPriceGroupsQuery(var SortField, SortDir: string): boolean;
-var
-  s: string;
-begin
-  zTelPriceGroupsFilter := '';
-  s := qryGetTelPriceGroups(SortField + ' ' + SortDir);
-  result := hData.rSet_bySQL(telPriceGroups_, s);
 end;
 
 function Td.GET_telPriceGroupsName_byCode(Code: string): string;
@@ -1763,15 +1632,6 @@ end;
 function Td.qryGetTelPriceRules(Orderstr: string): string;
 begin
   result := format(select_qryGetTelPriceRules, [Orderstr]);
-end;
-
-function Td.OpenTelPriceRulesQuery(var SortField, SortDir: string): boolean;
-var
-  s: string;
-begin
-  zTelPriceRulesFilter := '';
-  s := qryGetTelPriceRules(SortField + ' ' + SortDir);
-  result := hData.rSet_bySQL(telPriceRules_, s);
 end;
 
 function Td.GET_telPriceRulesName_byCode(Code: string): string;
@@ -2662,12 +2522,6 @@ begin
   // s := s + 'Items '+chr(10);
   // s := s + 'ORDER BY ' + Orderstr + ' '+chr(10);
   result := format(select_qryGetItems, [Orderstr]);;
-end;
-
-function Td.OpenItemsQuery(var SortField, SortDir: string): boolean;
-begin
-  zItemsFilter := '';
-  result := hData.rSet_bySQL(Items_, qryGetItems(SortField + ' ' + SortDir));
 end;
 
 function Td.Item_Get_AccountKey(sItem: string): string;
@@ -5133,29 +4987,6 @@ begin
 
 end;
 
-function Td.OpenRoomPricesQuery_1(var SortField, SortDir: string; priceCodeID, seasonId: Integer;
-  RoomType, Currency: string; seEndDate: TdateTime): boolean;
-var
-  extraSort: string;
-begin
-  // **
-  extraSort := '';
-  RoomType := trim(RoomType);
-  Currency := trim(Currency);
-
-  zRoomPricesFilter_1 := '';
-  if viewRoomPrices1_.Active then
-    viewRoomPrices1_.Close;
-  if _trimlower(SortField) <> 'sestartdate' then
-    extraSort := ', seStartDate ';
-  viewRoomPrices1_.CommandText := qryGetRoomPrices_1(SortField + ' ' + SortDir + extraSort, priceCodeID, seasonId,
-    RoomType, Currency,
-    seEndDate);
-
-  viewRoomPrices1_.Open;
-  result := True;
-end;
-
 function Td.PriceExistsByCodes(pcCode, seDescription, RoomType, Currency: string): boolean;
 var
   s: string;
@@ -5202,63 +5033,6 @@ begin
   // s := s + 'WHERE '+chr(10);
   // s := s + '(pcCode = ' + _db(pcCode) + ') AND '+chr(10);
   // s := s + '(Currency = ' + _db(Currency) + ') '+chr(10);
-end;
-
-function Td.imPortLog_getLastID: Integer;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-begin
-  result := 0;
-  rSet := CreateNewDataSet;
-  try
-    // s := 'SELECT TOP(1)ID FROM tblImportLogs WHERE importResultID <> 10010 ';
-    s := format(select_imPortLog_getLastID, []);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      result := rSet.FieldByName('ID').AsInteger;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
-function Td.imPortLog_InvoiceNumber: Integer;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-begin
-  result := 0;
-  rSet := CreateNewDataSet;
-  try
-    // s := s+'  SELECT TOP (1) '+chr(10);
-    // s := s+'    ID '+chr(10);
-    // s := s+'    ,invoiceNumber '+chr(10);
-    // s := s+'  FROM '+chr(10);
-    // s := s+'  tblPoxExport '+chr(10);
-    s := format(select_imPortLog_InvoiceNumber, []);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      result := rSet.FieldByName('invoiceNumber').AsInteger;
-      // ATH POST --> DELETE
-      rSet.delete;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
-function Td.imPortLog_isNewAvailable: boolean;
-var
-  Id: Integer;
-begin
-  result := False;
-  Id := imPortLog_getLastID;
-  if Id <> g.qLastImportLogID then
-  begin
-    result := True;
-    g.qLastImportLogID := Id;
-  end;
 end;
 
 function Td.inDateRange(seasonId: Integer; FromDate, ToDate: Tdate; var RangeStart, RangeEnd: Tdate): boolean;
@@ -8399,98 +8173,7 @@ begin
   end;
 end;
 
-procedure Td.memImportResults_Fill;
-begin
-  if memImportResults.Active then
-    memImportResults.Close();
-  memImportResults.Open;
 
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 10000;
-  memImportResults.FieldByName('Description').Asstring := 'Sucess - From POS';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 10010;
-  memImportResults.FieldByName('Description').Asstring := 'Sucess - From Home';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 20000;
-  memImportResults.FieldByName('Description').Asstring := 'Warning - Reason unknown';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 20100;
-  memImportResults.FieldByName('Description').Asstring := 'Warning - Get Item';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 20200;
-  memImportResults.FieldByName('Description').Asstring := 'Warning - Edit Item';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 20300;
-  memImportResults.FieldByName('Description').Asstring := 'Warning - INSERT Item';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 30000;
-  memImportResults.FieldByName('Description').Asstring := 'Failed - Reason unknown';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 30010;
-  memImportResults.FieldByName('Description').Asstring := 'Failed - HOME - Path not found';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 30100;
-  memImportResults.FieldByName('Description').Asstring := 'Failed - RoomReservation not found';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 30200;
-  memImportResults.FieldByName('Description').Asstring := 'Failed - INSERT Draft invoice';
-  memImportResults.post;
-
-  memImportResults.Insert;
-  memImportResults.FieldByName('ID').AsInteger := 30300;
-  memImportResults.FieldByName('Description').Asstring := 'Failed - INSERT InvoiceLinbe';
-  memImportResults.post;
-
-  memImportResults.SortedField := 'ID';
-end;
-
-procedure Td.memImportTypes_Fill;
-begin
-  if memImportTypes.Active then
-    memImportTypes.Close();
-  memImportTypes.Open;
-
-  memImportTypes.Append;
-  memImportTypes.FieldByName('ID').AsInteger := 10000;
-  memImportTypes.FieldByName('Description').Asstring := 'POS InvoiceLine';
-  memImportTypes.post;
-
-  memImportTypes.Insert;
-  memImportTypes.FieldByName('ID').AsInteger := 10010;
-  memImportTypes.FieldByName('Description').Asstring := 'POS InvoiceLine - HOME';
-  memImportTypes.post;
-
-  memImportTypes.Insert;
-  memImportTypes.FieldByName('ID').AsInteger := 10100;
-  memImportTypes.FieldByName('Description').Asstring := 'POS InvoiceLine - Snerta';
-  memImportTypes.post;
-
-  memImportTypes.Insert;
-  memImportTypes.FieldByName('ID').AsInteger := 10200;
-  memImportTypes.FieldByName('Description').Asstring := 'POS InvoiceLine - MerkurPos';
-  memImportTypes.post;
-
-  memImportTypes.SortedField := 'ID';
-end;
 
 procedure Td.IH_getPaymentsTypes(InvoiceNumber: Integer; var PayTypes, PayTypeDescription, payGroups,
   payGroupDescription: string);
@@ -11009,46 +10692,12 @@ begin
   if frmMain.OfflineMode then
     exit;
 
-  zMaidActionsSortField := 'maAction';
-  zMaidActionsSortDir := '';
-  OpenMaidActionsQuery(zMaidActionsSortField, zMaidActionsSortDir);
-
   OpenViewRoomsQuery('Room', '');
-
-  zItemsSortField := 'Item';
-  zItemsSortDir := '';
-  OpenItemsQuery(zItemsSortField, zItemsSortDir);
-
-  zRoomPricesSortField_1 := 'RoomType';
-  zRoomPricesSortDir_1 := '';
-  OpenRoomPricesQuery_1(zRoomPricesSortField_1, zRoomPricesSortDir_1, -1, -1, '', '', 1);
-
-  zTelPriceRulesSortField := 'displayOrder';
-  zTelPriceRulesSortDir := '';
-  OpenTelPriceRulesQuery(zTelPriceRulesSortField, zTelPriceRulesSortDir);
-
-  zTelPriceGroupsSortField := 'Code';
-  zTelPriceGroupsSortDir := '';
-  OpenTelPriceGroupsQuery(zTelPriceGroupsSortField, zTelPriceGroupsSortDir);
-
-  OpenViewRoomsQuery('Room', '');
-  g.qLastImportLogID := imPortLog_getLastID;
-
-  // **************** BHG : Below commands were the last part of the Create event *****************
-  RoomsDateSetWork := CreateNewDataSet;
-  RoomsDateSetWork.CommandType := cmdText;
-
-  lstVaribles := tstringList.Create;
-  lstValues := tstringList.Create;
 
   ctrlGetGlobalValues;
-  lstCollect := tstringList.Create;
 
-  memImportResults_Fill;
-  memImportTypes_Fill;
   chkInPosMonitor;
   chkConfirmMonitor;
-
 end;
 
 function Td.LocateRecord(rSet: TRoomerDataSet; FieldName: String; Value: Integer): boolean;
