@@ -141,7 +141,7 @@ uses
   sListView,
   cxTimeEdit, AdvSplitter, uFraCountryPanel
   , uCurrencyHandlersMap
-  , uCurrencyHandler, cxDBLabel, Datasnap.DBClient
+  , uCurrencyHandler, cxDBLabel, Datasnap.DBClient, ufraCurrencyPanel
     ;
 
 TYPE
@@ -423,9 +423,6 @@ type
     clabCurrency: TsLabel;
     clabDiscountPerc: TsLabel;
     clabPcCode: TsLabel;
-    labCurrencyName: TsLabel;
-    labCurrencyRate: TsLabel;
-    btnGetCurrency: TsSpeedButton;
     sSpeedButton2: TsSpeedButton;
     labPcCodeName: TsLabel;
     sLabPackage: TsLabel;
@@ -433,7 +430,6 @@ type
     labPackageDescription: TsLabel;
     edRoomResDiscount: TsSpinEdit;
     cbxIsRoomResDiscountPrec: TsComboBox;
-    edCurrency: TsEdit;
     edPcCode: TsEdit;
     edPackage: TsEdit;
     pgcMoreInfo: TsPageControl;
@@ -639,12 +635,12 @@ type
     lblContactMobile: TsLabel;
     edContactMobile: TsEdit;
     edContactPerson1: TcxComboBox;
+    fraCurrencyPanel: TfraCurrencyPanel;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
     procedure btnFinishClick(Sender: TObject);
     procedure edMarketSegmentCodeDblClick(Sender: TObject);
-    procedure edCurrencyDblClick(Sender: TObject);
     procedure edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
     procedure edPcCodeDblClick(Sender: TObject);
     procedure edPcCodeExit(Sender: TObject);
@@ -689,12 +685,11 @@ type
     procedure dtDepartureChange(Sender: TObject);
     procedure edCustomerChange(Sender: TObject);
     procedure btnGetLastCustomerClick(Sender: TObject);
-    procedure edCurrencyChange(Sender: TObject);
+    procedure evtCurrencyChangedAndValid(Sender: TObject);
     procedure cbxIsRoomResDiscountPrecChange(Sender: TObject);
     procedure mnuFinishAndShowClick(Sender: TObject);
     procedure edCustomerKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edMarketSegmentCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edCurrencyKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edPcCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edPackageDblClick(Sender: TObject);
     procedure edPackageExit(Sender: TObject);
@@ -773,7 +768,6 @@ type
 
     function customerValidate: boolean;
     function MarketSegmentValidate: boolean;
-    function CurrencyValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
     function PriceCodeValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
     function PackageValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
 
@@ -1244,6 +1238,7 @@ begin
     screen.Cursor := crDefault;
   end;
 
+  fraCurrencyPanel.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
   pgcExtraAndAlert.ActivePageIndex := 0;
 
 end;
@@ -1384,7 +1379,6 @@ begin
     cbxBreakfast.Checked := ctrlGetBoolean('BreakfastInclDefault');
     cbxBreakfastIncl.Checked := cbxBreakfast.Checked;
     lblExtraCurrency.Caption := g.qNativeCurrency;
-    lblExtraBedCurrency.Caption := edCurrency.Text;
 
     cbxExtraBed.Visible := false;
     cbxExtraBed.Checked := false;
@@ -1921,7 +1915,7 @@ begin
   else
     chkisGroupInvoice.Checked := false;
 
-  edCurrency.Text := FNewReservation.HomeCustomer.Currency;
+  fraCurrencyPanel.CurrencyCode := FNewReservation.HomeCustomer.Currency;
   edPcCode.Text := FNewReservation.HomeCustomer.PcCode;
   edRoomResDiscount.Value := trunc(FNewReservation.HomeCustomer.DiscountPerc);
   edPID.Text := FNewReservation.HomeCustomer.PID;
@@ -2383,7 +2377,7 @@ begin
       exit;
     if not MarketSegmentValidate then
       exit;
-    if not CurrencyValidate(edCurrency, clabCurrency, labCurrencyName) then
+    if not fraCurrencyPanel.IsValid then
       exit;
     if not PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName) then
       exit;
@@ -4430,34 +4424,6 @@ begin
   PackageValidate(edPackage, clabPcCode, labPackageDescription);
 end;
 
-/// ///////////////////////
-
-// -------------------------------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------------------------
-// Currency Edit
-
-function TfrmMakeReservationQuick.CurrencyValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
-var
-  theData: recCurrencyHolder;
-begin
-  theData.Currency := Trim(ed.Text);
-  Result := (hData.GET_currencyHolderByCurrency(theData)) and (theData.Currency <> '');
-
-  if not Result then
-  begin
-    ed.SetFocus;
-    labName.Font.Color := clRed;
-    labName.Caption := GetTranslatedText('shNotF_star');
-  end
-  else
-  begin
-    labName.Font.Color := clBlack;
-    labName.Caption := theData.Description + ' - Rate ' + floatTostr(theData.Value);
-  end;
-end;
-
-
 // =============================================================================================
 // Price Code Edit
 // =============================================================================================
@@ -4674,7 +4640,7 @@ begin
     begin
       edCustomer.Text := s;
       edPcCode.Text := theData.pcCode;
-      edCurrency.Text := theData.Currency;
+      fraCurrencyPanel.CurrencyCode := theData.Currency;
     end;
   end;
 end;
@@ -4784,49 +4750,27 @@ end;
 /// ///////////////////////////////
 // edCurrency
 
-procedure TfrmMakeReservationQuick.edCurrencyChange(Sender: TObject);
+procedure TfrmMakeReservationQuick.evtCurrencyChangedAndValid(Sender: TObject);
 var
   Index: integer;
 begin
-  if CurrencyValidate(edCurrency, clabCurrency, labCurrencyName) then
-  begin
-    FCurrentCurrencyhandler := FCurrencyhandlers.CurrencyHandler[edCurrency.text];
+  FCurrentCurrencyhandler := FCurrencyhandlers.CurrencyHandler[fraCurrencyPanel.CurrencyCode];
+  lblExtraBedCurrency.Caption := fraCurrencyPanel.CurrencyCode;
 
-    index := cbxIsRoomResDiscountPrec.ItemIndex;
-    cbxIsRoomResDiscountPrec.Items.Clear;
-    cbxIsRoomResDiscountPrec.Items.Add('%');
-    cbxIsRoomResDiscountPrec.Items.Add(edCurrency.Text);
-    cbxIsRoomResDiscountPrec.ItemIndex := index;
+  index := cbxIsRoomResDiscountPrec.ItemIndex;
+  cbxIsRoomResDiscountPrec.Items.Clear;
+  cbxIsRoomResDiscountPrec.Items.Add('%');
+  cbxIsRoomResDiscountPrec.Items.Add(fraCurrencyPanel.CurrencyCode);
+  cbxIsRoomResDiscountPrec.ItemIndex := index;
 
-    if index = 0 then
-      edRoomResDiscount.MaxValue := 100
-    else
-      edRoomResDiscount.MaxValue := 99999999;
+  if index = 0 then
+    edRoomResDiscount.MaxValue := 100
+  else
+    edRoomResDiscount.MaxValue := 99999999;
 
-    labCurrencyRate.Caption := floatTostr(FCurrentCurrencyhandler.Rate);
-  end;
   ActivateNextButton;
 end;
 
-procedure TfrmMakeReservationQuick.edCurrencyDblClick(Sender: TObject);
-var
-  theData: recCurrencyHolder;
-begin
-  theData.Currency := Trim(edCurrency.Text);
-  if Currencies(actLookup, theData) then
-  begin
-    edCurrency.Text := theData.Currency;
-    lblExtraBedCurrency.Caption := edCurrency.Text;
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edCurrencyKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = vk_f2 then
-  begin
-    edCurrencyDblClick(self);
-  end;
-end;
 
 /// ////////////////////////
 // edPcCode
