@@ -479,6 +479,8 @@ end;
 
 procedure TfrmInvoiceList2.ApplyFilter;
 begin
+  tvInvoiceHead.DataController.Filter.Active := false;
+
   tvInvoiceHead.DataController.Filter.Options := [fcoCaseInsensitive];
   tvInvoiceHead.DataController.Filter.Root.BoolOperatorKind := fboOr;
   tvInvoiceHead.DataController.Filter.Root.Clear;
@@ -499,6 +501,7 @@ begin
   tvInvoiceHead.DataController.Filter.Root.AddItem(tvInvoiceHeadStaff,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvInvoiceHead.DataController.Filter.Root.AddItem(tvInvoiceHeadReservation,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
   tvInvoiceHead.DataController.Filter.Root.AddItem(tvInvoiceHeadRoomReservation,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
+  tvInvoiceHead.DataController.Filter.Root.AddItem(tvInvoiceHeadexternalInvoiceId,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
 
   tvInvoiceHead.DataController.Filter.Active := True;
 end;
