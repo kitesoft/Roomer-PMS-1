@@ -236,10 +236,9 @@ procedure TfrmFinanceTransactionReport.DoLoadData;
 var
   xml : string;
   sFrom, sTo : String;
-  sdF, sdT, sm : String;
   Doc: IXMLDomDocument;
-  node, node_temp: IXMLDomNode;
-  nodes_tab, nodes_products : IXMLDomNodeList;
+  node: IXMLDomNode;
+  nodes_tab: IXMLDomNodeList;
   i : Integer;
   l: Integer;
 begin

@@ -100,11 +100,11 @@ begin
             begin
               if fieldbyName('active').asBoolean then
               begin
-                CreateDefinition(fieldByName('currency').asString, fieldByName('ID').asInteger);
+                CreateDefinition(TCurrencyCode(fieldByName('currency').asString), fieldByName('ID').asInteger);
               end;
               Next;
             end;
-            DefaultCurrency := glb.ControlSet.fieldByname('nativecurrency').AsString;
+            DefaultCurrency := TCurrencyCode(glb.ControlSet.fieldByname('nativecurrency').AsString);
           finally
             BookMark := bm;
             EnableControls;

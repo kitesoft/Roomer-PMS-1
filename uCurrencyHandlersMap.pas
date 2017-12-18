@@ -20,8 +20,8 @@ type
     procedure prepareCurrencyHandlers(List : TStrings);
     function GetCurrencyHandler(const forCurrency: string): TCurrencyHandler;
   public
-    constructor Create(currencyCodes : TStrings); overload;
-    constructor Create; overload;
+    constructor Create(currencyCodes : TStrings); overload; deprecated 'Use TRoomerCurrencyManager instead';
+    constructor Create; overload; deprecated 'Use TRoomerCurrencyManager instead';
 
     destructor Destroy; override;
 

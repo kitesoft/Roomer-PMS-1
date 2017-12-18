@@ -246,7 +246,7 @@ uses
    uD
   , uSqlDefinitions
   , uUtils
-  ;
+  , uRoomerCurrencymanager;
 
 {$R *.dfm}
 
@@ -466,6 +466,9 @@ begin
     Action := caFree;
   if Assigned(EmbedWindowCloseEvent) then
     EmbedWindowCloseEvent(self);
+
+  //TODO: implement this via an OnUpdate event on the AppGlobal.currencies recordset
+  RoomerCurrencyManager.UpdateDefinitions(nil);
 end;
 
 procedure TfrmCurrencies.FormCreate(Sender: TObject);

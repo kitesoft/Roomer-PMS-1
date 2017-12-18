@@ -46,6 +46,7 @@ uses
   , Spring.Collections
   , Spring.Collections.Dictionaries
   , sCurrEdit
+  , uCurrencyConstants
   ;
 
 type
@@ -108,7 +109,7 @@ type
     FCustomer : string;
     FReservation: Integer;
     FRoomReservation: Integer;
-    FCurrency: String;
+    FCurrency: TCurrencyCode;
     FCurrencyRate: Double;
     FInvoiceIndex: Integer;
     FAllowPaycardCharge: boolean;
@@ -126,7 +127,7 @@ type
      property Reservation : Integer read FReservation write FReservation;
      property RoomReservation : Integer read FRoomReservation write FRoomReservation;
      property InvocieIndex: Integer read FInvoiceIndex write FInvoiceIndex;
-     property Currency: String read FCurrency write FCurrency;
+     property Currency: TCurrencyCode read FCurrency write FCurrency;
      property CurrencyRate: Double read FCurrencyRate write FCurrencyRate;
      property AllowPaycardCharge: boolean read FAllowPaycardCharge write FAllowPaycardCharge;
     /// <summary>
@@ -171,7 +172,8 @@ uses
    , uFrmChargePayCard
    , uTokenHelpers
    , uFrmManagePCIConnection
-  , uFrmTokenChargeHistory;
+  , uFrmTokenChargeHistory
+  ;
 
 {$R *.DFM}
 
@@ -205,7 +207,6 @@ var
   i : integer;
   selected : string;
   frm: TfrmInvoicePayment;
-  sTemp: string;
 begin
   // --
   frm := TfrmInvoicePayment.Create(nil);
@@ -218,7 +219,7 @@ begin
     frm.AmountLeft := NativeAmount;
     frm.dtInvDate.Date := Date;
     frm.dtPayDate.Date := Date;
-    frm.Currency := Currency;
+    frm.Currency := TCurrencyCode(Currency);
     frm.CUrrencyRate := CurrencyRate;
 
     // TODO: Extend backend to allow specifying invoiceindex to store payment in
@@ -261,7 +262,7 @@ begin
       frm.__LblForeignCurrency.Visible := frm.LblForeignCurrencyAmount.Visible;
       frm.__pnlCurrencies.Visible := true;
       frm.__LblLocalCurrency.Caption := NativeAmount.AsDisplayStringWithCode;
-      frm.__LblForeignCurrency.Caption := NativeAmount.ToCurrency(Currency).AsDisplayStringWithCode;
+      frm.__LblForeignCurrency.Caption := NativeAmount.ToCurrency(TCurrencyCode(Currency)).AsDisplayStringWithCode;
     end;
 
     frm.Reservation := Reservation;

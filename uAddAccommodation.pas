@@ -82,7 +82,7 @@ uses
   , uDImages
   , uMain
   , uG
-  , Math;
+  , Math, uCurrencyConstants;
 
 
 function AddAccommodation(var Persons,rooms,nights : integer; var roomPrice : TAmount) : boolean;

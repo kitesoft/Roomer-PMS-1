@@ -507,7 +507,7 @@ uses
   , uSqlDefinitions
   , uAppGlobal
   , uSQLUtils
-  , uAmount;
+  , uAmount, uCurrencyConstants;
 
 // *****************************************************************************
 // TCustInfo - Starts

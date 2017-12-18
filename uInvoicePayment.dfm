@@ -285,7 +285,7 @@ object frmInvoicePayment: TfrmInvoicePayment
       Left = 166
       Top = 4
       Width = 45
-      Height = 14
+      Height = 13
       Margins.Right = 5
       Align = alRight
       Alignment = taRightJustify
@@ -296,14 +296,13 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitLeft = 0
     end
     object lblSelected: TsLabel
       AlignWithMargins = True
       Left = 219
       Top = 4
       Width = 22
-      Height = 14
+      Height = 13
       Margins.Right = 50
       Align = alRight
       Caption = '0.00'
@@ -313,14 +312,13 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitLeft = 0
     end
     object Label3: TsLabel
       AlignWithMargins = True
       Left = 294
       Top = 4
       Width = 23
-      Height = 14
+      Height = 13
       Margins.Right = 5
       Align = alRight
       Caption = 'Left:'
@@ -330,14 +328,13 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitLeft = 0
     end
     object lblLeft: TsLabel
       AlignWithMargins = True
       Left = 325
       Top = 4
       Width = 22
-      Height = 14
+      Height = 13
       Margins.Right = 20
       Align = alRight
       Alignment = taRightJustify
@@ -348,7 +345,6 @@ object frmInvoicePayment: TfrmInvoicePayment
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitLeft = 0
     end
   end
   object sPanel1: TsPanel

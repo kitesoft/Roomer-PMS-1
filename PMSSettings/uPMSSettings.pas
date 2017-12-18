@@ -75,7 +75,6 @@ type
     cShowRoomRentPerDay = 'SHOW_ROOMRENT_PER_DAY';
     cAggregateCityTax= 'AGGREGATE_CITYTAX';
   private
-    FAggregateCityTax: boolean;
     function GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
     procedure SetShowInvoiceAsPaidWhenStatusIsZero(const Value: boolean);
     function GetAllowDeletingItemsFromInvoice: boolean;
