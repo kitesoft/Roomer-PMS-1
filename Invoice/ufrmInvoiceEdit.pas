@@ -4186,9 +4186,9 @@ begin
     end;
 
 
-    if lInvoiceLine.IsGeneratedLine and not(ACol in [col_Description]) then
+    if lInvoiceLine.IsGeneratedLine then
     begin
-      CanEdit := false;
+      CanEdit := (ACol in [col_Description, col_Select]);
       exit;
     end;
 
