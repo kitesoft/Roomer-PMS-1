@@ -76,10 +76,14 @@ uses
   , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
-  , uTokenHelpers, ToolPanels
+  , uTokenHelpers, ToolPanels, RoomerExceptionHandling
   ;
 
 type
+
+  EReservationReferenceSaveFailed = class(ERoomerUserException)
+  end;
+
   TfrmReservationProfile = class(TForm)
     Panel2: TsPanel;
     PageControl2: TsPageControl;
@@ -1392,7 +1396,18 @@ begin
       rSet.fieldbyname('invRefrence').asstring := edtInvRefrence.text;
       rSet.Post;
 
-      d.roomerMainDataSet.SystemCommitTransaction;
+      // Update invReference on open invoices
+      s := '';
+      s := s + 'update invoiceheads '#10;
+      s := s + ' set invRefrence = '''' '#10;
+      s := s + ' where invoicenumber = -1 and reservation = %d '#10;
+      s := format(s, [zReservation]);
+
+      if cmd_bySQL(s) then
+        d.roomerMainDataSet.SystemCommitTransaction
+      else
+        raise EReservationReferenceSaveFailed.CreateFmt('Failed saving new reference [%s] for reservation [%d]', [edtInvRefrence.text, zReservation]);
+
     except
       d.roomerMainDataSet.SystemRollbackTransaction;
       raise;
