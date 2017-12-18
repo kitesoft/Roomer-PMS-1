@@ -1380,8 +1380,6 @@ begin
   screen.Cursor := crHourGlass;
   try
     cbxIsRoomResDiscountPrec.ItemIndex := 0;
-    edCustomer.Text := FNewReservation.HomeCustomer.Customer;
-    initCustomer;
 
     cbxBreakfast.Checked := ctrlGetBoolean('BreakfastInclDefault');
     cbxBreakfastIncl.Checked := cbxBreakfast.Checked;
@@ -1400,13 +1398,16 @@ begin
     chkExcluteBlocked.Checked := g.qExcluteBlocked;
     chkExcluteNoShow.Checked := g.qExcluteNoshow;
 
+    ShowRatePlans;
+    edCustomer.Text := FNewReservation.HomeCustomer.Customer;
+    initCustomer;
+
     if FNewReservation.IsQuick then
     begin
       Caption := GetTranslatedText('shTx_QuickReservation_NewReservationQuick');
       dtArrival.date := FNewReservation.newRoomReservations.ReservationArrival;
       dtDeparture.date := FNewReservation.newRoomReservations.ReservationDeparture;
       gbxDates.Enabled := false;
-      btnFinish.Enabled := false;
       edCustomer.SetFocus;
     end
     else
@@ -1414,26 +1415,23 @@ begin
       Caption := GetTranslatedText('shTx_QuickReservation_NewReservation');
       dtArrival.date := trunc(frmMain.resDateFrom); // trunc(now);
       dtDeparture.date := trunc(frmMain.resDateTo); // trunc(now+1);
-      btnFinish.Enabled := false;
       edNights.SetFocus;
     end;
+
+    btnFinish.Enabled := false;
     edNights.Value := trunc(dtDeparture.date) - trunc(dtArrival.date);
 
     memRoomNotes.Enabled := false;
     clabRoomNotes.Visible := false;
+    chkSendConfirmation.Enabled := false;
+    cbxAddToGuestProfiles.Visible := false;
+    FrmAlertPanel := TFrmAlertPanel.Create(self);
+    FrmAlertPanel.PlaceEditPanel(Alerts, FNewReservation.AlertList);
+    gbxProfileAlert.Visible := False;
 
-    ShowRatePlans;
   finally
     screen.Cursor := crDefault;
   end;
-
-  chkSendConfirmation.Enabled := false;
-
-  cbxAddToGuestProfiles.Visible := false;
-
-  FrmAlertPanel := TFrmAlertPanel.Create(self);
-  FrmAlertPanel.PlaceEditPanel(Alerts, FNewReservation.AlertList);
-  gbxProfileAlert.Visible := False;
 
   PostMessage(Handle, WM_LOADPREVIOUS_GUESTS, 0, 0);
 
