@@ -691,7 +691,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Left = 459
               Top = 19
               Width = 20
-              Height = 16
+              Height = 20
               Margins.Left = 0
               Margins.Top = 0
               Margins.Right = 0
@@ -1185,11 +1185,13 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               ExplicitLeft = 164
               ExplicitTop = 13
               inherited pnlCurrency: TsPanel
-                ExplicitTop = -1
                 inherited lblCurrencyName: TsLabel
                   ExplicitLeft = 64
                   ExplicitWidth = 142
                   ExplicitHeight = 20
+                end
+                inherited btnGetCurrency: TsButton
+                  ExplicitLeft = 40
                 end
               end
             end
@@ -1440,8 +1442,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object chkContactIsGuest: TsCheckBox
                   Left = 18
                   Top = 19
-                  Width = 106
-                  Height = 17
+                  Width = 98
+                  Height = 20
                   Caption = 'Contact is guest'
                   Checked = True
                   State = cbChecked
@@ -1505,8 +1507,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object chkSendConfirmation: TsCheckBox
                   Left = 433
                   Top = 243
-                  Width = 156
-                  Height = 17
+                  Width = 148
+                  Height = 20
                   Caption = 'Send confirmation by email'
                   Enabled = False
                   TabOrder = 7
@@ -1517,8 +1519,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object cbxAddToGuestProfiles: TsCheckBox
                   Left = 149
                   Top = 61
-                  Width = 128
-                  Height = 17
+                  Width = 120
+                  Height = 20
                   Caption = 'Add to guest profiles'
                   TabOrder = 9
                   Visible = False
@@ -2040,8 +2042,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteWaitingList: TsCheckBox
             Left = 14
             Top = 19
-            Width = 77
-            Height = 17
+            Width = 69
+            Height = 20
             Caption = 'Waitinglist'
             TabOrder = 0
             SkinData.SkinSection = 'CHECKBOX'
@@ -2051,8 +2053,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteAllotment: TsCheckBox
             Left = 14
             Top = 41
-            Width = 73
-            Height = 17
+            Width = 65
+            Height = 20
             Caption = 'Allotment'
             TabOrder = 1
             SkinData.SkinSection = 'CHECKBOX'
@@ -2062,8 +2064,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteOrder: TsCheckBox
             Left = 327
             Top = 19
-            Width = 56
-            Height = 17
+            Width = 48
+            Height = 20
             Caption = 'Order'
             TabOrder = 2
             SkinData.SkinSection = 'CHECKBOX'
@@ -2073,8 +2075,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteNoShow: TsCheckBox
             Left = 224
             Top = 41
-            Width = 69
-            Height = 17
+            Width = 61
+            Height = 20
             Caption = 'No show'
             TabOrder = 3
             SkinData.SkinSection = 'CHECKBOX'
@@ -2084,8 +2086,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteDeparted: TsCheckBox
             Left = 122
             Top = 19
-            Width = 73
-            Height = 17
+            Width = 65
+            Height = 20
             Caption = 'Departed'
             TabOrder = 4
             SkinData.SkinSection = 'CHECKBOX'
@@ -2095,8 +2097,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteBlocked: TsCheckBox
             Left = 224
             Top = 19
-            Width = 64
-            Height = 17
+            Width = 56
+            Height = 20
             Caption = 'Blocked'
             TabOrder = 5
             SkinData.SkinSection = 'CHECKBOX'
@@ -2106,8 +2108,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteGuest: TsCheckBox
             Left = 122
             Top = 41
-            Width = 56
-            Height = 17
+            Width = 48
+            Height = 20
             Caption = 'Guest'
             TabOrder = 6
             SkinData.SkinSection = 'CHECKBOX'
@@ -2117,8 +2119,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcludeWaitingListNonOptional: TsCheckBox
             Left = 327
             Top = 41
-            Width = 80
-            Height = 17
+            Width = 72
+            Height = 20
             Caption = 'Waiting list'
             TabOrder = 7
             SkinData.SkinSection = 'CHECKBOX'
@@ -2407,8 +2409,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object cbxFilterSelectedTypes: TsCheckBox
           Left = 8
           Top = 69
-          Width = 196
-          Height = 17
+          Width = 188
+          Height = 20
           Caption = 'Only show rooms of selected types'
           Checked = True
           State = cbChecked
@@ -2816,8 +2818,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkAutoUpdateNullPrice: TsCheckBox
             Left = 7
             Top = 18
-            Width = 134
-            Height = 17
+            Width = 126
+            Height = 20
             Caption = 'Auto update Null Price'
             Checked = True
             State = cbChecked
@@ -2877,14 +2879,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Hint = 'Per person'
                 Caption = 'PP'
               end
-              object lblExtraBedCurrency: TsLabel
-                Left = 261
-                Top = 59
-                Width = 16
-                Height = 13
-                Alignment = taRightJustify
-                Caption = 'ISK'
-              end
               object lblOnGroupInvoice: TsLabel
                 Left = 314
                 Top = 5
@@ -2904,8 +2898,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               object cbxBreakfast: TsCheckBox
                 Left = 29
                 Top = 30
-                Width = 74
-                Height = 17
+                Width = 66
+                Height = 20
                 Caption = 'Breakfast'
                 TabOrder = 0
                 OnClick = cbxBreakfastClick
@@ -2917,7 +2911,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Left = 129
                 Top = 32
                 Width = 20
-                Height = 16
+                Height = 20
                 TabOrder = 1
                 OnClick = cbxBreakfastClick
                 SkinData.SkinSection = 'CHECKBOX'
@@ -2941,63 +2935,12 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Text = '0'
                 SkinData.SkinSection = 'EDIT'
               end
-              object cbxExtraBedIncl: TsCheckBox
-                Left = 129
-                Top = 59
-                Width = 20
-                Height = 16
-                TabOrder = 4
-                OnClick = cbxBreakfastClick
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
-              end
-              object cbxExtraBed: TsCheckBox
-                Left = 29
-                Top = 57
-                Width = 75
-                Height = 17
-                Caption = 'Extra bed'
-                TabOrder = 5
-                OnClick = cbxBreakfastClick
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
-              end
-              object edtExtraBed: TsEdit
-                Left = 190
-                Top = 56
-                Width = 65
-                Height = 21
-                Alignment = taRightJustify
-                Color = clWhite
-                Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
-                Font.Height = -11
-                Font.Name = 'Tahoma'
-                Font.Style = []
-                ParentFont = False
-                TabOrder = 6
-                Text = '0'
-                SkinData.SkinSection = 'EDIT'
-              end
               object cbxBreakfastGrp: TsCheckBox
                 Left = 351
                 Top = 32
                 Width = 20
-                Height = 16
+                Height = 20
                 TabOrder = 3
-                OnClick = cbxBreakfastClick
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
-              end
-              object cbxExtraBedGrp: TsCheckBox
-                Left = 351
-                Top = 59
-                Width = 20
-                Height = 16
-                TabOrder = 7
                 OnClick = cbxBreakfastClick
                 SkinData.SkinSection = 'CHECKBOX'
                 ImgChecked = 0
@@ -3738,34 +3681,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     StorageType = stRegistry
     Left = 32
     Top = 112
-  end
-  object mCurrency: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 560
-    Top = 288
-    object mCurrencyCurrency: TWideStringField
-      FieldName = 'Currency'
-      Size = 5
-    end
-    object mCurrencyDescription: TWideStringField
-      FieldName = 'Description'
-      Size = 30
-    end
-    object mCurrencyAValue: TFloatField
-      FieldName = 'AValue'
-    end
-    object mCurrencyId: TIntegerField
-      FieldName = 'ID'
-    end
-    object mCurrencyActive: TBooleanField
-      FieldName = 'active'
-    end
-  end
-  object mCurrencyDS: TDataSource
-    DataSet = mCurrency
-    Left = 568
-    Top = 336
   end
   object mnuFinish: TPopupMenu
     Images = DImages.PngImageList1

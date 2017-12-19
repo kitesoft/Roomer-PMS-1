@@ -141,8 +141,9 @@ object FrmViewDailyRates: TFrmViewDailyRates
       SearchFooter.HintFindPrev = 'Find previous occurrence'
       SearchFooter.HintHighlight = 'Highlight occurrences'
       SearchFooter.MatchCaseCaption = 'Match case'
+      SearchFooter.ResultFormat = '(%d of %d)'
       SortSettings.DefaultFormat = ssAutomatic
-      Version = '7.9.1.1'
+      Version = '8.2.4.1'
       ColWidths = (
         100
         101
@@ -163,7 +164,7 @@ object FrmViewDailyRates: TFrmViewDailyRates
         Left = 4
         Top = 4
         Width = 74
-        Height = 33
+        Height = 19
         Align = alLeft
         Caption = 'Daily rates'
         ParentFont = False
@@ -172,14 +173,13 @@ object FrmViewDailyRates: TFrmViewDailyRates
         Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
-        ExplicitHeight = 19
       end
       object lblCurrency: TsLabel
         AlignWithMargins = True
         Left = 525
         Top = 4
         Width = 74
-        Height = 33
+        Height = 19
         Align = alRight
         Alignment = taRightJustify
         Caption = 'Daily rates'
@@ -189,7 +189,6 @@ object FrmViewDailyRates: TFrmViewDailyRates
         Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
-        ExplicitHeight = 19
       end
     end
     object sPanel2: TsPanel
@@ -204,7 +203,7 @@ object FrmViewDailyRates: TFrmViewDailyRates
         Left = 11
         Top = 4
         Width = 18
-        Height = 108
+        Height = 19
         Margins.Left = 10
         Margins.Right = 10
         Align = alLeft
@@ -216,15 +215,13 @@ object FrmViewDailyRates: TFrmViewDailyRates
         Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
-        ExplicitLeft = 143
-        ExplicitHeight = 19
       end
       object lblDescriptionRight: TsLabel
         AlignWithMargins = True
         Left = 49
         Top = 4
-        Width = 543
-        Height = 108
+        Width = 18
+        Height = 19
         Margins.Left = 10
         Margins.Right = 10
         Align = alClient
@@ -235,9 +232,6 @@ object FrmViewDailyRates: TFrmViewDailyRates
         Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
-        ExplicitLeft = 181
-        ExplicitWidth = 18
-        ExplicitHeight = 19
       end
     end
   end
