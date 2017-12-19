@@ -327,7 +327,8 @@ uses
   uFinanceTransactionReport in 'uFinanceTransactionReport.pas' {frmFinanceTransactionReport},
   uDailyTotalsReport in 'uDailyTotalsReport.pas' {frmDailyTotalsReport},
   uCachedDataHandler in 'TableCache\uCachedDataHandler.pas',
-  uReleaseNotes in 'VersionManagement\uReleaseNotes.pas';
+  uReleaseNotes in 'VersionManagement\uReleaseNotes.pas',
+  RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas';
 
 {$R *.RES}
 

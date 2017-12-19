@@ -987,6 +987,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </DCCReference>
         <DCCReference Include="TableCache\uCachedDataHandler.pas"/>
         <DCCReference Include="VersionManagement\uReleaseNotes.pas"/>
+        <DCCReference Include="RoomerVCLs\Source\RoomerCurrencyEdit.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

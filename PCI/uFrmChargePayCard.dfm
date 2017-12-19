@@ -136,6 +136,7 @@ inherited FrmChargePayCard: TFrmChargePayCard
       Top = 120
       Width = 208
       Height = 20
+      AutoSize = True
       TabOrder = 2
       ExplicitLeft = 192
       ExplicitTop = 120
@@ -144,15 +145,16 @@ inherited FrmChargePayCard: TFrmChargePayCard
         Width = 208
         ExplicitWidth = 208
         inherited lblCurrencyName: TsLabel
-          Width = 142
-          Height = 14
+          Width = 138
+          ExplicitWidth = 142
+          ExplicitHeight = 14
         end
       end
     end
     object edAmount: TsCurrencyEdit
       Left = 192
       Top = 93
-      Width = 88
+      Width = 87
       Height = 21
       AutoSize = False
       Color = clWhite
@@ -164,8 +166,10 @@ inherited FrmChargePayCard: TFrmChargePayCard
       ParentFont = False
       TabOrder = 1
       OnChange = edAmountChange
+      CheckOnExit = True
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
+      ShowButton = True
     end
   end
   inherited pnlButtons: TsPanel

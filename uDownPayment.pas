@@ -45,8 +45,8 @@ uses
   dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
-  dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
-
+  dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sCurrencyEdit
+  , RoomerCurrencyEdit //Must be included AFTER sCurrencyEdit
   ;
 
 type
@@ -69,7 +69,7 @@ type
     edDescription: TsEdit;
     labPayment: TsLabel;
     labDescription: TsLabel;
-    edAmount: TsCalcEdit;
+    edAmount: TsCurrencyEdit;
     sSpeedButton1: TsButton;
     FormStore: TcxPropertiesStore;
     pnlCCButtons: TsPanel;
@@ -205,6 +205,7 @@ var
 
 begin
   lbCurrency.Caption             := rec.Currency;
+  edAmount.CurrencyCode          := rec.Currency;
   edAmount.Value                 := rec.AmountInCurrency;
   edDescription.text             := rec.Description;
   memNotes.Text                  := rec.Notes;

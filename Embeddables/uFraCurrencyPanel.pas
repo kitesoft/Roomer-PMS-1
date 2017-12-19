@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sButton, sEdit, sLabel, Vcl.ExtCtrls, sPanel;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sButton, sEdit, sLabel, Vcl.ExtCtrls, sPanel,
+  uRoomerCurrencyDefinition;
 
 type
   TfraCurrencyPanel = class(TFrame)
@@ -28,6 +29,8 @@ type
     function GetIsValid: boolean;
     function GetCurrencyRate: double;
     procedure SetShowCurrencyName(const Value: boolean);
+    function GetCurrencyDefinition: TRoomerCurrencyDefinition;
+    procedure SetCurrencyDefinition(const Value: TRoomerCurrencyDefinition);
     { Private declarations }
   public
     constructor Create(aOwner: TComponent); override;
@@ -44,6 +47,7 @@ type
     property OnCurrencyChange: TNotifyEvent read FOnCurrencyChange write FOnCurrencyChange;
     property OnCurrencyChangeAndValid: TNotifyEvent read FOnCurrencyChangeAndValid write FOnCurrencyChangeAndValid;
     property CurrencyCode: string read GetCurrencyCode write SetCurrencyCode;
+    property CurrencyDefinition: TRoomerCurrencyDefinition read GetCurrencyDefinition write SetCurrencyDefinition;
   end;
 
 implementation
@@ -55,7 +59,7 @@ uses
   , uAppGlobal
   , Math
   , uCurrencies
-  , hData;
+  , hData, uRoomerCurrencymanager;
 
 { TfraCurrencyPanel }
 
@@ -110,6 +114,14 @@ begin
   Result := edCurrencyCode.Text;
 end;
 
+function TfraCurrencyPanel.GetCurrencyDefinition: TRoomerCurrencyDefinition;
+begin
+  if IsValid then
+    Result := RoomerCurrencyManager[CurrencyCode]
+  else
+    Result := RoomerCurrencyManager.DefaultCurrencyDefinition;
+end;
+
 function TfraCurrencyPanel.GetCurrencyName: string;
 begin
   Result := lblCurrencyName.Caption;
@@ -139,6 +151,11 @@ procedure TfraCurrencyPanel.SetCurrencyCode(const Value: string);
 begin
   if not Sametext(edCurrencyCode.Text, Value) then
     edCurrencyCode.Text := Value;
+end;
+
+procedure TfraCurrencyPanel.SetCurrencyDefinition(const Value: TRoomerCurrencyDefinition);
+begin
+  CurrencyCode := Value.CurrencyCode;
 end;
 
 procedure TfraCurrencyPanel.SetShowCurrencyName(const Value: boolean);

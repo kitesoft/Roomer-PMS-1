@@ -32,10 +32,12 @@ uses
   cxClasses,
   cxPropertiesStore, ufraCurrencyPanel
   , uAmount, uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, Vcl.ComCtrls, sStatusBar
-
+  , sCurrencyEdit
+  , RoomerCurrencyEdit // must be after include of sCurrencyEdit!
   ;
 
 type
+
   TfrmAddAccommodation = class(TfrmBaseRoomerDialogForm)
     edPersons: TsSpinEdit;
     cxLabel1: TsLabel;
@@ -44,7 +46,7 @@ type
     cxLabel3: TsLabel;
     edRooms: TsSpinEdit;
     cxLabel4: TsLabel;
-    edRoomPrice: TsCalcEdit;
+    edRoomPrice: TsCurrencyEdit;
     fraCurrencyPanel: TfraCurrencyPanel;
     procedure FormShow(Sender : TObject);
     procedure edRoomPriceChange(Sender: TObject);
@@ -59,6 +61,7 @@ type
     function GetNights: integer;
     function GetPersons: integer;
     function GetRooms: integer;
+    procedure evtCurrencyChangedAndValid(Sender: TObject);
     { Private declarations }
   protected
     procedure DoUpdateControls; override;
@@ -133,13 +136,20 @@ end;
 
 procedure TfrmAddAccommodation.FormShow(Sender : TObject);
 begin
+  FRoomPrice := 0;
+  fraCurrencyPanel.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
+  fraCurrencyPanel.OnCurrencyChange := HandleChanged;
   fraCurrencyPanel.CurrencyCode := g.qNativeCurrency;
   fraCurrencyPanel.ShowCurrencyName := false;
-  fraCurrencyPanel.OnCurrencyChangeAndValid := reCalcAmount;
-  fraCurrencyPanel.OnCurrencyChange := HandleChanged;
-  FRoomPrice := 0;
   edRoomprice.SetFocus;
   DialogButtons := mbOKCancel;
+end;
+
+procedure TfrmAddAccommodation.evtCurrencyChangedAndValid(Sender: TObject);
+begin
+  edRoomPrice.CurrencyCode := fraCurrencyPanel.CurrencyCode;
+  RecalcAmount(Sender);
+  edRoomPrice.DecimalPlaces := fraCurrencyPanel.CurrencyDefinition.CurrencyFormatSettings.CurrencyDecimals;
 end;
 
 function TfrmAddAccommodation.GetNights: integer;

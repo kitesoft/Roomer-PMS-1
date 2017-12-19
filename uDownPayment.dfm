@@ -123,7 +123,7 @@ object frmDownPayment: TfrmDownPayment
       Text = 'Downpayment'
       SkinData.SkinSection = 'EDIT'
     end
-    object edAmount: TsCalcEdit
+    object edAmount: TsCurrencyEdit
       Left = 157
       Top = 34
       Width = 88
@@ -136,10 +136,13 @@ object frmDownPayment: TfrmDownPayment
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = False
       TabOrder = 0
       SkinData.SkinSection = 'EDIT'
       GlyphMode.Blend = 0
       GlyphMode.Grayed = False
+      ShowButton = True
     end
   end
   object sGroupBox1: TsGroupBox

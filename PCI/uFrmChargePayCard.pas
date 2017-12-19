@@ -7,7 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Generics.Collections, uTokenHelpers, Vcl.StdCtrls, sLabel, Vcl.ExtCtrls, sPanel, sComboBox, sEdit, sButton,
   uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo,
   uRoomerForm, ufraCurrencyPanel, Vcl.Mask, sMaskEdit, sCustomComboEdit, sCurrEdit, sCurrencyEdit
-  , RoomerExceptionHandling;
+  , RoomerExceptionHandling
+  , RoomerCurrencyEdit // must be after include of sCurrencyEdit!
+  ;
 
 type
   EChargePaycardException = class(ERoomerUserException);
@@ -143,7 +145,7 @@ uses Data.DB,
      uUtils
      , UITypes
      , Types
-     , uFrmManagePCIConnection;
+     , uFrmManagePCIConnection, uRoomerCurrencyDefinition;
 
 const
 
@@ -547,18 +549,13 @@ begin
   else
     LoadCards;
 
-  fraCurrency.DisableEvents;
-  try
-    fraCurrency.CurrencyCode := Currency;
-    CurrencyRate := fraCurrency.CurrencyRate;
-  finally
-    fraCurrency.EnableEvents;
-  end;
+  fraCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
+  fraCurrency.OnCurrencyChange := evtCurrencyChanged;
+  fraCurrency.CurrencyCode := Currency;
+  CurrencyRate := fraCurrency.CurrencyRate;
 
   edAmount.Value := Amount;
   DialogButtons := [mbClose];
-  fraCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
-  fraCurrency.OnCurrencyChange := evtCurrencyChanged;
 end;
 
 function TFrmChargePayCard.GetTokenList: TObjectList<TToken>;
@@ -584,7 +581,9 @@ procedure TFrmChargePayCard.evtCurrencyChangedAndValid(Sender: TObject);
 begin
   if not SameValue(fraCurrency.CurrencyRate, CurrencyRate) then
   begin
+    edAmount.CurrencyCode := fraCurrency.CurrencyCode;
     edAmount.value := edAmount.Value * CurrencyRate / fraCurrency.CurrencyRate;
+    edAmount.DecimalPlaces := fraCurrency.CurrencyDefinition.CurrencyFormatSettings.CurrencyDecimals;
     CurrencyRate := fraCurrency.CurrencyRate;
   end;
 end;

@@ -46,7 +46,8 @@ uses
   , Spring.Collections
   , Spring.Collections.Dictionaries
   , sCurrEdit
-  , uCurrencyConstants
+  , uCurrencyConstants, sCurrencyEdit
+  , RoomerCurrencyEdit // Must be included AFTER sCurrencyEdit
   ;
 
 type
@@ -65,7 +66,7 @@ type
     lblSelected: TsLabel;
     lblLeft: TsLabel;
     lblAmount: TsLabel;
-    edtAmount: TsCalcEdit;
+    edtAmount: TsCurrencyEdit;
     sPanel1: TsPanel;
     dtInvDate: TsDateEdit;
     sLabel1: TsLabel;
@@ -120,6 +121,7 @@ type
     function AlreadyProvidedPayments: TAmount;
     procedure EnabledChargepaycard;
     procedure SetAmountLeft(const Value: TAmount);
+    procedure SetCurrency(const Value: TCurrencyCode);
     property AmountLeft: TAmount read FAmountLeft write SetAmountLeft;
   public
     { Public declarations }
@@ -127,7 +129,7 @@ type
      property Reservation : Integer read FReservation write FReservation;
      property RoomReservation : Integer read FRoomReservation write FRoomReservation;
      property InvocieIndex: Integer read FInvoiceIndex write FInvoiceIndex;
-     property Currency: TCurrencyCode read FCurrency write FCurrency;
+     property Currency: TCurrencyCode read FCurrency write SetCurrency;
      property CurrencyRate: Double read FCurrencyRate write FCurrencyRate;
      property AllowPaycardCharge: boolean read FAllowPaycardCharge write FAllowPaycardCharge;
     /// <summary>
@@ -362,6 +364,12 @@ procedure TfrmInvoicePayment.SetAmountLeft(const Value: TAmount);
 begin
   FAmountLeft := Value;
   lblLeft.Caption := FAmountLeft.ToNative.AsDisplayStringWithCode;
+end;
+
+procedure TfrmInvoicePayment.SetCurrency(const Value: TCurrencyCode);
+begin
+  FCurrency := Value;
+  edtAmount.CurrencyCode := Value;
 end;
 
 function TfrmInvoicePayment.AlreadyProvidedPayments : TAmount;

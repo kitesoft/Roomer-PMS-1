@@ -22,9 +22,9 @@ object fraCurrencyPanel: TfraCurrencyPanel
     SkinData.SkinSection = 'PANEL'
     object lblCurrencyName: TsLabel
       AlignWithMargins = True
-      Left = 64
+      Left = 70
       Top = 0
-      Width = 142
+      Width = 136
       Height = 20
       Margins.Left = 6
       Margins.Top = 0
@@ -76,24 +76,21 @@ object fraCurrencyPanel: TfraCurrencyPanel
       BoundLabel.Font.Height = -13
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
-      ExplicitTop = 1
-      ExplicitHeight = 19
     end
     object btnGetCurrency: TsButton
       AlignWithMargins = True
-      Left = 37
+      Left = 40
       Top = 0
       Width = 21
       Height = 20
-      Margins.Left = 0
       Margins.Top = 0
-      Margins.Right = 0
       Margins.Bottom = 0
       Align = alLeft
       Caption = '...'
       TabOrder = 1
       OnClick = btnGetCurrencyClick
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 37
     end
   end
 end

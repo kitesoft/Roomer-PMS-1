@@ -172,10 +172,10 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     MinValue = 0
     Value = 1
   end
-  object edRoomPrice: TsCalcEdit [9]
+  object edRoomPrice: TsCurrencyEdit [9]
     Left = 124
     Top = 93
-    Width = 81
+    Width = 80
     Height = 21
     AutoSize = False
     Color = clWhite
@@ -190,6 +190,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     SkinData.SkinSection = 'EDIT'
     GlyphMode.Blend = 0
     GlyphMode.Grayed = False
+    ShowButton = True
   end
   inline fraCurrencyPanel: TfraCurrencyPanel [10]
     Left = 209
@@ -205,13 +206,12 @@ inherited frmAddAccommodation: TfrmAddAccommodation
       Width = 135
       ExplicitWidth = 135
       inherited lblCurrencyName: TsLabel
-        Width = 71
+        Width = 65
         ExplicitWidth = 73
         ExplicitHeight = 14
       end
-      inherited edCurrencyCode: TsEdit
-        ExplicitTop = 0
-        ExplicitHeight = 20
+      inherited btnGetCurrency: TsButton
+        ExplicitLeft = 40
       end
     end
   end
