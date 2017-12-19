@@ -145,7 +145,6 @@ type
     cLabFilter: TsLabel;
     edFilter: TsEdit;
     btnClear: TsSpeedButton;
-    btnExport: TsButton;
     tvInvoiceHeadRowSelected: TcxGridDBBandedColumn;
     tvInvoiceHeadexternalInvoiceId: TcxGridDBBandedColumn;
     pnlButtons: TsPanel;
@@ -167,6 +166,7 @@ type
     mnuExportability: TMenuItem;
     tvInvoiceHeadexportAllowed: TcxGridDBBandedColumn;
     mnuEditFinExportProp: TMenuItem;
+    btnExport: TsButton;
     procedure rbtDatesClick(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure cbxPeriodChange(Sender : TObject);
@@ -463,6 +463,7 @@ end;
 procedure TfrmInvoiceList2.cbxTxtTypeChange(Sender : TObject);
 begin
   zTextType := cbxTxtType.ItemIndex;
+  rbtFreeText.Checked := True;
 end;
 
 procedure TfrmInvoiceList2.edFilterChange(Sender: TObject);
@@ -512,21 +513,25 @@ begin
   zLast := edtLast.Value;
   zInvoiceTo := zLastInvoiceID;
   zInvoiceFrom := zLastInvoiceID - zLast + 1;
+  rbtLast.Checked := True;
 end;
 
 procedure TfrmInvoiceList2.edtFreeTextChange(Sender : TObject);
 begin
   zText := edtFreeText.Text;
+  rbtFreeText.Checked := True;
 end;
 
 procedure TfrmInvoiceList2.dtFromChange(Sender : TObject);
 begin
   zdtFrom := dtFrom.Date;
+  rbtDates.Checked := True;
 end;
 
 procedure TfrmInvoiceList2.dtToChange(Sender : TObject);
 begin
   zDTTo := dtTo.Date;
+  rbtDates.Checked := True;
 end;
 
 procedure TfrmInvoiceList2.mnuEditFinExportPropClick(Sender: TObject);
@@ -608,6 +613,12 @@ begin
     zdtFrom := dtFrom.Date;
     zdtTo := dtTo.Date;
 
+    if (cbxTxtType.ItemIndex in [4, 5, 6]) and  not _isInteger(edtFreeText.Text) then
+    begin
+      ShowMessage(Format(GetTranslatedtext('shTx_Invoice_NotANumber'), [edtFreeText.Text]));
+      exit;
+    end;
+
     screen.Cursor := crHourGlass;
     rSet := CreateNewDataset;
     try
@@ -655,9 +666,7 @@ begin
 
       if rbtDates.checked then
       begin
-  //      s := s + '    AND ((ih.ihInvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.ihInvoiceDate <= ' + _db(zDTTo, true)
-        s := s + '    AND ((ih.InvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.InvoiceDate <= ' + _db(zDTTo, true)
-          + ')) ';
+        s := s + '    AND ((ih.InvoiceDate >= ' + _db(zdtFrom, true) + ')  AND (ih.InvoiceDate <= ' + _db(zDTTo, true) + ')) ';
       end;
 
       if (rbtInvoices.checked) or (rbtLast.checked) then
@@ -668,44 +677,13 @@ begin
       if (rbtFreeText.checked) then
       begin
         case cbxTxtType.ItemIndex of
-          0 :
-            begin // InvoiceNumber;
-              s := s + '  AND (ih.InvoiceNumber=' + _db(edtFreeText.Text) + ') ';
-            end;
-          1 :
-            begin // Kennitala;
-              s := s + '  AND (custPID=' + _db(edtFreeText.Text) + ') ';
-            end;
-          2 :
-            begin // Customer N�mer;
-              s := s + '  AND (Customer=' + _db(edtFreeText.Text) + ') ';
-            end;
-          3 :
-            begin // Nafn Gests e�a Fyrirt�kis;
-              s := s + '  AND ((Name LIKE ' + _db('%' + edtFreeText.Text + '%') + ') OR (RoomGuest LIKE ' + _db('%' + edtFreeText.Text + '%') + ')) ';
-            end;
-          4 :
-            begin // N�mer b�kunnar;
-              if _isInteger(edtFreeText.Text) then
-              begin
-                s := s + '  AND (Reservation=' + edtFreeText.Text + ') ';
-              end
-              else
-              begin
-                showmessage(GetTranslatedText('shTx_InvoiceList2_BookingNumber'));
-              end;
-            end;
-          5 :
-            begin // N�mer herbergja b�kunnar;
-              if _isInteger(edtFreeText.Text) then
-              begin
-                s := s + '  AND (RoomReservation=' + edtFreeText.Text + ') ';
-              end
-              else
-              begin
-                showmessage(GetTranslatedText('shTx_InvoiceList2_BookingNumber'))
-              end;
-            end;
+          0 : s := s + '  AND (ih.InvoiceNumber=' + _db(edtFreeText.Text) + ') ';
+          1 : s := s + '  AND (custPID=' + _db(edtFreeText.Text) + ') ';
+          2 : s := s + '  AND (Customer=' + _db(edtFreeText.Text) + ') ';
+          3 : s := s + '  AND ((Name LIKE ' + _db('%' + edtFreeText.Text + '%') + ') OR (RoomGuest LIKE ' + _db('%' + edtFreeText.Text + '%') + ')) ';
+          4 : s := s + '  AND (Reservation=' + edtFreeText.Text + ') ';
+          5 : s := s + '  AND (RoomReservation=' + edtFreeText.Text + ') ';
+          6 : s := s + '  AND (externalInvoiceId=' + edtFreeText.Text + ') ';
         end;
       end;
       s := s + ' ORDER BY ';
@@ -823,6 +801,7 @@ begin
   if edtInvoiceTo.value < edtInvoiceFrom.value then
     edtInvoiceTo.Value := edtInvoiceFrom.value;
   zInvoiceFrom := edtInvoiceFrom.value;
+  rbtInvoices.Checked := True;
 end;
 
 procedure TfrmInvoiceList2.edtInvoiceToChange(Sender: TObject);
@@ -830,6 +809,7 @@ begin
   if edtInvoiceTo.value < edtInvoiceFrom.Value then
     edtInvoiceTo.Value := edtInvoiceFrom.value;
   zInvoiceTo := edtInvoiceTo.value;
+  rbtInvoices.Checked := True;
 end;
 
 procedure TfrmInvoiceList2.tvInvDblClick(Sender: TObject);

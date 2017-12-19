@@ -35,10 +35,11 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
       object LMDSimpleLabel2: TsLabel
-        Left = 251
-        Top = 20
+        Left = 270
+        Top = 19
         Width = 11
         Height = 16
+        Alignment = taRightJustify
         Caption = 'to'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -48,10 +49,11 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
       end
       object LMDSimpleLabel3: TsLabel
-        Left = 251
-        Top = 44
+        Left = 270
+        Top = 45
         Width = 11
         Height = 16
+        Alignment = taRightJustify
         Caption = 'to'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
@@ -61,8 +63,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Font.Style = []
       end
       object LMDSpeedButton3: TsButton
-        Left = 251
-        Top = 89
+        Left = 265
+        Top = 91
         Width = 122
         Height = 25
         Caption = 'Refresh'
@@ -122,8 +124,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtDates: TsRadioButton
         Left = 4
         Top = 19
-        Width = 82
-        Height = 19
+        Width = 74
+        Height = 20
         Caption = 'Date range'
         TabOrder = 0
         OnClick = rbtDatesClick
@@ -131,9 +133,9 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object rbtInvoices: TsRadioButton
         Left = 4
-        Top = 42
-        Width = 96
-        Height = 19
+        Top = 44
+        Width = 88
+        Height = 20
         Caption = 'Number range'
         TabOrder = 1
         OnClick = rbtDatesClick
@@ -204,8 +206,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtFreeText: TsRadioButton
         Left = 4
         Top = 68
-        Width = 75
-        Height = 19
+        Width = 67
+        Height = 20
         Caption = 'Text filter'
         TabOrder = 2
         OnClick = rbtDatesClick
@@ -214,8 +216,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       object rbtLast: TsRadioButton
         Left = 4
         Top = 92
-        Width = 48
-        Height = 19
+        Width = 40
+        Height = 20
         Caption = 'Last'
         Checked = True
         TabOrder = 3
@@ -225,7 +227,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object cbxTxtType: TsComboBox
         Left = 393
-        Top = 68
+        Top = 67
         Width = 131
         Height = 21
         Alignment = taLeftJustify
@@ -254,7 +256,8 @@ inherited frmInvoiceList2: TfrmInvoiceList2
           'Name of Guest or Company'
           'Refernce'
           'Booking number'
-          'Room Booking')
+          'Room Booking'
+          'External #')
       end
       object edtLast: TsSpinEdit
         Left = 146
@@ -278,7 +281,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object edtInvoiceFrom: TsSpinEdit
         Left = 146
-        Top = 41
+        Top = 43
         Width = 102
         Height = 21
         Color = clWhite
@@ -297,7 +300,7 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       end
       object edtInvoiceTo: TsSpinEdit
         Left = 285
-        Top = 42
+        Top = 44
         Width = 102
         Height = 21
         Color = clWhite
@@ -315,16 +318,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         Value = 0
       end
     end
-    object btnExport: TsButton
-      Left = 547
-      Top = 19
-      Width = 118
-      Height = 44
-      Caption = 'Export invoices'
-      TabOrder = 1
-      OnClick = btnExportClick
-      SkinData.SkinSection = 'BUTTON'
-    end
     object pnlButtons: TsPanel
       Left = 1
       Top = 141
@@ -332,24 +325,25 @@ inherited frmInvoiceList2: TfrmInvoiceList2
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       object LMDSpeedButton6: TsButton
         AlignWithMargins = True
-        Left = 3
+        Left = 922
         Top = 3
         Width = 100
         Height = 35
-        Align = alLeft
-        Caption = 'EXCEL'
+        Align = alRight
+        Caption = 'Excel'
         ImageIndex = 132
         Images = DImages.PngImageList1
         TabOrder = 0
         OnClick = LMDSpeedButton6Click
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 3
       end
       object btnReservation: TsButton
         AlignWithMargins = True
-        Left = 109
+        Left = 3
         Top = 3
         Width = 100
         Height = 35
@@ -360,10 +354,11 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 1
         OnClick = btnReservationClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 109
       end
       object LMDSpeedButton1: TsButton
         AlignWithMargins = True
-        Left = 215
+        Left = 109
         Top = 3
         Width = 100
         Height = 35
@@ -374,10 +369,11 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 2
         OnClick = LMDSpeedButton1Click
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 215
       end
       object btnViewInvoice: TsButton
         AlignWithMargins = True
-        Left = 321
+        Left = 215
         Top = 3
         Width = 100
         Height = 35
@@ -388,10 +384,11 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 3
         OnClick = btnViewInvoiceClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 321
       end
       object btnPrint: TsButton
         AlignWithMargins = True
-        Left = 427
+        Left = 321
         Top = 3
         Width = 100
         Height = 35
@@ -402,10 +399,11 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 4
         OnClick = btnPrintClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 427
       end
       object btnBestFit: TsButton
         AlignWithMargins = True
-        Left = 533
+        Left = 427
         Top = 3
         Width = 100
         Height = 35
@@ -415,10 +413,11 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 5
         OnClick = btnBestFitClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 533
       end
       object LMDButton1: TsButton
         AlignWithMargins = True
-        Left = 639
+        Left = 533
         Top = 3
         Width = 100
         Height = 35
@@ -430,6 +429,20 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 6
         OnClick = LMDButton1Click
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 639
+      end
+      object btnExport: TsButton
+        AlignWithMargins = True
+        Left = 1028
+        Top = 3
+        Width = 100
+        Height = 35
+        Align = alRight
+        Caption = 'Export invoices'
+        TabOrder = 7
+        OnClick = btnExportClick
+        SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 1010
       end
     end
   end
@@ -890,6 +903,10 @@ inherited frmInvoiceList2: TfrmInvoiceList2
     object lvInvoiceHead: TcxGridLevel
       GridView = tvInvoiceHead
     end
+  end
+  inherited psRoomerBase: TcxPropertiesStore
+    Left = 560
+    Top = 72
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
     PixelsPerInch = 96
