@@ -648,6 +648,7 @@ type
     procedure GenerateRoomRentLinesPerRoom;
     procedure UpdateCaptions;
     procedure SetAggregateCityTax(const Value: boolean);
+    procedure RedrawGridThroughWinMessage;
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -747,6 +748,7 @@ const
 
   // WM_StartUpLists = WM_User + 381;
   WM_REDRAW_LINE = WM_User + 290;
+  WM_REDRAW_GRID = WM_User + 291;
 
   REMOVE_CURRENT_PROFORMA_INVOICE: Array [0 .. 3] OF String = (
     'DELETE FROM invoicelines WHERE invoiceNumber=%d',
@@ -819,6 +821,11 @@ begin
     rSet.Free;
   end;
 
+end;
+
+procedure TfrmInvoiceEdit.RedrawGridThroughWinMessage;
+begin
+  PostMessage(Handle, WM_REDRAW_GRID, 0, 0);
 end;
 
 procedure TfrmInvoiceEdit.RemoveAllCheckboxes;
@@ -1054,11 +1061,14 @@ procedure TfrmInvoiceEdit.UpdateGrid;
 var
   lInvoiceLine: TInvoiceLine;
   cnt: integer;
+  lCol, lRow: integer;
 begin
   if not agrLines.IsUpdating then
   begin
     agrLines.BeginUpdate;
     Screen.Cursor := crHourGlass;
+    lCol := agrLines.Col;
+    lRow := agrLines.Row;
     try
       InitInvoiceGrid;
       agrLines.RowCount := FInvoiceLinesList.Count + 1;
@@ -1077,6 +1087,8 @@ begin
 
       UpdateControls;
     finally
+      agrLines.Col := lCol;
+      agrLines.Row := lRow;
       agrLines.EndUpdate;
       Screen.Cursor := crDefault;
     end;
@@ -1089,13 +1101,18 @@ var
   lRow: integer;
 begin
   lInvoice := GetInvoiceLineByRow(ARow);
-  lRow := ARow;
-  while assigned(lInvoice) do
-  begin
-    DisplayLine(lInvoice, lRow);
-    lInvoice := lInvoice.Parent;
-    if assigned(lInvoice) then
-      lRow := GetRowForInvoiceLine(lInvoice);
+  agrLines.BeginUpdate;
+  try
+    lRow := ARow;
+    while assigned(lInvoice) do
+    begin
+      DisplayLine(lInvoice, lRow);
+      lInvoice := lInvoice.Parent;
+      if assigned(lInvoice) then
+        lRow := GetRowForInvoiceLine(lInvoice);
+    end;
+  finally
+    agrLines.EndUpdate;
   end;
   CheckAndAddLastRow;
 end;
@@ -2788,7 +2805,7 @@ begin
   agrLines.ColWidths[col_Item] := 100;
   agrLines.ColWidths[col_Date] := 100;
   agrLines.ColWidths[col_ItemCount] := 80;
-  agrLines.ColWidths[col_ItemPrice] := 80;
+  agrLines.ColWidths[col_ItemPrice] := 100;
   agrLines.ColWidths[col_TotalPrice] := 100;
   agrLines.ColWidths[col_TotalOnInvoice] := 100;
   agrLines.ColWidths[col_Source] := 60;
@@ -4239,6 +4256,8 @@ begin
     UpdateLine(Message.LParam);
     DisplayTotals;
   end
+  else if Message.msg = WM_REDRAW_GRID then
+    UpdateGrid
   else
     inherited WndProc(message);
 end;
@@ -4895,12 +4914,9 @@ begin
           end;
       end;
 
-    // If packageitem prices have changed then the roomrent item totals can be changed too
-
     finally
       agrLines.EndUpdate;
-      UpdateGrid;
-      chkChanged;
+      RedrawGridThroughWinMessage;
     end;
   except
     Valid := false;
