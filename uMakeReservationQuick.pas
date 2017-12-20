@@ -704,7 +704,6 @@ type
       var AText: string);
     procedure tvRoomResStockItemsCountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure mExtrasCalcFields(DataSet: TDataSet);
-    procedure mRoomResDSDataChange(Sender: TObject; Field: TField);
     procedure cbxFilterSelectedTypesClick(Sender: TObject);
     procedure mSelectRoomsFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure edPcCodeChange(Sender: TObject);
@@ -1153,6 +1152,7 @@ var
   ii,
   Guests,
   dayCount, RoomReservation: integer;
+  rateValue: double;
   Rate: TAmount;
   rateId: String;
   lRateCurrency: string;
@@ -1180,8 +1180,8 @@ begin
           ADate := Arrival + ii;
           if mRoomRates.Locate('RateDate', ADate, []) then
           begin
-            if FDynamicRates.active AND FDynamicRates.findRateByRateCode(trunc(Arrival) + ii, Guests, rateId, Rate, lRateCurrency) then
-              Rate := RoomerCurrencyManager.ConvertAmount(TAmount.Create(Rate, lRateCurrency), FCurrentCurrency.CurrencyCode)
+            if FDynamicRates.active AND FDynamicRates.findRateByRateCode(trunc(Arrival) + ii, Guests, rateId, rateValue, lRateCurrency) then
+              Rate := RoomerCurrencyManager.ConvertAmount(TAmount.Create(rateValue, lRateCurrency), FCurrentCurrency.CurrencyCode)
             else
               Rate := TAmount.Create(mRoomResAvragePrice.AsFloat, FCurrentCurrency.CurrencyCode);
 
@@ -1645,7 +1645,7 @@ begin
       Arrival := mRoomResarrival.AsDateTime;
       Departure := mRoomResdeparture.AsDateTime;
       dayCount := trunc(Departure) - trunc(Arrival);
-      rateTotal := TAmount.Create(0, FCurrentCurrency);
+      rateTotal := TAmount.Create(0, FCurrentCurrency.CurrencyCode);
 
       for ii := 0 to dayCount - 1 do
       begin
@@ -2881,11 +2881,6 @@ begin
 
   Close;
   modalresult := mrok;
-end;
-
-procedure TfrmMakeReservationQuick.mRoomResDSDataChange(Sender: TObject; Field: TField);
-begin
-//
 end;
 
 procedure TfrmMakeReservationQuick.addAvailableRoomTypes;

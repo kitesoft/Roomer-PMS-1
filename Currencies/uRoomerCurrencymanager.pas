@@ -82,6 +82,7 @@ procedure TRoomerCurrencyManager.UpdateDefinitions(Sender: TObject);
 var
   ds: TRoomerDataset;
   bm: TBookmark;
+  lCurDef: TCurrencyDefinition;
 begin
   ds := glb.CurrenciesSet;
 
@@ -100,7 +101,8 @@ begin
             begin
               if fieldbyName('active').asBoolean then
               begin
-                CreateDefinition(TCurrencyCode(fieldByName('currency').asString), fieldByName('ID').asInteger);
+                lCurDef := CreateDefinition(TCurrencyCode(fieldByName('currency').asString), fieldByName('ID').asInteger);
+                lCurDef.Description := fieldByName('description').asString;
               end;
               Next;
             end;

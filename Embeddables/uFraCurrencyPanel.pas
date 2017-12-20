@@ -85,13 +85,19 @@ end;
 
 procedure TfraCurrencyPanel.edCurrencyCodeChange(Sender: TObject);
 begin
-  FValidCurrency := CurrencyValidate(edCurrencyCode.text, lblCurrencyName);
+  FValidCurrency := RoomerCurrencyManager.DefinitionExists(edCurrencyCode.Text); //CurrencyValidate(edCurrencyCode.text, lblCurrencyName);
   if NOT FValidCurrency then
-    lblCurrencyName.Font.Color := clRed
+  begin
+    lblCurrencyName.Font.Color := clRed;
+    lblCurrencyName.caption := GetTranslatedText('shNotF_star');
+  end
   else
+  begin
     lblCurrencyName.Font.Color := clWindowText;
+    lblCurrencyName.caption := CurrencyDefinition.ShortDescription;
+  end;
 
-  if EventsEnabled and  Assigned(FOnCurrencyChange) then
+  if EventsEnabled and Assigned(FOnCurrencyChange) then
     FOnCurrencyChange(Self);
 
   if EventsEnabled and IsValid and Assigned(FOnCurrencyChangeAndValid) then

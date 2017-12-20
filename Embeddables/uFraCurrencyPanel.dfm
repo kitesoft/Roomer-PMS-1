@@ -90,7 +90,6 @@ object fraCurrencyPanel: TfraCurrencyPanel
       TabOrder = 1
       OnClick = btnGetCurrencyClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 37
     end
   end
 end
