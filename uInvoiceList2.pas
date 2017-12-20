@@ -618,9 +618,9 @@ begin
     zdtFrom := dtFrom.Date;
     zdtTo := dtTo.Date;
 
-    if (cbxTxtType.ItemIndex in [4, 5, 6]) and  not _isInteger(edtFreeText.Text) then
+    if rbtFreeText.Checked and (cbxTxtType.ItemIndex in [4, 5, 6]) and  not _isInteger(edtFreeText.Text) then
     begin
-      ShowMessage(Format(GetTranslatedtext('shTx_Invoice_NotANumber'), [edtFreeText.Text]));
+      ShowMessage(Format(GetTranslatedtext('shTx_Invoice_NotANumber'), ['"' + edtFreeText.Text + '"']));
       exit;
     end;
 
