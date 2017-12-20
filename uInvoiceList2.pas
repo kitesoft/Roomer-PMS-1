@@ -608,8 +608,13 @@ var
 begin
   inherited;
 
-  initialRead := True;
+  m22_.DisableControls;
   try
+
+    if m22_.active then m22_.Close;
+      m22_.open;
+
+    initialRead := True;
     zdtFrom := dtFrom.Date;
     zdtTo := dtTo.Date;
 
@@ -694,21 +699,13 @@ begin
 
       if hData.rSet_bySQL(rSet,s) then
       begin
-         m22_.DisableControls;
-        try
-          if m22_.active then m22_.Close;
-          m22_.open;
-          LoadKbmMemtableFromDataSetQuiet(m22_,rset,[]);
-          InitSelections;
-        finally
-           m22_.EnableControls;
-        end;
+        LoadKbmMemtableFromDataSetQuiet(m22_,rset,[]);
+        InitSelections;
         m22_.First;
-      end else
-      begin
       end;
     finally
       freeandnil(rSet);
+      m22_.EnableControls;
       screen.Cursor := crDefault;
       zRecordCount := m22_.RecordCount;
     end;
@@ -785,6 +782,7 @@ begin
   zLastInvoiceID := hdata.IVH_GetLastID();
   firstTime := false;
 
+  rbtLast.Checked := true;
   ActiveControl := edtLast;
 
   if rbtLast.checked then
