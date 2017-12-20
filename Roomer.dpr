@@ -10,6 +10,8 @@
 
 
 
+
+
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -328,7 +330,8 @@ uses
   uDailyTotalsReport in 'uDailyTotalsReport.pas' {frmDailyTotalsReport},
   uCachedDataHandler in 'TableCache\uCachedDataHandler.pas',
   uReleaseNotes in 'VersionManagement\uReleaseNotes.pas',
-  RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas';
+  RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas',
+  uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraLookupPanel: TFrame};
 
 {$R *.RES}
 

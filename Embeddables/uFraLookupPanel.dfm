@@ -1,53 +1,50 @@
-object fraCurrencyPanel: TfraCurrencyPanel
+object fraLookupPanel: TfraLookupPanel
   Left = 0
   Top = 0
-  Width = 206
+  Width = 250
   Height = 20
-  AutoSize = True
   TabOrder = 0
-  object pnlCurrency: TsPanel
+  object pnlLookup: TsPanel
     Left = 0
     Top = 0
-    Width = 206
+    Width = 250
     Height = 20
     Margins.Left = 0
     Margins.Top = 1
     Margins.Right = 0
     Margins.Bottom = 0
     Align = alTop
-    AutoSize = True
     BevelOuter = bvNone
     TabOrder = 0
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'PANEL'
-    object lblCurrencyName: TsLabel
+    object lblDescription: TLabel
       AlignWithMargins = True
       Left = 93
       Top = 0
-      Width = 113
+      Width = 157
       Height = 20
       Margins.Left = 6
       Margins.Top = 0
       Margins.Right = 0
       Margins.Bottom = 0
       Align = alClient
-      AutoSize = False
       Caption = '-'
       Color = clBtnFace
-      ParentColor = False
-      ParentFont = False
-      Layout = tlCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitLeft = 62
-      ExplicitTop = 3
+      ParentColor = False
+      ParentFont = False
+      Transparent = True
+      Layout = tlCenter
+      ExplicitLeft = 91
       ExplicitWidth = 4
       ExplicitHeight = 13
     end
-    object edCurrencyCode: TsEdit
+    object edCode: TsEdit
       AlignWithMargins = True
       Left = 0
       Top = 0
@@ -58,7 +55,6 @@ object fraCurrencyPanel: TfraCurrencyPanel
       Margins.Right = 0
       Margins.Bottom = 0
       Align = alLeft
-      AutoSize = False
       CharCase = ecUpperCase
       Constraints.MaxWidth = 140
       Font.Charset = ANSI_CHARSET
@@ -66,18 +62,21 @@ object fraCurrencyPanel: TfraCurrencyPanel
       Font.Height = -11
       Font.Name = 'Arial'
       Font.Style = []
-      MaxLength = 3
+      MaxLength = -1
       ParentFont = False
       TabOrder = 0
-      OnChange = edCurrencyCodeChange
+      OnChange = edCodeChange
+      OnDblClick = edCodeDblClick
+      OnKeyUp = edCodeKeyUp
       SkinData.SkinSection = 'EDIT'
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
       BoundLabel.Font.Height = -13
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
+      ExplicitHeight = 22
     end
-    object btnGetCurrency: TsButton
+    object btnSelect: TsButton
       AlignWithMargins = True
       Left = 63
       Top = 0
@@ -88,9 +87,8 @@ object fraCurrencyPanel: TfraCurrencyPanel
       Align = alLeft
       Caption = '...'
       TabOrder = 1
-      OnClick = btnGetCurrencyClick
+      OnClick = btnSelectClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 40
     end
   end
 end

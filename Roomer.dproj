@@ -987,6 +987,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="TableCache\uCachedDataHandler.pas"/>
         <DCCReference Include="VersionManagement\uReleaseNotes.pas"/>
         <DCCReference Include="RoomerVCLs\Source\RoomerCurrencyEdit.pas"/>
+        <DCCReference Include="Embeddables\uFraLookupPanel.pas">
+            <Form>fraLookupPanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

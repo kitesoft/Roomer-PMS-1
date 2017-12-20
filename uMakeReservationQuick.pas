@@ -97,7 +97,6 @@ uses
   sSpeedButton,
   uDImages,
   Vcl.DBCtrls,
-  cxCurrencyEdit,
   dxSkinCaramel,
   dxSkinCoffee,
   dxSkinTheAsphaltWorld,
@@ -139,8 +138,13 @@ uses
   system.Generics.Collections,
   uDynamicRates,
   sListView,
-  cxTimeEdit, AdvSplitter, uFraCountryPanel
-  , cxDBLabel, Datasnap.DBClient, ufraCurrencyPanel, uRoomerCurrencyDefinition
+  sCurrencyEdit
+  , RoomerCurrencyEdit
+  , cxTimeEdit, AdvSplitter, uFraCountryPanel
+  , cxDBLabel, Datasnap.DBClient
+  , ufraCurrencyPanel
+  , uRoomerCurrencyDefinition
+  , uFraLookupPanel, sCurrEdit, cxCurrencyEdit
     ;
 
 TYPE
@@ -388,9 +392,7 @@ type
     gbxGetReservation: TsGroupBox;
     clabReservationName: TsLabel;
     clabGroupInvoice: TsLabel;
-    labMarketSegmentName: TsLabel;
     sLabel9: TsLabel;
-    btnGetMarketSegment: TsSpeedButton;
     clabMarketSegmentCode: TsLabel;
     clabReservationType: TsLabel;
     lblMarket: TsLabel;
@@ -399,9 +401,7 @@ type
     cbxRoomStatus: TsComboBox;
     chkisGroupInvoice: TsCheckBox;
     edInvRefrence: TsEdit;
-    edMarketSegmentCode: TsEdit;
     cbxMarket: TsComboBox;
-    fraCountry: TfraCountryPanel;
     gbxDates: TsGroupBox;
     clabArrival: TsLabel;
     __lblArrivalWeekday: TsLabel;
@@ -413,17 +413,8 @@ type
     dtDeparture: TsDateEdit;
     gbxRate: TsGroupBox;
     clabCurrency: TsLabel;
-    clabDiscountPerc: TsLabel;
     clabPcCode: TsLabel;
-    sSpeedButton2: TsSpeedButton;
-    labPcCodeName: TsLabel;
     sLabPackage: TsLabel;
-    sSpeedButton3: TsSpeedButton;
-    labPackageDescription: TsLabel;
-    edRoomResDiscount: TsSpinEdit;
-    cbxIsRoomResDiscountPrec: TsComboBox;
-    edPcCode: TsEdit;
-    edPackage: TsEdit;
     pgcMoreInfo: TsPageControl;
     tabContactDetails: TsTabSheet;
     sPanel3: TsPanel;
@@ -623,14 +614,18 @@ type
     edContactMobile: TsEdit;
     edContactPerson1: TcxComboBox;
     fraCurrencyPanel: TfraCurrencyPanel;
+    fraLookupPriceCode: TfraLookupPanel;
+    fraLookupPackage: TfraLookupPanel;
+    pnlDiscount: TPanel;
+    edRoomResDiscount: TsCurrencyEdit;
+    cbxIsRoomResDiscountPrec: TsComboBox;
+    clabDiscountPerc: TsLabel;
+    fraLookupCountry: TfraLookupPanel;
+    fraLookupMarketSegment: TfraLookupPanel;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
     procedure btnFinishClick(Sender: TObject);
-    procedure edMarketSegmentCodeDblClick(Sender: TObject);
-    procedure edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
-    procedure edPcCodeDblClick(Sender: TObject);
-    procedure edPcCodeExit(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnPreviusClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -676,10 +671,6 @@ type
     procedure cbxIsRoomResDiscountPrecChange(Sender: TObject);
     procedure mnuFinishAndShowClick(Sender: TObject);
     procedure edCustomerKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edMarketSegmentCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edPcCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edPackageDblClick(Sender: TObject);
-    procedure edPackageExit(Sender: TObject);
     procedure tvRoomResPackagePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
     procedure cbxRoomStatusChange(Sender: TObject);
     procedure edContactEmailChange(Sender: TObject);
@@ -706,15 +697,11 @@ type
     procedure mExtrasCalcFields(DataSet: TDataSet);
     procedure cbxFilterSelectedTypesClick(Sender: TObject);
     procedure mSelectRoomsFilterRecord(DataSet: TDataSet; var Accept: Boolean);
-    procedure edPcCodeChange(Sender: TObject);
-    procedure edPackageChange(Sender: TObject);
-    procedure edMarketSegmentCodeChange(Sender: TObject);
     procedure tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure edContactPerson1PropertiesCloseUp(Sender: TObject);
-    procedure fraCountryedCountryCodeChange(Sender: TObject);
   private
     { Private declarations }
     zCustomerChanged: boolean;
@@ -752,9 +739,6 @@ type
     procedure SetAllAsNoRoom(doNextPage: boolean = true);
 
     function customerValidate: boolean;
-    function MarketSegmentValidate: boolean;
-    function PriceCodeValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
-    function PackageValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
 
     procedure ApplyRateToOther(RoomReservation: integer; RoomType: string);
     procedure ApplyNettoRateToNullPrice(NewRate: double; RoomReservation: integer; RoomType: string);
@@ -782,6 +766,11 @@ type
     procedure EmptyQuickFind;
     procedure ActivateNextButton;
     function OkToActivateNextButton: Boolean;
+    procedure evtLookupOnChange(Sender: TObject);
+    function evtSelectPriceCode(var aCode: string): boolean;
+    function evtSelectPackage(var aCode: string): boolean;
+    function evtSelectCountry(var aCode: string): boolean;
+    function evtSelectMarketSegments(var aCode: string): boolean;
 
   protected
     const
@@ -1224,8 +1213,93 @@ begin
   end;
 
   fraCurrencyPanel.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
+
+  with fraLookupPriceCode do
+  begin
+    Dataset := glb.TblpricecodesSet;
+    CodeField := 'pccode';
+    DescriptionField := 'pcdescription';
+    OnChange := evtLookupOnChange;
+    OnSelect := evtSelectPriceCode;
+  end;
+
+  with fraLookupPackage do
+  begin
+    Dataset := glb.Packages;
+    CodeField := 'package';
+    DescriptionField := 'description';
+    OnChange := evtLookupOnChange;
+    OnSelect := evtSelectPackage;
+  end;
+
+  with fraLookupCountry do
+  begin
+    RejectedCodes := '00';
+    Dataset := glb.Countries;
+    CodeField := 'country';
+    DescriptionField := 'countryname';
+    OnChange := evtLookupOnChange;
+    OnSelect := evtSelectCountry;
+  end;
+
+  with fraLookupMarketSegment do
+  begin
+    Dataset := glb.CustomertypesSet;
+    CodeField := 'customertype';
+    DescriptionField := 'description';
+    OnChange := evtLookupOnChange;
+    OnSelect := evtSelectMarketSegments;
+  end;
+
   pgcExtraAndAlert.ActivePageIndex := 0;
 
+end;
+
+function TfrmMakeReservationQuick.evtSelectMarketSegments(var aCode: string): boolean;
+var
+  theData: recCustomerTypeHolder;
+begin
+  theData.customerType := aCode;
+  Result := openCustomerTypes(actLookup, theData);
+  if Result then
+    aCode := theData.customerType;
+end;
+
+function TfrmMakeReservationQuick.evtSelectCountry(var aCode: string): boolean;
+var
+  theData : recCountryHolder;
+begin
+  initCountryHolder(theData);
+  theData.country := aCode;
+  Result := countries(actLookup,theData);
+  if Result then
+    aCode := theData.Country;
+end;
+
+
+function TfrmMakeReservationQuick.evtSelectPackage(var aCode: string): boolean;
+var
+  theData: recPackageHolder;
+begin
+  theData.package := aCode;
+  Result := openPackages(actLookup, theData);
+  if Result then
+    aCode := theData.package;
+end;
+
+function TfrmMakeReservationQuick.evtSelectPriceCode(var aCode: string): boolean;
+var
+  theData: recPriceCodeHolder;
+begin
+  theData.PcCode := aCode;
+  Result := priceCodes(actLookup, theData);
+  if Result then
+    aCode := theData.PcCode;
+end;
+
+procedure TfrmMakeReservationQuick.evtLookupOnChange(Sender: TObject);
+begin
+  ActivateNextButton;
 end;
 
 procedure TfrmMakeReservationQuick.EmptyQuickFind;
@@ -1408,12 +1482,6 @@ begin
 
 end;
 
-
-procedure TfrmMakeReservationQuick.fraCountryedCountryCodeChange(Sender: TObject);
-begin
-  fraCountry.edCountryCodeChange(Sender);
-  ActivateNextButton;
-end;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //  RoomRes grid and table
@@ -1883,11 +1951,11 @@ begin
   FNewReservation.HomeCustomer.Customer_update(Customer);
   labCustomerName.Caption := FNewReservation.HomeCustomer.CustomerName;
 
-  fraCountry.CountryCode:= FNewReservation.HomeCustomer.Country;
+  fraLookupCountry.Code := FNewReservation.HomeCustomer.Country;
   edReservationName.Text := FNewReservation.HomeCustomer.CustomerName;
 
   cbxRoomStatus.ItemIndex := RoomStatusFromInfo(FNewReservation.HomeCustomer.RoomStatus);
-  edMarketSegmentCode.Text := FNewReservation.HomeCustomer.MarketSegmentCode;
+  fraLookupMarketSegment.Code := FNewReservation.HomeCustomer.MarketSegmentCode;
 
   if FNewReservation.HomeCustomer.IsGroupInvoice = true then
     chkisGroupInvoice.Checked := true
@@ -1895,7 +1963,7 @@ begin
     chkisGroupInvoice.Checked := false;
 
   fraCurrencyPanel.CurrencyCode := FNewReservation.HomeCustomer.Currency;
-  edPcCode.Text := FNewReservation.HomeCustomer.PcCode;
+  fraLookupPriceCode.Code := FNewReservation.HomeCustomer.PcCode;
   edRoomResDiscount.Value := trunc(FNewReservation.HomeCustomer.DiscountPerc);
   edPID.Text := FNewReservation.HomeCustomer.PID;
   edCustomerName.Text := FNewReservation.HomeCustomer.CustomerName;
@@ -2331,7 +2399,7 @@ begin
         zCustomerChanged := true;
         initCustomer;
       end;
-      fraCountry.CountryCode := rSet.FieldByName('country').AsString;
+      fraLookupCountry.Code := rSet.FieldByName('country').AsString;
     end;
   finally
     FreeAndNil(rSet);
@@ -2345,13 +2413,13 @@ begin
   begin
     if not customerValidate then
       exit;
-    if not fraCountry.IsValid then
+    if not fraLookupCountry.IsValid then
       exit;
-    if not MarketSegmentValidate then
+    if not fraLookupMarketSegment.IsValid then
       exit;
     if not fraCurrencyPanel.IsValid then
       exit;
-    if not PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName) then
+    if not fraLookupPriceCode.IsValid then
       exit;
   end;
   if pgcMain.ActivePageIndex = 3 then
@@ -2643,7 +2711,7 @@ begin
       edtRoom.Text := glb.PersonProfiles['Room'];
       edtRoomType.Text := glb.PersonProfiles['RoomType'];
 
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+      fraLookupCountry.Code := glb.PersonProfiles['Country'];
       SetProfileAlertVisibility;
     end;
   end;
@@ -3219,7 +3287,7 @@ begin
 
   Arrival := dtArrival.date;
   Departure := dtDeparture.date;
-  PriceCode := Trim(edPcCode.Text);
+  PriceCode := fraLookupPriceCode.Code;
 
   if not((zTotalSelected = 0) and (zTotalNoRooms > 0)) and (zTotal <> 0) then
   begin
@@ -3401,7 +3469,7 @@ var
 begin
   Result := true;
   RoomReservation := 0;
-  PriceCode := Trim(edPcCode.Text);
+  PriceCode := fraLookupPriceCode.Code;
 
   if mRoomRes.active then
     mRoomRes.Close;
@@ -3789,7 +3857,7 @@ begin
     ShowDiscount := true;
     isPercentage := cbxIsRoomResDiscountPrec.ItemIndex = 0;
 
-    PriceCode := Trim(edPcCode.Text);
+    PriceCode := fraLookupPriceCode.Code;
     priceID := hData.PriceCode_ID(PriceCode);
 
     andRoomTypes := '';
@@ -4003,7 +4071,7 @@ begin
       infantCount := mRoomResinfantCount.AsInteger;
       Discount := mRoomResavrageDiscount.AsFloat;
 
-      PriceCode := Trim(edPcCode.Text);
+      PriceCode := fraLookupPriceCode.Code;
       priceID := hData.PriceCode_ID(PriceCode);
 
       dayCount := trunc(Departure) - trunc(Arrival);
@@ -4166,13 +4234,13 @@ begin
   end;
 
   FNewReservation.HomeCustomer.invRefrence := edInvRefrence.Text;
-  FNewReservation.HomeCustomer.Country := fraCountry.CountryCode;
+  FNewReservation.HomeCustomer.Country := fraLookupCountry.Code;
   FNewReservation.HomeCustomer.ReservationName := edReservationName.Text;
   FNewReservation.HomeCustomer.RoomStatus := RoomStatusToInfo(cbxRoomStatus.ItemIndex);
-  FNewReservation.HomeCustomer.MarketSegmentCode := edMarketSegmentCode.Text;
+  FNewReservation.HomeCustomer.MarketSegmentCode := fraLookupMarketSegment.Code;
   FNewReservation.HomeCustomer.IsGroupInvoice := chkisGroupInvoice.Checked;
   FNewReservation.HomeCustomer.Currency := FCurrentCurrency.CurrencyCode;
-  FNewReservation.HomeCustomer.PcCode := edPcCode.Text;
+  FNewReservation.HomeCustomer.PcCode := fraLookupPriceCode.Code;
   FNewReservation.HomeCustomer.PID := edPID.Text;
   FNewReservation.HomeCustomer.CustomerName := edCustomerName.Text;
   FNewReservation.HomeCustomer.Address1 := edAddress1.Text;
@@ -4191,7 +4259,7 @@ begin
   FNewReservation.HomeCustomer.ContactAddress3 := edContactAddress3.Text;
   FNewReservation.HomeCustomer.ContactAddress4 := edContactAddress4.Text;
   // 0810-hj   FNewReservation.HomeCustomer.ContactCountry         := edContactCountry.text   ;
-  FNewReservation.HomeCustomer.ContactCountry := fraCountry.CountryCode;
+  FNewReservation.HomeCustomer.ContactCountry := fraLookupCountry.Code;
   FNewReservation.HomeCustomer.PersonProfileId := edtPortfolio.Tag;
   FNewReservation.HomeCustomer.CreatePersonProfileId := cbxAddToGuestProfiles.Checked;
 
@@ -4356,89 +4424,6 @@ begin
   frmdayNotes.memLog.Perform(EM_LINESCROLL, 0, -10)
 end;
 
-procedure TfrmMakeReservationQuick.edPackageChange(Sender: TObject);
-begin
-  PackageValidate(edPackage, clabPcCode, labPackageDescription);
-  ActivateNextButton;
-end;
-
-procedure TfrmMakeReservationQuick.edPackageDblClick(Sender: TObject);
-var
-  theData: recPackageHolder;
-begin
-  theData.package := edPackage.Text;
-  if openPackages(actLookup, theData) then
-  begin
-    edPackage.Text := theData.package;
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edPackageExit(Sender: TObject);
-begin
-  PackageValidate(edPackage, clabPcCode, labPackageDescription);
-end;
-
-// =============================================================================================
-// Price Code Edit
-// =============================================================================================
-
-function TfrmMakeReservationQuick.PriceCodeValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
-var
-  sValue: string;
-  priceID: integer;
-begin
-  sValue := Trim(ed.Text);
-  Result := PriceCodeExist(sValue);
-
-  priceID := PriceCode_ID(sValue);
-  try
-  if not Result then
-  begin
-    labName.Font.Color := clRed;
-    labName.Caption := GetTranslatedText('shNotF_star');
-    ed.SetFocus;
-  end
-  else
-  begin
-    labName.Font.Color := clBlack;
-    labName.Caption := PriceCode_Description(priceID);
-  end;
-  except
-
-  end;
-end;
-
-function TfrmMakeReservationQuick.PackageValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
-var
-  sValue: string;
-begin
-  sValue := Trim(ed.Text);
-  Result := PackageExist(sValue);
-
-  if not Result then
-  begin
-    ed.SetFocus;
-    labName.Font.Color := clRed;
-    labName.Caption := GetTranslatedText('shNotF_star');
-  end
-  else
-  begin
-    labName.Font.Color := clBlack;
-    labName.Caption := Package_Description(sValue);
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
-var
-  theData: recPriceCodeHolder;
-begin
-  theData.PcCode := edPcCode.Text;
-  if priceCodes(actLookup, theData) then
-  begin
-    edPcCode.Text := theData.PcCode;
-  end;
-end;
-
 procedure TfrmMakeReservationQuick.edtRatePlansCloseUp(Sender: TObject);
 var
   ChannelCode,
@@ -4460,36 +4445,6 @@ begin
   if Assigned(Sender) then
     GetPrices;
 end;
-
-
-/// ///////////////////////////////////////////////////////////
-///
-///
-
-function TfrmMakeReservationQuick.MarketSegmentValidate: boolean;
-var
-  sValue: string;
-begin
-  sValue := Trim(edMarketSegmentCode.Text);
-  Result := CustomerTypeExist(sValue);
-
-  if edMarketSegmentCode.Visible and labMarketSegmentName.Visible then
-  begin
-    if not Result then
-    begin
-      edMarketSegmentCode.SetFocus;
-      labMarketSegmentName.Font.Color := clRed;
-      labMarketSegmentName.Caption := GetTranslatedText('shNotF_star');
-    end
-    else
-    begin
-      labMarketSegmentName.Font.Color := clBlack;
-      labMarketSegmentName.Caption := d.GET_CustomerTypesDescription_byCustomerType(Trim(edMarketSegmentCode.Text));
-    end;
-  end;
-end;
-
-
 
 
 
@@ -4592,7 +4547,7 @@ begin
     if (s <> '') and (s <> Trim(edCustomer.Text)) then
     begin
       edCustomer.Text := s;
-      edPcCode.Text := theData.pcCode;
+      fraLookupPriceCode.Code := theData.pcCode;
       fraCurrencyPanel.CurrencyCode := theData.Currency;
     end;
   end;
@@ -4611,34 +4566,7 @@ begin
   end;
 end;
 
-/// ///////////////////////////
-// edMarketSegmentCode
 
-procedure TfrmMakeReservationQuick.edMarketSegmentCodeChange(Sender: TObject);
-begin
-  MarketSegmentValidate;
-  ActivateNextButton;
-end;
-
-procedure TfrmMakeReservationQuick.edMarketSegmentCodeDblClick(Sender: TObject);
-var
-  theData: recCustomerTypeHolder;
-begin
-  theData.customerType := edMarketSegmentCode.Text;
-  if openCustomerTypes(actLookup, theData) then
-    edMarketSegmentCode.Text := theData.customerType;
-end;
-
-procedure TfrmMakeReservationQuick.edMarketSegmentCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = vk_f2 then
-  begin
-    edMarketSegmentCodeDblClick(self);
-  end;
-end;
-
-/// ///////////////////////////
-// edCountry
 
 procedure TfrmMakeReservationQuick.edContactEmailChange(Sender: TObject);
 begin
@@ -4708,6 +4636,7 @@ var
   Index: integer;
 begin
   FCurrentCurrency := RoomerCurrencyManager[fraCurrencyPanel.CurrencyCode];
+  edRoomResDiscount.CurrencyCode := FCurrentCurrency.CurrencyCode;
 
   index := cbxIsRoomResDiscountPrec.ItemIndex;
   cbxIsRoomResDiscountPrec.Items.Clear;
@@ -4724,38 +4653,6 @@ begin
 end;
 
 
-/// ////////////////////////
-// edPcCode
-
-procedure TfrmMakeReservationQuick.edPcCodeChange(Sender: TObject);
-begin
-  PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName);
-  ActivateNextButton;
-end;
-
-procedure TfrmMakeReservationQuick.edPcCodeDblClick(Sender: TObject);
-var
-  theData: recPriceCodeHolder;
-begin
-  theData.PcCode := edPcCode.Text;
-  if priceCodes(actLookup, theData) then
-  begin
-    edPcCode.Text := theData.PcCode;
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edPcCodeExit(Sender: TObject);
-begin
-  PriceCodeValidate(edPcCode, clabPcCode, labPcCodeName);
-end;
-
-procedure TfrmMakeReservationQuick.edPcCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = vk_f2 then
-  begin
-    edPcCodeDblClick(self);
-  end;
-end;
 
 /// ////////////////////////////
 //
