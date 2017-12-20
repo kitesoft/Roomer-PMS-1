@@ -952,7 +952,10 @@ begin
     tvDataTotalStock.Visible := false;
   end;
 
-  grData.SetFocus;
+  if zAct = actLookup then
+    edFilter.SetFocus
+  else
+    grData.SetFocus;
 end;
 
 procedure Tfrmitems2.FillStockItemPrices;
