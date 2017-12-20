@@ -339,7 +339,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 0
         OnClick = LMDSpeedButton6Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 3
       end
       object btnReservation: TsButton
         AlignWithMargins = True
@@ -354,7 +353,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 1
         OnClick = btnReservationClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 109
       end
       object LMDSpeedButton1: TsButton
         AlignWithMargins = True
@@ -369,7 +367,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 2
         OnClick = LMDSpeedButton1Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 215
       end
       object btnViewInvoice: TsButton
         AlignWithMargins = True
@@ -384,7 +381,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 3
         OnClick = btnViewInvoiceClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 321
       end
       object btnPrint: TsButton
         AlignWithMargins = True
@@ -399,7 +395,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 4
         OnClick = btnPrintClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 427
       end
       object btnBestFit: TsButton
         AlignWithMargins = True
@@ -413,7 +408,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 5
         OnClick = btnBestFitClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 533
       end
       object LMDButton1: TsButton
         AlignWithMargins = True
@@ -429,7 +423,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 6
         OnClick = LMDButton1Click
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 639
       end
       object btnExport: TsButton
         AlignWithMargins = True
@@ -442,7 +435,6 @@ inherited frmInvoiceList2: TfrmInvoiceList2
         TabOrder = 7
         OnClick = btnExportClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 1010
       end
     end
   end
