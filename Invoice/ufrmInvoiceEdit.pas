@@ -1088,7 +1088,7 @@ begin
       UpdateControls;
     finally
       agrLines.Col := lCol;
-      agrLines.Row := lRow;
+      agrLines.Row := min(lRow, agrLines.RowCount-1);
       agrLines.EndUpdate;
       Screen.Cursor := crDefault;
     end;
