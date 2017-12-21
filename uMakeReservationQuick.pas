@@ -407,7 +407,6 @@ type
     gbxContact: TsGroupBox;
     clabContactPerson: TsLabel;
     clabContactAddress: TsLabel;
-    clabContactPhone: TsLabel;
     clabContactFax: TsLabel;
     clabContactEmail: TsLabel;
     lblContactZip: TsLabel;
@@ -418,10 +417,7 @@ type
     edContactAddress3: TsEdit;
     edContactAddress4: TsEdit;
     chkContactIsGuest: TsCheckBox;
-    edContactPhone: TsEdit;
     edContactFax: TsEdit;
-    edContactEmail: TsEdit;
-    chkSendConfirmation: TsCheckBox;
     cbxAddToGuestProfiles: TsCheckBox;
     gbxProfileAlert: TsGroupBox;
     lblSpecialRequests: TsLabel;
@@ -595,8 +591,6 @@ type
     tvRoomRatesNativeAmount: TcxGridDBColumn;
     lvRoomRes: TcxGridLevel;
     lvRoomRates: TcxGridLevel;
-    lblContactMobile: TsLabel;
-    edContactMobile: TsEdit;
     edContactPerson1: TcxComboBox;
     fraCurrencyPanel: TfraCurrencyPanel;
     fraLookupPriceCode: TfraLookupPanel;
@@ -625,6 +619,14 @@ type
     pnlDeparture: TsPanel;
     __lblDepartureWeekday: TsLabel;
     dtDeparture: TsDateEdit;
+    pnlPhones: TsPanel;
+    edContactPhone: TsEdit;
+    lblContactMobile: TsLabel;
+    edContactMobile: TsEdit;
+    clabContactPhone: TsLabel;
+    pnlEmail: TsPanel;
+    edContactEmail: TsEdit;
+    chkSendConfirmation: TsCheckBox;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
