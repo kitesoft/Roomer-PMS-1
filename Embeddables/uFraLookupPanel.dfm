@@ -2,7 +2,7 @@ object fraLookupPanel: TfraLookupPanel
   Left = 0
   Top = 0
   Width = 250
-  Height = 20
+  Height = 19
   TabOrder = 0
   object pnlLookup: TsPanel
     Left = 0
@@ -18,12 +18,12 @@ object fraLookupPanel: TfraLookupPanel
     TabOrder = 0
     StyleElements = [seFont, seClient]
     SkinData.SkinSection = 'PANEL'
-    object lblDescription: TLabel
+    object lblDescription: TsLabel
       AlignWithMargins = True
       Left = 93
       Top = 0
-      Width = 4
-      Height = 13
+      Width = 157
+      Height = 20
       Margins.Left = 6
       Margins.Top = 0
       Margins.Right = 0
@@ -31,18 +31,18 @@ object fraLookupPanel: TfraLookupPanel
       Align = alClient
       Caption = '-'
       Color = clBtnFace
+      ParentColor = False
+      ParentFont = False
+      Layout = tlCenter
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ParentColor = False
-      ParentFont = False
-      Transparent = True
-      Layout = tlCenter
+      ExplicitWidth = 4
+      ExplicitHeight = 13
     end
     object edCode: TsEdit
-      AlignWithMargins = True
       Left = 0
       Top = 0
       Width = 60

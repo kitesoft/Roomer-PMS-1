@@ -381,36 +381,22 @@ type
     Panel2: TsPanel;
     gbxGetCustomer: TsGroupBox;
     clabCustomer: TsLabel;
-    labCustomerName: TsLabel;
-    btnGetCustomer: TsSpeedButton;
-    btnGetLastCustomer: TsSpeedButton;
     lblPortfolio: TsLabel;
-    btnPortfolio: TsSpeedButton;
-    btnPortfolioLookup: TsSpeedButton;
-    edCustomer: TsEdit;
-    edtPortfolio: TsEdit;
     gbxGetReservation: TsGroupBox;
     clabReservationName: TsLabel;
-    clabGroupInvoice: TsLabel;
     sLabel9: TsLabel;
     clabMarketSegmentCode: TsLabel;
     clabReservationType: TsLabel;
     lblMarket: TsLabel;
     lblCountry: TsLabel;
     edReservationName: TsEdit;
-    cbxRoomStatus: TsComboBox;
-    chkisGroupInvoice: TsCheckBox;
     edInvRefrence: TsEdit;
     cbxMarket: TsComboBox;
     gbxDates: TsGroupBox;
     clabArrival: TsLabel;
-    __lblArrivalWeekday: TsLabel;
-    __lblDepartureWeekday: TsLabel;
     clabdeparture: TsLabel;
     clabNights: TsLabel;
     edNights: TsSpinEdit;
-    dtArrival: TsDateEdit;
-    dtDeparture: TsDateEdit;
     gbxRate: TsGroupBox;
     clabCurrency: TsLabel;
     clabPcCode: TsLabel;
@@ -620,6 +606,25 @@ type
     clabDiscountPerc: TsLabel;
     fraLookupCountry: TfraLookupPanel;
     fraLookupMarketSegment: TfraLookupPanel;
+    pnlReservationStatus: TsPanel;
+    cbxRoomStatus: TsComboBox;
+    clabGroupInvoice: TsLabel;
+    chkisGroupInvoice: TsCheckBox;
+    pnlGuest: TsPanel;
+    edtPortfolio: TsEdit;
+    btnPortfolioLookup: TsSpeedButton;
+    btnPortfolio: TsSpeedButton;
+    pnlCompany: TsPanel;
+    labCustomerName: TsLabel;
+    btnGetCustomer: TsSpeedButton;
+    btnGetLastCustomer: TsSpeedButton;
+    edCustomer: TsEdit;
+    pnlArrival: TsPanel;
+    dtArrival: TsDateEdit;
+    __lblArrivalWeekday: TsLabel;
+    pnlDeparture: TsPanel;
+    __lblDepartureWeekday: TsLabel;
+    dtDeparture: TsDateEdit;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
@@ -1422,7 +1427,6 @@ begin
 
     ShowRatePlans;
     edCustomer.Text := FNewReservation.HomeCustomer.Customer;
-    initCustomer;
 
     if FNewReservation.IsQuick then
     begin

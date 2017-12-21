@@ -10,13 +10,13 @@ uses
 type
   TfraLookupPanel = class;
   TLookupPanelSelectEvent = function(var aCode: string): boolean of object;
-  TLookupPanelValidateEvent = function(Code: string): boolean of object;
+  TLookupPanelValidateEvent = function(const aCode: string): boolean of object;
 
   TfraLookupPanel = class(TFrame)
     pnlLookup: TsPanel;
     edCode: TsEdit;
     btnSelect: TsButton;
-    lblDescription: TLabel;
+    lblDescription: TsLabel;
     procedure btnSelectClick(Sender: TObject);
     procedure edCodeChange(Sender: TObject);
     procedure edCodeDblClick(Sender: TObject);
@@ -33,6 +33,7 @@ type
     FDataset: TDataset;
     FCodeField: string;
     FDescriptionField: string;
+    FAllowEmpty: boolean;
     procedure SetAllowEdit(const Value: boolean);
     function GetCode: string;
     procedure SetCode(const Value: string);
@@ -41,6 +42,7 @@ type
     procedure SetRejectedCodes(const Value: string);
     procedure SetOnSelect(const Value: TLookupPanelSelectEvent);
     function ValidateInDataset(const aCode: string): boolean;
+    procedure SetAllowEmpty(const Value: boolean);
     { Private declarations }
   protected
     procedure DoInternalSelect(); virtual;
@@ -56,6 +58,7 @@ type
   published
     { Public declarations }
     property AllowEdit: boolean read FAllowEdit write SetAllowEdit;
+    property AllowEmpty: boolean read FAllowEmpty write SetAllowEmpty;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnChangedAndValid: TNotifyEvent read FOnChangedAndValid write FOnChangedAndValid;
     property OnSelect: TLookupPanelSelectEvent read FOnSelect write SetOnSelect;
@@ -188,7 +191,7 @@ end;
 
 procedure TfraLookupPanel.edCodeChange(Sender: TObject);
 begin
-  FIsValidCode := ValidateCode(edCode.Text);
+  FIsValidCode := (FAllowEmpty and (trim(edCode.Text) = '')) or ValidateCode(edCode.Text);
 
   if NOT FIsValidCode then
   begin
@@ -253,6 +256,12 @@ begin
   FAllowEdit := Value;
   edCode.ReadOnly := not FAllowEdit;
   btnSelect.Visible := FAllowEdit;
+end;
+
+procedure TfraLookupPanel.SetAllowEmpty(const Value: boolean);
+begin
+  FAllowEmpty := Value;
+  edCodeChange(self);
 end;
 
 procedure TfraLookupPanel.SetCode(const Value: string);
