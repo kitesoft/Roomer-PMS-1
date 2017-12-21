@@ -589,18 +589,18 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             ExplicitWidth = 217
             ExplicitHeight = 21
             inherited lblCurrencyName: TsLabel
-              Width = 153
+              Width = 147
               Height = 21
               ExplicitWidth = 168
               ExplicitHeight = 18
             end
             inherited edCurrencyCode: TsEdit
               Height = 21
-              ExplicitTop = 0
               ExplicitHeight = 21
             end
             inherited btnGetCurrency: TsButton
               Height = 21
+              ExplicitLeft = 40
               ExplicitHeight = 21
             end
           end

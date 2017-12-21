@@ -428,14 +428,10 @@ type
     btnGetCurrency: TsSpeedButton;
     sSpeedButton2: TsSpeedButton;
     labPcCodeName: TsLabel;
-    sLabPackage: TsLabel;
-    sSpeedButton3: TsSpeedButton;
-    labPackageDescription: TsLabel;
     edRoomResDiscount: TsSpinEdit;
     cbxIsRoomResDiscountPrec: TsComboBox;
     edCurrency: TsEdit;
     edPcCode: TsEdit;
-    edPackage: TsEdit;
     pgcMoreInfo: TsPageControl;
     tabContactDetails: TsTabSheet;
     sPanel3: TsPanel;
@@ -696,8 +692,6 @@ type
     procedure edMarketSegmentCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edCurrencyKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edPcCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edPackageDblClick(Sender: TObject);
-    procedure edPackageExit(Sender: TObject);
     procedure tvRoomResPackagePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
     procedure cbxRoomStatusChange(Sender: TObject);
     procedure edContactEmailChange(Sender: TObject);
@@ -726,7 +720,6 @@ type
     procedure cbxFilterSelectedTypesClick(Sender: TObject);
     procedure mSelectRoomsFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure edPcCodeChange(Sender: TObject);
-    procedure edPackageChange(Sender: TObject);
     procedure edMarketSegmentCodeChange(Sender: TObject);
     procedure tvRoomResGetCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
@@ -775,7 +768,6 @@ type
     function MarketSegmentValidate: boolean;
     function CurrencyValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
     function PriceCodeValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
-    function PackageValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
 
     procedure ApplyRateToOther(RoomReservation: integer; RoomType: string);
     procedure ApplyNettoRateToNullPrice(NewRate: double; RoomReservation: integer; RoomType: string);
@@ -4408,28 +4400,6 @@ begin
   frmdayNotes.memLog.Perform(EM_LINESCROLL, 0, -10)
 end;
 
-procedure TfrmMakeReservationQuick.edPackageChange(Sender: TObject);
-begin
-  PackageValidate(edPackage, clabPcCode, labPackageDescription);
-  ActivateNextButton;
-end;
-
-procedure TfrmMakeReservationQuick.edPackageDblClick(Sender: TObject);
-var
-  theData: recPackageHolder;
-begin
-  theData.package := edPackage.Text;
-  if openPackages(actLookup, theData) then
-  begin
-    edPackage.Text := theData.package;
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edPackageExit(Sender: TObject);
-begin
-  PackageValidate(edPackage, clabPcCode, labPackageDescription);
-end;
-
 /// ///////////////////////
 
 // -------------------------------------------------------------------------------------------------
@@ -4485,26 +4455,6 @@ begin
   end;
   except
 
-  end;
-end;
-
-function TfrmMakeReservationQuick.PackageValidate(ed: TsEdit; lab, labName: TsLabel): boolean;
-var
-  sValue: string;
-begin
-  sValue := Trim(ed.Text);
-  Result := PackageExist(sValue);
-
-  if not Result then
-  begin
-    ed.SetFocus;
-    labName.Font.Color := clRed;
-    labName.Caption := GetTranslatedText('shNotF_star');
-  end
-  else
-  begin
-    labName.Font.Color := clBlack;
-    labName.Caption := Package_Description(sValue);
   end;
 end;
 

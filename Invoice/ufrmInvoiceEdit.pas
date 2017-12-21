@@ -1248,7 +1248,7 @@ begin
   unitPrice := totalTax / TaxUnits;
 
   lInvLine := AddLine(0, aParentInvoice, '', taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
-    lItemInfo.VATCode, aPurchaseDate, aParentInvoice.IsGeneratedLine, '', '', false, 0, ConfirmDate, ConfirmAmount, -1, _GetCurrentTick, 0, not aIsIncludedInParent);
+    lItemInfo.VATCode, aPurchaseDate, aParentInvoice.IsGeneratedLine, '', '', false, 0, ConfirmDate, ConfirmAmount, {aParentInvoice.roomreservation}-1, _GetCurrentTick, 0, not aIsIncludedInParent);
 
   lInvLine.IsTotalIncludedInParent := aIsIncludedInParent;
 end;
