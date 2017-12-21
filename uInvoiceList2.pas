@@ -627,6 +627,7 @@ begin
     screen.Cursor := crHourGlass;
     rSet := CreateNewDataset;
     try
+      s := '';
       s := s + 'SELECT '#10;
       s := s + '      ih.externalInvoiceId '#10;
       s := s + '    , ih.exportAllowed '#10;
