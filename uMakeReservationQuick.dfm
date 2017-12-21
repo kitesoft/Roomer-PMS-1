@@ -726,8 +726,10 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               ExplicitWidth = 309
               inherited pnlLookup: TsPanel
                 Width = 309
+                ExplicitWidth = 309
                 inherited lblDescription: TLabel
                   Width = 216
+                  Height = 20
                 end
               end
             end
@@ -745,6 +747,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ExplicitWidth = 307
                 inherited lblDescription: TLabel
                   Width = 214
+                  Height = 20
                 end
               end
             end
@@ -937,8 +940,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             ParentFont = False
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 383
-            ExplicitHeight = 153
             object clabCurrency: TsLabel
               Left = 107
               Top = 18
@@ -968,24 +969,9 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object sLabPackage: TsLabel
-              Left = 111
-              Top = 70
-              Width = 47
-              Height = 13
-              Alignment = taRightJustify
-              Caption = 'Package :'
-              ParentFont = False
-              Visible = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
             object clabDiscountPerc: TsLabel
               Left = 110
-              Top = 96
+              Top = 70
               Width = 48
               Height = 13
               Alignment = taRightJustify
@@ -1008,18 +994,21 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Margins.Right = 14
               Align = alTop
               AutoSize = True
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
               TabOrder = 0
               ExplicitLeft = 166
               ExplicitTop = 15
               ExplicitWidth = 309
-              inherited pnlCurrency: TsPanel
+              inherited pnlLookup: TsPanel
                 Width = 309
                 ExplicitWidth = 309
-                inherited lblCurrencyName: TsLabel
+                inherited lblDescription: TLabel
                   Width = 216
-                  ExplicitLeft = 70
-                  ExplicitWidth = 136
-                  ExplicitHeight = 20
                 end
               end
             end
@@ -1041,41 +1030,21 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ExplicitWidth = 309
                 inherited lblDescription: TLabel
                   Width = 216
-                end
-              end
-            end
-            inline fraLookupPackage: TfraLookupPanel
-              AlignWithMargins = True
-              Left = 166
-              Top = 67
-              Width = 309
-              Height = 20
-              Margins.Left = 164
-              Margins.Right = 14
-              Align = alTop
-              TabOrder = 2
-              ExplicitLeft = 166
-              ExplicitTop = 67
-              ExplicitWidth = 309
-              inherited pnlLookup: TsPanel
-                Width = 309
-                ExplicitWidth = 309
-                inherited lblDescription: TLabel
-                  Width = 216
+                  Height = 20
                 end
               end
             end
             object pnlDiscount: TPanel
               AlignWithMargins = True
               Left = 166
-              Top = 93
+              Top = 67
               Width = 309
               Height = 21
               Margins.Left = 164
               Margins.Right = 14
               Align = alTop
               BevelOuter = bvNone
-              TabOrder = 3
+              TabOrder = 2
               object edRoomResDiscount: TsCurrencyEdit
                 AlignWithMargins = True
                 Left = 0
@@ -1129,7 +1098,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Items.Strings = (
                   '%'
                   'ISK')
-                ExplicitLeft = 175
               end
             end
           end

@@ -137,17 +137,22 @@ inherited FrmChargePayCard: TFrmChargePayCard
       Width = 208
       Height = 20
       AutoSize = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 2
       ExplicitLeft = 192
       ExplicitTop = 120
       ExplicitWidth = 208
-      inherited pnlCurrency: TsPanel
+      inherited pnlLookup: TsPanel
         Width = 208
         ExplicitWidth = 208
-        inherited lblCurrencyName: TsLabel
-          Width = 138
-          ExplicitWidth = 142
-          ExplicitHeight = 14
+        inherited lblDescription: TLabel
+          Width = 115
+          Height = 20
         end
       end
     end

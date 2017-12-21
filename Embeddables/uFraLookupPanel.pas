@@ -17,8 +17,8 @@ type
     edCode: TsEdit;
     btnSelect: TsButton;
     lblDescription: TLabel;
-    procedure edCodeChange(Sender: TObject);
     procedure btnSelectClick(Sender: TObject);
+    procedure edCodeChange(Sender: TObject);
     procedure edCodeDblClick(Sender: TObject);
     procedure edCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
@@ -41,8 +41,11 @@ type
     procedure SetRejectedCodes(const Value: string);
     procedure SetOnSelect(const Value: TLookupPanelSelectEvent);
     function ValidateInDataset(const aCode: string): boolean;
-    function GetDescription(const aCode: string): string;
     { Private declarations }
+  protected
+    procedure DoInternalSelect(); virtual;
+    function ValidateCode(const aCode: string): boolean; virtual;
+    function GetDescription(const aCode: string): string; virtual;
   public
     constructor Create(aOwner: TCOmponent); override;
     destructor Destroy; override;
@@ -58,15 +61,22 @@ type
     property OnSelect: TLookupPanelSelectEvent read FOnSelect write SetOnSelect;
     property OnValidate: TLookupPanelValidateEvent read FOnValidate write FOnValidate;
     property Code: string read GetCode write SetCode;
+
     /// <summary>
     ///   A comma separated list of codes that are not accepted
     /// </summary>
     property RejectedCodes: string read GetRejectedCodes write SetRejectedCodes;
+    /// <summary>
+    ///   Dataset used to locate the entered Code for validation, if assigned and active
+    /// </summary>
     property Dataset: TDataset read FDataset write FDataset;
     /// <summary>
     ///   Fieldname in Dataset used to locate the entered Code for validation
     /// </summary>
     property CodeField: string read FCodeField write FCodeField;
+    /// <summary>
+    ///   Fieldname in Dataset used to retrieve the description of a selected item
+    /// </summary>
     property DescriptionField: string read FDescriptionField write FDescriptionField;
   end;
 
@@ -83,6 +93,11 @@ uses
 
 { TfraLookupPanel }
 
+procedure TfraLookupPanel.DoInternalSelect;
+begin
+end;
+
+
 procedure TfraLookupPanel.btnSelectClick(Sender: TObject);
 var
   lCode: string;
@@ -92,18 +107,18 @@ begin
     lCode := edCode.Text;
     if FOnSelect(lCode) then
       edCode.Text := lCode;
-  end;
-//  getCountry(edCountryCode, lblCountryName);
+  end
+  else
+    DoInternalSelect;
 end;
 
 constructor TfraLookupPanel.Create(aOwner: TCOmponent);
 begin
-  inherited;
   FRejectedCodes := TStringlist.Create;
   FRejectedCodes.Duplicates := dupIgnore;
   FRejectedCodes.CaseSensitive := false;
 
-  btnSelect.Enabled := false;
+  inherited;
 end;
 
 destructor TfraLookupPanel.Destroy;
@@ -159,18 +174,21 @@ begin
   end;
 end;
 
-
-procedure TfraLookupPanel.edCodeChange(Sender: TObject);
+function TfraLookupPanel.ValidateCode(const aCode: string): boolean;
 var
   idx: integer;
 begin
-  FIsValidCode := not FRejectedCodes.Find(edCode.Text, idx);
+  Result := not FRejectedCodes.Find(aCode, idx);
 
   if assigned(FonValidate) then
-    FIsValidCode := FIsValidCode and FOnValidate(edCode.Text)
+    Result := Result and FOnValidate(aCode)
   else
-    FIsValidCode := FIsValidCode and (not assigned(FDataset) or ValidateInDataset(edCode.Text));
+    result := Result and (not assigned(FDataset) or ValidateInDataset(aCode));
+end;
 
+procedure TfraLookupPanel.edCodeChange(Sender: TObject);
+begin
+  FIsValidCode := ValidateCode(edCode.Text);
 
   if NOT FIsValidCode then
   begin
@@ -239,14 +257,12 @@ end;
 
 procedure TfraLookupPanel.SetCode(const Value: string);
 begin
-  if not Sametext(edCode.Text, Value) then
-    edCode.Text := Value;
+  edCode.Text := Value;
 end;
 
 procedure TfraLookupPanel.SetOnSelect(const Value: TLookupPanelSelectEvent);
 begin
   FOnSelect := Value;
-  btnSelect.Enabled := assigned(FOnSelect);
 end;
 
 procedure TfraLookupPanel.SetRejectedCodes(const Value: string);

@@ -33,7 +33,8 @@ uses
   cxPropertiesStore, ufraCurrencyPanel
   , uAmount, uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, Vcl.ComCtrls, sStatusBar
   , sCurrencyEdit
-  , RoomerCurrencyEdit // must be after include of sCurrencyEdit!
+  , RoomerCurrencyEdit// must be after include of sCurrencyEdit!
+  , uFraLookupPanel
   ;
 
 type
@@ -130,16 +131,16 @@ end;
 procedure TfrmAddAccommodation.edRoomPriceChange(Sender: TObject);
 begin
   if fraCurrencyPanel.IsValid then
-    FRoomPrice := TAmount.Create(edRoomPrice.Value, fraCurrencyPanel.CurrencyCode);
+    FRoomPrice := TAmount.Create(edRoomPrice.Value, fraCurrencyPanel.Code);
   HandleChanged(Sender);
 end;
 
 procedure TfrmAddAccommodation.FormShow(Sender : TObject);
 begin
   FRoomPrice := 0;
-  fraCurrencyPanel.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
-  fraCurrencyPanel.OnCurrencyChange := HandleChanged;
-  fraCurrencyPanel.CurrencyCode := g.qNativeCurrency;
+  fraCurrencyPanel.OnChangedAndValid := evtCurrencyChangedAndValid;
+  fraCurrencyPanel.OnChange := HandleChanged;
+  fraCurrencyPanel.Code := g.qNativeCurrency;
   fraCurrencyPanel.ShowCurrencyName := false;
   edRoomprice.SetFocus;
   DialogButtons := mbOKCancel;
@@ -147,7 +148,7 @@ end;
 
 procedure TfrmAddAccommodation.evtCurrencyChangedAndValid(Sender: TObject);
 begin
-  edRoomPrice.CurrencyCode := fraCurrencyPanel.CurrencyCode;
+  edRoomPrice.CurrencyCode := fraCurrencyPanel.Code;
   RecalcAmount(Sender);
   edRoomPrice.DecimalPlaces := fraCurrencyPanel.CurrencyDefinition.CurrencyFormatSettings.CurrencyDecimals;
 end;
@@ -169,9 +170,9 @@ end;
 
 procedure TfrmAddAccommodation.RecalcAmount(Sender : TObject);
 begin
-  if (RoomPrice <> TAmount.ZERO) and fraCurrencyPanel.IsValid and (RoomPrice.CurrencyCode <> fraCurrencyPanel.CurrencyCode) then
+  if (RoomPrice <> TAmount.ZERO) and fraCurrencyPanel.IsValid and (RoomPrice.CurrencyCode <> fraCurrencyPanel.Code) then
   begin
-    edRoomPrice.Value := RoomPrice.ToCurrency(fraCurrencyPanel.CurrencyCode)
+    edRoomPrice.Value := RoomPrice.ToCurrency(fraCurrencyPanel.Code)
   end;
 end;
 

@@ -22,8 +22,8 @@ object fraLookupPanel: TfraLookupPanel
       AlignWithMargins = True
       Left = 93
       Top = 0
-      Width = 157
-      Height = 20
+      Width = 4
+      Height = 13
       Margins.Left = 6
       Margins.Top = 0
       Margins.Right = 0
@@ -40,9 +40,6 @@ object fraLookupPanel: TfraLookupPanel
       ParentFont = False
       Transparent = True
       Layout = tlCenter
-      ExplicitLeft = 91
-      ExplicitWidth = 4
-      ExplicitHeight = 13
     end
     object edCode: TsEdit
       AlignWithMargins = True

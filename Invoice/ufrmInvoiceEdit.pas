@@ -81,7 +81,7 @@ uses
   , Generics.Collections
   , cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
-  , uAmount, uCurrencyConstants
+  , uAmount, uCurrencyConstants, uFraLookupPanel
   ;
 
 type
@@ -2843,7 +2843,7 @@ begin
 
   pnlInvoiceIndices.Visible := FInvoiceType = TinvoiceType.itDebitInvoice;
 
-  fraInvoiceCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
+  fraInvoiceCurrency.OnChangedAndValid := evtCurrencyChangedAndValid;
   fraInvoiceCurrency.Enabled := not IsDirectInvoice;
 
   RefreshData;
@@ -5100,7 +5100,7 @@ begin
   end;
 
   oldCurrency := InvoiceCurrencyCode;
-  InvoiceCurrencyCode := fraInvoiceCurrency.CurrencyCode;
+  InvoiceCurrencyCode := fraInvoiceCurrency.Code;
   if oldCurrency <> InvoiceCurrencyCode then
     ExecuteCurrencyChange(oldCurrency, InvoiceCurrencyCode);
 end;
@@ -5238,7 +5238,7 @@ begin
 
   fraInvoiceCurrency.DisableEvents;
   try
-    fraInvoiceCurrency.CurrencyCode := Value;
+    fraInvoiceCurrency.Code := Value;
   finally
     fraInvoiceCurrency.EnableEvents;
   end;

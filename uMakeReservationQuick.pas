@@ -414,7 +414,6 @@ type
     gbxRate: TsGroupBox;
     clabCurrency: TsLabel;
     clabPcCode: TsLabel;
-    sLabPackage: TsLabel;
     pgcMoreInfo: TsPageControl;
     tabContactDetails: TsTabSheet;
     sPanel3: TsPanel;
@@ -615,7 +614,6 @@ type
     edContactPerson1: TcxComboBox;
     fraCurrencyPanel: TfraCurrencyPanel;
     fraLookupPriceCode: TfraLookupPanel;
-    fraLookupPackage: TfraLookupPanel;
     pnlDiscount: TPanel;
     edRoomResDiscount: TsCurrencyEdit;
     cbxIsRoomResDiscountPrec: TsComboBox;
@@ -768,7 +766,6 @@ type
     function OkToActivateNextButton: Boolean;
     procedure evtLookupOnChange(Sender: TObject);
     function evtSelectPriceCode(var aCode: string): boolean;
-    function evtSelectPackage(var aCode: string): boolean;
     function evtSelectCountry(var aCode: string): boolean;
     function evtSelectMarketSegments(var aCode: string): boolean;
 
@@ -1212,7 +1209,7 @@ begin
     screen.Cursor := crDefault;
   end;
 
-  fraCurrencyPanel.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
+  fraCurrencyPanel.OnChangedAndValid := evtCurrencyChangedAndValid;
 
   with fraLookupPriceCode do
   begin
@@ -1221,15 +1218,6 @@ begin
     DescriptionField := 'pcdescription';
     OnChange := evtLookupOnChange;
     OnSelect := evtSelectPriceCode;
-  end;
-
-  with fraLookupPackage do
-  begin
-    Dataset := glb.Packages;
-    CodeField := 'package';
-    DescriptionField := 'description';
-    OnChange := evtLookupOnChange;
-    OnSelect := evtSelectPackage;
   end;
 
   with fraLookupCountry do
@@ -1274,17 +1262,6 @@ begin
   Result := countries(actLookup,theData);
   if Result then
     aCode := theData.Country;
-end;
-
-
-function TfrmMakeReservationQuick.evtSelectPackage(var aCode: string): boolean;
-var
-  theData: recPackageHolder;
-begin
-  theData.package := aCode;
-  Result := openPackages(actLookup, theData);
-  if Result then
-    aCode := theData.package;
 end;
 
 function TfrmMakeReservationQuick.evtSelectPriceCode(var aCode: string): boolean;
@@ -1962,7 +1939,7 @@ begin
   else
     chkisGroupInvoice.Checked := false;
 
-  fraCurrencyPanel.CurrencyCode := FNewReservation.HomeCustomer.Currency;
+  fraCurrencyPanel.Code := FNewReservation.HomeCustomer.Currency;
   fraLookupPriceCode.Code := FNewReservation.HomeCustomer.PcCode;
   edRoomResDiscount.Value := trunc(FNewReservation.HomeCustomer.DiscountPerc);
   edPID.Text := FNewReservation.HomeCustomer.PID;
@@ -4548,7 +4525,8 @@ begin
     begin
       edCustomer.Text := s;
       fraLookupPriceCode.Code := theData.pcCode;
-      fraCurrencyPanel.CurrencyCode := theData.Currency;
+      fraCurrencyPanel.Code := theData.Currency;
+      fraLookupCountry.Code := theData.Country;
     end;
   end;
 end;
@@ -4565,8 +4543,6 @@ begin
     edCustomerDblClick(self);
   end;
 end;
-
-
 
 procedure TfrmMakeReservationQuick.edContactEmailChange(Sender: TObject);
 begin
@@ -4635,7 +4611,7 @@ procedure TfrmMakeReservationQuick.evtCurrencyChangedAndValid(Sender: TObject);
 var
   Index: integer;
 begin
-  FCurrentCurrency := RoomerCurrencyManager[fraCurrencyPanel.CurrencyCode];
+  FCurrentCurrency := fraCurrencyPanel.CurrencyDefinition;
   edRoomResDiscount.CurrencyCode := FCurrentCurrency.CurrencyCode;
 
   index := cbxIsRoomResDiscountPrec.ItemIndex;
