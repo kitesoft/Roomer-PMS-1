@@ -159,7 +159,7 @@ begin
   if not DefinitionExists(aToCurrCode) then
     raise ECurrencyConversionException.CreateFmt('Converting to an unknown currency [%s]', [aToCurrCode]);
 
-  lNewValue := aValue * CurrencyDefinition[aValue.CurrencyCode].Rate / CurrencyDefinition[aToCurrCode].Rate;
+  lNewValue := aValue * aValue.CurrencyRate / CurrencyDefinition[aToCurrCode].Rate;
   Result := TAmount.Create(lNewValue, aToCurrCode);
 end;
 

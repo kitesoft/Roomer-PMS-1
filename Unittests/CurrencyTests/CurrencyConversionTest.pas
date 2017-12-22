@@ -18,6 +18,7 @@ type
     procedure TestConvertTo;
     procedure TestConvertToUnknown;
     procedure TestConvertToNative;
+    procedure TestConvertWithFixedRateInAmount;
   end;
 
 implementation
@@ -52,6 +53,22 @@ begin
   v1 := TAmount.Create(153400, 'ISK');
   ExpectedException := ECurrencyConversionException;
   v2 := v1.ToCurrency('ANT');
+end;
+
+procedure TCurrencyConversionTest.TestConvertWithFixedRateInAmount;
+var
+  v1, v2: TAmount;
+begin
+  v1 := TAmount.Create(15.35, 'GBP');
+  CheckTrue(SameValue(1.15, v1.CurrencyRate));
+  v1.CurrencyRate := 2.30; // override global rate of GBP
+  CheckTrue(SameValue(2.30, v1.CurrencyRate));
+
+  v2 := v1.ToCurrency('EUR');
+  CheckTrue(SameValue(15.35 * 2.30, v2.Value, 0.0001), Format('Expected %f, found %f', [ 15.35*2.30, v2.value]));
+  v1.CurrencyRate := 0;
+  v2 := v1.ToCurrency('EUR');
+  CheckTrue(SameValue(15.35 * 1.15, v2.Value, 0.0001), Format('Expected %f, found %f', [ 15.35*1.15, v2.value]));
 end;
 
 procedure TCurrencyConversionTest.TestConvertTo;

@@ -35,12 +35,15 @@ type
   strict private
     FValue: Currency;
     FCurCode: TCurrencyCode;
+    FCurrencyRate: double;
     function GetCurrencyDefinition: TCurrencyDefinition;
   private
     class function IsSameCurrency(a1, a2: TAmount): boolean; static;
     class function IsValidCurrencyCode(const c: TCurrencyCode): boolean; static;
     class procedure CheckValidCurrencyCode(const c: TCurrencyCode); static;
     class function CheckValidCurrencyID(id: integer): TCurrencyCode; static;
+    function GetCurrencyRate: double;
+    procedure SetCurrencyRate(const Value: double);
     property CurrencyDefinition: TCurrencyDefinition read GetCurrencyDefinition;
   public
     class function Create(): TAmount; overload; static; inline;
@@ -115,6 +118,12 @@ type
 
     property Value: Currency read FValue;
     property CurrencyCode: TCurrencyCode read FCurCode;
+    /// <summary>
+    ///   CurrencyRate to use conversions of this amount. If not set (or set to 0) then the active currencyrate is
+    ///  used form the RoomerCurrencyManager.
+    ///  This can be used to calculation with amounts that are already handled in a different currency at a certain rate
+    /// </summary>
+    property CurrencyRate: double read GetCurrencyRate write SetCurrencyRate;
   end;
 
   /// <summary>
@@ -134,6 +143,7 @@ implementation
 uses
     uFloatUtils
   , uCurrencyManager
+  , Math
   ;
 
 
@@ -142,6 +152,7 @@ begin
   CheckValidCurrencyCode(c);
   Result.FValue := a;
   Result.FCurCode := c;
+  Result.FCurrencyRate := 0.0000;
 end;
 
 class function TAmount.Create(const a: integer; const c: TCurrencyCode): TAmount;
@@ -149,6 +160,7 @@ begin
   CheckValidCurrencyCode(c);
   Result.FValue := a;
   Result.FCurCode := c;
+  Result.FCurrencyRate := 0.0000;
 end;
 
 
@@ -211,6 +223,7 @@ begin
   CheckValidCurrencyCode(c);
   Result.FValue := a;
   Result.FCurCode := c;
+  Result.FCurrencyRate := 0.0000;
 end;
 
 class operator TAmount.Divide(a: TAmount; d: double): TAmount;
@@ -239,6 +252,14 @@ end;
 function TAmount.GetCurrencyDefinition: TCurrencyDefinition;
 begin
   Result := CurrencyManager.CurrencyDefinition[FCurCode];
+end;
+
+function TAmount.GetCurrencyRate: double;
+begin
+  if SameValue(FCurrencyRate, 0.0000) then
+    Result := CurrencyDefinition.Rate
+  else
+    Result := FCurrencyRate;
 end;
 
 class operator TAmount.GreaterThan(a, b: TAmount): boolean;
@@ -384,6 +405,11 @@ begin
   Result.FValue := CurrencyDefinition.RoundedValue(Self.Value);
 end;
 
+procedure TAmount.SetCurrencyRate(const Value: double);
+begin
+  FCurrencyRate := Value;
+end;
+
 class operator TAmount.Subtract(a: TAmount; c: extended): TAmount;
 begin
   Result.FValue := a.Value - c;
@@ -441,6 +467,7 @@ begin
   CheckValidCurrencyCode(c);
   Result.FCurCode := c;
   Result.FValue := a;
+  Result.FCurrencyRate := 0.0000;
 end;
 
 class function TAmount.Create(const c: TCurrencyCode): TAmount;
