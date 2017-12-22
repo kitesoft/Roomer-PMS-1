@@ -129,6 +129,7 @@ type
     fraCompCountry: TfraCountryPanel;
     cbPaycards: TsComboBox;
     btnManagePayCards: TsButton;
+    chkNationalityForAllGuests: TsCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure edLastNameChange(Sender: TObject);
@@ -276,7 +277,11 @@ const
 
   PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT = 'UPDATE persons p ' +
     ' SET p.Country=%s ' +
-    ' WHERE p.roomreservation=%d AND p.Country=''00'' ';
+    ' WHERE p.roomreservation=%d AND Coalesce(p.Country, ''00'')=''00'' ';
+
+  PUT_GUESTsNATIONALITY_CHECKIN_CHECKOUT = 'UPDATE persons p ' +
+    ' SET p.Nationality=%s ' +
+    ' WHERE p.roomreservation=%d AND coalesce(p.Nationality, ''0'')=''00'' ';
 
   UPDATE_PROFILE_FROM_PERSON = 'UPDATE persons pe ' +
                   'JOIN personprofiles pp ON pp.Id = pe.PersonsProfilesId ' +
@@ -792,48 +797,71 @@ procedure TFrmGuestCheckInForm.SaveGuestInfo;
 var
   s: String;
   NewId: Integer;
+  lExecPlan: TRoomerExecutionPlan;
 begin
-  s := format(PUT_GUEST_CHECKIN_CHECKOUT, [_DB(edTitle.Text), _DB(Trim(edFirstname.Text + ' ' + edLastName.Text)), _DB(edAddress1.Text), _DB(edAddress2.Text),
-    _DB(edZipcode.Text), _DB(edCity.Text), _DB(fraCountry.CountryCode),
+  lExecPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
 
-    _DB(edTel1.Text), _DB(edMobile.Text), _DB(edEmail.Text),
+    s := format(PUT_GUEST_CHECKIN_CHECKOUT, [_DB(edTitle.Text), _DB(Trim(edFirstname.Text + ' ' + edLastName.Text)), _DB(edAddress1.Text), _DB(edAddress2.Text),
+      _DB(edZipcode.Text), _DB(edCity.Text), _DB(fraCountry.CountryCode),
 
-    _DB(fraNationality.CountryCode),
+      _DB(edTel1.Text), _DB(edMobile.Text), _DB(edEmail.Text),
 
-    _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(fraCompCountry.CountryCode),
-    _DB(edCompTelNumber.Text), _DB(edCompEmail.Text), _DB(inttostr(btnPortfolio.Tag)),
+      _DB(fraNationality.CountryCode),
 
-    _DB(edFax.Text), _DB(edVAT.Text), _DB(edSSN.Text),
+      _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(fraCompCountry.CountryCode),
+      _DB(edCompTelNumber.Text), _DB(edCompEmail.Text), _DB(inttostr(btnPortfolio.Tag)),
 
-    _DB(edCardId.Text), _DB(uDateUtils.dateToSqlString(edDateOfBirth.Date)),
+      _DB(edFax.Text), _DB(edVAT.Text), _DB(edSSN.Text),
 
-    _DB(PAYMENT_GUARANTEE_TYPE[cbxGuaranteeTypes.ItemIndex]), PersonId]);
+      _DB(edCardId.Text), _DB(uDateUtils.dateToSqlString(edDateOfBirth.Date)),
+
+      _DB(PAYMENT_GUARANTEE_TYPE[cbxGuaranteeTypes.ItemIndex]), PersonId]);
 
 
-  CopyToClipboard(s);
-  if NOT cmd_bySQL(s, false) then
-    raise Exception.Create('Unable to save changes.');
-
-  s := format(UPDATE_PROFILE_FROM_PERSON, [RoomReservation]);
-  CopyToClipboard(s);
-  if NOT cmd_bySQL(s, false) then
-    raise Exception.Create('Unable to save changes to guest''s profile.');
-
-  d.UpdateReservationMarket(Reservation, TReservationmarketType(cbxMarket.itemIndex));
-
-  if chkCountryForAllGuests.Checked then
-  begin
-    s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(fraCountry.CountryCode), RoomReservation]);
     CopyToClipboard(s);
-    if NOT cmd_bySQL(s, false) then
-      raise Exception.Create('Unable to update country for other guests.');
-  end;
+    lExecPlan.AddExec(s);
 
-  if (cbxGuaranteeTypes.ItemIndex = 1) AND (edAmount.Value <> 0) and not theDownPaymentData.IsStored then
-  begin
-    NewId := 0;
-    if NOT INS_Payment(theDownPaymentData, NewId) then
-      raise Exception.Create('Unable to save down-payment.');
+    s := format(UPDATE_PROFILE_FROM_PERSON, [RoomReservation]);
+    CopyToClipboard(s);
+    lExecPlan.AddExec(s);
+
+
+    if chkCountryForAllGuests.Checked then
+    begin
+      s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(fraCountry.CountryCode), RoomReservation]);
+      CopyToClipboard(s);
+      lExecPlan.AddExec(s);
+    end;
+
+    if chkNationalityForAllGuests.Checked then
+    begin
+      s := format(PUT_GUESTsNATIONALITY_CHECKIN_CHECKOUT, [_db(fraNationality.CountryCode), RoomReservation]);
+      CopyToClipboard(s);
+      lExecPlan.AddExec(s);
+    end;
+
+    d.roomerMainDataSet.SystemStartTransaction;
+    try
+      if not lExecPlan.Execute(ptAll) then
+        raise Exception.CreateFmt('Unable to save checkin data. Message: [%s]', [lExecPLan.ExecException]);
+
+      d.UpdateReservationMarket(Reservation, TReservationmarketType(cbxMarket.itemIndex));
+
+      if (cbxGuaranteeTypes.ItemIndex = 1) AND (edAmount.Value <> 0) and not theDownPaymentData.IsStored then
+      begin
+        NewId := 0;
+        if NOT INS_Payment(theDownPaymentData, NewId) then
+          raise Exception.Create('Unable to save down-payment.');
+      end;
+
+      d.roomerMainDataSet.SystemCommitTransaction;
+    except
+      d.roomerMainDataSet.SystemRollbackTransaction;
+    end;
+
+  finally
+    lExecPlan.Free;
   end;
 end;
 
