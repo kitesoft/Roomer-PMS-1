@@ -1197,7 +1197,7 @@ begin
     nativeTotal := FInvoiceLinesList.TotalOnInvoice.ToNative;
     ttVAT := FInvoiceLinesList.TotalVatOnInvoice.ToNative;
     TotalDownPayments := getTotalDownPayments;
-    TotalBalance := nativeTotal.Rounded() - TotalDownPayments.Rounded();
+    TotalBalance := (nativeTotal - TotalDownPayments).Rounded();
 
     edtTotalWOVat.Text := (nativeTotal - ttVAT).AsDisplayStringWithCode;
     edtVat.Text := ttVAT.AsDisplayStringWithCode;
