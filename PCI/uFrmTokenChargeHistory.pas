@@ -297,23 +297,24 @@ begin
     lvi.SubItems.Add(charge.operationResultCode);
     lvi.SubItems.Add(FCurrencyHandlersMap[charge.currency].FormattedValue(charge.amount));
     lvi.SubItems.Add(charge.currency);
+    lvi.SubItems.Add(FCurrencyHandlersMap[g.qNativeCurrency].FormattedValue(charge.nativeAmount));
     lvi.Data := charge;
 
     if (LowerCase(charge.operationResultCode) = 'success') then
     begin
       if (LowerCase(charge.operationType) = 'charge') then
-        charged := charged + FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
+        charged := charged + charge.NativeAmount // FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
       else if (LowerCase(charge.operationType) = 'capture') then
       begin
-        charged := charged + FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency);
-        preAuthed := preAuthed - FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency);
+        charged := charged + charge.NativeAmount; // FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency);
+        preAuthed := preAuthed - charge.NativeAmount; // FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency);
       end
       else if (LowerCase(charge.operationType) = 'refund') then
-        charged := charged - FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
+        charged := charged - charge.NativeAmount // FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
       else if (LowerCase(charge.operationType) = 'preauth') then
-        preAuthed := preAuthed + FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
+        preAuthed := preAuthed + charge.NativeAmount // FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
       else if (LowerCase(charge.operationType) = 'void') then
-        preAuthed := preAuthed - FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
+        preAuthed := preAuthed - charge.NativeAmount // FCurrencyHandlersMap[g.qNativeCurrency].ConvertFrom(charge.amount, charge.currency)
     end;
   end;
   lbCharged.Caption := FCurrencyHandlersMap[g.qNativeCurrency].FormattedValueWithCode(charged);
