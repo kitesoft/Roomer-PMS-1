@@ -284,7 +284,7 @@ object FrmRateQuery: TFrmRateQuery
       end
       object btnRefresh: TButton
         Left = 380
-        Top = 84
+        Top = 86
         Width = 75
         Height = 25
         Caption = 'Refresh'
@@ -493,8 +493,9 @@ object FrmRateQuery: TFrmRateQuery
       SearchFooter.HintFindPrev = 'Find previous occurrence'
       SearchFooter.HintHighlight = 'Highlight occurrences'
       SearchFooter.MatchCaseCaption = 'Match case'
+      SearchFooter.ResultFormat = '(%d of %d)'
       SortSettings.DefaultFormat = ssAutomatic
-      Version = '7.9.1.0'
+      Version = '8.2.4.1'
     end
   end
   object timRefresh: TTimer
