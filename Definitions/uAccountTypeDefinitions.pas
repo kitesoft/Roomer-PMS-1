@@ -10,7 +10,7 @@ uses
 
 type
   ///	<summary>
-  ///	  Possible states of a breakfast as part of a reservation
+  ///	  Possible states of a reservations-accounttype as part of a reservation
   ///	</summary>
   TAccountType= (
     atRoomAccount,

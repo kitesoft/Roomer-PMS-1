@@ -18,7 +18,7 @@ uses
   , ug
   , uAlerts
   , uRoomerDefinitions
-  , RoomerExceptionHandling
+  , RoomerExceptionHandling, uMarketDefinitions
   ;
 
 TYPE

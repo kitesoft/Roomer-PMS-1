@@ -26,10 +26,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     Align = alClient
     TabOrder = 0
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitHeight = 647
     object sTabSheet1: TsTabSheet
       Caption = 'Room 101'
-      ExplicitHeight = 619
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -42,7 +40,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         Padding.Bottom = 5
         TabOrder = 0
         SkinData.SkinSection = 'TRANSPARENT'
-        ExplicitHeight = 619
         object sLabel7: TsLabel
           Left = 6
           Top = 6
@@ -67,12 +64,9 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Align = alClient
           TabOrder = 0
           SkinData.SkinSection = 'PAGECONTROL'
-          ExplicitHeight = 582
           object sTabSheet2: TsTabSheet
             Caption = 'Guest Info'
             SkinData.SkinSection = 'TRANSPARENT'
-            ExplicitLeft = 8
-            ExplicitTop = 19
             object sLabel6: TsLabel
               Left = 97
               Top = 126
@@ -545,8 +539,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object cbActiveLiveSearch: TsCheckBox
               Left = 190
               Top = 47
-              Width = 74
-              Height = 20
+              Width = 82
+              Height = 17
               Caption = 'Live search'
               TabOrder = 20
               OnClick = cbActiveLiveSearchClick
@@ -567,7 +561,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               AutoComplete = False
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -582,7 +576,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Tag = 14
               Left = 190
               Top = 285
-              Width = 76
+              Width = 107
               Height = 19
               Hint = 'Select market or press DEL to clear'
               Alignment = taLeftJustify
@@ -592,7 +586,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               Style = csDropDownList
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -9
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -608,8 +602,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object chkCountryForAllGuests: TsCheckBox
               Left = 190
               Top = 559
-              Width = 244
-              Height = 20
+              Width = 252
+              Height = 17
               Hint = 
                 'When checked the selected country will be set for all guests of ' +
                 'this room that don'#39't already have a country set'
@@ -659,8 +653,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object chkNationalityForAllGuests: TsCheckBox
               Left = 190
               Top = 232
-              Width = 246
-              Height = 20
+              Width = 254
+              Height = 17
               Hint = 
                 'When checked the selected nationality will be set for all guests' +
                 ' of this room that don'#39't already have a nationality set'
@@ -674,7 +668,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
-            ExplicitHeight = 557
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -982,7 +975,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
         Padding.Bottom = 5
         TabOrder = 1
         SkinData.SkinSection = 'TRANSPARENT'
-        ExplicitHeight = 619
         object sLabel8: TsLabel
           Left = 6
           Top = 6
@@ -1182,7 +1174,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           Style = csDropDownList
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = 4473924
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
@@ -1324,7 +1316,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               AutoSize = False
               Color = clWhite
               Font.Charset = DEFAULT_CHARSET
-              Font.Color = 4473924
+              Font.Color = clBlack
               Font.Height = -11
               Font.Name = 'Tahoma'
               Font.Style = []
@@ -1374,7 +1366,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     Align = alBottom
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 647
     DesignSize = (
       842
       33)

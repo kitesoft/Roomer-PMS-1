@@ -992,6 +992,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>fraLookupPanel</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="Definitions\uMarketDefinitions.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

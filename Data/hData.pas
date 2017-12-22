@@ -23,7 +23,8 @@ uses
   , uReservationStateDefinitions
   , uRoomReservationOBJ
   , uRoomerThreadedRequest
-  , uStaffCommunicationDefinitions, uDateTimeHelper, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions
+  , uStaffCommunicationDefinitions, uDateTimeHelper, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions,
+  uMarketDefinitions
   ;
 
 const

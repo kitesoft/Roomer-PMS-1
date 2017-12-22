@@ -59,7 +59,7 @@ uses
     , uReservationStateDefinitions
     , cmpRoomerDataSet
     , cmpRoomerConnection
-    , cxEditRepositoryItems, ALHttpClient, ALWininetHttpClient
+    , cxEditRepositoryItems, ALHttpClient, ALWininetHttpClient, uMarketDefinitions
     ;
 
 type

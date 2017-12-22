@@ -823,7 +823,7 @@ uses
  , DateUtils
  , uSQLUtils
  , Math
- , uRoomerCurrencymanager, uAmount, uCurrencyConstants;
+ , uRoomerCurrencymanager, uAmount, uCurrencyConstants, uMarketDefinitions;
 
 {$R *.dfm}
 
