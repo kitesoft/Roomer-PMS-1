@@ -610,15 +610,14 @@ begin
 
   m22_.DisableControls;
   try
-
+    initialRead := True;
     if m22_.active then m22_.Close;
       m22_.open;
 
-    initialRead := True;
     zdtFrom := dtFrom.Date;
     zdtTo := dtTo.Date;
 
-    if rbtFreeText.Checked and (cbxTxtType.ItemIndex in [4, 5, 6]) and  not _isInteger(edtFreeText.Text) then
+    if rbtFreeText.Checked and (cbxTxtType.ItemIndex in [0, 4, 5, 6]) and  not _isInteger(edtFreeText.Text) then
     begin
       ShowMessage(Format(GetTranslatedtext('shTx_Invoice_NotANumber'), ['"' + edtFreeText.Text + '"']));
       exit;
@@ -627,6 +626,7 @@ begin
     screen.Cursor := crHourGlass;
     rSet := CreateNewDataset;
     try
+      s := '';
       s := s + 'SELECT '#10;
       s := s + '      ih.externalInvoiceId '#10;
       s := s + '    , ih.exportAllowed '#10;
@@ -705,11 +705,11 @@ begin
       end;
     finally
       freeandnil(rSet);
-      m22_.EnableControls;
       screen.Cursor := crDefault;
       zRecordCount := m22_.RecordCount;
     end;
   finally
+    m22_.EnableControls;
     initialRead := False;
   end;
 end;

@@ -1088,7 +1088,7 @@ begin
       UpdateControls;
     finally
       agrLines.Col := lCol;
-      agrLines.Row := lRow;
+      agrLines.Row := min(lRow, agrLines.RowCount-1);
       agrLines.EndUpdate;
       Screen.Cursor := crDefault;
     end;
@@ -1197,7 +1197,7 @@ begin
     nativeTotal := FInvoiceLinesList.TotalOnInvoice.ToNative;
     ttVAT := FInvoiceLinesList.TotalVatOnInvoice.ToNative;
     TotalDownPayments := getTotalDownPayments;
-    TotalBalance := nativeTotal.Rounded() - TotalDownPayments.Rounded();
+    TotalBalance := (nativeTotal - TotalDownPayments).Rounded();
 
     edtTotalWOVat.Text := (nativeTotal - ttVAT).AsDisplayStringWithCode;
     edtVat.Text := ttVAT.AsDisplayStringWithCode;
@@ -1248,7 +1248,7 @@ begin
   unitPrice := totalTax / TaxUnits;
 
   lInvLine := AddLine(0, aParentInvoice, '', taxItem, Item_GetDescription(taxItem), TaxUnits, unitPrice, g.qNativeCurrency,
-    lItemInfo.VATCode, aPurchaseDate, aParentInvoice.IsGeneratedLine, '', '', false, 0, ConfirmDate, ConfirmAmount, -1, _GetCurrentTick, 0, not aIsIncludedInParent);
+    lItemInfo.VATCode, aPurchaseDate, aParentInvoice.IsGeneratedLine, '', '', false, 0, ConfirmDate, ConfirmAmount, {aParentInvoice.roomreservation}-1, _GetCurrentTick, 0, not aIsIncludedInParent);
 
   lInvLine.IsTotalIncludedInParent := aIsIncludedInParent;
 end;

@@ -24,7 +24,7 @@ type
   public
     constructor Create(const aDefaultCurrency: TCurrencyCode); override;
 
-    procedure UpdateDefinitions(Sender: TObject);
+    procedure UpdateDefinitions();
 
     property DefaultCurrencyDefinition: TRoomerCurrencyDefinition read GetDefaultDefinition;
     property CurrencyDefinition[const CurCode: TCurrencyCode]: TRoomerCurrencyDefinition read GetDefinition; default;
@@ -57,9 +57,7 @@ end;
 constructor TRoomerCurrencyManager.Create;
 begin
   inherited ;
-//  if glb.TableList.ContainsKey('currencies') then
-//    glb.TableList['currencies'].RSet.DataSource.OnStateChange := UpdateDefinitions;
-  UpdateDefinitions(nil);
+  UpdateDefinitions();
 end;
 
 function TRoomerCurrencyManager.CurrencyDefinitionClass: TCurrencyDefinitionClass;
@@ -78,7 +76,7 @@ begin
   Result := inherited CurrencyDefinition[CurCode] as TRoomerCurrencyDefinition;
 end;
 
-procedure TRoomerCurrencyManager.UpdateDefinitions(Sender: TObject);
+procedure TRoomerCurrencyManager.UpdateDefinitions();
 var
   ds: TRoomerDataset;
   bm: TBookmark;

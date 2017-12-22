@@ -468,7 +468,7 @@ begin
     EmbedWindowCloseEvent(self);
 
   //TODO: implement this via an OnUpdate event on the AppGlobal.currencies recordset
-  RoomerCurrencyManager.UpdateDefinitions(nil);
+  RoomerCurrencyManager.UpdateDefinitions();
 end;
 
 procedure TfrmCurrencies.FormCreate(Sender: TObject);
