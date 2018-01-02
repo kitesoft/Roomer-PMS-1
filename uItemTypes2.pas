@@ -86,7 +86,7 @@ uses
   , cmpRoomerDataSet
   , cmpRoomerConnection, dxSkinsCore, dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinMcSkin, dxSkinOffice2013White,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxButtonEdit, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, cxPropertiesStore, dxmdaset,
-  dxPScxPivotGridLnk, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld
+  dxPScxPivotGridLnk, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld, cxDropDownEdit
 
   ;
 
@@ -134,6 +134,8 @@ type
     btnEdit: TsButton;
     btnInsert: TsButton;
     FormStore: TcxPropertiesStore;
+    m_category: TWideStringField;
+    tvDatacategory: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -288,27 +290,18 @@ begin
   zData.Itemtype     := m_['Itemtype'];
   zData.VATCode      := m_['VATCode'];
   zData.AccItemLink  := m_['AccItemLink'];
+  zData.Category     := m_['category'];
 end;
 
 procedure TfrmItemTypes2.changeAllowgridEdit;
 begin
-  if zAllowGridEdit then
-  begin
-    tvDataID.Options.Editing             := false;
-    tvDataActive.Options.Editing         := true;
-    tvDataDescription.Options.Editing    := true;
-    tvDataItemtype.Options.Editing       := true;
-    tvDataVATCode.Options.Editing        := true;
-    tvDataAccItemLink.Options.Editing    := true;
-  end else
-  begin
-    tvDataID.Options.Editing             := false;
-    tvDataActive.Options.Editing         := false;
-    tvDataDescription.Options.Editing    := false;
-    tvDataItemtype.Options.Editing       := false;
-    tvDataVATCode.Options.Editing        := false;
-    tvDataAccItemLink.Options.Editing    := false;
-  end;
+  tvDataID.Options.Editing             := false;
+  tvDataActive.Options.Editing         := zAllowGridEdit;
+  tvDataDescription.Options.Editing    := zAllowGridEdit;
+  tvDataItemtype.Options.Editing       := zAllowGridEdit;
+  tvDataVATCode.Options.Editing        := zAllowGridEdit;
+  tvDataAccItemLink.Options.Editing    := zAllowGridEdit;
+  tvDatacategory.Options.Editing       := zAllowGridEdit;
 end;
 
 
@@ -502,6 +495,7 @@ begin
   zData.Description  := dataset['Description'];
   zData.VATCode      := dataset['VATCode'];
   zData.AccItemLink  := dataset['AccItemLink'];
+  zData.Category     := dataset['category'];
 
   if tvData.DataController.DataSource.State = dsEdit then
   begin
@@ -549,8 +543,9 @@ begin
   dataset['Active']        := true;
   dataset['ItemType']      := '';
   dataset['Description']   := '';
-  dataset['VATCode']  := '' ;
-  dataset['AccItemLink']  := '' ;
+  dataset['VATCode']       := '' ;
+  dataset['AccItemLink']   := '' ;
+  dataset['category']      := 'OTHER' ;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////

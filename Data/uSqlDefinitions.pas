@@ -5234,6 +5234,7 @@ select_ItemTypes : string =
 ' ,Description '#10+
 ' ,VATCode '#10+
 ' ,AccItemLink '#10+
+' ,category '#10+
 ' FROM '#10+
 '  itemtypes '#10+
 ' ORDER BY '#10+
