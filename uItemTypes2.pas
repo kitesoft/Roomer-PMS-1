@@ -135,7 +135,7 @@ type
     btnInsert: TsButton;
     FormStore: TcxPropertiesStore;
     m_category: TWideStringField;
-    tvDatacategory: TcxGridDBColumn;
+    __tvDatacategory: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -301,7 +301,7 @@ begin
   tvDataItemtype.Options.Editing       := zAllowGridEdit;
   tvDataVATCode.Options.Editing        := zAllowGridEdit;
   tvDataAccItemLink.Options.Editing    := zAllowGridEdit;
-  tvDatacategory.Options.Editing       := zAllowGridEdit;
+  __tvDatacategory.Options.Editing       := zAllowGridEdit;
 end;
 
 
