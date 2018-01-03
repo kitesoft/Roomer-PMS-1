@@ -56,7 +56,7 @@ object frmControlData: TfrmControlData
         Left = 1
         Top = 1
         Width = 71
-        Height = 28
+        Height = 26
         Align = alLeft
         Caption = 'Select'
         ParentFont = False
@@ -65,6 +65,7 @@ object frmControlData: TfrmControlData
         Font.Height = -23
         Font.Name = 'Verdana'
         Font.Style = []
+        ExplicitHeight = 28
       end
     end
     object LMDBackPanel2: TsPanel
@@ -773,8 +774,8 @@ object frmControlData: TfrmControlData
             object cbxBackupMachine: TsCheckBox
               Left = 239
               Top = 72
-              Width = 140
-              Height = 18
+              Width = 132
+              Height = 20
               Caption = 'Offline Backup Client'
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
@@ -807,8 +808,8 @@ object frmControlData: TfrmControlData
             object cbxLocationPerRoomType: TsCheckBox
               Left = 68
               Top = 24
-              Width = 257
-              Height = 18
+              Width = 249
+              Height = 20
               Caption = 'Room Location determined by Room type'
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
@@ -818,8 +819,8 @@ object frmControlData: TfrmControlData
             object cbxDefaultSendCCEmailToHotel: TsCheckBox
               Left = 68
               Top = 47
-              Width = 370
-              Height = 18
+              Width = 362
+              Height = 20
               Caption = 'Always send a blind copy of emails to the hotel'#39's email address'
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
@@ -854,8 +855,8 @@ object frmControlData: TfrmControlData
             object cbxPreloadPreviousGuests: TsCheckBox
               Left = 68
               Top = 105
-              Width = 240
-              Height = 18
+              Width = 232
+              Height = 20
               Caption = 'Preload ALL previous guests for lookup'
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
@@ -3594,7 +3595,6 @@ object frmControlData: TfrmControlData
             Caption = 'Room rate '
             TabOrder = 1
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 324
             object Label1: TsLabel
               Left = 6
               Top = 22
@@ -3837,7 +3837,6 @@ object frmControlData: TfrmControlData
             Caption = 'A/R '
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitTop = 271
             object Label65: TsLabel
               Left = 109
               Top = 20
@@ -4005,7 +4004,6 @@ object frmControlData: TfrmControlData
             AutoSize = True
             BevelOuter = bvNone
             TabOrder = 5
-            ExplicitTop = 401
             object cxGroupBox5: TsGroupBox
               Left = 0
               Top = 0
@@ -4276,12 +4274,12 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lbAggregateCityTax: TsLabel
-              Left = 142
+              Left = 195
               Top = 56
-              Width = 277
+              Width = 224
               Height = 14
               Alignment = taRightJustify
-              Caption = 'Aggregate excluded citytax on invoice by default :'
+              Caption = 'Aggregate citytax on invoice by default :'
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
@@ -5714,8 +5712,8 @@ object frmControlData: TfrmControlData
             object chkExcluteWaitingList: TsCheckBox
               Left = 14
               Top = 21
-              Width = 120
-              Height = 18
+              Width = 112
+              Height = 20
               Caption = 'Optional booking'
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
@@ -5725,8 +5723,8 @@ object frmControlData: TfrmControlData
             object chkExcluteAllotment: TsCheckBox
               Left = 14
               Top = 41
-              Width = 81
-              Height = 18
+              Width = 73
+              Height = 20
               Caption = 'Allotment'
               TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
@@ -5736,8 +5734,8 @@ object frmControlData: TfrmControlData
             object chkExcluteOrder: TsCheckBox
               Left = 14
               Top = 61
-              Width = 59
-              Height = 18
+              Width = 51
+              Height = 20
               Caption = 'Order'
               TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
@@ -5747,8 +5745,8 @@ object frmControlData: TfrmControlData
             object chkExcluteNoShow: TsCheckBox
               Left = 276
               Top = 41
-              Width = 76
-              Height = 18
+              Width = 68
+              Height = 20
               Caption = 'No show'
               TabOrder = 3
               SkinData.SkinSection = 'CHECKBOX'
@@ -5758,8 +5756,8 @@ object frmControlData: TfrmControlData
             object chkExcluteDeparted: TsCheckBox
               Left = 141
               Top = 21
-              Width = 79
-              Height = 18
+              Width = 71
+              Height = 20
               Caption = 'Departed'
               TabOrder = 4
               SkinData.SkinSection = 'CHECKBOX'
@@ -5769,8 +5767,8 @@ object frmControlData: TfrmControlData
             object chkExcluteBlocked: TsCheckBox
               Left = 276
               Top = 21
-              Width = 70
-              Height = 18
+              Width = 62
+              Height = 20
               Caption = 'Blocked'
               TabOrder = 5
               SkinData.SkinSection = 'CHECKBOX'
@@ -5780,8 +5778,8 @@ object frmControlData: TfrmControlData
             object chkExcluteGuest: TsCheckBox
               Left = 141
               Top = 41
-              Width = 60
-              Height = 18
+              Width = 52
+              Height = 20
               Caption = 'Guest'
               TabOrder = 6
               SkinData.SkinSection = 'CHECKBOX'
@@ -5819,7 +5817,7 @@ object frmControlData: TfrmControlData
               Left = 141
               Top = 25
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 0
               OnClick = cbxPreArrivalEnabledClick
               ImgChecked = 0
@@ -5829,7 +5827,7 @@ object frmControlData: TfrmControlData
               Left = 141
               Top = 89
               Width = 20
-              Height = 16
+              Height = 20
               TabOrder = 2
               OnClick = cbxPostDepartureEnabledClick
               ImgChecked = 0
@@ -6025,8 +6023,8 @@ object frmControlData: TfrmControlData
             object chkChangeNationality: TsCheckBox
               Left = 22
               Top = 29
-              Width = 197
-              Height = 18
+              Width = 189
+              Height = 20
               Caption = 'Change nationality of all guests'
               TabOrder = 0
               SkinData.SkinSection = 'CHECKBOX'
@@ -6036,8 +6034,8 @@ object frmControlData: TfrmControlData
             object chkAllowAllotmentStateChange: TsCheckBox
               Left = 22
               Top = 55
-              Width = 428
-              Height = 18
+              Width = 420
+              Height = 20
               Caption = 
                 'Allow changing reservation state from Allotment to Reservation a' +
                 'nd back'
@@ -9345,10 +9343,6 @@ object frmControlData: TfrmControlData
         end
         object tabEmailService: TsTabSheet
           Caption = 'EmailService'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sGroupBox2: TsGroupBox
             Left = 48
             Top = 43
@@ -9435,8 +9429,8 @@ object frmControlData: TfrmControlData
             object cbSmtpAuthenticate: TsCheckBox
               Left = 132
               Top = 236
-              Width = 100
-              Height = 18
+              Width = 92
+              Height = 20
               Caption = 'Authenticate'
               Enabled = False
               TabOrder = 4
@@ -9511,8 +9505,8 @@ object frmControlData: TfrmControlData
           object cbSmtpServiceActive: TsCheckBox
             Left = 48
             Top = 17
-            Width = 302
-            Height = 18
+            Width = 294
+            Height = 20
             Caption = 'Use the below SMTP server for all outgoing emails'
             TabOrder = 1
             OnClick = cbSmtpServiceActiveClick
