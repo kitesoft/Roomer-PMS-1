@@ -1,6 +1,6 @@
 inherited fraCurrencyPanel: TfraCurrencyPanel
   inherited pnlLookup: TsPanel
-    inherited lblDescription: TLabel
+    inherited lblDescription: TsLabel
       Width = 157
       Height = 20
     end

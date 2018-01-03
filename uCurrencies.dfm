@@ -25,7 +25,7 @@ inherited frmCurrencies: TfrmCurrencies
     Width = 847
     Height = 366
     TabOrder = 0
-    ExplicitTop = 87
+    ExplicitTop = 89
     ExplicitWidth = 847
     ExplicitHeight = 366
     inherited tvData: TcxGridDBBandedTableView
@@ -219,7 +219,6 @@ inherited frmCurrencies: TfrmCurrencies
       ShowHint = True
       Style = bsSplitButton
       TabOrder = 3
-      OnClick = btnOtherClick
       SkinData.SkinSection = 'BUTTON'
     end
     object chkActive: TsCheckBox
@@ -276,10 +275,12 @@ inherited frmCurrencies: TfrmCurrencies
     ExplicitWidth = 847
     inherited btnOK: TsButton
       Left = 531
+      OnClick = btnOKClick
       ExplicitLeft = 531
     end
     inherited btnCancel: TsButton
       Left = 637
+      OnClick = btnCancelClick
       ExplicitLeft = 637
     end
     inherited btnClose: TsButton
@@ -309,7 +310,6 @@ inherited frmCurrencies: TfrmCurrencies
   object m_: TdxMemData
     Indexes = <>
     SortOptions = []
-    BeforeInsert = m_BeforeInsert
     BeforePost = m_BeforePost
     BeforeDelete = m_BeforeDelete
     OnNewRecord = m_NewRecord
@@ -403,7 +403,7 @@ inherited frmCurrencies: TfrmCurrencies
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43103.520640902770000000
+      ReportDocument.CreationDate = 43103.660572638890000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end

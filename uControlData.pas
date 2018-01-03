@@ -748,7 +748,7 @@ type
     cbAllowDeleteItemsFromInvoice: TsCheckBox;
     lbAggregateCityTax: TsLabel;
     cbAggregateCityTax: TsCheckBox;
-    fraCurrencyPanel: TfraCurrencyPanel;
+    fraCurrencyPnl: TfraCurrencyPanel;
     fraMasterRateCurrency: TfraCurrencyPanel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
@@ -1107,7 +1107,7 @@ g.ReadWriteSettingsToRegistry(0);
     editDiscountItem.Text := rControlData.fieldbyname('DiscountItem').AsString;
     labDiscountItemDescription.Caption := Item_GetDescription(editDiscountItem.Text);
 
-    fraCurrencyPanel.Code := rControlData.fieldbyname('NativeCurrency').AsString;
+    fraCurrencyPnl.Code := rControlData.fieldbyname('NativeCurrency').AsString;
 
     try
       edChannelManager.Text := inttostr(rControlData.fieldbyname('DefaultChannelManager').AsInteger);
@@ -1741,7 +1741,7 @@ begin
 
       rControlData.fieldbyname('PaymentItem').AsString := editPaymentItem.Text;
       rControlData.fieldbyname('PhoneUseItem').AsString := editPhoneUseItem.Text;
-      rControlData.fieldbyname('NativeCurrency').AsString := fraCurrencyPanel.Code;
+      rControlData.fieldbyname('NativeCurrency').AsString := fraCurrencyPnl.Code;
 
       try
         rControlData.fieldbyname('DefaultChannelManager').AsInteger := strtoint(edChannelManager.Text);
@@ -2061,9 +2061,9 @@ begin
       end;
 
       try
-        rControlData.FieldByName('CurrencySymbol').AsString :=  fraCurrencyPanel.CurrencyDefinition.Symbol;
-        if FormatSettings.CurrencyString <> fraCurrencyPanel.CurrencyDefinition.Symbol then
-          FormatSettings.CurrencyString := fraCurrencyPanel.CurrencyDefinition.Symbol;
+        rControlData.FieldByName('CurrencySymbol').AsString :=  fraCurrencyPnl.CurrencyDefinition.Symbol;
+        if FormatSettings.CurrencyString <> fraCurrencyPnl.CurrencyDefinition.Symbol then
+          FormatSettings.CurrencyString := fraCurrencyPnl.CurrencyDefinition.Symbol;
       Except
       end;
 

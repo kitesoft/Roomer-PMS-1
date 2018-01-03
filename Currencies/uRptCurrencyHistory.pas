@@ -16,12 +16,12 @@ uses
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
   , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton
-  , uRoomerForm, cxCalendar, cxCalc, cxCheckBox
+  , uRoomerForm, cxCalendar, cxCalc, cxCheckBox, dxmdaset
    ;
 
 type
   TfrmCurrencyHistory = class(TfrmBaseRoomerForm)
-    kbmCurrencyhistory: TkbmMemTable;
+    m_Currencyhistory: TdxMemData;
     dsData: TDataSource;
     pnlTop: TsPanel;
     btnExcel: TsButton;
@@ -32,20 +32,16 @@ type
     grdPrinter: TdxComponentPrinter;
     grdPrinterLink1: TdxGridReportLink;
     pnlFilter: TsPanel;
-    cLabFilter: TsLabel;
-    btnClear: TsSpeedButton;
-    edFilter: TsEdit;
-    timFilter: TTimer;
-    kbmCurrencyhistoryLogtime: TDateTimeField;
-    kbmCurrencyhistoryCurrency: TWideStringField;
-    kbmCurrencyhistoryDescription: TWideStringField;
-    kbmCurrencyhistoryRate: TFloatField;
-    kbmCurrencyhistoryActive: TBooleanField;
-    kbmCurrencyhistoryCurrencySign: TWideStringField;
-    kbmCurrencyhistorylastUpdate: TDateTimeField;
-    kbmCurrencyhistoryDisplayFormat: TWideStringField;
-    kbmCurrencyhistoryDecimals: TIntegerField;
-    kbmCurrencyhistoryAction: TWideStringField;
+    m_CurrencyhistoryLogtime: TDateTimeField;
+    m_CurrencyhistoryCurrency: TWideStringField;
+    m_CurrencyhistoryDescription: TWideStringField;
+    m_CurrencyhistoryRate: TFloatField;
+    m_CurrencyhistoryActive: TBooleanField;
+    m_CurrencyhistoryCurrencySign: TWideStringField;
+    m_CurrencyhistorylastUpdate: TDateTimeField;
+    m_CurrencyhistoryDisplayFormat: TWideStringField;
+    m_CurrencyhistoryDecimals: TIntegerField;
+    m_CurrencyhistoryAction: TWideStringField;
     tvCurrencyHistoryLogtime: TcxGridDBColumn;
     tvCurrencyHistoryCurrency: TcxGridDBColumn;
     tvCurrencyHistoryDescription: TcxGridDBColumn;
@@ -59,13 +55,11 @@ type
     btnRefresh: TsButton;
     procedure btnExcelClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
-    procedure kbmCurrencyhistoryAfterScroll(DataSet: TDataSet);
+    procedure m_CurrencyhistoryAfterScroll(DataSet: TDataSet);
     procedure btnReportClick(Sender: TObject);
-    procedure timFilterTimer(Sender: TObject);
-    procedure btnClearClick(Sender: TObject);
-    procedure edFilterChange(Sender: TObject);
   private
     FCurrency: string;
+    FOrigCaption: string;
     function ConstructSQL: string;
     procedure SetCurrency(const Value: string);
   protected
@@ -73,8 +67,6 @@ type
     procedure DoUpdateControls; override;
     procedure DoShow; override;
   public
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
     property Currency: string read FCurrency write SetCurrency;
   end;
 
@@ -101,7 +93,6 @@ uses
   , hData
   , uAlerts
   , uRptbViewer
-  , uDataSetFilterUtils
   , uSQLUtils;
 
 const
@@ -132,11 +123,6 @@ begin
     finally
       Free;
     end;
-end;
-
-procedure TfrmCurrencyHistory.btnClearClick(Sender: TObject);
-begin
-  edFilter.Text := '';
 end;
 
 procedure TfrmCurrencyHistory.btnExcelClick(Sender: TObject);
@@ -171,33 +157,14 @@ begin
   CopyToClipboard(Result);
 end;
 
-constructor TfrmCurrencyHistory.Create(aOwner: TComponent);
-begin
-  inherited;
-end;
-
-destructor TfrmCurrencyHistory.Destroy;
-begin
-  inherited;
-end;
-
 procedure TfrmCurrencyHistory.DoShow;
 begin
+  FOrigCaption := Caption;
   inherited;
+  RefreshData;
 end;
 
-procedure TfrmCurrencyHistory.edFilterChange(Sender: TObject);
-begin
-  if edFilter.Text = '' then
-  begin
-    StopFilter(kbmCurrencyhistory, timFilter, tvCurrencyHistory);
-  end else
-  begin
-    applyFilter(kbmCurrencyhistory, edFilter.Text, timFilter, tvCurrencyHistory);
-  end;
-end;
-
-procedure TfrmCurrencyHistory.kbmCurrencyhistoryAfterScroll(DataSet: TDataSet);
+procedure TfrmCurrencyHistory.m_CurrencyhistoryAfterScroll(DataSet: TDataSet);
 begin
   UpdateControls;
 end;
@@ -211,43 +178,37 @@ procedure TfrmCurrencyHistory.DoLoadData;
 var
   rset: TRoomerDataset;
 begin
-  kbmCurrencyhistory.DisableControls;
+  m_Currencyhistory.DisableControls;
   try
     rset := CreateNewDataSet;
     try
       hData.rSet_bySQL(rset, ConstructSQL);
       rset.First;
-      if not kbmCurrencyhistory.Active then
-        kbmCurrencyhistory.Open;
-      LoadKbmMemtableFromDataSetQuiet(kbmCurrencyhistory,rset,[]);
+      m_Currencyhistory.Close;
+      m_Currencyhistory.LoadFromDataSet(rset);
     finally
       FreeAndNil(rset);
     end;
 
-    kbmCurrencyhistory.First;
+    m_Currencyhistory.First;
 
   finally
-    kbmCurrencyhistory.EnableControls;
+    m_Currencyhistory.EnableControls;
   end;
-end;
-
-procedure TfrmCurrencyHistory.timFilterTimer(Sender: TObject);
-begin
-  timFilter.Enabled := False;
-  kbmCurrencyhistory.filtered := True;
-  tvCurrencyHistory.DataController.Filter.Refresh;
 end;
 
 procedure TfrmCurrencyHistory.DoUpdateControls;
 var
   lDataAvailable: boolean;
 begin
+  Caption := FOrigCaption + Format(' - (%s)', [FCurrency]);
+
   if LoadingData then
     Exit;
 
   inherited;
 
-  lDataAvailable := kbmCurrencyhistory.Active and NOT kbmCurrencyhistory.Eof;
+  lDataAvailable := m_Currencyhistory.Active and NOT m_Currencyhistory.Eof;
   btnExcel.Enabled := lDataAvailable;
   btnReport.Enabled := lDataAvailable;
 end;

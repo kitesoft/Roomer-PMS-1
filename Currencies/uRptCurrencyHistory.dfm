@@ -1,30 +1,27 @@
 inherited frmCurrencyHistory: TfrmCurrencyHistory
   Caption = 'Currency History'
   ClientHeight = 442
-  ClientWidth = 1005
+  ClientWidth = 810
   Font.Height = -11
-  ExplicitWidth = 1021
+  ExplicitWidth = 826
   ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 422
-    Width = 1005
-    ExplicitTop = 566
-    ExplicitWidth = 1123
+    Width = 810
+    ExplicitTop = 422
+    ExplicitWidth = 1005
   end
   object grCurrencyHistory: TcxGrid [1]
     Left = 0
     Top = 78
-    Width = 1005
+    Width = 810
     Height = 344
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
-    ExplicitTop = 72
-    ExplicitWidth = 1123
-    ExplicitHeight = 488
+    ExplicitWidth = 1005
     object tvCurrencyHistory: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsData
@@ -50,6 +47,11 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
         end>
       DataController.Summary.SummaryGroups = <>
       FilterRow.Visible = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
@@ -85,6 +87,7 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
         DataBinding.FieldName = 'CurrencySign'
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taRightJustify
+        Visible = False
         HeaderAlignmentHorz = taRightJustify
         Width = 85
       end
@@ -92,6 +95,7 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
         DataBinding.FieldName = 'DisplayFormat'
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taRightJustify
+        Visible = False
         HeaderAlignmentHorz = taRightJustify
         Width = 145
       end
@@ -103,11 +107,13 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       end
       object tvCurrencyHistoryAction: TcxGridDBColumn
         DataBinding.FieldName = 'Action'
+        Visible = False
         Width = 111
       end
       object tvCurrencyHistorylastUpdate: TcxGridDBColumn
         DataBinding.FieldName = 'lastUpdate'
         PropertiesClassName = 'TcxDateEditProperties'
+        Visible = False
         Width = 133
       end
     end
@@ -118,20 +124,19 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
   object pnlTop: TsPanel [2]
     Left = 0
     Top = 0
-    Width = 1005
+    Width = 810
     Height = 78
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 482
-    ExplicitWidth = 1123
+    ExplicitWidth = 1005
     object btnExcel: TsButton
       AlignWithMargins = True
-      Left = 740
+      Left = 545
       Top = 3
       Width = 128
-      Height = 34
+      Height = 43
       Align = alRight
       Caption = 'Excel'
       ImageIndex = 115
@@ -139,15 +144,15 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       TabOrder = 0
       OnClick = btnExcelClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 858
-      ExplicitHeight = 41
+      ExplicitLeft = 740
+      ExplicitHeight = 34
     end
     object btnReport: TsButton
       AlignWithMargins = True
-      Left = 874
+      Left = 679
       Top = 3
       Width = 128
-      Height = 34
+      Height = 43
       Align = alRight
       Caption = 'Report'
       ImageIndex = 69
@@ -155,66 +160,24 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       TabOrder = 1
       OnClick = btnReportClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 992
-      ExplicitHeight = 41
+      ExplicitLeft = 874
+      ExplicitHeight = 34
     end
     object pnlFilter: TsPanel
       Left = 0
-      Top = 40
-      Width = 1005
-      Height = 38
+      Top = 49
+      Width = 810
+      Height = 29
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitWidth = 1123
-      object cLabFilter: TsLabel
-        Left = 19
-        Top = 6
-        Width = 31
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Filter :'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
-      object btnClear: TsSpeedButton
-        Left = 273
-        Top = 3
-        Width = 63
-        Height = 21
-        Caption = 'Clear'
-        OnClick = btnClearClick
-        SkinData.SkinSection = 'SPEEDBUTTON'
-        Images = DImages.PngImageList1
-        ImageIndex = 4
-      end
-      object edFilter: TsEdit
-        Left = 56
-        Top = 3
-        Width = 215
-        Height = 21
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-        OnChange = edFilterChange
-        SkinData.SkinSection = 'EDIT'
-      end
     end
     object btnRefresh: TsButton
       AlignWithMargins = True
       Left = 20
       Top = 3
       Width = 118
-      Height = 34
+      Height = 43
       Margins.Left = 20
       Align = alLeft
       Caption = 'Refresh'
@@ -224,9 +187,7 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       TabOrder = 3
       OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitHeight = 47
+      ExplicitHeight = 34
     end
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
@@ -238,70 +199,52 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       BuiltIn = True
     end
   end
-  object kbmCurrencyhistory: TkbmMemTable
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'RoomerRoomReservationID'
-        DataType = ftInteger
-      end>
-    IndexDefs = <>
+  object m_Currencyhistory: TdxMemData
+    Indexes = <>
     SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    AfterScroll = kbmCurrencyhistoryAfterScroll
-    Left = 416
-    Top = 359
-    object kbmCurrencyhistoryLogtime: TDateTimeField
+    AfterScroll = m_CurrencyhistoryAfterScroll
+    Left = 288
+    Top = 311
+    object m_CurrencyhistoryLogtime: TDateTimeField
       FieldName = 'Logtime'
     end
-    object kbmCurrencyhistoryCurrency: TWideStringField
+    object m_CurrencyhistoryCurrency: TWideStringField
       FieldName = 'Currency'
       Size = 5
     end
-    object kbmCurrencyhistoryDescription: TWideStringField
+    object m_CurrencyhistoryDescription: TWideStringField
       FieldName = 'Description'
       Size = 30
     end
-    object kbmCurrencyhistoryRate: TFloatField
+    object m_CurrencyhistoryRate: TFloatField
       FieldName = 'Rate'
     end
-    object kbmCurrencyhistoryActive: TBooleanField
+    object m_CurrencyhistoryActive: TBooleanField
       FieldName = 'Active'
     end
-    object kbmCurrencyhistoryCurrencySign: TWideStringField
+    object m_CurrencyhistoryCurrencySign: TWideStringField
       DisplayWidth = 3
       FieldName = 'CurrencySign'
       Size = 3
     end
-    object kbmCurrencyhistorylastUpdate: TDateTimeField
+    object m_CurrencyhistorylastUpdate: TDateTimeField
       FieldName = 'lastUpdate'
     end
-    object kbmCurrencyhistoryDisplayFormat: TWideStringField
+    object m_CurrencyhistoryDisplayFormat: TWideStringField
       FieldName = 'DisplayFormat'
     end
-    object kbmCurrencyhistoryDecimals: TIntegerField
+    object m_CurrencyhistoryDecimals: TIntegerField
       FieldName = 'Decimals'
     end
-    object kbmCurrencyhistoryAction: TWideStringField
+    object m_CurrencyhistoryAction: TWideStringField
       FieldName = 'Action'
       Size = 15
     end
   end
   object dsData: TDataSource
-    DataSet = kbmCurrencyhistory
-    Left = 488
-    Top = 359
+    DataSet = m_Currencyhistory
+    Left = 400
+    Top = 311
   end
   object grdPrinter: TdxComponentPrinter
     CurrentLink = grdPrinterLink1
@@ -317,10 +260,9 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       PrinterPage.GrayShading = True
       PrinterPage.Header = 6350
       PrinterPage.Margins.Bottom = 6350
-      PrinterPage.Margins.Left = 5000
-      PrinterPage.Margins.Right = 5000
-      PrinterPage.Margins.Top = 12700
-      PrinterPage.Orientation = poLandscape
+      PrinterPage.Margins.Left = 12700
+      PrinterPage.Margins.Right = 6350
+      PrinterPage.Margins.Top = 6350
       PrinterPage.PageFooter.Font.Charset = ANSI_CHARSET
       PrinterPage.PageFooter.Font.Color = clBlack
       PrinterPage.PageFooter.Font.Height = -7
@@ -333,7 +275,7 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43103.580745451390000000
+      ReportDocument.CreationDate = 43103.624162187500000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -351,12 +293,5 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       OptionsView.FilterBar = False
       BuiltInReportLink = True
     end
-  end
-  object timFilter: TTimer
-    Enabled = False
-    Interval = 2000
-    OnTimer = timFilterTimer
-    Left = 200
-    Top = 304
   end
 end

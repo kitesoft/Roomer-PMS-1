@@ -333,7 +333,7 @@ uses
   RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas',
   uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraLookupPanel: TFrame},
   uMarketDefinitions in 'Definitions\uMarketDefinitions.pas',
-  uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory};
+  uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory: {$R *.RES};
 
 {$R *.RES}
 

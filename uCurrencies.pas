@@ -169,8 +169,6 @@ type
     procedure btnDeleteClick(Sender: TObject);
     procedure BtnOkClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
-    procedure mnuExitClick(Sender: TObject);
-    procedure btnOtherClick(Sender: TObject);
     procedure mnuiPrintClick(Sender: TObject);
     procedure mnuiAllowGridEditClick(Sender: TObject);
     procedure mnuiGridToExcelClick(Sender: TObject);
@@ -187,7 +185,6 @@ type
     procedure btnClearClick(Sender: TObject);
     procedure chkActiveClick(Sender: TObject);
     procedure m_BeforeDelete(DataSet: TDataSet);
-    procedure m_BeforeInsert(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btnHistoryClick(Sender: TObject);
@@ -203,6 +200,7 @@ type
     procedure applyFilter;
   protected
     procedure DoLoadData; override;
+    procedure DoShow; override;
   public
     { Public declarations }
     zAct               : TActTableAction;
@@ -212,7 +210,6 @@ type
     embedded : Boolean;
     EmbedWindowCloseEvent : TNotifyEvent;
 
-    procedure PrepareUserInterface;
   end;
 
 function Currencies(act : TActTableAction; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
@@ -227,7 +224,7 @@ uses
    uD
   , uSqlDefinitions
   , uUtils
-  , uRoomerCurrencymanager, RoomerCurrencyEdit, uRptCurrencyHistory;
+  , uRoomerCurrencymanager, RoomerCurrencyEdit, uRptCurrencyHistory, uActivityLogs;
 
 {$R *.dfm}
 
@@ -254,7 +251,6 @@ begin
 //    end
 //    else
 //    begin
-      _frmCurrencies.PrepareUserInterface;
       _frmCurrencies.ShowModal;
       if _frmCurrencies.modalresult = mrOk then
       begin
@@ -377,8 +373,6 @@ end;
 procedure TfrmCurrencies.FormCreate(Sender: TObject);
 begin
   zAct        := actNone;
-
-  PrepareUserInterface;
 end;
 
 procedure TfrmCurrencies.FormShow(Sender: TObject);
@@ -412,10 +406,11 @@ begin
   begin
     screen.Cursor := crHourGlass;
     try
-      if not Del_CurrencyBycurrency(zData.Currency) then
-      begin
+      if Del_CurrencyBycurrency(zData.Currency) then
+        AddCurrencyActivityLog(d.roomerMainDataSet.username, DELETE_CURRENCY, zData.Currency, zData.Value, 0, zData.active, zData.Decimals, '')
+      else
         abort
-      end;
+
     finally
       screen.Cursor := crDefault;
     end;
@@ -423,12 +418,6 @@ begin
   begin
     abort;
   end;
-end;
-
-procedure TfrmCurrencies.m_BeforeInsert(DataSet: TDataSet);
-begin
-  if LoadingData then Exit;
-  tvData.GetColumnByFieldName('Currency').Focused := True;
 end;
 
 procedure TfrmCurrencies.m_BeforePost(DataSet: TDataSet);
@@ -445,6 +434,7 @@ begin
   begin
     if UPD_Currency(zData) then
     begin
+      AddCurrencyActivityLog(d.roomerMainDataSet.username, CHANGE_CURRENCY, zData.Currency, m_AValue.OldValue, m_AValue.AsFloat, m_active.AsBoolean, m_decimals.AsInteger, '');
       glb.ForceTableRefresh;
     end else
     begin
@@ -466,6 +456,7 @@ begin
 
     if ins_Currency(zData,nID) then
     begin
+      AddCurrencyActivityLog(d.roomerMainDataSet.username, ADD_CURRENCY, zData.Currency, 0, m_AValue.AsFloat, m_active.AsBoolean, m_decimals.AsInteger, '');
       m_.FieldByName('ID').AsInteger := nID;
       glb.ForceTableRefresh;
     end else
@@ -484,15 +475,17 @@ begin
   dataset['description'] := '';
 end;
 
-procedure TfrmCurrencies.PrepareUserInterface;
+procedure TfrmCurrencies.DoShow;
 begin
-
+  inherited;
   if ZAct = actLookup then
   begin
     mnuiAllowGridEdit.Checked := false;
+    DialogButtons := mbOKCancel;
   end else
   begin
     mnuiAllowGridEdit.Checked := true;
+    DialogButtons := [mbClose];
   end;
   //-C
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
@@ -625,16 +618,6 @@ procedure TfrmCurrencies.btnCloseClick(Sender: TObject);
 begin
   if embedded then
     Close;
-end;
-
-procedure TfrmCurrencies.mnuExitClick(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TfrmCurrencies.btnOtherClick(Sender: TObject);
-begin
-  //
 end;
 
 procedure TfrmCurrencies.btnInsertClick(Sender: TObject);
