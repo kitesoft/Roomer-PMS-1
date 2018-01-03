@@ -56,7 +56,7 @@ object frmControlData: TfrmControlData
         Left = 1
         Top = 1
         Width = 71
-        Height = 28
+        Height = 26
         Align = alLeft
         Caption = 'Select'
         ParentFont = False
@@ -65,6 +65,7 @@ object frmControlData: TfrmControlData
         Font.Height = -23
         Font.Name = 'Verdana'
         Font.Style = []
+        ExplicitHeight = 28
       end
     end
     object LMDBackPanel2: TsPanel
@@ -162,10 +163,6 @@ object frmControlData: TfrmControlData
         end
         object tsCompany: TsTabSheet
           Caption = 'Company'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxCompany: TsGroupBox
             Left = 3
             Top = 4
@@ -915,10 +912,6 @@ object frmControlData: TfrmControlData
         end
         object tsSystemItemIDs: TsTabSheet
           Caption = 'ID Numbers'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object cbxIdNumbers: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -3335,10 +3328,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceSystem: TsTabSheet
           Caption = 'Invoice Settings'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox5: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -3812,10 +3801,9 @@ object frmControlData: TfrmControlData
               ExplicitTop = 14
               ExplicitHeight = 20
               inherited pnlLookup: TsPanel
-                inherited edCode: TsEdit
-                  ExplicitLeft = -32
-                  ExplicitTop = -6
-                  ExplicitHeight = 20
+                inherited lblDescription: TsLabel
+                  Width = 157
+                  Height = 20
                 end
               end
             end
@@ -5485,10 +5473,6 @@ object frmControlData: TfrmControlData
         end
         object tsInvoiceMain: TsTabSheet
           Caption = 'tsInvoiceMain'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDGroupBox10: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6065,10 +6049,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet3: TsTabSheet
           Caption = 'Channelmanager'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sGroupBox1: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6511,13 +6491,6 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object lblMasterRateCurrencyName: TsLabel
-              Left = 709
-              Top = 40
-              Width = 4
-              Height = 14
-              Caption = '-'
-            end
             object cbxAutoAddToGuestPortfolio: TsCheckBox
               Left = 436
               Top = 20
@@ -6548,37 +6521,31 @@ object frmControlData: TfrmControlData
               ImgChecked = 0
               ImgUnchecked = 0
             end
-            object ceMasterRateCurrency: TsComboEdit
-              Left = 632
-              Top = 36
-              Width = 68
-              Height = 22
-              AutoSize = False
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 3
-              Text = ''
-              OnDblClick = ceMasterRateCurrencyDblClick
-              CheckOnExit = True
-              SkinData.SkinSection = 'EDIT'
-              OnButtonClick = ceMasterRateCurrencyDblClick
-              GlyphMode.Blend = 0
-              GlyphMode.Grayed = False
-            end
             object cbxCurrencyCalculation: TsCheckBox
               Left = 632
               Top = 64
               Width = 174
               Height = 20
               Caption = 'Perform currency calculation'
-              TabOrder = 4
+              TabOrder = 3
               ImgChecked = 0
               ImgUnchecked = 0
+            end
+            inline fraMasterRateCurrency: TfraCurrencyPanel
+              Left = 632
+              Top = 36
+              Width = 250
+              Height = 21
+              TabOrder = 4
+              ExplicitLeft = 632
+              ExplicitTop = 36
+              ExplicitHeight = 21
+              inherited pnlLookup: TsPanel
+                inherited lblDescription: TsLabel
+                  Width = 157
+                  Height = 20
+                end
+              end
             end
           end
         end
@@ -6591,10 +6558,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet6: TsTabSheet
           Caption = 'Accounting'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxForceExternalIdCorrectness: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6977,10 +6940,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet7: TsTabSheet
           Caption = 'Pos'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LMDSimplePanel2: TsPanel
             Left = 0
             Top = 0
@@ -7101,10 +7060,6 @@ object frmControlData: TfrmControlData
             end
             object AdvTabSheet9: TsTabSheet
               Caption = 'poster'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object LMDSimplePanel3: TsPanel
                 Left = 0
                 Top = 0
@@ -8054,10 +8009,6 @@ object frmControlData: TfrmControlData
         end
         object tsColors: TsTabSheet
           Caption = 'tsColors'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel4: TsPanel
             Left = 0
             Top = 0
@@ -9319,10 +9270,6 @@ object frmControlData: TfrmControlData
         end
         object tabMandatory: TsTabSheet
           Caption = 'Mandatory info'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object pcMandatoryInfo: TsPageControl
             AlignWithMargins = True
             Left = 3
@@ -9334,10 +9281,6 @@ object frmControlData: TfrmControlData
             TabOrder = 0
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20

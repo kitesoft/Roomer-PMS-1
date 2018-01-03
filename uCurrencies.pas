@@ -117,23 +117,11 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMaskEdit
+  , uRoomerGridForm, cxCheckBox
   ;
 
 type
-  TfrmCurrencies = class(TForm)
-    sbMain: TsStatusBar;
-    PanTop: TsPanel;
-    btnInsert: TsButton;
-    btnEdit: TsButton;
-    btnDelete: TsButton;
-    btnOther: TsButton;
-    btnClose: TsButton;
-    panBtn: TsPanel;
-    btnCancel: TsButton;
-    BtnOk: TsButton;
-    tvData: TcxGridDBTableView;
-    lvData: TcxGridLevel;
-    grData: TcxGrid;
+  TfrmCurrencies = class(TfrmBaseRoomerGridForm)
     m_: TdxMemData;
     m_Currency: TWideStringField;
     m_Description: TWideStringField;
@@ -146,36 +134,39 @@ type
     mnuiGridToHtml: TMenuItem;
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
-    DS: TDataSource;
-    tvDataRecId: TcxGridDBColumn;
-    tvDataCurrency: TcxGridDBColumn;
-    tvDataDescription: TcxGridDBColumn;
     m_AValue: TFloatField;
-    tvDataAValue: TcxGridDBColumn;
     grPrinter: TdxComponentPrinter;
     prLink_grData: TdxGridReportLink;
     m_ID: TIntegerField;
-    chkActive: TsCheckBox;
-    cLabFilter: TsLabel;
-    edFilter: TsEdit;
-    btnClear: TsSpeedButton;
     m_active: TBooleanField;
-    tvDataactive: TcxGridDBColumn;
-    FormStore: TcxPropertiesStore;
-    pnlHolder: TsPanel;
-    tvDataID: TcxGridDBColumn;
     m_displayformat: TWideStringField;
     m_decimals: TIntegerField;
-    tvDatadisplayformat: TcxGridDBColumn;
-    tvDatadecimals: TcxGridDBColumn;
     m_SellValue: TFloatField;
-    m_CurrencySign: TStringField;
+    m_CurrencySign: TWideStringField;
+    cLabFilter: TsLabel;
+    btnClear: TsSpeedButton;
+    btnInsert: TsButton;
+    btnEdit: TsButton;
+    btnDelete: TsButton;
+    btnOther: TsButton;
+    chkActive: TsCheckBox;
+    edFilter: TsEdit;
+    btnHistory: TsButton;
+    tvDataRecId: TcxGridDBBandedColumn;
+    tvDataCurrency: TcxGridDBBandedColumn;
+    tvDataDescription: TcxGridDBBandedColumn;
+    tvDataAValue: TcxGridDBBandedColumn;
+    tvDataactive: TcxGridDBBandedColumn;
+    tvDatadisplayformat: TcxGridDBBandedColumn;
+    tvDatadecimals: TcxGridDBBandedColumn;
+    tvDataCurrencySign: TcxGridDBBandedColumn;
+    tvDataID: TcxGridDBBandedColumn;
+    tvDataSellValue: TcxGridDBBandedColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
-    procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure BtnOkClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure mnuExitClick(Sender: TObject);
@@ -193,28 +184,25 @@ type
     procedure tvDataAValuePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure m_NewRecord(DataSet: TDataSet);
     procedure tvDataDblClick(Sender: TObject);
-    procedure tvDataDataControllerSortingChanged(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure chkActiveClick(Sender: TObject);
     procedure m_BeforeDelete(DataSet: TDataSet);
     procedure m_BeforeInsert(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnHistoryClick(Sender: TObject);
 
   private
     { Private declarations }
-    zFirstTime       : boolean;
     //**
     zAllowGridEdit   : boolean;
     zFilterOn        : boolean;
-    zSortStr         : string;
-    Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
     procedure changeAllowgridEdit;
     Procedure chkFilter;
     procedure applyFilter;
+  protected
+    procedure DoLoadData; override;
   public
     { Public declarations }
     zAct               : TActTableAction;
@@ -225,16 +213,9 @@ type
     EmbedWindowCloseEvent : TNotifyEvent;
 
     procedure PrepareUserInterface;
-    procedure BringWindowToFront;
   end;
 
 function Currencies(act : TActTableAction; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
-
-function getCurrency(ed : TsComboEdit; lab : TsLabel) : boolean; overload;
-function getCurrency(var curr: string; lab : TsLabel) : boolean; overload;
-function CurrencyValidate(const curr: string; lab: TsLabel) : boolean; overload;
-function CurrencyValidate(ed : TsComboEdit; lab: TsLabel) : boolean; overload;
-
 
 var
   frmCurrencies: TfrmCurrencies;
@@ -246,7 +227,7 @@ uses
    uD
   , uSqlDefinitions
   , uUtils
-  , uRoomerCurrencymanager;
+  , uRoomerCurrencymanager, RoomerCurrencyEdit, uRptCurrencyHistory;
 
 {$R *.dfm}
 
@@ -262,17 +243,17 @@ begin
   try
     _frmCurrencies.zData := theData;
     _frmCurrencies.zAct := act;
-    _frmCurrencies.embedded := (act = actNone) AND
-                                    (embedPanel <> nil);
-    _frmCurrencies.EmbedWindowCloseEvent := WindowCloseEvent;
-    if _frmCurrencies.embedded then
-    begin
-      _frmCurrencies.pnlHolder.parent := embedPanel;
-      embedPanel.Update;
-      frmCurrenciesX := _frmCurrencies;
-    end
-    else
-    begin
+//    _frmCurrencies.embedded := (act = actNone) AND
+//                                    (embedPanel <> nil);
+//    _frmCurrencies.EmbedWindowCloseEvent := WindowCloseEvent;
+//    if _frmCurrencies.embedded then
+//    begin
+//      _frmCurrencies.pnlHolder.parent := embedPanel;
+//      embedPanel.Update;
+//      frmCurrenciesX := _frmCurrencies;
+//    end
+//    else
+//    begin
       _frmCurrencies.PrepareUserInterface;
       _frmCurrencies.ShowModal;
       if _frmCurrencies.modalresult = mrOk then
@@ -284,108 +265,18 @@ begin
       begin
         theData.init;
       end;
-    end;
+//    end;
   finally
-    if (act <> actNone) OR
-      (embedPanel = nil) then
+//    if (act <> actNone) OR
+//      (embedPanel = nil) then
       freeandnil(_frmCurrencies);
   end;
 end;
 
 
-function getCurrency(ed : TsComboEdit; lab : TsLabel) : boolean;
-var
-  curr: string;
-begin
-  curr := ed.Text;
-  result := getCurrency(curr, lab);
-  if result then
-    ed.Text := curr;
-end;
-
-function getCurrency(var curr: string; lab : TsLabel) : boolean;
-var
-  theData : recCurrencyHolder;
-begin
-  theData.init;
-  theData.Currency := curr;
-  result := Currencies(actLookup,theData);
-
-  if (trim(theData.Currency) = trim(curr)) then
-  begin
-    result := false;
-    exit;
-  end;
-  curr := theData.Currency;
-  lab.Caption := theData.Description+' - Rate '+ floatTostr(theData.Value);
-end;
-
-
-function CurrencyValidate(ed : TsComboEdit; lab: TsLabel) : boolean;
-begin
-  Result := CurrencyValidate(ed.Text, lab);
-  if not result then
-    ed.SetFocus;
-end;
-
-function CurrencyValidate(const curr: string; lab: TsLabel) : boolean;
-var
-  theData : recCurrencyHolder;
-begin
-  theData.init;
-  theData.Currency := trim(curr);
-  result := hdata.GET_currencyHolderByCurrency(theData);
-
-  if not result then
-  begin
-    lab.Color := clRed;
-    lab.caption := GetTranslatedText('shNotF_star');
-  end else
-  begin
-    lab.Color := clBtnFace;
-    lab.caption := theData.Description+' - Rate '+ floatTostr(theData.Value);
-  end;
-end;
-
-
-//END unit global functions
-
-
 ///////////////////////////////////////////////////////////////////////
 //
 ///////////////////////////////////////////////////////////////////////
-
-Procedure TfrmCurrencies.fillGridFromDataset(sGoto : string);
-var
-  s    : string;
-  rSet : TRoomerDataSet;
-  active : boolean;
-begin
-  active := chkActive.Checked;
-  zFirstTime := true;
-  if zSortStr = '' then zSortStr := 'Currency ';
-  rSet := CreateNewDataSet;
-  try
-		s := format(select_Currencies_fillGridFromDataset_byActive, [ord(active),zSortStr]);
-    if rSet_bySQL(rSet,s) then
-    begin
-      if m_.active then m_.Close;
-      m_.LoadFromDataSet(rSet);
-      if sGoto = '' then
-      begin
-        m_.First;
-      end else
-      begin
-        try
-          m_.Locate('currency',sGoto,[]);
-        except
-        end;
-      end;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
 
 procedure  TfrmCurrencies.fillHolder;
 begin
@@ -417,13 +308,7 @@ end;
 
 procedure TfrmCurrencies.chkActiveClick(Sender: TObject);
 begin
-  zFirstTime := false;
-  if tvdata.DataController.DataSet.State = dsEdit then
-  begin
-    tvdata.DataController.Post;
-  end;
-  fillGridFromDataset(zData.Currency);
-  zFirstTime := false;
+  RefreshData;
 end;
 
 Procedure TfrmCurrencies.ChkFilter;
@@ -436,14 +321,40 @@ begin
   rc2 := tvData.DataController.FilteredRecordCount;
 
   zFilterON := rc1 <> rc2;
-
-  if zFilterON then
-  begin
-  end else
-  begin
-  end;
 end;
 
+
+procedure TfrmCurrencies.DoLoadData;
+var
+  s    : string;
+  rSet : TRoomerDataSet;
+  active : boolean;
+  lID: integer;
+begin
+  inherited;
+
+  if m_.Active then
+    lId := m_ID.AsInteger
+  else
+    lId := 0;
+
+  active := chkActive.Checked;
+  rSet := CreateNewDataSet;
+  try
+		s := select_Currencies_fillGridFromDataset_byActive;
+    if active then
+      s := s + ' WHERE active';
+    if rSet_bySQL(rSet,s) then
+    begin
+      if m_.active then m_.Close;
+      m_.LoadFromDataSet(rSet);
+      m_.Locate('ID', lid, []);
+    end;
+  finally
+    freeandnil(rSet);
+  end;
+
+end;
 
 /////////////////////////////////////////////////////////////
 // Form actions
@@ -451,21 +362,13 @@ end;
 
 procedure TfrmCurrencies.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if tvdata.DataController.DataSet.State = dsInsert then
-  begin
-    tvdata.DataController.Post;
-  end;
-  if tvdata.DataController.DataSet.State = dsEdit then
-  begin
-    tvdata.DataController.Post;
-  end;
   glb.EnableOrDisableTableRefresh('currencies', True);
-  pnlHolder.Parent := self;
-  update;
-  if embedded then
-    Action := caFree;
-  if Assigned(EmbedWindowCloseEvent) then
-    EmbedWindowCloseEvent(self);
+//  pnlHolder.Parent := self;
+//  update;
+//  if embedded then
+//    Action := caFree;
+//  if Assigned(EmbedWindowCloseEvent) then
+//    EmbedWindowCloseEvent(self);
 
   //TODO: implement this via an OnUpdate event on the AppGlobal.currencies recordset
   RoomerCurrencyManager.UpdateDefinitions();
@@ -473,57 +376,15 @@ end;
 
 procedure TfrmCurrencies.FormCreate(Sender: TObject);
 begin
-  RoomerLanguage.TranslateThisForm(self);
-     glb.PerformAuthenticationAssertion(self);
-  PlaceFormOnVisibleMonitor(self);
-  zFirstTime  := true;
   zAct        := actNone;
 
   PrepareUserInterface;
 end;
 
-procedure TfrmCurrencies.FormDestroy(Sender: TObject);
-begin
-  glb.EnableOrDisableTableRefresh('currencies', True);
-end;
-
-procedure TfrmCurrencies.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    btnCancel.Click;
-end;
-
-procedure TfrmCurrencies.FormKeyPress(Sender: TObject; var Key: Char);
-begin
-  //*NOT TESTED*//
-  if ZAct = actLookup then
-  begin
-    if key = chr(13) then
-    begin
-      if activecontrol = edFilter then
-      begin
-      end else
-      begin
-        btnOk.click;
-      end;
-    end;
-
-    if key = chr(27) then
-    begin
-      if activecontrol = edFilter then
-      begin
-      end else
-      begin
-        btnCancel.click;
-      end;
-    end;
-  end;
-end;
-
-
 procedure TfrmCurrencies.FormShow(Sender: TObject);
 begin
   glb.EnableOrDisableTableRefresh('currencies', False);
+  RefreshData;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -539,6 +400,7 @@ begin
   if hdata.CurrencyExistsInOther(zData.Currency) then
   begin
     Showmessage(format(GetTranslatedText('shExistsInRelatedDataCannotDelete'), ['Currency', zData.Description]));
+    Abort;
     exit;
   end;
 
@@ -565,7 +427,7 @@ end;
 
 procedure TfrmCurrencies.m_BeforeInsert(DataSet: TDataSet);
 begin
-  if zFirstTime then exit;
+  if LoadingData then Exit;
   tvData.GetColumnByFieldName('Currency').Focused := True;
 end;
 
@@ -573,15 +435,11 @@ procedure TfrmCurrencies.m_BeforePost(DataSet: TDataSet);
 var
   nID : integer;
 begin
-  if zFirstTime then exit;
+  if LoadingData then Exit;
   nId := 0;
 
   zData.init;
   zData.ReadFromDataset(dataset);
-//  zData.currency      := dataset['currency'];
-//  zData.Description   := dataset['Description'];
-//  zData.Value         := dataset['AValue'];
-//  zData.active        := dataset['active'];
 
   if tvData.DataController.DataSource.State = dsEdit then
   begin
@@ -628,29 +486,18 @@ end;
 
 procedure TfrmCurrencies.PrepareUserInterface;
 begin
-  panBtn.Visible := False;
-  sbMain.Visible := false;
-  btnClose.Visible := False;
-
-  fillGridFromDataset(zData.Currency);
-  zFirstTime := true;
-  sbMain.SimpleText := zSortStr;
 
   if ZAct = actLookup then
   begin
     mnuiAllowGridEdit.Checked := false;
-    panBtn.Visible := true;
   end else
   begin
     mnuiAllowGridEdit.Checked := true;
-    btnClose.Visible := embedded;
-    sbMain.Visible := true;
   end;
   //-C
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowGridEdit;
   chkFilter;
-  zFirstTime := false;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -731,26 +578,6 @@ begin
   chkFilter;
 end;
 
-procedure TfrmCurrencies.tvDataDataControllerSortingChanged(Sender: TObject);
-var
-  i : integer;
-  s : string;
-  serval : boolean;
-begin
-  s := '';
-  serval := false;
-  for i :=  0 to tvData.SortedItemCount - 1 do
-  begin
-    if serval then s := s+', ';
-    s := s+TcxGridDBColumn(tvData.SortedItems[I]).DataBinding.FieldName;
-    serval := true;
-    if tvData.SortedItems[i].SortOrder = soDescending then
-    s := s + ' DESC';
-  end;
-  zSortStr := s;
-  sbMain.SimpleText := s;
-end;
-
 procedure TfrmCurrencies.ApplyFilter;
 begin
   tvData.DataController.Filter.Options := [fcoCaseInsensitive];
@@ -782,12 +609,6 @@ end;
 procedure TfrmCurrencies.BtnOkClick(Sender: TObject);
 begin
   fillHolder;
-end;
-
-
-procedure TfrmCurrencies.BringWindowToFront;
-begin
-  pnlHolder.BringToFront;
 end;
 
 procedure TfrmCurrencies.btnCancelClick(Sender: TObject);
@@ -838,6 +659,12 @@ begin
   showmessage(GetTranslatedText('shTx_Currencies_EditInGrid'));
 end;
 
+procedure TfrmCurrencies.btnHistoryClick(Sender: TObject);
+begin
+  inherited;
+  ShowCurrencyHistory(m_Currency.AsString);
+end;
+
 procedure TfrmCurrencies.btnDeleteClick(Sender: TObject);
 begin
   m_.Delete;
@@ -849,7 +676,6 @@ end;
 
 procedure TfrmCurrencies.mnuiAllowGridEditClick(Sender: TObject);
 begin
-  if zFirstTime then exit;
 
   mnuiAllowGridEdit.Checked := not mnuiAllowGridEdit.Checked;
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
@@ -863,9 +689,6 @@ begin
   sFilename := g.qProgramPath + caption;
   ExportGridToExcel(sFilename, grData, true, true, true);
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
-  //  To export ot xlsx form then use this
-  //  ExportGridToXLSX(sFilename, grData, true, true, true);
-  //  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xlsx'), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmCurrencies.mnuiGridToHtmlClick(Sender: TObject);

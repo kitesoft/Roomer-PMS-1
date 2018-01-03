@@ -332,7 +332,8 @@ uses
   uReleaseNotes in 'VersionManagement\uReleaseNotes.pas',
   RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas',
   uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraLookupPanel: TFrame},
-  uMarketDefinitions in 'Definitions\uMarketDefinitions.pas';
+  uMarketDefinitions in 'Definitions\uMarketDefinitions.pas',
+  uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory};
 
 {$R *.RES}
 

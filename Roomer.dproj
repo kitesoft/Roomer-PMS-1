@@ -993,6 +993,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Definitions\uMarketDefinitions.pas"/>
+        <DCCReference Include="Currencies\uRptCurrencyHistory.pas">
+            <Form>frmCurrencyHistory</Form>
+            <DesignClass>{$R *.RES</DesignClass>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

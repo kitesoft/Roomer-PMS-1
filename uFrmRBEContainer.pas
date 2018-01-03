@@ -211,8 +211,8 @@ begin
     FrmResourcesX.pnlHolder.Parent := nil;
   if RBEWindowTypes[rwRoomTypes] then
     frmRoomTypes2X.pnlHolder.Parent := nil;
-  if RBEWindowTypes[rwCurrencies] then
-    frmCurrenciesX.pnlHolder.Parent := nil;
+//  if RBEWindowTypes[rwCurrencies] then
+//    frmCurrenciesX.pnlHolder.Parent := nil;
   if RBEWindowTypes[rwCountries] then
     frmCountriesX.pnlHolder.Parent := nil;
   if RBEWindowTypes[rwRoomTypeGroups] then
@@ -232,10 +232,7 @@ begin
                         frmCountriesX.pnlHolder.Parent := pnlForm
                       else
                         Countries(actNone, theCountriesHolder, pnlForm, WindowCloseEvent);
-    rwCurrencies:     if RBEWindowTypes[rwCurrencies] then
-                        frmCurrenciesX.pnlHolder.Parent := pnlForm
-                      else
-                        Currencies(actNone, theCurrencyHolder, pnlForm, WindowCloseEvent);
+    rwCurrencies:     Currencies(actNone, theCurrencyHolder, pnlForm, WindowCloseEvent);
     rwTaxes:          EditTaxes();
     rwEmailResource:  if RBEWindowTypes[rwEmailResource] then
                         FrmResourcesX.pnlHolder.Parent := pnlForm

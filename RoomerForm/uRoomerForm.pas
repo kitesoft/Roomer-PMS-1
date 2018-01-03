@@ -152,7 +152,7 @@ end;
 procedure TfrmBaseRoomerForm.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   inherited; // Calls FormKeyDown event if present
-  if FCloseOnEsc and (Key = VK_ESCAPE) then
+  if (Key <> 0) and FCloseOnEsc and (Key = VK_ESCAPE) then
     Close;
 end;
 

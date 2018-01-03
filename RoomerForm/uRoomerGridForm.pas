@@ -43,6 +43,7 @@ type
     /// </summary>
     procedure InitializeGridProperties; virtual;
     procedure DoShow; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
   public
     { Public declarations }
   end;
@@ -81,6 +82,14 @@ end;
 procedure TfrmBaseRoomerGridForm.InitializeGridProperties;
 begin
   tvData.OptionsView.NoDataToDisplayInfoText := GetTranslatedText('shBaseGridForm_NoDataToDisplay');
+end;
+
+procedure TfrmBaseRoomerGridForm.KeyDown(var Key: Word; Shift: TShiftState);
+begin
+  if (Key = VK_ESCAPE) and (dsData.DataSet.State in [dsEdit, dsInsert]) then
+    dsData.DataSet.Cancel
+  else
+    inherited;
 end;
 
 procedure TfrmBaseRoomerGridForm.AddViewColumnPropsToStore(aGrid: TcxGrid);

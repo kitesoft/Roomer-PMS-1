@@ -677,10 +677,8 @@ type
     lblAllowPaymentModifications: TsLabel;
     lbTopClassAvaiabilityOrderActive: TsLabel;
     cbTopClassAvaiabilityOrderActive: TsCheckBox;
-    ceMasterRateCurrency: TsComboEdit;
     lblMasterRateCurrency: TsLabel;
     cbxCurrencyCalculation: TsCheckBox;
-    lblMasterRateCurrencyName: TsLabel;
     tsBetaFunctions: TsTabSheet;
     gbxInvoiceBeta: TsGroupBox;
     cbxNewTaxCalcMethod: TsCheckBox;
@@ -751,6 +749,7 @@ type
     lbAggregateCityTax: TsLabel;
     cbAggregateCityTax: TsCheckBox;
     fraCurrencyPanel: TfraCurrencyPanel;
+    fraMasterRateCurrency: TfraCurrencyPanel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -809,7 +808,6 @@ type
     procedure btnMFSelectAllClick(Sender: TObject);
     procedure btnMFSelectNoneClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure ceMasterRateCurrencyDblClick(Sender: TObject);
     procedure tvSelectionCustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
       var DefaultDraw: Boolean);
     procedure tvSelectionChanging(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
@@ -1584,7 +1582,7 @@ g.ReadWriteSettingsToRegistry(0);
     cbAllowPaymentModification.Checked := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
     cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
     cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive;
-    ceMasterRateCurrency.Text := glb.PMSSettings.MasterRatesSettings.MasterRateCurrency;
+    fraMasterRateCurrency.Code := glb.PMSSettings.MasterRatesSettings.MasterRateCurrency;
     cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert;
     cbAllowTogglingOfCityTaxesOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
     cbAggregateCityTax.Checked := glb.PMSSettings.InvoiceSettings.AggregateCityTax;
@@ -2116,7 +2114,7 @@ begin
       glb.PMSSettings.InvoiceSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
       glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
       glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
-      glb.PMSSettings.MasterRatesSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
+      glb.PMSSettings.MasterRatesSettings.MasterRateCurrency := fraMasterRateCurrency.Code;
       glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
       glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
       glb.PMSSettings.InvoiceSettings.AggregateCityTax := cbAggregateCityTax.Checked;
@@ -3692,11 +3690,6 @@ begin
   setColorControls
 end;
 
-
-procedure TfrmControlData.ceMasterRateCurrencyDblClick(Sender: TObject);
-begin
-  getCurrency(ceMasterRateCurrency, lblMasterRateCurrencyName);
-end;
 
 procedure TfrmControlData.setColorControls;
 var
