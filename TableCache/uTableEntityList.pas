@@ -57,6 +57,7 @@ implementation
 
 uses
   uD
+  , Windows
   , AdODB
   , uMessageList
   , uUtils
@@ -114,8 +115,6 @@ begin
   Add('countrygroups', TTableEntity.Create('countrygroups'));
   Add('customers', TTableEntity.Create('customers'));
 
-  Add('tblconverts', TTableEntity.Create('tblconverts'));
-  Add('tblconvertgroups', TTableEntity.Create('tblconvertgroups'));
   Add('paygroups', TTableEntity.Create('paygroups'));
   Add('paytypes', TTableEntity.Create('paytypes'));
   Add('personprofiles', TTableEntity.Create('personprofiles'));
@@ -170,6 +169,7 @@ begin
 
   FRSet.Close;
   try
+    OutputDebugString(PChar(Format('Refreshing statictable [%s] from server', [FTableName])));
     FRSet.Open(true, false, True); // Open(doLowerCase: Boolean = true; setLastAccess: Boolean = true; Threaded: Boolean = False);
     SaveToFile(FRSet.SavedLastResult);
     FRSet.First;

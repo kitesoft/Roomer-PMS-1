@@ -21,7 +21,9 @@ type
   TCachedDataHandler = class
   private
     FTableStates : TObjectDictionary<String, TDatePair>;
-    function GetTableUpdateTimeStamps(aRSet: TRoomerDataset): boolean;
+    function GetTableUpdateTimeStamps(aRSet: TRoomerDataset): boolean; deprecated 'Use GetStaticTablesLastUpdates';
+    function GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string = ''): boolean;
+    function UpdateLastUpdateOnServer(const aTableName: string): boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -45,6 +47,7 @@ uses
   uD,
   uAppGlobal,
   DateUtils
+  , Data.DB
   ;
 
 var
@@ -71,6 +74,7 @@ end;
 constructor TCachedDataHandler.Create;
 begin
   FTableStates := TObjectDictionary<String, TDatePair>.Create([doOwnsValues], TCaseInsensitiveEqualityComparer.Create);
+  RefreshTabelStateList;
 end;
 
 function TCachedDataHandler.CurrentTableDate(const TableName: String): TDateTime;
@@ -78,8 +82,7 @@ var datePair : TDatePair;
     key : String;
 begin
   result := 0;
-  key := format(cLastUpdateFieldFormat, [TableName]).tolower;
-  if FTableStates.TryGetValue(key, datePair) then
+  if FTableStates.TryGetValue(TableName, datePair) then
     result := datePair.LastUpdateOnServerUTC;
 end;
 
@@ -91,31 +94,48 @@ end;
 
 function TCachedDataHandler.GetTableUpdateTimeStamps(aRSet: TRoomerDataset): boolean;
 begin
-  Result := true;
+  Result := false;
   try
     if NOT aRSet.OfflineMode then
+    begin
       aRSet.OpenDatasetFromUrlAsString('messaging/lastchanges', false, 0, '');
+      Result := true;
+    end;
   except
     // Ignore ...
-    Result := false;
+  end;
+end;
+
+function TCachedDataHandler.GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string): boolean;
+var
+  url: string;
+begin
+  Result := false;
+  try
+    if NOT aRSet.OfflineMode then
+    begin
+      url := 'messaging/statictableslastupdates';
+      if not aTableName.IsEmpty then
+        url := url + '/' + aTableName;
+      aRSet.OpenDatasetFromUrlAsString(url, false, 0, '');
+      Result := true;
+    end;
+  except
+    // Ignore ...
   end;
 end;
 
 procedure TCachedDataHandler.MarkTableAsRefreshed(const TableName: String);
 var datePair : TDatePair;
-    key : String;
 begin
-  key := format(cLastUpdateFieldFormat, [TableName]);
-  if FTableStates.TryGetValue(key, datePair) then
+  if UpdateLastUpdateOnServer(TableName) and FTableStates.TryGetValue(TableName, datePair) then
     datePair.LocalFileDate := datePair.LastUpdateOnServerUTC;
 end;
 
 procedure TCachedDataHandler.MarkTableAsRefreshed(const TableName: String; dt: TDateTime);
 var datePair : TDatePair;
-    key : String;
 begin
-  key := format(cLastUpdateFieldFormat, [TableName]);
-  if FTableStates.TryGetValue(key, datePair) then
+  if FTableStates.TryGetValue(TableName, datePair) then
   begin
     datePair.LocalFileDate := dt;
     datePair.LastUpdateOnServerUTC := dt;
@@ -123,61 +143,95 @@ begin
 end;
 
 procedure TCachedDataHandler.RefreshTabelStateList;
-var TableRefreshSet : TRoomerDataset;
-
-    i : integer;
-    datePair : TDatePair;
-    key : String;
-    tablename: string;
+var lTableRefreshSet : TRoomerDataset;
+    lDatePair : TDatePair;
+    fldTableName: TField;
+    fldLastUpdate: TField;
 begin
   if d.roomerMainDataSet.OfflineMode then
     exit;
-  TableRefreshSet := CreateNewDataSet;
+  lTableRefreshSet := CreateNewDataSet;
   try
-    TableRefreshSet.RoomerDataSet := nil;
-    if GetTableUpdateTimeStamps(TableRefreshSet) then
+    lTableRefreshSet.RoomerDataSet := nil;
+    if GetStaticTablesLastUpdates(lTableRefreshSet) then
     begin
-      TableRefreshSet.First;
-      if not TableRefreshSet.Eof then
+      fldTableName := lTableRefreshSet.FieldByName('tablename');
+      fldLastUpdate := lTableRefreshSet.FieldByName('lastupdate');
+
+      lTableRefreshSet.First;
+      while not lTableRefreshSet.Eof do
       begin
-        for i := 0 to TableRefreshSet.Fields.Count - 1 do
+        if FTableStates.TryGetValue(fldTableName.AsString, ldatePair) then
+            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime
+        else
         begin
-          key := TableRefreshSet.Fields[i].FieldName;
-          if FTableStates.TryGetValue(key, datePair) then
-            datePair.LastUpdateOnServerUTC := TableRefreshSet.fieldByName(key).AsDateTime
-          else
-          begin
-            datePair := TDatePair.Create;
-            try
-//              datePair.LocalFileDate := TableRefreshSet.fieldByName(key).AsDateTime;
-              tablename := copy(key, 0, key.length -length(cLastUpdateSuffix));
-              datePair.LocalFileDate := glb.TableList.TableEntity[tableName].LocalFileDate;
-              datePair.LastUpdateOnServerUTC := TableRefreshSet.fieldByName(key).AsDateTime;
-              FTableStates.Add(key, datePair);
-            except
-              datePair.Free;
-              raise;
-            end;
+          ldatePair := TDatePair.Create;
+          try
+            ldatePair.LocalFileDate := glb.TableList.TableEntity[fldTableName.AsString].LocalFileDate;
+            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime;
+            FTableStates.Add(fldTableName.AsString, ldatePair);
+          except
+            ldatePair.Free;
+            raise;
           end;
         end;
+        lTableRefreshSet.Next;
       end;
     end;
   finally
-    freeandnil(TableRefreshSet);
+    lTableRefreshSet.Free;
   end;
 end;
 
 function TCachedDataHandler.TableNeedsRefresh(const TableName: String): Boolean;
 var datePair : TDatePair;
-    key : String;
 begin
   result := true;
-
-  key := format(cLastUpdateFieldFormat, [TableName]);
-  if FTableStates.TryGetValue(key, datePair) then
+  if FTableStates.TryGetValue(TableName, datePair) then
     result := datePair.IsChanged;
 end;
 
+
+function TCachedDataHandler.UpdateLastUpdateOnServer(const aTableName: string): boolean;
+var lTableRefreshSet : TRoomerDataset;
+    lDatePair : TDatePair;
+    fldTableName: TField;
+    fldLastUpdate: TField;
+begin
+  Result := false;
+  if d.roomerMainDataSet.OfflineMode then
+    exit;
+  lTableRefreshSet := CreateNewDataSet;
+  try
+    lTableRefreshSet.RoomerDataSet := nil;
+    if GetStaticTablesLastUpdates(lTableRefreshSet, aTableName) then
+    begin
+      fldTableName := lTableRefreshSet.FieldByName('tablename');
+      fldLastUpdate := lTableRefreshSet.FieldByName('lastupdate');
+
+      lTableRefreshSet.First;
+      if not lTableRefreshSet.Eof then
+      begin
+        if FTableStates.TryGetValue(fldTableName.AsString, ldatePair) then
+            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime
+        else
+        begin
+          ldatePair := TDatePair.Create;
+          try
+            ldatePair.LocalFileDate := glb.TableList.TableEntity[fldTableName.AsString].LocalFileDate;
+            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime;
+            FTableStates.Add(fldTableName.AsString, ldatePair);
+          except
+            ldatePair.Free;
+            raise;
+          end;
+        end;
+      end;
+    end;
+  finally
+    lTableRefreshSet.Free;
+  end;
+end;
 
 { TDatePair }
 
