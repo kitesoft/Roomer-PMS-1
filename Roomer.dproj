@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">releaseBas</Config>
+        <Config Condition="'$(Config)'==''">DebugBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -196,7 +196,6 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
-        <VerInfo_PreRelease>false</VerInfo_PreRelease>
         <VerInfo_Build>0</VerInfo_Build>
         <PostBuildEvent><![CDATA[$(OUTPUTDIR)DeployOnDev.bat
 $(PostBuildEvent)]]></PostBuildEvent>
@@ -231,11 +230,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <VerInfo_AutoGenVersion>false</VerInfo_AutoGenVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3)'!=''">
+        <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <VerInfo_Release>13</VerInfo_Release>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=2.9.13.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.9.13.0;Comments=;ExtraBuild=170421;PrivateBuild=</VerInfo_Keys>
-        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_MapFile>3</DCC_MapFile>
+        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
         <DCC_Optimize>false</DCC_Optimize>
         <DCC_Define>Debug;$(DCC_Define)</DCC_Define>
@@ -988,6 +988,15 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="TableCache\uCachedDataHandler.pas"/>
         <DCCReference Include="VersionManagement\uReleaseNotes.pas"/>
         <DCCReference Include="RoomerVCLs\Source\RoomerCurrencyEdit.pas"/>
+        <DCCReference Include="Embeddables\uFraLookupPanel.pas">
+            <Form>fraLookupPanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Definitions\uMarketDefinitions.pas"/>
+        <DCCReference Include="Currencies\uRptCurrencyHistory.pas">
+            <Form>frmCurrencyHistory</Form>
+            <DesignClass>{$R *.RES</DesignClass>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

@@ -3680,19 +3680,6 @@ object frmControlData: TfrmControlData
             Caption = 'Various'
             TabOrder = 2
             SkinData.SkinSection = 'GROUPBOX'
-            object labNativeCurrency: TsLabel
-              Left = 497
-              Top = 18
-              Width = 4
-              Height = 14
-              Caption = '-'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
             object sLabel3: TsLabel
               Left = 226
               Top = 18
@@ -3749,50 +3736,12 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object edNativeCurrency: TsComboEdit
-              Left = 327
-              Top = 14
-              Width = 117
-              Height = 22
-              AutoSize = False
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 0
-              Text = ''
-              OnDblClick = edNativeCurrencyDblClick
-              CheckOnExit = True
-              SkinData.SkinSection = 'EDIT'
-              OnButtonClick = edNativeCurrencyDblClick
-              GlyphMode.Blend = 0
-              GlyphMode.Grayed = False
-            end
-            object edCurrencySymbol: TsEdit
-              Left = 450
-              Top = 15
-              Width = 39
-              Height = 22
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              ReadOnly = True
-              TabOrder = 1
-              SkinData.SkinSection = 'EDIT'
-            end
             object cbShowIncludedBreakfastOnInvoice: TsCheckBox
               Left = 425
               Top = 67
               Width = 20
               Height = 20
-              TabOrder = 3
+              TabOrder = 1
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
@@ -3814,17 +3763,33 @@ object frmControlData: TfrmControlData
               Font.Style = []
               ItemIndex = -1
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 0
             end
             object cbAllowDeleteItemsFromInvoice: TsCheckBox
               Left = 425
               Top = 88
               Width = 20
               Height = 20
-              TabOrder = 4
+              TabOrder = 2
               SkinData.SkinSection = 'CHECKBOX'
               ImgChecked = 0
               ImgUnchecked = 0
+            end
+            inline fraCurrencyPnl: TfraCurrencyPanel
+              Left = 327
+              Top = 14
+              Width = 250
+              Height = 20
+              TabOrder = 3
+              ExplicitLeft = 327
+              ExplicitTop = 14
+              ExplicitHeight = 20
+              inherited pnlLookup: TsPanel
+                inherited lblDescription: TsLabel
+                  Width = 157
+                  Height = 20
+                end
+              end
             end
           end
           object LMDGroupBox26: TsGroupBox
@@ -6490,13 +6455,6 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object lblMasterRateCurrencyName: TsLabel
-              Left = 709
-              Top = 40
-              Width = 4
-              Height = 14
-              Caption = '-'
-            end
             object cbxAutoAddToGuestPortfolio: TsCheckBox
               Left = 436
               Top = 20
@@ -6527,37 +6485,31 @@ object frmControlData: TfrmControlData
               ImgChecked = 0
               ImgUnchecked = 0
             end
-            object ceMasterRateCurrency: TsComboEdit
-              Left = 632
-              Top = 36
-              Width = 68
-              Height = 22
-              AutoSize = False
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 3
-              Text = ''
-              OnDblClick = ceMasterRateCurrencyDblClick
-              CheckOnExit = True
-              SkinData.SkinSection = 'EDIT'
-              OnButtonClick = ceMasterRateCurrencyDblClick
-              GlyphMode.Blend = 0
-              GlyphMode.Grayed = False
-            end
             object cbxCurrencyCalculation: TsCheckBox
               Left = 632
               Top = 64
               Width = 174
               Height = 20
               Caption = 'Perform currency calculation'
-              TabOrder = 4
+              TabOrder = 3
               ImgChecked = 0
               ImgUnchecked = 0
+            end
+            inline fraMasterRateCurrency: TfraCurrencyPanel
+              Left = 632
+              Top = 36
+              Width = 250
+              Height = 21
+              TabOrder = 4
+              ExplicitLeft = 632
+              ExplicitTop = 36
+              ExplicitHeight = 21
+              inherited pnlLookup: TsPanel
+                inherited lblDescription: TsLabel
+                  Width = 157
+                  Height = 20
+                end
+              end
             end
           end
         end

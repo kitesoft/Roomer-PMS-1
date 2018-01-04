@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.Generics.Collections,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvUtil, Vcl.Grids, AdvObj, BaseGrid, AdvGrid, Vcl.ExtCtrls, sPanel, Vcl.StdCtrls, sLabel;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvUtil, Vcl.Grids, AdvObj, BaseGrid, AdvGrid, Vcl.ExtCtrls, sPanel, Vcl.StdCtrls, sLabel,
+  uAmount;
 
 type
 
@@ -75,7 +76,8 @@ var
   FrmViewDailyRates: TFrmViewDailyRates;
 
 procedure ShowRatesForRoomReservation(RoomReservation : Integer);
-function CreateDateRate(ADate : TDate; Rate : Double; Customer : String; NumDays, NumGuest : Integer; _Currency : String) : TDateRate;
+function CreateDateRate(ADate : TDate; Rate : Double; Customer : String; NumDays, NumGuest : Integer; _Currency : String) : TDateRate; overload;
+function CreateDateRate(ADate : TDate; Rate : TAmount; Customer : String; NumDays, NumGuest : Integer) : TDateRate; overload;
 
 
 implementation
@@ -103,6 +105,11 @@ begin
   finally
     FreeAndNil(_FrmViewDailyRates);
   end;
+end;
+
+function CreateDateRate(ADate : TDate; Rate : TAmount; Customer : String; NumDays, NumGuest : Integer) : TDateRate;
+begin
+  Result := CreateDateRate(aDate, Rate.Value, Customer, NumDays, NumGuest, Rate.CurrencyCode);
 end;
 
 function CreateDateRate(ADate : TDate; Rate : Double; Customer : String; NumDays, NumGuest : Integer; _Currency : String) : TDateRate;

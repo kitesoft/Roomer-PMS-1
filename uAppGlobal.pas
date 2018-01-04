@@ -168,8 +168,6 @@ Type
     function GetCustomertypes: TRoomerDataSet;
     function GetPaygroups: TRoomerDataSet;
     function GetPaytypes: TRoomerDataSet;
-    function GetTblconvertgroups: TRoomerDataSet;
-    function GetTblconverts: TRoomerDataSet;
     function GetTblpricecodes: TRoomerDataSet;
     function GetTblseasons: TRoomerDataSet;
     function GetCustomersSet: TRoomerDataSet;
@@ -312,8 +310,6 @@ Type
       property PackageItems    : TRoomerDataSet read GetPackageItems;
       property PersonProfiles  : TRoomerDataSet read GetPersonProfiles;
       property BookKeepingCodes  : TRoomerDataSet read GetBookKeepingCodes;
-      property TblconvertsSet      : TRoomerDataSet read GetTblconverts;
-      property TblconvertgroupsSet : TRoomerDataSet read GetTblconvertgroups;
       property PaygroupsSet        : TRoomerDataSet read GetPaygroups;
       property PaytypesSet         : TRoomerDataSet read GetPaytypes;
       property TblseasonsSet       : TRoomerDataSet read GetTblseasons;
@@ -1612,16 +1608,6 @@ end;
 function TGlobalSettings.GetStaffMembers: TRoomerDataset;
 begin
   result := tablesList.Dataset['staffmembers'];
-end;
-
-function TGlobalSettings.GetTblconvertgroups: TRoomerDataSet;
-begin
-  result := tableslist.Dataset['tblconvertgroups'];
-end;
-
-function TGlobalSettings.GetTblconverts: TRoomerDataSet;
-begin
-  result := tableslist.Dataset['tblconverts'];
 end;
 
 function TGlobalSettings.GetTblpricecodes: TRoomerDataSet;

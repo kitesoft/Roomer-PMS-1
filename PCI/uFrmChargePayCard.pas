@@ -8,7 +8,7 @@ uses
   uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.ComCtrls, sStatusBar, sMemo,
   uRoomerForm, ufraCurrencyPanel, Vcl.Mask, sMaskEdit, sCustomComboEdit, sCurrEdit, sCurrencyEdit
   , RoomerExceptionHandling
-  , RoomerCurrencyEdit // must be after include of sCurrencyEdit!
+  , RoomerCurrencyEdit, uFraLookupPanel // must be after include of sCurrencyEdit!
   ;
 
 type
@@ -339,7 +339,7 @@ begin
                'gateWayReference=%s',
                [
                  FloatToXML(edAmount.Value, 2),
-                 fraCurrency.CurrencyCode,
+                 fraCurrency.Code,
                  '', // description
                  tokenId,
                  PAY_CARD_OPERATION_TYPE[PayCardOperationType],
@@ -549,9 +549,9 @@ begin
   else
     LoadCards;
 
-  fraCurrency.OnCurrencyChangeAndValid := evtCurrencyChangedAndValid;
-  fraCurrency.OnCurrencyChange := evtCurrencyChanged;
-  fraCurrency.CurrencyCode := Currency;
+  fraCurrency.OnChangedAndValid := evtCurrencyChangedAndValid;
+  fraCurrency.OnChange := evtCurrencyChanged;
+  fraCurrency.Code := Currency;
   CurrencyRate := fraCurrency.CurrencyRate;
 
   edAmount.Value := Amount;
@@ -581,7 +581,7 @@ procedure TFrmChargePayCard.evtCurrencyChangedAndValid(Sender: TObject);
 begin
   if not SameValue(fraCurrency.CurrencyRate, CurrencyRate) then
   begin
-    edAmount.CurrencyCode := fraCurrency.CurrencyCode;
+    edAmount.CurrencyCode := fraCurrency.Code;
     edAmount.value := edAmount.Value * CurrencyRate / fraCurrency.CurrencyRate;
     edAmount.DecimalPlaces := fraCurrency.CurrencyDefinition.CurrencyFormatSettings.CurrencyDecimals;
     CurrencyRate := fraCurrency.CurrencyRate;

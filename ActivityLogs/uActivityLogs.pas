@@ -11,7 +11,7 @@ type
 
   EActivityLogException = class(ERoomerException);
 
-  TActivityType = (ROOMER, INVOICE, RESERVATION, AVAILABILITY, RATE, TABLE_CHANGE, OFFLINEREPORT);
+  TActivityType = (ROOMER, INVOICE, RESERVATION, AVAILABILITY, RATE, TABLE_CHANGE, OFFLINEREPORT, CURRENCY);
   TRoomerAction = (LOGIN, LOGOUT, BUTTON_CLICK, ERROR);
 
   TInvoiceAction = (ADD_LINE, DELETE_LINE, CHANGE_ITEM, ADD_PAYMENT, DELETE_PAYMENT, CHANGE_PAYMENT, PRINT_PROFORMA, PAY_AND_PRINT);
@@ -37,6 +37,8 @@ type
   TRateAction = (RATE_EDIT, STOP_EDIT, MIN_EDIT, MAX_EDIT, COA_EDIT, COD_EDIT);
 
   TOfflineReportAction = (REPORTEXCEPTION);
+
+  TCurrencyAction = (ADD_CURRENCY, CHANGE_CURRENCY, DELETE_CURRENCY);
 
 procedure AddTableChangeActivityLog(const user : String;
                                     action : TTableAction;
@@ -101,6 +103,15 @@ procedure AddRateActivityLog(const user : String;
                              min : Integer;
                              max : Integer;
                              date : TDate;
+                             const moreInfo : String);
+
+procedure AddCurrencyActivityLog(const user : String;
+                             action : TCurrencyAction;
+                             const CurrencyCode: String;
+                             oldRate: double;
+                             newRate : Double;
+                             Active: Boolean;
+                             Decimals: Integer;
                              const moreInfo : String);
 
 procedure PushActivityLogs(aWaitForCompletion: boolean = false);
@@ -537,6 +548,45 @@ begin
   end;
 
 end;
+
+procedure AddCurrencyActivityLog(const user : String;
+                             action : TCurrencyAction;
+                             const CurrencyCode: String;
+                             oldRate: double;
+                             newRate : Double;
+                             Active: Boolean;
+                             Decimals: Integer;
+                             const moreInfo : String);
+var
+  categoryName, actionName, sLine : String;
+begin
+  try
+    categoryName := GetEnumName(TypeInfo(TActivityType), ORD(CURRENCY));
+    actionName := GetEnumName(TypeInfo(TCurrencyAction), ORD(action));
+
+    sLine := CreateXmlElement(user,
+                              uDateUtils.dateTimeToXmlString(now),
+                              categoryName,
+                              actionName,
+                              moreinfo,
+                              Format('Active: %s Decimals: %d', [BoolToStr(Active, True), Decimals]),
+                              iif(SameValue(oldrate, newrate), '', FloatToXML(oldRate, 2)),
+                              iif(SameValue(oldrate, newrate), '', FloatToXml(newrate, 2)),
+                              CurrencyCode,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0,
+                              '');
+    AddToTextFile(GetDataFileLocationWithName(CURRENCY), sLine);
+  except
+    on e: Exception do
+      raise EActivityLogException.Create('Error when writing CurrencyActivity to activitylogs: '  +  #13#10 + E.Message);
+  end;
+
+end;
+
 
 procedure PushActivityLogs(aWaitForCompletion: boolean = false);
 var activity  : TActivityType;

@@ -104,7 +104,7 @@ uses
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, AdvDropDown, AdvColorPickerDropDown, AdvGlowButton, AdvOfficeSelectors, AsgCombo, ColorCombo, dxGalleryControl, dxColorGallery, dxColorEdit,
   sListBox, sCheckListBox, uFraCountryPanel
   , uHotelServicesSettings
-  , RegularExpressions
+  , RegularExpressions, uFraLookupPanel, ufraCurrencyPanel
   ;
 
   //
@@ -490,8 +490,6 @@ type
     Label34: TsLabel;
     edIvhTxtTotalStayTax: TsEdit;
     edIvhTxtTotalStayTaxNights: TsEdit;
-    labNativeCurrency: TsLabel;
-    edNativeCurrency: TsComboEdit;
     sLabel1: TsLabel;
     cbxStatusAttr_: TsComboBox;
     sLabel3: TsLabel;
@@ -604,7 +602,6 @@ type
     __editTZ: TsComboBox;
     lblNumShifts: TsLabel;
     edtNumShifts: TsEdit;
-    edCurrencySymbol: TsEdit;
     sGroupBox12: TsGroupBox;
     labAutoInvoiceTransfer: TsLabel;
     chkAutoInvoiceTransfer: TsCheckBox;
@@ -680,10 +677,8 @@ type
     lblAllowPaymentModifications: TsLabel;
     lbTopClassAvaiabilityOrderActive: TsLabel;
     cbTopClassAvaiabilityOrderActive: TsCheckBox;
-    ceMasterRateCurrency: TsComboEdit;
     lblMasterRateCurrency: TsLabel;
     cbxCurrencyCalculation: TsCheckBox;
-    lblMasterRateCurrencyName: TsLabel;
     tsBetaFunctions: TsTabSheet;
     gbxInvoiceBeta: TsGroupBox;
     cbxNewTaxCalcMethod: TsCheckBox;
@@ -753,6 +748,8 @@ type
     cbAllowDeleteItemsFromInvoice: TsCheckBox;
     lbAggregateCityTax: TsLabel;
     cbAggregateCityTax: TsCheckBox;
+    fraCurrencyPnl: TfraCurrencyPanel;
+    fraMasterRateCurrency: TfraCurrencyPanel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -784,7 +781,6 @@ type
     procedure editPhoneUseItemDblClick(Sender : TObject);
     procedure editPaymentItemDblClick(Sender : TObject);
     procedure edinPosMonitorChkSecChange(Sender: TObject);
-    procedure edNativeCurrencyDblClick(Sender: TObject);
     procedure cbxStatusAttr_CloseUp(Sender: TObject);
     procedure edInvoiceFormFileERLChange(Sender: TObject);
     procedure edInvoiceFormFileISLChange(Sender: TObject);
@@ -812,7 +808,6 @@ type
     procedure btnMFSelectAllClick(Sender: TObject);
     procedure btnMFSelectNoneClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure ceMasterRateCurrencyDblClick(Sender: TObject);
     procedure tvSelectionCustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
       var DefaultDraw: Boolean);
     procedure tvSelectionChanging(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
@@ -1112,11 +1107,7 @@ g.ReadWriteSettingsToRegistry(0);
     editDiscountItem.Text := rControlData.fieldbyname('DiscountItem').AsString;
     labDiscountItemDescription.Caption := Item_GetDescription(editDiscountItem.Text);
 
-    edNativeCurrency.Text := rControlData.fieldbyname('NativeCurrency').AsString;
-    if CurrencyValidate(edNativeCurrency, labNativeCurrency) then
-    begin
-      //
-    end;
+    fraCurrencyPnl.Code := rControlData.fieldbyname('NativeCurrency').AsString;
 
     try
       edChannelManager.Text := inttostr(rControlData.fieldbyname('DefaultChannelManager').AsInteger);
@@ -1576,12 +1567,6 @@ g.ReadWriteSettingsToRegistry(0);
 
     edexpensiveChannelsLevelFrom.value := trunc(rSethotelconfigurations.FieldByName('expensiveChannelsLevelFrom').asFloat);
 
-
-    try
-      edCurrencySymbol.text := rControlData.FieldByName('CurrencySymbol').AsString;
-    except
-    end;
-
     try
       cbxAutoAddToGuestPortfolio.Checked := rSethotelconfigurations.fieldbyname('AutoAddGuestsToProfilesFromChannels').AsBoolean;
     except
@@ -1597,7 +1582,7 @@ g.ReadWriteSettingsToRegistry(0);
     cbAllowPaymentModification.Checked := glb.PMSSettings.InvoiceSettings.AllowPaymentModification;
     cbAllowDeleteItemsFromInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice;
     cbTopClassAvaiabilityOrderActive.Checked := glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive;
-    ceMasterRateCurrency.Text := glb.PMSSettings.MasterRatesSettings.MasterRateCurrency;
+    fraMasterRateCurrency.Code := glb.PMSSettings.MasterRatesSettings.MasterRateCurrency;
     cbxCurrencyCalculation.Checked := glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert;
     cbAllowTogglingOfCityTaxesOnInvoice.Checked := glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes;
     cbAggregateCityTax.Checked := glb.PMSSettings.InvoiceSettings.AggregateCityTax;
@@ -1756,7 +1741,7 @@ begin
 
       rControlData.fieldbyname('PaymentItem').AsString := editPaymentItem.Text;
       rControlData.fieldbyname('PhoneUseItem').AsString := editPhoneUseItem.Text;
-      rControlData.fieldbyname('NativeCurrency').AsString := edNativeCurrency.Text;
+      rControlData.fieldbyname('NativeCurrency').AsString := fraCurrencyPnl.Code;
 
       try
         rControlData.fieldbyname('DefaultChannelManager').AsInteger := strtoint(edChannelManager.Text);
@@ -2076,8 +2061,9 @@ begin
       end;
 
       try
-        rControlData.FieldByName('CurrencySymbol').AsString :=  trim(edCurrencySymbol.text);
-        if FormatSettings.CurrencyString <> edCurrencySymbol.text then FormatSettings.CurrencyString := edCurrencySymbol.text
+        rControlData.FieldByName('CurrencySymbol').AsString :=  fraCurrencyPnl.CurrencyDefinition.Symbol;
+        if FormatSettings.CurrencyString <> fraCurrencyPnl.CurrencyDefinition.Symbol then
+          FormatSettings.CurrencyString := fraCurrencyPnl.CurrencyDefinition.Symbol;
       Except
       end;
 
@@ -2128,7 +2114,7 @@ begin
       glb.PMSSettings.InvoiceSettings.AllowPaymentModification := cbAllowPaymentModification.Checked;
       glb.PMSSettings.InvoiceSettings.AllowDeletingItemsFromInvoice := cbAllowDeleteItemsFromInvoice.Checked;
       glb.PMSSettings.MasterRatesSettings.TopClassAvaiabilityOrderActive := cbTopClassAvaiabilityOrderActive.Checked;
-      glb.PMSSettings.MasterRatesSettings.MasterRateCurrency := ceMasterRateCurrency.Text;
+      glb.PMSSettings.MasterRatesSettings.MasterRateCurrency := fraMasterRateCurrency.Code;
       glb.PMSSettings.MasterRatesSettings.MasterRateCurrencyConvert := cbxCurrencyCalculation.Checked;
       glb.PMSSettings.InvoiceSettings.AllowTogglingOfCityTaxes := cbAllowTogglingOfCityTaxesOnInvoice.Checked;
       glb.PMSSettings.InvoiceSettings.AggregateCityTax := cbAggregateCityTax.Checked;
@@ -3501,11 +3487,6 @@ begin
   itemLookup(editRoomRentItem, labRoomRentItemDescription);
 end;
 
-procedure TfrmControlData.edNativeCurrencyDblClick(Sender: TObject);
-begin
-  getCurrency(edNativeCurrency, labNativeCurrency);
-end;
-
 procedure TfrmControlData.checkEmailRegEx(Sender: TObject);
 begin
    if FEmailregEx.IsMatch(TEdit(Sender).text) then
@@ -3709,11 +3690,6 @@ begin
   setColorControls
 end;
 
-
-procedure TfrmControlData.ceMasterRateCurrencyDblClick(Sender: TObject);
-begin
-  getCurrency(ceMasterRateCurrency, lblMasterRateCurrencyName);
-end;
 
 procedure TfrmControlData.setColorControls;
 var

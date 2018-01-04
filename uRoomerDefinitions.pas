@@ -56,17 +56,6 @@ const
   RESERVATION_STATUS_STRING = 'PGDCONABCWZX';
 
 type
-  TReservationMarketType = (Unknown = -1, Leisure=0, Business=1);
-
-  TReservationMarketTypeHelper = record helper for TReservationMarketType
-  const
-    RESERVATIONMARKET_TYPE : array[TReservationMarketType] of string = ('', 'LEISURE', 'BUSINESS');
-  public
-    class function FromString(const aStr: string): TReservationMarketType; static;// constructor;
-    function ToDBString: string;
-    function ItemIndex: integer;
-  end;
-
   recStatusAttr = record
     backgroundColor : TColor;
     fontColor	      : TColor;
@@ -78,34 +67,5 @@ type
 
 
 implementation
-
-uses
-  SysUtils
-  ;
-
-{ TReservationMarketTypeHelper }
-
-class function TReservationMarketTypeHelper.FromString(const aStr: string): TReservationMarketType;
-var
-  i: TReservationMarketType;
-begin
-  Result := TReservationMarketType.Unknown;
-  for i := low(TReservationMarketType) to high(TReservationMarketType) do
-    if aStr.ToUpper.Equals(RESERVATIONMARKET_TYPE[i]) then
-    begin
-      Result := i;
-      Break;
-    end;
-end;
-
-function TReservationMarketTypeHelper.ItemIndex: integer;
-begin
-  Result := ord(Self);
-end;
-
-function TReservationMarketTypeHelper.ToDBString: string;
-begin
-  Result := RESERVATIONMARKET_TYPE[Self];
-end;
 
 end.

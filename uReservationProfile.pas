@@ -883,7 +883,7 @@ uses
   , uResourceTypeDefinitions
   , uFrmPayCardView
   , uFrmTokenChargeHistory
-  , ufrmInvoiceEdit, uInvoiceDefinitions;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions;
 
 {$R *.DFM}
 
@@ -1213,7 +1213,7 @@ end;
 
 procedure TfrmReservationProfile.SetMarketItemIndex(const aMarket: string);
 begin
-  cbxMarket.ItemIndex := TReservationMarketType.FromString(aMarket).ItemIndex;
+  cbxMarket.ItemIndex := TReservationMarketType.FromDBString(aMarket, mtUnknown).ToItemIndex;
 end;
 
 procedure TfrmReservationProfile.rgrinvoicePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);

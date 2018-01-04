@@ -26,6 +26,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      NewItemRow.Visible = True
       OptionsBehavior.FocusCellOnTab = True
       OptionsView.ColumnAutoWidth = True
       Styles.StyleSheet = cxssRoomerGridBandedTableView

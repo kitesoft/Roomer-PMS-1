@@ -377,11 +377,7 @@ var
   '   ,displayFormat '+
   '   ,decimals '+
   ' FROM '+
-  '   currencies '+
-  ' WHERE '+
-  '   Active = %d '+
-  ' ORDER BY '+
-  '  %s ';
+  '   currencies ';
 
   select_personviptypes_fillGridFromDataset_byActive : string =
   ' SELECT '+

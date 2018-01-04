@@ -198,20 +198,22 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     Width = 135
     Height = 20
     AutoSize = True
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 4
     ExplicitLeft = 209
     ExplicitTop = 93
     ExplicitWidth = 135
-    inherited pnlCurrency: TsPanel
+    inherited pnlLookup: TsPanel
       Width = 135
       ExplicitWidth = 135
-      inherited lblCurrencyName: TsLabel
-        Width = 65
-        ExplicitWidth = 73
-        ExplicitHeight = 14
-      end
-      inherited btnGetCurrency: TsButton
-        ExplicitLeft = 40
+      inherited lblDescription: TLabel
+        Width = 42
+        Height = 20
       end
     end
   end

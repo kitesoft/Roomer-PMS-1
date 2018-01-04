@@ -1654,7 +1654,6 @@ uses
 	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-    , uCachedDataHandler
     , uReleaseNotes;
 
 {$R *.DFM}

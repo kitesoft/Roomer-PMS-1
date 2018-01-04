@@ -199,6 +199,7 @@ const
     '(SELECT Customer FROM reservations WHERE Reservation=persons.Reservation) AS Customer, ' +
     '(SELECT PAYCARD_TOKEN_ID FROM roomreservations WHERE RoomReservation=persons.RoomReservation) AS PAYCARD_TOKEN_ID, ' +
     '(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) AS Currency, ' +
+    '(SELECT market from reservations WHERE Reservation=persons.Reservation) AS Market, ' +
     '(SELECT Avalue FROM currencies WHERE Currency=(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) LIMIT 1) AS CurrencyRate, '
     +
 
@@ -342,7 +343,7 @@ uses uRoomerLanguage,
   , uRoomerBookingDataModel_ModelObjects
   , uRoomerCanonicalDataModel_SimpleTypes
   , uFrmTokenChargeHistory
-  ;
+  , uMarketDefinitions;
 
 const
   WM_SET_COMBO_TEXT = WM_User + 101;
@@ -759,6 +760,8 @@ begin
 
       fraNationality.CountryCode := ResSetGuest['Nationality'];
 
+      cbxMarket.ItemIndex := TReservationMarketType.FromDBString(ResSetGuest['market'], TReservationMarketType.mtUnknown).ToItemIndex;
+
       edCompany.Text := ResSetGuest['CompanyName'];
       edCompAddress1.Text := ResSetGuest['CompAddress1'];
       edCompAddress2.Text := ResSetGuest['CompAddress2'];
@@ -1090,6 +1093,8 @@ begin
   else
     cbPaycards.ItemIndex := 0;
   pgGuaranteeTypes.ActivePageIndex := 0;
+
+  TReservationMarketType.AsStrings(cbxMarket.Items);
 
   UpdateControls;
 end;

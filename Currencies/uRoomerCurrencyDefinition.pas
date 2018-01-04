@@ -17,6 +17,8 @@ type
   public
     constructor Create(const aCurrencyCode: string); override;
 
+    function ShortDescription: string; override;
+
     function GetcxEditProperties: TcxCurrencyEditProperties;
     function GetcxEditPropertiesKeepEvents(aOrigProperties: TcxCustomEditProperties): TcxCustomEditProperties;
   end;
@@ -32,6 +34,8 @@ uses
   , SysUtils
   , Math
   , Types
+  , PrjConst
+  , uFloatUtils
   ;
 
 { TRoomerCurrencyDefinition }
@@ -66,6 +70,14 @@ begin
   end;
 
 end;
+
+function TRoomerCurrencyDefinition.ShortDescription: string;
+const
+  cFormat = '%s (%s: %s)';
+begin
+  Result := Format(cFormat, [Description, GetTranslatedText('shCurrencyRate'), FloatToStr(RoundDecimals(Rate, 4))]);
+end;
+
 
 function TRoomerCurrencyDefinition.GetcxEditProperties: TcxCurrencyEditProperties;
 begin

@@ -25,11 +25,14 @@ type
     FRate: double;
     FCode: TCurrencyCode;
     FFormatSettings: TFormatSettings;
+    FDescription: string;
     function GetRate: double;
     function GetCurrencyCode: string;
     function GetFormatSettings: TFormatSettings;
     procedure SetFormatSettings(const Value: TFormatSettings);
     procedure SetRate(const Value: double);
+    function GetSymbol: string;
+    procedure SetSymbol(const Value: string);
   protected
     FID: integer;
   public
@@ -39,6 +42,8 @@ type
 
     property ID: integer read FId;
     property CurrencyCode: string read GetCurrencyCode;
+    property Description: string read FDescription write FDescription;
+    property Symbol: string read GetSymbol write SetSymbol;
     property Rate: double read GetRate write SetRate;
     property CurrencyFormatSettings: TFormatSettings read GetFormatSettings write SetFormatSettings;
 
@@ -60,9 +65,9 @@ type
     /// </summary>
     function EditValue(aAmount: double): string;
     /// <summary>
-    ///   Returns a formatted string with the currencycode and the exchange rate, used to display active currency in i.e. a labelcaption
+    ///   Returns a formatted string with the currency description and the exchange rate, used to display active currency in i.e. a labelcaption
     /// </summary>
-    function ShortDescription: string;
+    function ShortDescription: string; virtual;
   end;
 
   TCurrencyDefinitionClass = class of TCurrencyDefinition;
@@ -74,12 +79,12 @@ uses
   uFloatUtils
   ;
 
-
 constructor TCurrencyDefinition.Create(const aCurrencyCode: TCurrencyCode);
 begin
   if String(aCurrencyCode).IsEmpty then
     raise ECurrencyDefinitionException.Create('Cannot create a currencydefinition with empty currencycode');
   FCode := UpperCase(String(aCurrencyCode));
+  FDescription := FCode;
   FRate := 1.0;
   FID := -1;
   FFormatSettings := TFormatSettings.Create; // System defaults
@@ -102,14 +107,10 @@ begin
 end;
 
 function TCurrencyDefinition.FormattedValue(aAmount: double; aIncludeCurrencySymbol: boolean = false): string;
-var
-  lSettings: TFormatSettings;
 begin
   if aIncludeCurrencySymbol then
   begin
-    lSettings := FFormatSettings;
-    lSettings.CurrencyString := '';
-    Result := CurrToStrF(aAMount, ffCurrency, lSettings.CurrencyDecimals, lSettings)
+    Result := CurrToStrF(aAMount, ffCurrency, FFormatSettings.CurrencyDecimals, FFormatSettings);
   end
   else
     Result := CurrToStrF(aAmount, ffFixed, FFormatSettings.CurrencyDecimals, FFormatSettings);
@@ -135,11 +136,16 @@ begin
   Result := FRate;
 end;
 
+function TCurrencyDefinition.GetSymbol: string;
+begin
+  Result := FFormatSettings.CurrencyString;
+end;
+
 function TCurrencyDefinition.ShortDescription: string;
 const
   cFormat = '%s (%s)';
 begin
-  Result := Format(cFormat, [CurrencyCode, FloatToStr(RoundDecimals(Rate, 4))]);
+  Result := Format(cFormat, [Description, FloatToStr(RoundDecimals(Rate, 4))]);
 end;
 
 procedure TCurrencyDefinition.SetFormatSettings(const Value: TFormatSettings);
@@ -150,6 +156,11 @@ end;
 procedure TCurrencyDefinition.SetRate(const Value: double);
 begin
   FRate := Value;
+end;
+
+procedure TCurrencyDefinition.SetSymbol(const Value: string);
+begin
+  FFormatSettings.CurrencyString := Value;
 end;
 
 function TCurrencyDefinition.RoundedValue(aAmount: double): double;

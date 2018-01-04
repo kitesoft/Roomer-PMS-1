@@ -572,35 +572,26 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Left = 125
           Top = 103
           Width = 217
-          Height = 21
+          Height = 20
           Margins.Left = 124
           Align = alTop
           AutoSize = True
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 1
           ExplicitLeft = 125
           ExplicitTop = 103
           ExplicitWidth = 217
-          ExplicitHeight = 21
-          inherited pnlCurrency: TsPanel
+          inherited pnlLookup: TsPanel
             Width = 217
-            Height = 21
-            Align = alClient
             ExplicitWidth = 217
-            ExplicitHeight = 21
-            inherited lblCurrencyName: TsLabel
-              Width = 147
-              Height = 21
-              ExplicitWidth = 168
-              ExplicitHeight = 18
-            end
-            inherited edCurrencyCode: TsEdit
-              Height = 21
-              ExplicitHeight = 21
-            end
-            inherited btnGetCurrency: TsButton
-              Height = 21
-              ExplicitLeft = 40
-              ExplicitHeight = 21
+            inherited lblDescription: TLabel
+              Width = 124
+              Height = 20
             end
           end
         end
