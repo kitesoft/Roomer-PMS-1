@@ -21,7 +21,6 @@ type
   TCachedDataHandler = class
   private
     FTableStates : TObjectDictionary<String, TDatePair>;
-    function GetTableUpdateTimeStamps(aRSet: TRoomerDataset): boolean; deprecated 'Use GetStaticTablesLastUpdates';
     function GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string = ''): boolean;
     function UpdateLastUpdateOnServer(const aTableName: string): boolean;
   public
@@ -53,10 +52,6 @@ uses
 var
   gCachedDataHandler: TCachedDataHandler;
 
-const
-  cLastUpdateSuffix = '_lastUpdate';
-  cLastUpdateFieldFormat = '%s' + cLastUpdateSuffix;
-
 function CachedDataHandler: TCachedDataHandler;
 begin
   if not assigned(gCachedDataHandler) then
@@ -79,7 +74,6 @@ end;
 
 function TCachedDataHandler.CurrentTableDate(const TableName: String): TDateTime;
 var datePair : TDatePair;
-    key : String;
 begin
   result := 0;
   if FTableStates.TryGetValue(TableName, datePair) then
@@ -90,20 +84,6 @@ destructor TCachedDataHandler.Destroy;
 begin
   FTableStates.Free;
   inherited;
-end;
-
-function TCachedDataHandler.GetTableUpdateTimeStamps(aRSet: TRoomerDataset): boolean;
-begin
-  Result := false;
-  try
-    if NOT aRSet.OfflineMode then
-    begin
-      aRSet.OpenDatasetFromUrlAsString('messaging/lastchanges', false, 0, '');
-      Result := true;
-    end;
-  except
-    // Ignore ...
-  end;
 end;
 
 function TCachedDataHandler.GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string): boolean;
