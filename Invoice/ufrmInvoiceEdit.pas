@@ -2419,8 +2419,8 @@ begin
         if not SameValue(dNumber, 0.00) then
           Price := eSet.FieldByName('revenue').asFloat / eSet.fieldByName('Number').AsFloat;
 
-        if SameValue(Price,0.00) then // fallback
-          Price := eSet.FieldByName('Price').AsFloat;
+        //if SameValue(Price,0.00) then // fallback
+        //  Price := eSet.FieldByName('Price').AsFloat;
 
         // Manually added roomrent
         Room := '';

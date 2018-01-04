@@ -30,10 +30,6 @@ inherited frmDailyTotalsReport: TfrmDailyTotalsReport
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
@@ -188,6 +184,46 @@ inherited frmDailyTotalsReport: TfrmDailyTotalsReport
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotalACC
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotalACCWOVat
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotalFB
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotalFBWOVat
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotalAUX
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotalAUXWOVat
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotal
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Column = tvTrxListTotalWOVat
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.IncSearch = True
@@ -244,6 +280,20 @@ inherited frmDailyTotalsReport: TfrmDailyTotalsReport
             OnGetProperties = tvTrxListPriceGetProperties
             HeaderAlignmentHorz = taRightJustify
             Width = 138
+          end
+          object tvTrxListTotalFB: TcxGridDBColumn
+            Caption = 'Gross F&B'
+            DataBinding.FieldName = 'TotalFB'
+            OnGetProperties = tvTrxListPriceGetProperties
+            HeaderAlignmentHorz = taRightJustify
+            Width = 97
+          end
+          object tvTrxListTotalFBWOVat: TcxGridDBColumn
+            Caption = 'Net F&B'
+            DataBinding.FieldName = 'TotalFBWOVat'
+            OnGetProperties = tvTrxListPriceGetProperties
+            HeaderAlignmentHorz = taRightJustify
+            Width = 88
           end
           object tvTrxListTotalAUX: TcxGridDBColumn
             Caption = 'Gross Various'
@@ -439,6 +489,12 @@ inherited frmDailyTotalsReport: TfrmDailyTotalsReport
     object mTrxListTotalWOVat: TFloatField
       FieldName = 'TotalWOVat'
     end
+    object mTrxListTotalFB: TFloatField
+      FieldName = 'TotalFB'
+    end
+    object mTrxListTotalFBWOVat: TFloatField
+      FieldName = 'TotalFBWOVat'
+    end
   end
   object mTrxListDS: TDataSource
     DataSet = mTrxList
@@ -516,7 +572,7 @@ inherited frmDailyTotalsReport: TfrmDailyTotalsReport
         Properties.Strings = (
           'Width')
       end>
-    StorageName = 'Software\Roomer\FormStatus\DailyTotalsReport'
+    StorageName = 'Software\Roomer\FormStatus\DailyTotalsReport2'
     StorageType = stRegistry
     Left = 496
     Top = 344

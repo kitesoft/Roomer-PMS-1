@@ -1245,6 +1245,7 @@ type
     ItemType: string; // MAX 5
     VatCode: string; // MAX 10
     AccItemLink: string; // MAX 20
+    category : String;
     tmp: integer;
   end;
 
@@ -2803,6 +2804,7 @@ begin
     Description := '';
     VatCode := '';
     AccItemLink := '';
+    category := 'OTHER';
   end;
 end;
 
@@ -10880,6 +10882,7 @@ begin
   s := s + '   ,Itemtype  = ' + _db(theData.ItemType) + ' ' + #10;
   s := s + '   ,VATCode  = ' + _db(theData.VatCode) + ' ' + #10;
   s := s + '   ,AccItemLink  = ' + _db(theData.AccItemLink) + ' ' + #10;
+  s := s + '   ,category  = ' + _db(theData.category) + ' ' + #10;
   s := s + ' WHERE ' + #10;
   s := s + '   (ID = ' + _db(theData.id) + ') ';
   result := cmd_bySQL(s);
@@ -10892,11 +10895,12 @@ begin
   s := '';
   s := s + 'INSERT INTO itemtypes ' + #10;
   s := s + '   ( ' + #10;
-  s := s + '     [Itemtype] ' + #10;
-  s := s + '    ,[Description] ' + #10;
-  s := s + '    ,[VATCode] ' + #10;
-  s := s + '    ,[AccItemLink] ' + #10;
-  s := s + '    ,[Active] ' + #10;
+  s := s + '     Itemtype ' + #10;
+  s := s + '    ,Description ' + #10;
+  s := s + '    ,VATCode ' + #10;
+  s := s + '    ,AccItemLink ' + #10;
+  s := s + '    ,category ' + #10;
+  s := s + '    ,Active] ' + #10;
   s := s + '   ) ' + #10;
   s := s + '   VALUES ' + #10;
   s := s + '   ( ' + #10;
@@ -10904,6 +10908,7 @@ begin
   s := s + '  , ' + _db(theData.Description) + #10;
   s := s + '  , ' + _db(theData.VatCode) + #10;
   s := s + '  , ' + _db(theData.AccItemLink) + #10;
+  s := s + '  , ' + _db(theData.Category) + #10;
   s := s + '  , ' + _db(theData.active) + #10;
   s := s + '   ) ';
 
@@ -10930,6 +10935,7 @@ begin
       theData.Description := rSet.fieldbyname('Description').asString;
       theData.VatCode := rSet.fieldbyname('VATCode').asString;
       theData.AccItemLink := rSet.fieldbyname('AccItemLink').asString;
+      theData.category := rSet.fieldbyname('category').asString;
       theData.id := rSet.fieldbyname('ID').asInteger;
       theData.active := rSet.fieldbyname('Active').Asboolean;
       result := true;

@@ -3,7 +3,7 @@ object frmItemTypes2: TfrmItemTypes2
   Top = 0
   Caption = 'Item Types'
   ClientHeight = 458
-  ClientWidth = 534
+  ClientWidth = 738
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,7 +24,7 @@ object frmItemTypes2: TfrmItemTypes2
   object sPanel1: TsPanel
     Left = 0
     Top = 0
-    Width = 534
+    Width = 738
     Height = 68
     Align = alTop
     TabOrder = 0
@@ -130,7 +130,7 @@ object frmItemTypes2: TfrmItemTypes2
   object sbMain: TsStatusBar
     Left = 0
     Top = 439
-    Width = 534
+    Width = 738
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
@@ -138,16 +138,16 @@ object frmItemTypes2: TfrmItemTypes2
   object panBtn: TsPanel
     Left = 0
     Top = 406
-    Width = 534
+    Width = 738
     Height = 33
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
     DesignSize = (
-      534
+      738
       33)
     object btnCancel: TsButton
-      Left = 445
+      Left = 649
       Top = 4
       Width = 85
       Height = 25
@@ -163,7 +163,7 @@ object frmItemTypes2: TfrmItemTypes2
       SkinData.SkinSection = 'BUTTON'
     end
     object BtnOk: TsButton
-      Left = 357
+      Left = 561
       Top = 4
       Width = 85
       Height = 25
@@ -181,7 +181,7 @@ object frmItemTypes2: TfrmItemTypes2
   object grData: TcxGrid
     Left = 0
     Top = 68
-    Width = 534
+    Width = 738
     Height = 338
     Align = alClient
     Constraints.MinWidth = 450
@@ -273,6 +273,17 @@ object frmItemTypes2: TfrmItemTypes2
         Properties.OnValidate = tvDataVATCodePropertiesValidate
         Width = 77
       end
+      object __tvDatacategory: TcxGridDBColumn
+        Caption = 'Category'
+        DataBinding.FieldName = 'category'
+        PropertiesClassName = 'TcxComboBoxProperties'
+        Properties.DropDownListStyle = lsFixedList
+        Properties.Items.Strings = (
+          'OTHER'
+          'FOOD'
+          'BEVERAGE'
+          'ROOM_RENT')
+      end
       object tvDataAccItemLink: TcxGridDBColumn
         DataBinding.FieldName = 'AccItemLink'
       end
@@ -338,6 +349,7 @@ object frmItemTypes2: TfrmItemTypes2
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -351,6 +363,7 @@ object frmItemTypes2: TfrmItemTypes2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
@@ -382,6 +395,10 @@ object frmItemTypes2: TfrmItemTypes2
     end
     object m_AccItemLink: TWideStringField
       FieldName = 'AccItemLink'
+    end
+    object m_category: TWideStringField
+      FieldName = 'category'
+      Size = 25
     end
   end
   object FormStore: TcxPropertiesStore

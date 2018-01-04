@@ -4239,12 +4239,12 @@ object frmControlData: TfrmControlData
               Font.Style = []
             end
             object lbAggregateCityTax: TsLabel
-              Left = 142
+              Left = 195
               Top = 56
-              Width = 277
+              Width = 224
               Height = 14
               Alignment = taRightJustify
-              Caption = 'Aggregate excluded citytax on invoice by default :'
+              Caption = 'Aggregate citytax on invoice by default :'
               ParentFont = False
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack

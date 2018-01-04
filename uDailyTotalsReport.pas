@@ -143,6 +143,10 @@ type
     tvTrxListTotalAUXWOVat: TcxGridDBColumn;
     tvTrxListTotal: TcxGridDBColumn;
     tvTrxListTotalWOVat: TcxGridDBColumn;
+    mTrxListTotalFB: TFloatField;
+    mTrxListTotalFBWOVat: TFloatField;
+    tvTrxListTotalFB: TcxGridDBColumn;
+    tvTrxListTotalFBWOVat: TcxGridDBColumn;
     procedure btnRefreshClick(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure btnExcelS1Click(Sender : TObject);
@@ -231,6 +235,7 @@ var
   rSet : TRoomerDataSet;
 begin
   screen.Cursor := crHourGlass;
+
   mTrxList.DisableControls;
   try
     d.roomerMainDataSet.SetTimeZoneComparedToUTC('');
@@ -242,6 +247,9 @@ begin
 
     rSet := CreateNewDataSet;
     rSet.OpenDataset(xml);
+
+    mTrxList.Active := False;
+    mTrxList.Active := True;
 
     rSet.First;
     while NOT rSet.Eof  do
@@ -257,6 +265,8 @@ begin
       mTrxListTotalACCWOVat.AsFloat := rSet['TotalACCWOVat'];
       mTrxListTotalAUX.AsFloat := rSet['TotalAUX'];
       mTrxListTotalAUXWOVat.AsFloat := rSet['TotalAUXWOVat'];
+      mTrxListTotalFB.AsFloat := rSet['TotalFB'];
+      mTrxListTotalFBWOVat.AsFloat := rSet['TotalFBWOVat'];
       mTrxListTotal.AsFloat := rSet['Total'];
       mTrxListTotalWOVat.AsFloat := rSet['TotalWOVat'];
 

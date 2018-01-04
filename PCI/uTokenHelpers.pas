@@ -84,6 +84,7 @@ type
     FauthCode: String;
     FReservation: integer;
     FRoomReservation: integer;
+    function GetNativeAmount: Double;
   public
     constructor Create(id : Integer; token : TToken; Reservation: integer; Roomreservation: integer; amount : Double; currency : String; currencyRate : Double;
         authCode : String; operationType : String; operationResultCode : String; operationResultDescription : String;
@@ -97,6 +98,7 @@ type
     property amount: Double read Famount write Famount;
     property currency: String read Fcurrency write Fcurrency;
     property currencyRate: Double read FcurrencyRate write FcurrencyRate;
+    property NativeAmount: Double read GetNativeAmount;
     property authCode: String read FauthCode write FauthCode;
     property operationType: String read FoperationType write FoperationType;
     property operationResultCode: String read FoperationResultCode write FoperationResultCode;
@@ -299,6 +301,11 @@ destructor TTokenCharge.Destroy;
 begin
   FToken.Free;
   inherited;
+end;
+
+function TTokenCharge.GetNativeAmount: Double;
+begin
+  Result := Amount * currencyRate;
 end;
 
 end.
