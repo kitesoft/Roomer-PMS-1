@@ -539,7 +539,7 @@ begin
         if hdata.UPD_countryGroup(zData) then
         begin
           // label1.Caption := 'Update OK';
-          glb.ForceTableRefresh;
+          glb.RefreshOnServerTimestamp;
         end else
         begin
           // label1.Caption := 'Update NOT OK';
@@ -550,7 +550,7 @@ begin
         if hdata.ins_Countrygroup(zData) then
         begin
           // label1.Caption := 'Insert OK';
-          glb.ForceTableRefresh;
+          glb.RefreshOnServerTimestamp;
         end else
         begin
           // label1.Caption := 'insert NOT OK';
@@ -578,7 +578,7 @@ begin
   begin
     zPostData := true;
     zPostState   := 1;
-    glb.ForceTableRefresh;
+    glb.RefreshOnServerTimestamp;
   end;
   if tvData.DataController.DataSource.State = dsInsert then
   begin
@@ -594,7 +594,7 @@ begin
       end;
       zPostData := false;
       zPostState := 0;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
       exit;
     end;
 

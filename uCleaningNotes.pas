@@ -460,7 +460,7 @@ end;
 
 procedure TfrmCleaningNotes.m_CleaningNotesAfterPost(DataSet: TDataSet);
 begin
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
 end;
 
 procedure TfrmCleaningNotes.m_CleaningNotesBeforeDelete(DataSet: TDataSet);
@@ -488,7 +488,7 @@ begin
   begin
     if UPD_CleaningNote(zData) then
     begin
-       glb.ForceTableRefresh;
+       glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

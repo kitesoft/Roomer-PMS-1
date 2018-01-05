@@ -874,7 +874,7 @@ begin
           UpdateRoomTypeGroupCode(oldCode, zData.Code);
         if oldTop <> zData.TopClass then
           Set2RoomTypeGroupDity(oldTop, zData.TopClass);
-        glb.ForceTableRefresh;
+        glb.RefreshOnServerTimestamp;
       end else
       begin
         abort;
@@ -905,7 +905,7 @@ begin
     begin
       m_.fieldByName('ID').AsInteger := nID;
       glb.LogChanges(DataSet, 'roomtypegroups', ADD_RECORD, '');
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

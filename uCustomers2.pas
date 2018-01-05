@@ -880,7 +880,7 @@ begin
           CustomerDepartments.PostChanges;
           if oldCustCode <> zData.Customer then
             UpdateCustomerCode(oldCustCode, zData.Customer);
-          glb.ForceTableRefresh;
+          glb.RefreshOnServerTimestamp;
         end else
         begin
           abort;
@@ -913,7 +913,7 @@ begin
         m_.FieldByName('ID').AsInteger := nID;
         CustomerDepartments.CustomerId := nID;
         CustomerDepartments.PostChanges;
-        glb.ForceTableRefresh;
+        glb.RefreshOnServerTimestamp;
       end else
       begin
         abort;
@@ -1065,7 +1065,7 @@ end;
 procedure TfrmCustomers2.BtnOkClick(Sender: TObject);
 begin
   fillHolder;
-   glb.ForceTableRefresh;
+   glb.RefreshOnServerTimestamp;
 end;
 
 procedure TfrmCustomers2.btnOtherClick(Sender: TObject);
@@ -1152,13 +1152,13 @@ end;
 
 procedure TfrmCustomers2.btnDeleteClick(Sender: TObject);
 begin
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
   m_.Delete;
 end;
 
 procedure TfrmCustomers2.btnEditClick(Sender: TObject);
 begin
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
   fillHolder;
   if NOT assigned(financeLookupList) then
     financeLookupList := d.RetrieveFinancesKeypair(FKP_CUSTOMERS);
@@ -1200,7 +1200,7 @@ end;
 
 procedure TfrmCustomers2.btnInsertClick(Sender: TObject);
 begin
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
   if not m_.active then m_.open;
   initCustomerHolder(zData);
   GetCustomerDepartments(0, True);

@@ -759,7 +759,7 @@ begin
   begin
     if UPD_Person(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -780,7 +780,7 @@ begin
     if ins_Person(zData,nID) then
     begin
       m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

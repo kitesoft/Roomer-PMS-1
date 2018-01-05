@@ -435,7 +435,7 @@ begin
     if UPD_Currency(zData) then
     begin
       AddCurrencyActivityLog(d.roomerMainDataSet.username, CHANGE_CURRENCY, zData.Currency, m_AValue.OldValue, m_AValue.AsFloat, m_active.AsBoolean, m_decimals.AsInteger, '');
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -458,7 +458,7 @@ begin
     begin
       AddCurrencyActivityLog(d.roomerMainDataSet.username, ADD_CURRENCY, zData.Currency, 0, m_AValue.AsFloat, m_active.AsBoolean, m_decimals.AsInteger, '');
       m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

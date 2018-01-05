@@ -33,7 +33,7 @@ object frmPackages: TfrmPackages
     object labFilterWarning: TsLabel
       Left = 1
       Top = 67
-      Width = 973
+      Width = 4
       Height = 13
       Align = alBottom
       Alignment = taCenter
@@ -44,7 +44,6 @@ object frmPackages: TfrmPackages
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      ExplicitWidth = 4
     end
     object cLabFilter: TsLabel
       Left = 19
@@ -483,6 +482,7 @@ object frmPackages: TfrmPackages
     Left = 80
     Top = 160
     object prLink_grData: TdxGridReportLink
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -496,6 +496,7 @@ object frmPackages: TfrmPackages
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

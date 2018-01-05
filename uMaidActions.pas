@@ -392,7 +392,7 @@ begin
     if not Del_MaidAction(zData) then
       Abort
     else
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
       fillGridFromDataset('');
   end;
     Abort;
@@ -529,7 +529,7 @@ begin
   if OpenMaidActionEdit(zData, false) then
   begin
     UPD_MaidAction(zData);
-    glb.ForceTableRefresh;
+    glb.RefreshOnServerTimestamp;
     fillGridFromDataset(zData.action);
   end;
 end;
@@ -543,7 +543,7 @@ begin
   if OpenMaidActionEdit(lData, True) then
   begin
     INS_MaidAction(lData, lNewId);
-    glb.ForceTableRefresh;
+    glb.RefreshOnServerTimestamp;
     fillGridFromDataset(lData.action);
   end;
 end;

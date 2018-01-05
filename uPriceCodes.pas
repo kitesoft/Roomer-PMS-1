@@ -669,7 +669,7 @@ begin
   begin
     if UPD_priceCode(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -690,7 +690,7 @@ begin
     if ins_priceCode(zData,nID) then
     begin
       dataset.fieldbyname('ID').asInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

@@ -558,7 +558,7 @@ begin
   begin
     if UPD_Package(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -577,7 +577,7 @@ begin
     if ins_Package(zData,nID) then
     begin
       m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

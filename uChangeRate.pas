@@ -120,7 +120,7 @@ begin
       showmessage(GetTranslatedText('shTx_CurrencyUpdateError'))
     end else
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end;
   end;
 end;

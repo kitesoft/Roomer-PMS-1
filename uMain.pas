@@ -7187,6 +7187,7 @@ begin
       lblCacheNotification.Visible := true;
       lblCacheNotification.Update;
 
+      glb.RefreshOnServerTimestamp;
       g.RefreshRoomList;
 
       if NOT OffLineMode then
@@ -10326,7 +10327,7 @@ begin
     try
       path := glb.GetDataCacheLocation;
       TDirectory.Delete(path, true);
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
 
       RemoveLanguagesFilesAndRefresh;
     finally

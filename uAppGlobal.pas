@@ -199,7 +199,7 @@ Type
                                     zOneDay_dtDate : TDateTime = 0);
 
       procedure ReloadPreviousGuests;
-      procedure ForceTableRefresh;
+      procedure RefreshOnServerTimestamp;
       procedure RefreshTableByName(const aTable: string);
       function KeyAlreadyExistsInAnotherRecord(table, field, value: String; ID: Integer): Boolean;
       function LocateSpecificRecord(table, field, value: String): Boolean; overload;
@@ -380,7 +380,6 @@ end;
 constructor TGlobalSettings.Create;
 begin
   tablesList := TTableDictionary.Create;
-  tablesList.InitializeTables;
 
   FRoomFloors := TList<Integer>.Create;
 
@@ -630,7 +629,7 @@ end;
 
 
 procedure TGlobalSettings.EnableOrDisableTableRefresh(tablename : String; enable: Boolean);
-var tableEntity : TTableEntity;
+var tableEntity : TCachedTableEntity;
 begin
   tableEntity := tablesList[tableName];
   if assigned(tableEntity) then
@@ -733,7 +732,6 @@ procedure TGlobalSettings.FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                               oFreeRooms : TFreeRooms = nil;
                                               zOneDay_dtDate : TDateTime = 0);
 var l : integer;
-    resultFilter : Boolean;
 
     FloorFilterActive,
     LocationFilterActive,
@@ -761,18 +759,8 @@ begin
         FilterPassed := FilterPassed AND
                         ((NOT LocationFilterActive) OR (LocationFilterPassed AND LocationFilterActive));
 
-        resultFilter := FilterPassed;
-//        if resultFilter then
-//        begin
-//          sTemp := oFreeRooms.FindRoomNextOcc(FieldByName( 'Room' ).AsString);
-//          if sTemp = '' then
-//          begin
-//            dtdate := zOneDay_dtDate + 1000;
-//          end else dtDate := SQLToDateTime(sTemp);
-//          iNextOcc := trunc(dtDate)-trunc(zOneDay_dtDate);
-//          resultFilter := iNextOcc >= numDays;
-//        end;
-        if resultFilter then
+
+        if FilterPassed then
         begin
           inc(l);
           agrRooms.RowCount :=l;
@@ -822,15 +810,14 @@ begin
   tablesList.RefreshAllIfNeeded;
 end;
 
-procedure TGlobalSettings.ForceTableRefresh;
+procedure TGlobalSettings.RefreshOnServerTimestamp;
 begin
-  CachedDataHandler.RefreshTabelStateList;
-  tablesList.RefreshAllIfNeeded;
+  CachedDataHandler.RefreshServerTimeStamps(TableList);
 end;
 
 procedure TGlobalSettings.RefreshTableByName(const aTable: string);
 begin
-  tablesList.TableEntity[aTable].RefreshFromServer;
+  tablesList.TableEntity[aTable].RefreshIfNeeded;
 end;
 
 procedure TGlobalSettings.LoadStaticTables(startingUp : Boolean = False);

@@ -673,7 +673,7 @@ begin
   begin
     if UPD_Rate(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -693,7 +693,7 @@ begin
     if ins_Rate(zData,nID) then
     begin
       m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

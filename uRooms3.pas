@@ -806,7 +806,7 @@ begin
     begin
       if bChangedRoomTypes then
          d.roomermainDataSet.SystemChangeRoomTypeForRoom(zData.Room, oldType, zData.roomType);
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -833,7 +833,7 @@ begin
     end;
     if ins_room(zData,nID) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

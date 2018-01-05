@@ -505,7 +505,7 @@ begin
   begin
     if UPD_Convert(zData) then
     begin
-       glb.ForceTableRefresh;
+       glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -525,14 +525,14 @@ begin
     if ins_Convert(zData) then
     begin
       m_.FieldByName('ID').AsInteger := nID;         // TODO: THis does not work
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
       exit;
     end;
   end;
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
 end;
 
 procedure TfrmConverts.m_NewRecord(DataSet: TDataSet);

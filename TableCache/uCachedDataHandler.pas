@@ -5,36 +5,23 @@ interface
 uses
   Generics.Collections,
   cmpRoomerDataset
+  , uTableEntityList
   ;
 
 type
-  TDatePair = class
-  public
-    LocalFileDate : TDateTime;
-    LastUpdateOnServerUTC : TDateTime;
-    function IsChanged: boolean;
-  end;
-
   /// <summary>
   ///   Handler of timestamp data of cached tables
   /// </summary>
   TCachedDataHandler = class
   private
-    FTableStates : TObjectDictionary<String, TDatePair>;
     function GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string = ''): boolean;
-    function UpdateLastUpdateOnServer(const aTableName: string): boolean;
   public
-    constructor Create;
-    destructor Destroy; override;
-
-    function TableNeedsRefresh(const TableName : String) : Boolean;
-    procedure MarkTableAsRefreshed(const TableName: String); overload;
-    procedure MarkTableAsRefreshed(const TableName: String; dt : TDateTime); overload;
-    function CurrentTableDate(const TableName: String): TDateTime;
-    procedure RefreshTabelStateList;
-
+    function UpdateLastUpdateOnServer(aTable: TCachedTableEntity): boolean;
+    procedure RefreshServerTimeStamps(aTableDict: TTableDictionary);
   end;
 
+
+// TODO No gobal instance needed, add one to TAppGLobal
 function CachedDataHandler: TCachedDataHandler;
 procedure ClearCachedDataHandler;
 
@@ -44,8 +31,7 @@ uses
   SysUtils,
   uUtils,
   uD,
-  uAppGlobal,
-  DateUtils
+  uAppGlobal
   , Data.DB
   ;
 
@@ -63,27 +49,6 @@ end;
 procedure ClearCachedDataHandler;
 begin
   FreeAndNil(gCachedDataHandler);
-end;
-{ TCachedDataHandler }
-
-constructor TCachedDataHandler.Create;
-begin
-  FTableStates := TObjectDictionary<String, TDatePair>.Create([doOwnsValues], TCaseInsensitiveEqualityComparer.Create);
-  RefreshTabelStateList;
-end;
-
-function TCachedDataHandler.CurrentTableDate(const TableName: String): TDateTime;
-var datePair : TDatePair;
-begin
-  result := 0;
-  if FTableStates.TryGetValue(TableName, datePair) then
-    result := datePair.LastUpdateOnServerUTC;
-end;
-
-destructor TCachedDataHandler.Destroy;
-begin
-  FTableStates.Free;
-  inherited;
 end;
 
 function TCachedDataHandler.GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string): boolean;
@@ -105,26 +70,9 @@ begin
   end;
 end;
 
-procedure TCachedDataHandler.MarkTableAsRefreshed(const TableName: String);
-var datePair : TDatePair;
-begin
-  if UpdateLastUpdateOnServer(TableName) and FTableStates.TryGetValue(TableName, datePair) then
-    datePair.LocalFileDate := datePair.LastUpdateOnServerUTC;
-end;
-
-procedure TCachedDataHandler.MarkTableAsRefreshed(const TableName: String; dt: TDateTime);
-var datePair : TDatePair;
-begin
-  if FTableStates.TryGetValue(TableName, datePair) then
-  begin
-    datePair.LocalFileDate := dt;
-    datePair.LastUpdateOnServerUTC := dt;
-  end;
-end;
-
-procedure TCachedDataHandler.RefreshTabelStateList;
+procedure TCachedDataHandler.RefreshServerTimeStamps(aTableDict: TTableDictionary);
 var lTableRefreshSet : TRoomerDataset;
-    lDatePair : TDatePair;
+    lTable: TCachedTableEntity;
     fldTableName: TField;
     fldLastUpdate: TField;
 begin
@@ -141,20 +89,8 @@ begin
       lTableRefreshSet.First;
       while not lTableRefreshSet.Eof do
       begin
-        if FTableStates.TryGetValue(fldTableName.AsString, ldatePair) then
-            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime
-        else
-        begin
-          ldatePair := TDatePair.Create;
-          try
-            ldatePair.LocalFileDate := glb.TableList.TableEntity[fldTableName.AsString].LocalFileDate;
-            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime;
-            FTableStates.Add(fldTableName.AsString, ldatePair);
-          except
-            ldatePair.Free;
-            raise;
-          end;
-        end;
+        if aTableDict.TryGetValue(fldTableName.AsString, lTable) then
+          lTable.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime;
         lTableRefreshSet.Next;
       end;
     end;
@@ -163,20 +99,8 @@ begin
   end;
 end;
 
-function TCachedDataHandler.TableNeedsRefresh(const TableName: String): Boolean;
-var datePair : TDatePair;
-begin
-  result := true;
-  if FTableStates.TryGetValue(TableName, datePair) then
-    result := datePair.IsChanged;
-end;
-
-
-function TCachedDataHandler.UpdateLastUpdateOnServer(const aTableName: string): boolean;
+function TCachedDataHandler.UpdateLastUpdateOnServer(aTable: TCachedTableEntity): boolean;
 var lTableRefreshSet : TRoomerDataset;
-    lDatePair : TDatePair;
-    fldTableName: TField;
-    fldLastUpdate: TField;
 begin
   Result := false;
   if d.roomerMainDataSet.OfflineMode then
@@ -184,40 +108,16 @@ begin
   lTableRefreshSet := CreateNewDataSet;
   try
     lTableRefreshSet.RoomerDataSet := nil;
-    if GetStaticTablesLastUpdates(lTableRefreshSet, aTableName) then
+    if GetStaticTablesLastUpdates(lTableRefreshSet, aTable.TableName) then
     begin
-      fldTableName := lTableRefreshSet.FieldByName('tablename');
-      fldLastUpdate := lTableRefreshSet.FieldByName('lastupdate');
-
       lTableRefreshSet.First;
       if not lTableRefreshSet.Eof then
-      begin
-        if FTableStates.TryGetValue(fldTableName.AsString, ldatePair) then
-            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime
-        else
-        begin
-          ldatePair := TDatePair.Create;
-          try
-            ldatePair.LocalFileDate := glb.TableList.TableEntity[fldTableName.AsString].LocalFileDate;
-            ldatePair.LastUpdateOnServerUTC := fldLastUpdate.AsDateTime;
-            FTableStates.Add(fldTableName.AsString, ldatePair);
-          except
-            ldatePair.Free;
-            raise;
-          end;
-        end;
-      end;
+        aTable.LastUpdateOnServerUTC := lTableRefreshSet.FieldByName('lastupdate').AsDateTime;
+
     end;
   finally
     lTableRefreshSet.Free;
   end;
-end;
-
-{ TDatePair }
-
-function TDatePair.IsChanged: boolean;
-begin
-  result := TTimeZone.Local.ToUniversalTime(LocalFileDate) <> LastUpdateOnServerUTC;
 end;
 
 

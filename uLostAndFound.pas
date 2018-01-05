@@ -526,7 +526,7 @@ begin
   begin
     if UPD_lostandFound(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -546,7 +546,7 @@ begin
     if ins_LostandFound(zData, nID) then
     begin
       m_.fieldbyname('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

@@ -561,7 +561,7 @@ begin
   begin
     if UPD_PackageItem(zData) then
     begin
-       glb.ForceTableRefresh;
+       glb.RefreshOnServerTimestamp;
     end else
     begin
     //  label1.Caption := 'UPDATE NOT OK';

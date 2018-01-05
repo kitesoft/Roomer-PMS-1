@@ -501,7 +501,7 @@ begin
   begin
     if UPD_ItemType(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -526,7 +526,7 @@ begin
     end;
     if ins_ItemType(zData,nID) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

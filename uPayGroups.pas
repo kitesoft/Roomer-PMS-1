@@ -521,7 +521,7 @@ begin
   begin
     if UPD_Paygroup(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -541,7 +541,7 @@ begin
     if ins_PayGroup(zData,nID) then
     begin
       m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

@@ -435,7 +435,7 @@ begin
             'UPDATE bookkeepingcodes SET code=''%s'', description=''%s'', txStatus=''%s'', bookOnCustomer=%d WHERE code=''%s''',
             [DataSet['code'], DataSet['description'], DataSet['txStatus'], ABS(ORD(DataSet.FieldByName('bookOnCustomer').AsBoolean)), SelectedCode])) >= 0 then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -459,7 +459,7 @@ begin
     if nID >= 0 then
     begin
       m_.fieldbyname('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

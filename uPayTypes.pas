@@ -627,7 +627,7 @@ begin
   begin
     if UPD_payType(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -656,7 +656,7 @@ begin
     if ins_payType(zData, newID) then
     begin
       m_.FieldByName('ID').AsInteger := newID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

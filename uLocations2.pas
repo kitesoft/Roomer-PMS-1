@@ -513,7 +513,7 @@ begin
   begin
     if UPD_Location(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -533,7 +533,7 @@ begin
     if ins_Location(zData, nID) then
     begin
       m_.fieldbyname('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

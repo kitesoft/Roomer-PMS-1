@@ -937,7 +937,7 @@ begin
   begin
     if UPD_StaffMember(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -960,7 +960,7 @@ begin
 
     if ins_StaffMember(zData,nID) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

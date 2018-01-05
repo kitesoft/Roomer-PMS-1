@@ -687,7 +687,7 @@ begin
     glb.LogChanges(DataSet, 'channels', CHANGE_FIELD, '');
     if UPD_Channel(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end
     else
     begin
@@ -708,7 +708,7 @@ begin
     begin
       glb.LogChanges(DataSet, 'channels', ADD_RECORD, 'Channel ID = ' + zData.channelManagerId + ', name = ' +
         zData.name);
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end
     else
     begin

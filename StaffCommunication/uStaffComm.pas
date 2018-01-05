@@ -453,7 +453,7 @@ begin
       exit;
     end;
   end;
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
   RefreshData;
 end;
 

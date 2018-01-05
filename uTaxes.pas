@@ -407,7 +407,7 @@ begin
   if tvData.DataController.DataSource.State = dsEdit then
   begin
     if UPD_Taxes(zData) then
-      glb.ForceTableRefresh
+      glb.RefreshOnServerTimestamp
     else
     begin
       abort;
@@ -420,7 +420,7 @@ begin
     if ins_Taxes(zData,nID) then
     begin
       m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

@@ -2553,7 +2553,7 @@ begin
   freeandNil(rTableInc);
   freeandNil(rSetHotelConfigurations);
 
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
 end;
 
 procedure TfrmControlData.FormShow(Sender : TObject);

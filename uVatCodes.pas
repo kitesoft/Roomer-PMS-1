@@ -534,7 +534,7 @@ begin
   begin
     if UPD_VatCode(zData) then
     begin
-       glb.ForceTableRefresh;
+       glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -557,7 +557,7 @@ begin
     if ins_vatCode(zData) then
     begin
       VatCodeAdded := True;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

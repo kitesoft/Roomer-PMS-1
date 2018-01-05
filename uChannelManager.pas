@@ -615,7 +615,7 @@ begin
         if hdata.UPD_CHannelManager(zData) then
         begin
           // label1.Caption := 'Update OK';
-          glb.ForceTableRefresh;
+          glb.RefreshOnServerTimestamp;
         end else
         begin
           // label1.Caption := 'Update NOT OK';
@@ -626,7 +626,7 @@ begin
         if hdata.ins_ChannelManager(zData) then
         begin
           // label1.Caption := 'Insert OK';
-          glb.ForceTableRefresh;
+          glb.RefreshOnServerTimestamp;
         end else
         begin
           // label1.Caption := 'insert NOT OK';

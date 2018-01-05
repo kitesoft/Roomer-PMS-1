@@ -538,7 +538,7 @@ begin
   begin
     if UPD_ChannelPlanCode(zData) then
     begin
-       glb.ForceTableRefresh;
+       glb.RefreshOnServerTimestamp;
     end else
     begin
       label1.Caption := GetTranslatedText('shTx_ChannelPlanCodes_UpdateNotOK');
@@ -560,7 +560,7 @@ begin
 
     if ins_ChannelPlanCode(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       label1.Caption := GetTranslatedText('shTx_ChannelPlanCodes_InsertNotOK');

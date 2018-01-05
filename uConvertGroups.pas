@@ -509,7 +509,7 @@ begin
   begin
     if UPD_ConvertGroup(zData) then
     begin
-       glb.ForceTableRefresh;
+       glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
@@ -528,14 +528,14 @@ begin
     if ins_Convertgroup(zData) then
     begin
       m_.FieldByName('ID').AsInteger := nID;          ///TODO: This does not work!
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;
       exit;
     end;
   end;
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
 end;
 
 procedure TfrmConvertGroups.m_NewRecord(DataSet: TDataSet);

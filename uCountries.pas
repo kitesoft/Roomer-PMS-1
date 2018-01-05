@@ -215,7 +215,6 @@ type
     procedure btnInsertClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure m_AfterPost(DataSet: TDataSet);
 
   private
     { Private declarations }
@@ -622,15 +621,8 @@ end;
 
 procedure TfrmCountries.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if tvdata.DataController.DataSet.State = dsInsert then
-  begin
-    tvdata.DataController.Post;
-  end;
-  if tvdata.DataController.DataSet.State = dsEdit then
-  begin
-    tvdata.DataController.Post;
-  end;
-
+  tvData.DataController.Dataset.CheckBrowseMode;
+  glb.RefreshTableByName('countries');
   pnlHolder.Parent := self;
   update;
   if embedded then
@@ -690,12 +682,6 @@ end;
 
 
 
-
-procedure TfrmCountries.m_AfterPost(DataSet: TDataSet);
-begin
-  if not m_.ControlsDisabled then
-    glb.RefreshTableByName('countries');
-end;
 
 procedure TfrmCountries.m_BeforeDelete(DataSet: TDataSet);
 var

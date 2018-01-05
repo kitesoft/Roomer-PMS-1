@@ -700,7 +700,7 @@ begin
           Set2RoomTypeGroupDity(oldGroup, zData.RoomTypeGroup);
   //       if (OldLocation <> zData.Location) then
   //          UPD_roomLocation(zData.RoomType, zData.location);
-         glb.ForceTableRefresh;
+         glb.RefreshOnServerTimestamp;
       end else
       begin
         abort;
@@ -733,7 +733,7 @@ begin
       // m_.Edit;
       m_.fieldbyname('ID').AsInteger := nID;
       // m_.Post;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

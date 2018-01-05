@@ -484,7 +484,7 @@ begin
   begin
     if UPD_season(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
      end else
     begin
       abort;
@@ -503,7 +503,7 @@ begin
     if ins_season(zData,nID) then
     begin
       m_.FieldByName('ID').AsInteger := nID;
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       abort;

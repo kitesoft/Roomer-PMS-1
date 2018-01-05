@@ -1032,7 +1032,7 @@ procedure TfrmItems2.m_ItemsAfterPost(DataSet: TDataSet);
 begin
   if zFirstTime then Exit;
 
-  glb.ForceTableRefresh;
+  glb.RefreshOnServerTimestamp;
 end;
 
 procedure TfrmItems2.m_ItemsBeforeDelete(DataSet: TDataSet);
@@ -1122,7 +1122,7 @@ begin
       begin
         if oldCode <> zData.Item then
           UpdateItemCode(oldCode, zData.Item);
-         glb.ForceTableRefresh;
+         glb.RefreshOnServerTimestamp;
       end else
       begin
         abort;

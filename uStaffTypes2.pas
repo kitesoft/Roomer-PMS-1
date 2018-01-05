@@ -482,7 +482,7 @@ begin
   begin
     if UPD_StaffType(zData) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
       //label1.Caption := 'UPDATE NOT OK';
@@ -503,7 +503,7 @@ begin
     end;
     if ins_StaffType(zData,nID) then
     begin
-      glb.ForceTableRefresh;
+      glb.RefreshOnServerTimestamp;
     end else
     begin
     //  label1.Caption := 'INSERT NOT OK';
