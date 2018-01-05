@@ -2420,6 +2420,10 @@ begin
         else
           Price := eSet.FieldByName('revenue').asFloat / eSet.fieldByName('Number').AsFloat;
 
+        // Older package items are not save with revenues filled
+        if SameValue(Price, 0.00) and eSet.fieldByName('isPackage').AsBoolean then
+          Price := eSet.FieldByName('Price').AsFloat;
+
 
         // Externally added items have amounts in native currency, but currency and currencyrate can be set
         // to a different currency (WHY??)
