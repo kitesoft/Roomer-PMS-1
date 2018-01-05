@@ -392,9 +392,6 @@ begin
   FPreviousGuestsReload := TGetSQLDataThreaded.Create;
   FPreviousGuestsSet := nil;
 
-  LoadStaticTables(true);
-
-  ReloadPreviousGuests;
 end;
 
 destructor TGlobalSettings.Destroy;
@@ -1701,6 +1698,8 @@ procedure OpenAppSettings;
 begin
   glb.Free;
   glb := TGlobalSettings.create;
+  glb.LoadStaticTables(true);
+  glb.ReloadPreviousGuests;
   InitGlobalCurrencyManager(TRoomerCurrencyManager, glb.ControlSet.FieldByName('nativecurrency').asString);
 end;
 

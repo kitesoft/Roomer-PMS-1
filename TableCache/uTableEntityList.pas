@@ -185,16 +185,17 @@ begin
   if NOT FRefreshEnabled then
     exit;
   if FRSet.Active then FRSet.Close;
+
   localData := ReadFromFile;
-  if localData <> '' then
+  if ForceRefresh or localData.IsEmpty then
+    RefreshFromServer
+  else
   try
     FRSet.OpenDataset(localData);
     CachedDataHandler.MarkTableAsRefreshed(FTableName, FileTimeStamp);
   except
     RefreshFromServer;
   end
-  else
-    RefreshFromServer;
 end;
 
 procedure TTableEntity.SaveToFile(data : String);

@@ -454,7 +454,7 @@ begin
   Clear;
   if NOT d.roomerMainDataSet.LoggedIn then exit;
 
-  glb.ForceTableRefresh;
+  glb.RefreshTablesWhenNeeded;
 
   maintNotes := glb.Maintenanceroomnotes;
   maintCodes := glb.MaintenanceCodes;
