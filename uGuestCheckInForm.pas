@@ -1085,6 +1085,8 @@ end;
 
 procedure TFrmGuestCheckInForm.FormShow(Sender: TObject);
 begin
+  TReservationMarketType.AsStrings(cbxMarket.Items);
+
   LoadGuestInfo;
   FillQuickFind;
   cbxGuaranteeTypes.ItemIndex := 0;
@@ -1093,8 +1095,6 @@ begin
   else
     cbPaycards.ItemIndex := 0;
   pgGuaranteeTypes.ActivePageIndex := 0;
-
-  TReservationMarketType.AsStrings(cbxMarket.Items);
 
   UpdateControls;
 end;

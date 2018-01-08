@@ -1014,6 +1014,8 @@ begin
   TReservationState.AsStrings((tvRoomsStatusText.Properties AS TcxComboBoxProperties).Items);
   (tvRoomsStatusText.Properties AS TcxComboBoxProperties).DropDownRows := (tvRoomsStatusText.Properties AS TcxComboBoxProperties).Items.Count;
 
+  TReservationMarketType.AsStrings(cbxMarket.Items);
+
   ConstructOtherResStateMenu;
 
   FOrigCaption := Caption;
