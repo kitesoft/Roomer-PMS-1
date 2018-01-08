@@ -104,7 +104,7 @@ type
     mnuDeleteRoomFromReservation: TMenuItem;
     MenuItem13: TMenuItem;
     pmnuRoomReservation: TMenuItem;
-    mnuCancelReservation2: TMenuItem;
+    mnuRemovereservation: TMenuItem;
     N18: TMenuItem;
     mmnuFinishedInvoices: TMenuItem;
     pmnuClosedInvoicesThisRoom: TMenuItem;
@@ -886,7 +886,7 @@ type
     procedure btnDownPaymentsClick(Sender: TObject);
     procedure btnCancelThisReservationClick(Sender: TObject);
     procedure btnTotallistClick(Sender: TObject);
-    procedure mnuCancelReservation2Click(Sender: TObject);
+    procedure mnuRemovereservationClick(Sender: TObject);
     procedure btnStatusFilterClick(Sender: TObject);
     procedure btnLocationFilterClick(Sender: TObject);
     procedure btnGroupsFilterClick(Sender: TObject);
@@ -5928,7 +5928,7 @@ begin
   pmnuCheckOutRoom.Enabled := Enable;
   pmnuCheckInGroup.Enabled := Enable;
   mnuRoomNumber.Enabled := Enable;
-  mnuCancelReservation2.Enabled := Enable AND (NOT OffLineMode);
+  mnuRemovereservation.Enabled := Enable AND (NOT OffLineMode);
   pmnuModifyReservation.Enabled := Enable AND (NOT OffLineMode);
   pmnuRoomReservation.Enabled := Enable AND (NOT OffLineMode);
   pmnuRoomGuests.Enabled := Enable AND (NOT OffLineMode);
@@ -10227,9 +10227,10 @@ begin
   timBlink.Enabled := false;
 end;
 
-procedure TfrmMain.mnuCancelReservation2Click(Sender: TObject);
+procedure TfrmMain.mnuRemovereservationClick(Sender: TObject);
 begin
-  _RemoveAReservation;
+  if GetKeyState(VK_CONTROL) = -128 then
+    _RemoveAReservation;
 end;
 
 /// ////////////////////////////////////////////////////////////////////////////

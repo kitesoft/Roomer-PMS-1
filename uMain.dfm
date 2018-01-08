@@ -116,7 +116,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 302
-        ActivePage = tabRateQuery
+        ActivePage = tabPeriod
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -3314,13 +3314,6 @@ object frmMain: TfrmMain
     object MenuItem13: TMenuItem
       Caption = '-'
     end
-    object mnuCancelReservation2: TMenuItem
-      Caption = 'Remove Reservation'
-      Hint = 'Remove Reservation'
-      ImageIndex = 42
-      ShortCut = 24622
-      OnClick = mnuCancelReservation2Click
-    end
     object btnCancelReservations: TMenuItem
       Caption = 'Cancel Reservation'
       OnClick = btnCancelThisReservationClick
@@ -3345,6 +3338,9 @@ object frmMain: TfrmMain
       Caption = 'Color code Room'
       OnClick = mnuItmColorCodeRoomClick
     end
+    object S1: TMenuItem
+      Caption = 'Skins'
+    end
     object __N2: TMenuItem
       Caption = '-'
     end
@@ -3355,8 +3351,11 @@ object frmMain: TfrmMain
     object __N7: TMenuItem
       Caption = '-'
     end
-    object S1: TMenuItem
-      Caption = 'Skins'
+    object mnuRemovereservation: TMenuItem
+      Caption = 'Remove Reservation (use Ctrl key)'
+      Hint = 'Remove Reservation'
+      ImageIndex = 42
+      OnClick = mnuRemovereservationClick
     end
   end
   object barinn: TdxBarManager
