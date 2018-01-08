@@ -12,13 +12,26 @@ type
 
   ERefreshTableException = class(Exception);
 
+  TCachedTableEntity = class;
+  TTableDictionary = class;
+
+  ICachedTimestampHandler = interface(IUnknown)
+    ['{59C9CAC4-3504-44A7-89B1-7F19A23A7089}']
+    function RefreshTimeStampFromServer(aTable: TCachedTableEntity): boolean;
+    procedure RefreshTimeStampsFromServer(aTableDict: TTableDictionary);
+  end;
+
+  TCachedTableRefreshedEvent = procedure(aTable: TCachedTableEntity) of object;
+
   TCachedTableEntity = class
   private
     FTableName: String;
     FSql: String;
     FRSet: TRoomerDataSet;
     FRefreshEnabled : Boolean;
+    FCacheTimeStampHandler: ICachedTimestampHandler;
     FLastUpdateOnServerUTC: TDateTime;
+    FCachedTableRefreshedEvent: TCachedTableRefreshedEvent;
     function GetFilename: String;
     function ReadFromFile: String;
     procedure SaveToFile(const data: String);
@@ -27,7 +40,7 @@ type
     function IsStale: boolean;
     procedure SetLastUpdateOnServer(const Value: TDateTime);
   public
-    constructor Create(const tableName : String; const sqlExtension : String = '');
+    constructor Create(const tableName : String; aTimestampHandler: ICachedTimestampHandler; const sqlExtension : String = '');
     destructor Destroy; override;
     /// <summary>
     ///   Forcibly reload the data from the server and save it in local cache file
@@ -50,10 +63,12 @@ type
     ///   Filedatetime of the locally stored cache file in local time, is the last time that RefreshFromServer has been done
     /// </summary>
     property LocalFileDate: TDateTime read FileTimeStamp;
+    property OnRefresh: TCachedTableRefreshedEvent read FCachedTableRefreshedEvent write FCachedTableRefreshedEvent;
   end;
 
   TTableDictionary = class(TObjectDictionary<String, TCachedTableEntity>)
   private
+    FCachedTimestampHandler: ICachedTimestampHandler;
     function GetTableEntityByName(aName: string): TCachedTableEntity;
     function GetDatasetByName(aName: string): TRoomerDataset;
     procedure InitializeTables;
@@ -61,6 +76,7 @@ type
     constructor Create;
     procedure RefreshAllIfNeeded;
     procedure RefreshAllLocally(ForceRefresh : Boolean = true);
+    procedure RefreshTimeStampsFromServer;
 
     property TableEntity[aName: string]: TCachedTableEntity read GetTableEntityByName;
     property Dataset[aName: string]: TRoomerDataset read GetDatasetByName;
@@ -86,11 +102,13 @@ uses
   , uAppGlobal
   , PrjConst
   , uCachedDataHandler;
+
 { TTableDictionary }
 
 constructor TTableDictionary.Create;
 begin
   inherited Create([doOwnsValues], TCaseInsensitiveEqualityComparer.Create);
+  FCachedTimestampHandler := TCachedTimeStampHandler.Create;
   InitializeTables;
 end;
 
@@ -113,40 +131,40 @@ end;
 procedure TTableDictionary.InitializeTables;
 begin
 
-  Add('rooms', TCachedTableEntity.Create('rooms', 'ORDER BY OrderIndex Desc, Room ASC'));
+  Add('rooms', TCachedTableEntity.Create('rooms', FCachedTimestampHandler, 'ORDER BY OrderIndex Desc, Room ASC'));
 
-  Add('maintenancecodes', TCachedTableEntity.Create('maintenancecodes'));
-  Add('maintenanceroomnotes', TCachedTableEntity.Create('maintenanceroomnotes'));
-  Add('staffmembers', TCachedTableEntity.Create('staffmembers'));
+  Add('maintenancecodes', TCachedTableEntity.Create('maintenancecodes', FCachedTimestampHandler));
+  Add('maintenanceroomnotes', TCachedTableEntity.Create('maintenanceroomnotes', FCachedTimestampHandler));
+  Add('staffmembers', TCachedTableEntity.Create('staffmembers', FCachedTimestampHandler));
 
-  Add('locations', TCachedTableEntity.Create('locations'));
-  Add('packages', TCachedTableEntity.Create('packages'));
-  Add('packageitems', TCachedTableEntity.Create('packageitems'));
-  Add('roomtyperules', TCachedTableEntity.Create('roomtyperules'));
-  Add('vatcodes', TCachedTableEntity.Create('vatcodes'));
-  Add('items', TCachedTableEntity.Create('items'));
-  Add('itemtypes', TCachedTableEntity.Create('itemtypes'));
-  Add('roomtypegroups', TCachedTableEntity.Create('roomtypegroups'));
-  Add('roomtypes', TCachedTableEntity.Create('roomtypes'));
-  Add('channels', TCachedTableEntity.Create('channels'));
-  Add('channelmanagers', TCachedTableEntity.Create('channelmanagers'));
-  Add('currencies', TCachedTableEntity.Create('currencies'));
-  Add('control', TCachedTableEntity.Create('control', ' LIMIT 1'));
-  Add('countries', TCachedTableEntity.Create('countries'));
-  Add('countrygroups', TCachedTableEntity.Create('countrygroups'));
-  Add('customers', TCachedTableEntity.Create('customers'));
+  Add('locations', TCachedTableEntity.Create('locations', FCachedTimestampHandler));
+  Add('packages', TCachedTableEntity.Create('packages', FCachedTimestampHandler));
+  Add('packageitems', TCachedTableEntity.Create('packageitems', FCachedTimestampHandler));
+  Add('roomtyperules', TCachedTableEntity.Create('roomtyperules', FCachedTimestampHandler));
+  Add('vatcodes', TCachedTableEntity.Create('vatcodes', FCachedTimestampHandler));
+  Add('items', TCachedTableEntity.Create('items', FCachedTimestampHandler));
+  Add('itemtypes', TCachedTableEntity.Create('itemtypes', FCachedTimestampHandler));
+  Add('roomtypegroups', TCachedTableEntity.Create('roomtypegroups', FCachedTimestampHandler));
+  Add('roomtypes', TCachedTableEntity.Create('roomtypes', FCachedTimestampHandler));
+  Add('channels', TCachedTableEntity.Create('channels', FCachedTimestampHandler));
+  Add('channelmanagers', TCachedTableEntity.Create('channelmanagers', FCachedTimestampHandler));
+  Add('currencies', TCachedTableEntity.Create('currencies', FCachedTimestampHandler));
+  Add('control', TCachedTableEntity.Create('control', FCachedTimestampHandler, ' LIMIT 1'));
+  Add('countries', TCachedTableEntity.Create('countries', FCachedTimestampHandler));
+  Add('countrygroups', TCachedTableEntity.Create('countrygroups', FCachedTimestampHandler));
+  Add('customers', TCachedTableEntity.Create('customers', FCachedTimestampHandler));
 
-  Add('paygroups', TCachedTableEntity.Create('paygroups'));
-  Add('paytypes', TCachedTableEntity.Create('paytypes'));
-  Add('personprofiles', TCachedTableEntity.Create('personprofiles'));
-  Add('bookkeepingcodes', TCachedTableEntity.Create('bookkeepingcodes'));
-  Add('tblseasons', TCachedTableEntity.Create('tblseasons'));
-  Add('tblpricecodes', TCachedTableEntity.Create('tblpricecodes'));
-  Add('customertypes', TCachedTableEntity.Create('customertypes'));
+  Add('paygroups', TCachedTableEntity.Create('paygroups', FCachedTimestampHandler));
+  Add('paytypes', TCachedTableEntity.Create('paytypes', FCachedTimestampHandler));
+  Add('personprofiles', TCachedTableEntity.Create('personprofiles', FCachedTimestampHandler));
+  Add('bookkeepingcodes', TCachedTableEntity.Create('bookkeepingcodes', FCachedTimestampHandler));
+  Add('tblseasons', TCachedTableEntity.Create('tblseasons', FCachedTimestampHandler));
+  Add('tblpricecodes', TCachedTableEntity.Create('tblpricecodes', FCachedTimestampHandler));
+  Add('customertypes', TCachedTableEntity.Create('customertypes', FCachedTimestampHandler));
 
-  Add('channelplancodes', TCachedTableEntity.Create('channelplancodes'));
-  Add('pms_settings', TCachedTableEntity.Create('pms_settings'));
-  Add('tblMaidActions', TCachedTableEntity.Create('tblMaidActions'));
+  Add('channelplancodes', TCachedTableEntity.Create('channelplancodes', FCachedTimestampHandler));
+  Add('pms_settings', TCachedTableEntity.Create('pms_settings', FCachedTimestampHandler));
+  Add('tblMaidActions', TCachedTableEntity.Create('tblMaidActions', FCachedTimestampHandler));
 end;
 
 procedure TTableDictionary.RefreshAllLocally(ForceRefresh: Boolean);
@@ -165,9 +183,13 @@ begin
     lTable.RefreshIfNeeded;
 end;
 
+procedure TTableDictionary.RefreshTimeStampsFromServer;
+begin
+  FCachedTimestampHandler.RefreshTimeStampsFromServer(Self);
+end;
 { TTableEntity }
 
-constructor TCachedTableEntity.Create(const tableName : String; const sqlExtension: String = '');
+constructor TCachedTableEntity.Create(const tableName : String; aTimestampHandler: ICachedTimestampHandler; const sqlExtension : String = '');
 begin
   FSql := format('SELECT * FROM %s %s', [tableName, sqlExtension]);
   FTableName := tableName;
@@ -175,6 +197,7 @@ begin
   FRSet.CommandType := cmdText;
   FRSet.CommandText := FSql;
   FRefreshEnabled := True;
+  FCacheTimeStampHandler := aTimestampHandler;
 end;
 
 destructor TCachedTableEntity.Destroy;
@@ -194,7 +217,9 @@ begin
     FRSet.Open(true, false, True); // Open(doLowerCase: Boolean = true; setLastAccess: Boolean = true; Threaded: Boolean = False);
     SaveToFile(FRSet.SavedLastResult);
     FRSet.First;
-    CachedDataHandler.UpdateLastUpdateOnServer(Self);
+    FCacheTimeStampHandler.RefreshTimeStampFromServer(Self);
+    if assigned(FCachedTableRefreshedEvent) then
+      FCachedTableRefreshedEvent(Self);
   except
     raise ERefreshTableException.CreateFmt('Error while refreshing cachedtable [%s] from server', [FTableName]);
   end;
@@ -214,7 +239,9 @@ begin
   else
   try
     FRSet.OpenDataset(localData);
-    CachedDataHandler.UpdateLastUpdateOnServer(Self);
+    FCacheTimeStampHandler.RefreshTimeStampFromServer(Self);
+    if assigned(FCachedTableRefreshedEvent) then
+      FCachedTableRefreshedEvent(Self);
   except
     RefreshFromServer;
   end

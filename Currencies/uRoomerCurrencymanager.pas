@@ -7,6 +7,7 @@ uses
   , uCurrencyConstants
   , uCurrencyDefinition
   , uRoomerCurrencyDefinition
+  , uTableEntityList
   ;
 
 type
@@ -24,7 +25,7 @@ type
   public
     constructor Create(const aDefaultCurrency: TCurrencyCode); override;
 
-    procedure UpdateDefinitions();
+    procedure UpdateDefinitions(aTable: TCachedTableEntity);
 
     property DefaultCurrencyDefinition: TRoomerCurrencyDefinition read GetDefaultDefinition;
     property CurrencyDefinition[const CurCode: TCurrencyCode]: TRoomerCurrencyDefinition read GetDefinition; default;
@@ -57,14 +58,14 @@ end;
 constructor TRoomerCurrencyManager.Create;
 begin
   inherited ;
-  UpdateDefinitions();
+  glb.TableList['currencies'].OnRefresh := UpdateDefinitions;
+  UpdateDefinitions(glb.TableList['currencies']);
 end;
 
 function TRoomerCurrencyManager.CurrencyDefinitionClass: TCurrencyDefinitionClass;
 begin
   Result := TRoomerCurrencyDefinition;
 end;
-
 
 function TRoomerCurrencyManager.GetDefaultDefinition: TRoomerCurrencyDefinition;
 begin
@@ -76,17 +77,17 @@ begin
   Result := inherited CurrencyDefinition[CurCode] as TRoomerCurrencyDefinition;
 end;
 
-procedure TRoomerCurrencyManager.UpdateDefinitions();
+procedure TRoomerCurrencyManager.UpdateDefinitions(aTable: TCachedTableEntity);
 var
   ds: TRoomerDataset;
   bm: TBookmark;
   lCurDef: TCurrencyDefinition;
 begin
-  ds := glb.CurrenciesSet;
+  ds := aTable.RSet;
 
   Lock;
   try
-    ClearCache;
+    ClearDefinitions;
     if assigned(ds) and (ds.State = dsBrowse) then
       with ds do
         if Active then

@@ -29,7 +29,7 @@ type
     const
       cDefaultCurrency: TCurrencyCode = 'EUR';
     var
-      FCache: TCurrencyDefinitionDictionary;
+      FDefinitions: TCurrencyDefinitionDictionary;
       FIDCache: TCurrencyDefinitionDictionaryID;
       FDefault: TCurrencyCode;
       FDefaultDef: TCurrencyDefinition;
@@ -47,7 +47,7 @@ type
   public
     constructor Create(const aDefaultCurrency: TCurrencyCode); virtual;
     destructor Destroy; override;
-    procedure ClearCache;
+    procedure ClearDefinitions;
     function DefinitionExists(const aCurrCode: TCurrencyCode): boolean;
     function CreateDefinition(const CurCode: TCurrencyCode): TCurrencyDefinition; overload; virtual;
     function CreateDefinition(const CurCode: TCurrencyCode; aCurID: integer): TCurrencyDefinition; overload; virtual;
@@ -140,12 +140,12 @@ begin
   end;
 end;
 
-procedure TCurrencyManager.ClearCache;
+procedure TCurrencyManager.ClearDefinitions;
 begin
   Lock;
   try
     FDefaultDef := nil;
-    FCache.Clear;
+    FDefinitions.Clear;
     DefaultCurrency := FDefault;
   finally
     UnLock;
@@ -170,9 +170,9 @@ end;
 
 constructor TCurrencyManager.Create(const aDefaultCurrency: TCurrencyCode);
 begin
-  FCache := TCurrencyDefinitionDictionary.Create([doOwnsValues], TCurrencyCodeEqualityComparer.Create);
+  FDefinitions := TCurrencyDefinitionDictionary.Create([doOwnsValues], TCurrencyCodeEqualityComparer.Create);
   FIDCache := TCurrencyDefinitionDictionaryID.Create;
-  FCache.OnValueNotify := CacheNotification;
+  FDefinitions.OnValueNotify := CacheNotification;
   if (aDefaultCurrency <> '   ') then
     DefaultCurrency := aDefaultCurrency;
 end;
@@ -204,14 +204,14 @@ end;
 
 destructor TCurrencyManager.Destroy;
 begin
-  FCache.Free;
+  FDefinitions.Free;
   FIDCache.Free;
   inherited;
 end;
 
 function TCurrencyManager.GetCurrencyDefinitionByCode(const CurCode: TCurrencyCode): TCurrencyDefinition;
 begin
-  Result := FCache.Items[CurCode];
+  Result := FDefinitions.Items[CurCode];
 end;
 
 function TCurrencyManager.GetCurrencyDefinitionByID(CurID: integer): TCurrencyDefinition;
@@ -238,10 +238,10 @@ begin
 
   Lock;
   try
-    if not FCache.TryGetValue(CurCode, Result) then
+    if not FDefinitions.TryGetValue(CurCode, Result) then
     begin
       Result := CurrencyDefinitionClass.Create(CurCode, aCurId);
-      FCache.Add(CurCode, Result);
+      FDefinitions.Add(CurCode, Result);
     end;
   finally
     Unlock;
@@ -250,7 +250,7 @@ end;
 
 function TCurrencyManager.DefinitionExists(const aCurrCode: TCurrencyCode): boolean;
 begin
-  Result := FCache.ContainsKey(aCurrCode);
+  Result := FDefinitions.ContainsKey(aCurrCode);
 end;
 
 procedure TCurrencyManager.Lock;
@@ -270,7 +270,7 @@ begin
     begin
       lCorrection := CurrencyDefinition[value].Rate;
       if not SameValue(lCorrection, 1.0) then
-        for lCurrency in FCache.Values do
+        for lCurrency in FDefinitions.Values do
           lCurrency.Rate := lCurrency.Rate / lCorrection;
     end
     else

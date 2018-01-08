@@ -12,18 +12,14 @@ type
   /// <summary>
   ///   Handler of timestamp data of cached tables
   /// </summary>
-  TCachedDataHandler = class
+  TCachedTimeStampHandler = class(TInterfacedObject, ICachedTimestampHandler)
   private
     function GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string = ''): boolean;
   public
-    function UpdateLastUpdateOnServer(aTable: TCachedTableEntity): boolean;
-    procedure RefreshServerTimeStamps(aTableDict: TTableDictionary);
+    function RefreshTimeStampFromServer(aTable: TCachedTableEntity): boolean;
+    procedure RefreshTimeStampsFromServer(aTableDict: TTableDictionary);
   end;
 
-
-// TODO No gobal instance needed, add one to TAppGLobal
-function CachedDataHandler: TCachedDataHandler;
-procedure ClearCachedDataHandler;
 
 implementation
 
@@ -35,23 +31,7 @@ uses
   , Data.DB
   ;
 
-var
-  gCachedDataHandler: TCachedDataHandler;
-
-function CachedDataHandler: TCachedDataHandler;
-begin
-  if not assigned(gCachedDataHandler) then
-    gCachedDataHandler := TCachedDataHandler.Create;
-
-  Result := gCachedDataHandler;
-end;
-
-procedure ClearCachedDataHandler;
-begin
-  FreeAndNil(gCachedDataHandler);
-end;
-
-function TCachedDataHandler.GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string): boolean;
+function TCachedTimeStampHandler.GetStaticTablesLastUpdates(aRSet: TRoomerDataset; const aTableName: string): boolean;
 var
   url: string;
 begin
@@ -70,7 +50,7 @@ begin
   end;
 end;
 
-procedure TCachedDataHandler.RefreshServerTimeStamps(aTableDict: TTableDictionary);
+procedure TCachedTimeStampHandler.RefreshTimeStampsFromServer(aTableDict: TTableDictionary);
 var lTableRefreshSet : TRoomerDataset;
     lTable: TCachedTableEntity;
     fldTableName: TField;
@@ -99,7 +79,7 @@ begin
   end;
 end;
 
-function TCachedDataHandler.UpdateLastUpdateOnServer(aTable: TCachedTableEntity): boolean;
+function TCachedTimeStampHandler.RefreshTimeStampFromServer(aTable: TCachedTableEntity): boolean;
 var lTableRefreshSet : TRoomerDataset;
 begin
   Result := false;
@@ -112,8 +92,10 @@ begin
     begin
       lTableRefreshSet.First;
       if not lTableRefreshSet.Eof then
+      begin
         aTable.LastUpdateOnServerUTC := lTableRefreshSet.FieldByName('lastupdate').AsDateTime;
-
+        Result := true;
+      end;
     end;
   finally
     lTableRefreshSet.Free;
@@ -124,6 +106,5 @@ end;
 initialization
 
 finalization
-  ClearCachedDataHandler;
 
 end.

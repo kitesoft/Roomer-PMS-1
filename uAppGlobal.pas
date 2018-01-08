@@ -402,7 +402,7 @@ begin
   FRoomFloors.free;
   FPreviousGuestsReload.Free;
   tablesList.Clear;
-  FreeAndNil(tablesList);
+  tablesList.Free;
   FPmsSettings.Free;
 end;
 
@@ -812,7 +812,7 @@ end;
 
 procedure TGlobalSettings.RefreshOnServerTimestamp;
 begin
-  CachedDataHandler.RefreshServerTimeStamps(TableList);
+  tablesList.RefreshTimeStampsFromServer;
 end;
 
 procedure TGlobalSettings.RefreshTableByName(const aTable: string);
@@ -1695,7 +1695,6 @@ begin
   FreeAndNil(glb);
   ClearFileDependencyManager;
   ClearGlobalCurrencyManager;
-  ClearCachedDataHandler;
 end;
 
 { TSet_Of_Integer }
