@@ -117,7 +117,7 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMaskEdit
-  , uRoomerGridForm, cxCheckBox
+  , uRoomerGridForm, cxCheckBox, System.Actions, Vcl.ActnList
   ;
 
 type
@@ -135,22 +135,12 @@ type
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
     m_AValue: TFloatField;
-    grPrinter: TdxComponentPrinter;
-    prLink_grData: TdxGridReportLink;
     m_ID: TIntegerField;
     m_active: TBooleanField;
     m_displayformat: TWideStringField;
     m_decimals: TIntegerField;
     m_SellValue: TFloatField;
     m_CurrencySign: TWideStringField;
-    cLabFilter: TsLabel;
-    btnClear: TsSpeedButton;
-    btnInsert: TsButton;
-    btnEdit: TsButton;
-    btnDelete: TsButton;
-    btnOther: TsButton;
-    chkActive: TsCheckBox;
-    edFilter: TsEdit;
     btnHistory: TsButton;
     tvDataRecId: TcxGridDBBandedColumn;
     tvDataCurrency: TcxGridDBBandedColumn;
@@ -251,7 +241,7 @@ begin
 //    end
 //    else
 //    begin
-      _frmCurrencies.ShowModal;
+      _frmCurrencies.ShowModal(act);
       if _frmCurrencies.modalresult = mrOk then
       begin
         theData := _frmCurrencies.zData;

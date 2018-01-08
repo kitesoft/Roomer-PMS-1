@@ -208,7 +208,7 @@ uses
   , uVatCodes
   , uUtils
   , UITypes
-  ;
+  , ufrmVatCodesGrid, uRoomerGridForm;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -638,9 +638,7 @@ var
 begin
   fillholder;
   theData.VATCode := zData.VATCode;
-  vatCodes(actlookup,theData);
-
-  if theData.VATCode <> '' then
+  if vatCodes(TRoomerGridFormMode.SelectSingle,theData) then
   begin
     if tvData.DataController.DataSource.State <> dsInsert then m_.Edit;
     m_['VatCode'] := theData.vatCode;

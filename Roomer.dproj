@@ -996,6 +996,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>frmCurrencyHistory</Form>
             <DesignClass>{$R *.RES</DesignClass>
         </DCCReference>
+        <DCCReference Include="GridForms\ufrmVatCodesGrid.pas">
+            <Form>frmVatCodesGrid</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

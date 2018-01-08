@@ -1654,7 +1654,7 @@ uses
 	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-    , uReleaseNotes;
+    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -12059,7 +12059,7 @@ procedure TfrmMain._VatCodesList;
 var
   theData: recVatCodeHolder;
 begin
-  vatCodes(actNone, theData);
+  ufrmVatCodesGrid.vatCodes(TRoomerGridFormMode.Browse, theData);
 end;
 
 procedure TfrmMain._PayGroupList;
