@@ -34,10 +34,13 @@ type
     tvDataactive: TcxGridDBBandedColumn;
     procedure tvDataBookKeepCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
   private
+    FVatCodesAdded: Boolean;
+    procedure evtVatCodeInserted(Sender: TDataset);
     { Private declarations }
   public
     { Public declarations }
     constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
   end;
 
 
@@ -49,7 +52,12 @@ implementation
 
 uses
   uAppGlobal
-  , uBookKeepingCodes, uG;
+  , uBookKeepingCodes
+  , uG
+  , uFinanceConnectService
+  , uFrmFinanceConnect
+  , PrjConst
+  ;
 
 { TfrmVatCodesGrid }
 
@@ -63,47 +71,39 @@ begin
     if Result then
       theData.VatCode := SelectedCode;
 
+    if ((aMode <> TRoomerGridFormMode.SelectSingle) AND FVatCodesAdded AND (ActiveFinanceConnectSystemCode <> '')) AND
+       (MessageDlg(format(GetTranslatedText('Vat_FinanceConnect_AddedCode'), [ActiveFinanceConnectSystemName]),
+                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+        ManageFinanceConnect(PAGE_MAPPING, TAB_VATS);
+
   finally
     glb.TableList['vatcodes'].RefreshEnabled := true;
     if aMode = TRoomerGridFormMode.Browse then
       glb.TableList['vatcodes'].RefreshFromServer;
     Free;
   end;
-
-//
-//  result := false;
-//  frmVatCodes := TfrmVatCodes.Create(frmVatCodes);
-//  try
-//    frmVatCodes.zData := theData;
-//    frmVatCodes.zAct := act;
-//    frmVatCodes.ShowModal;
-//    if ((act <> actLookup) AND frmVatCodes.VatCodeAdded AND (ActiveFinanceConnectSystemCode <> '')) AND
-//       (MessageDlg(format(GetTranslatedText('Vat_FinanceConnect_AddedCode'), [ActiveFinanceConnectSystemName]),
-//                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-//      begin
-//        ManageFinanceConnect(PAGE_MAPPING, TAB_VATS);
-//      end;
-//    if frmVatCodes.modalresult = mrOk then
-//    begin
-//      theData := frmVatCodes.zData;
-//      result := true;
-//    end
-//    else
-//    begin
-//      initVatCodeHolder(theData);
-//    end;
-//  finally
-//    freeandnil(frmVatCodes);
-//  end;
 end;
 
 
 constructor TfrmVatCodesGrid.Create(aOwner: TComponent);
 begin
   inherited;
+  FVatCodesAdded := false;
   ActiveFieldName := 'active';
   CodeFieldName := 'vatcode';
   dsData.DataSet := glb.VAT;
+  dsData.Dataset.AfterInsert := evtVatCodeInserted;
+end;
+
+destructor TfrmVatCodesGrid.Destroy;
+begin
+  dsData.Dataset.AfterInsert := nil;
+  inherited;
+end;
+
+procedure TfrmVatCodesGrid.evtVatCodeInserted(Sender: TDataset);
+begin
+  FVatCodesAdded := true;
 end;
 
 procedure TfrmVatCodesGrid.tvDataBookKeepCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);

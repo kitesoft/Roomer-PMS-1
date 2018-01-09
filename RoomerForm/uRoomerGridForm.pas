@@ -16,7 +16,7 @@ uses
   dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd,
   dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers,
   dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, sLabel, sEdit, sCheckBox,
-  Vcl.Buttons, sSpeedButton, Vcl.Menus
+  Vcl.Buttons, sSpeedButton, Vcl.Menus, dxCore
   ;
 
 type
@@ -101,6 +101,9 @@ type
     ///   Name of the boolean field in the dataset that should be used to filter out non-active records
     /// </summary>
     property ActiveFieldName: string read FActiveFieldName write FActiveFieldName;
+    /// <summary>
+    ///   Identifying code of the currently selected record, can also be set to navigate to that record
+    /// </summary>
     property SelectedCode: string read GetSelectedCode write SetSelectedCode;
   end;
 
@@ -155,7 +158,7 @@ begin
   inherited;
   acNew.Enabled := FFormMode in [TRoomerGridFormMode.Browse];
   acEdit.Enabled := (FFormMode in [TRoomerGridFormMode.Browse]) and not dsData.DataSet.IsEmpty;
-  acDelete.Enabled := false; //FFormMode in [TRoomerGridFormMode.Browse] and not dsData.DataSet.IsEmpty;
+  acDelete.Enabled := (FormMode in [TRoomerGridFormMode.Browse]) and not dsData.DataSet.IsEmpty;
 end;
 
 procedure TfrmBaseRoomerGridForm.btnClearClick(Sender: TObject);
@@ -181,13 +184,18 @@ procedure TfrmBaseRoomerGridForm.DoShow;
 begin
   inherited;
   if not FCodeFieldName.IsEmpty then
-    tvData.GetColumnByFieldName(FCodeFieldName).Editing := false;
+    with tvData.GetColumnByFieldName(FCodeFieldName) do
+    begin
+      Editing := false;
+      SortOrder := soAscending;
+    end;
 
   case FFormMode of
     TRoomerGridFormMode.Browse:       DialogButtons := [mbClose];
     TRoomerGridFormMode.SelectSingle: DialogButtons := mbOKCancel;
   end;
 
+  chkActive.Visible := not FActiveFieldName.IsEmpty;
   ApplyFilter;
 end;
 
@@ -267,19 +275,19 @@ end;
 procedure TfrmBaseRoomerGridForm.acDeleteExecute(Sender: TObject);
 begin
   inherited;
-  dsData.DataSet.Delete;
+  tvData.Controller.DeleteSelection;
 end;
 
 procedure TfrmBaseRoomerGridForm.acEditExecute(Sender: TObject);
 begin
   inherited;
-  dsData.DataSet.Edit;
+  tvData.DataController.Edit;
 end;
 
 procedure TfrmBaseRoomerGridForm.acNewExecute(Sender: TObject);
 begin
   inherited;
-  dsData.DataSet.Insert;
+  tvData.DataController.Insert;
 end;
 
 procedure TfrmBaseRoomerGridForm.acPrintExecute(Sender: TObject);

@@ -23,8 +23,15 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     LookAndFeel.NativeStyle = False
     object tvData: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
+      Navigator.Buttons.PriorPage.Visible = False
+      Navigator.Buttons.NextPage.Visible = False
+      Navigator.Buttons.SaveBookmark.Visible = False
+      Navigator.Buttons.GotoBookmark.Visible = False
+      Navigator.Buttons.Filter.Visible = False
+      Navigator.Visible = True
       OnCellDblClick = tvDataCellDblClick
       DataController.DataSource = dsData
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -85,8 +92,8 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       object chkActive: TsCheckBox
         Left = 100
         Top = 30
-        Width = 109
-        Height = 17
+        Width = 101
+        Height = 20
         Caption = 'Show active only'
         Checked = True
         State = cbChecked
@@ -274,7 +281,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -287,8 +293,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43108.652916678240000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      ReportDocument.CreationDate = 43109.344961412040000000
       BuiltInReportLink = True
     end
   end

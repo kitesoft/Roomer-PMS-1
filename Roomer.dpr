@@ -114,7 +114,6 @@ uses
   PrjConst in 'PrjConst.pas',
   uRptResStats in 'uRptResStats.pas' {frmRptResStats},
   uMultiSelection in 'uMultiSelection.pas' {frmMultiSelection},
-  uVatCodes in 'uVatCodes.pas' {frmVatCodes},
   uNationalReport3 in 'uNationalReport3.pas' {frmNationalReport3},
   urptReservationsCust in 'urptReservationsCust.pas' {frmRptReservationsCust},
   uDImages in 'uDImages.pas' {DImages: TDataModule},
@@ -365,7 +364,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

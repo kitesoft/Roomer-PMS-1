@@ -527,9 +527,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uMultiSelection.pas">
             <Form>frmMultiSelection</Form>
         </DCCReference>
-        <DCCReference Include="uVatCodes.pas">
-            <Form>frmVatCodes</Form>
-        </DCCReference>
         <DCCReference Include="uNationalReport3.pas">
             <Form>frmNationalReport3</Form>
         </DCCReference>
