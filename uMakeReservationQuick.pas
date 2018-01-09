@@ -804,7 +804,7 @@ uses
   PrjConst,
   uMain,
   uCurrencies,
-  uPriceCodes,
+  ufrmPriceCodesGrid,
   uCountries,
   ueditRoomPrice,
   uCustomers2,
@@ -823,7 +823,7 @@ uses
  , DateUtils
  , uSQLUtils
  , Math
- , uRoomerCurrencymanager, uAmount, uCurrencyConstants, uMarketDefinitions;
+ , uRoomerCurrencymanager, uAmount, uCurrencyConstants, uMarketDefinitions, uRoomerGridForm;
 
 {$R *.dfm}
 
@@ -1276,7 +1276,7 @@ var
   theData: recPriceCodeHolder;
 begin
   theData.PcCode := aCode;
-  Result := priceCodes(actLookup, theData);
+  Result := priceCodes(TRoomerGridFormMode.SelectSingle, theData);
   if Result then
     aCode := theData.PcCode;
 end;

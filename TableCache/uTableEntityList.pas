@@ -40,7 +40,7 @@ type
     function IsStale: boolean;
     procedure SetLastUpdateOnServer(const Value: TDateTime);
   public
-    constructor Create(const tableName : String; aTimestampHandler: ICachedTimestampHandler; const sqlExtension : String = '');
+    constructor Create(const tableName : String; aTimestampHandler: ICachedTimestampHandler; const sqlExtension : String = ''); virtual;
     destructor Destroy; override;
     /// <summary>
     ///   Forcibly reload the data from the server and save it in local cache file
@@ -101,7 +101,7 @@ uses
   , uFileSystemUtils
   , uAppGlobal
   , PrjConst
-  , uCachedDataHandler;
+  , uCachedDataHandler, ufrmVatCodesGrid, uCachedVATTable;
 
 { TTableDictionary }
 
@@ -141,7 +141,7 @@ begin
   Add('packages', TCachedTableEntity.Create('packages', FCachedTimestampHandler));
   Add('packageitems', TCachedTableEntity.Create('packageitems', FCachedTimestampHandler));
   Add('roomtyperules', TCachedTableEntity.Create('roomtyperules', FCachedTimestampHandler));
-  Add('vatcodes', TCachedTableEntity.Create('vatcodes', FCachedTimestampHandler));
+  Add('vatcodes', TCachedVATTable.Create('vatcodes', FCachedTimestampHandler));
   Add('items', TCachedTableEntity.Create('items', FCachedTimestampHandler));
   Add('itemtypes', TCachedTableEntity.Create('itemtypes', FCachedTimestampHandler));
   Add('roomtypegroups', TCachedTableEntity.Create('roomtypegroups', FCachedTimestampHandler));

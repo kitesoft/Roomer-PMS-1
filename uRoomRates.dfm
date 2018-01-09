@@ -381,8 +381,8 @@ object frmRoomRates: TfrmRoomRates
     object chkActive: TsCheckBox
       Left = 56
       Top = 67
-      Width = 246
-      Height = 17
+      Width = 238
+      Height = 20
       Caption = 'Active (if checked then just active are visible)'
       Checked = True
       State = cbChecked
@@ -469,8 +469,6 @@ object frmRoomRates: TfrmRoomRates
     Align = alClient
     TabOrder = 3
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 112
-    ExplicitHeight = 409
     object tvData: TcxGridDBTableView
       OnDblClick = tvDataDblClick
       Navigator.Buttons.CustomButtons = <>

@@ -278,6 +278,7 @@ object frmStaffTypes2: TfrmStaffTypes2
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.CharCase = ecUpperCase
         Properties.OnValidate = tvDatastaffTypePropertiesValidate
+        Options.Editing = False
         Width = 71
       end
       object tvDataDescription: TcxGridDBColumn

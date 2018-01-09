@@ -99,6 +99,7 @@ inherited frmVatCodesGrid: TfrmVatCodesGrid
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43108.629184525460000000
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end

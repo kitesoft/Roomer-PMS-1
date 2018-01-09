@@ -333,7 +333,9 @@ uses
   uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraLookupPanel: TFrame},
   uMarketDefinitions in 'Definitions\uMarketDefinitions.pas',
   uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory: {$R *.RES},
-  ufrmVatCodesGrid in 'GridForms\ufrmVatCodesGrid.pas' {frmVatCodesGrid};
+  ufrmVatCodesGrid in 'GridForms\ufrmVatCodesGrid.pas' {frmVatCodesGrid},
+  ufrmPriceCodesGrid in 'GridForms\ufrmPriceCodesGrid.pas' {frmPriceCodesGrid},
+  uCachedVATTable in 'TableCache\uCachedVATTable.pas';
 
 {$R *.RES}
 

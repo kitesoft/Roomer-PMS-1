@@ -92,6 +92,7 @@ begin
   ActiveFieldName := 'active';
   CodeFieldName := 'vatcode';
   dsData.DataSet := glb.VAT;
+  Assert(not assigned(dsData.Dataset.AfterInsert));
   dsData.Dataset.AfterInsert := evtVatCodeInserted;
 end;
 

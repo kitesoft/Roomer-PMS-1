@@ -1553,7 +1553,6 @@ uses
 		, uPayTypes
 		,uVatCodes
 		, uChannelPlanCodes
-		, uPriceCodes
     , uResGuestList
 		, uMakereseRvationQuick
 		, uSqlDefinitions
@@ -1654,7 +1653,7 @@ uses
 	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm;
+    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -12154,7 +12153,7 @@ var
   theData: recPriceCodeHolder;
 begin
   initPriceCodeHolder(theData);
-  priceCodes(actNone, theData);
+  priceCodes(TRoomerGridFormMode.Browse, theData);
 end;
 
 procedure TfrmMain._Seasons;

@@ -291,7 +291,7 @@ begin
   begin
     tvDataID.Options.Editing                := false;
     tvDataActive.Options.Editing            := true;
-    tvDataStaffType.Options.Editing         := true;
+//    tvDataStaffType.Options.Editing         := true;
     tvDataDescription.Options.Editing       := true;
     tvDataAccessPrivilidges.Options.Editing := true;
     tvDataAuthValue.Options.Editing         := true;

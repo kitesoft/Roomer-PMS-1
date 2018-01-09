@@ -997,6 +997,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>frmVatCodesGrid</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="GridForms\ufrmPriceCodesGrid.pas">
+            <Form>frmPriceCodesGrid</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TableCache\uCachedVATTable.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

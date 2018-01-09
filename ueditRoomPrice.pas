@@ -182,10 +182,10 @@ implementation
 uses
     ud
   , uPriceOBJ
-  , uPriceCodes
+  , ufrmPriceCodesGrid
   , uAppGlobal
   , uMain, uDImages
-  , uUtils;
+  , uUtils, uRoomerGridForm;
 
 
 {$R *.dfm}
@@ -452,7 +452,7 @@ procedure TfrmEditRoomPrice.btnSelectPriceCodeClick(Sender: TObject);
 var
   theData : recPriceCodeHolder;
 begin
-  if priceCodes(actLookup,theData) then
+  if priceCodes(TRoomerGridFormMode.SelectSingle,theData) then
   begin
     edPcCode.text := theData.pcCode;
   end;
@@ -479,7 +479,7 @@ procedure TfrmEditRoomPrice.edPcCodePropertiesButtonClick(Sender: TObject; AButt
 var
   theData : recPriceCodeHolder;
 begin
-  if priceCodes(actLookup,theData) then
+  if priceCodes(TRoomerGridFormMode.SelectSingle, theData) then
   begin
     edPcCode.text := theData.pcCode;
   end;
