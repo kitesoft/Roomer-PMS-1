@@ -4202,7 +4202,7 @@ select_PayGroupExist : string =
 select_GET_VatCodeHolder : string =
 ' SELECT '#10+
 '    vatCode '#10+
-'    active'#10+
+'   ,active'#10+
 '   ,Description '#10+
 '   ,VATPercentage '#10+
 '   ,valueFormula '#10+
