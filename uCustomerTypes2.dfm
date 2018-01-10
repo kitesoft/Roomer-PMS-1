@@ -245,6 +245,7 @@ inherited frmCustomerTypes2: TfrmCustomerTypes2
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.CharCase = ecUpperCase
         Properties.OnValidate = tvDataCustomerTypePropertiesValidate
+        Options.Editing = False
         Width = 61
       end
       object tvDataDescription: TcxGridDBColumn
@@ -318,6 +319,7 @@ inherited frmCustomerTypes2: TfrmCustomerTypes2
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 208
     Top = 176
   end

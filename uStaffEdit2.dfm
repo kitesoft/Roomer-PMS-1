@@ -525,7 +525,8 @@ object frmStaffEdit2: TfrmStaffEdit2
           ExplicitLeft = 165
           ExplicitTop = 16
           inherited pnlCountry: TsPanel
-            inherited lblCountryName: TsLabel
+            inherited lblCountryName: TLabel
+              Width = 140
               Height = 14
             end
           end
@@ -696,10 +697,6 @@ object frmStaffEdit2: TfrmStaffEdit2
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Authorization'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox2: TsGroupBox
         AlignWithMargins = True
         Left = 0

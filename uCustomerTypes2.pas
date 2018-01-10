@@ -164,6 +164,7 @@ type
     procedure edFilterChange(Sender: TObject);
     procedure btnInsertClick(Sender: TObject);
     procedure tvDataCustomerTypePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -319,6 +320,12 @@ begin
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowGridEdit;
   chkFilter;
+end;
+
+procedure TfrmCustomerTypes2.DSStateChange(Sender: TObject);
+begin
+  inherited;
+  tvDataCustomerType.Options.Editing := (m_.State = dsInsert);
 end;
 
 procedure TfrmCustomerTypes2.edFilterChange(Sender: TObject);

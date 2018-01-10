@@ -114,7 +114,6 @@ uses
   PrjConst in 'PrjConst.pas',
   uRptResStats in 'uRptResStats.pas' {frmRptResStats},
   uMultiSelection in 'uMultiSelection.pas' {frmMultiSelection},
-  uVatCodes in 'uVatCodes.pas' {frmVatCodes},
   uNationalReport3 in 'uNationalReport3.pas' {frmNationalReport3},
   urptReservationsCust in 'urptReservationsCust.pas' {frmRptReservationsCust},
   uDImages in 'uDImages.pas' {DImages: TDataModule},
@@ -333,7 +332,12 @@ uses
   RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas',
   uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraLookupPanel: TFrame},
   uMarketDefinitions in 'Definitions\uMarketDefinitions.pas',
-  uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory: {$R *.RES};
+  uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory: {$R *.RES},
+  ufrmVatCodesGrid in 'GridForms\ufrmVatCodesGrid.pas' {frmVatCodesGrid},
+  ufrmPriceCodesGrid in 'GridForms\ufrmPriceCodesGrid.pas' {frmPriceCodesGrid},
+  uCachedVATTable in 'TableCache\uCachedVATTable.pas',
+  uCachedPriceCodesTable in 'TableCache\uCachedPriceCodesTable.pas',
+  uRoomerGridExporters in 'RoomerForm\uRoomerGridExporters.pas';
 
 {$R *.RES}
 

@@ -282,6 +282,7 @@ type
     procedure GetPriceProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure FormDestroy(Sender: TObject);
+    procedure dsItemsStateChange(Sender: TObject);
   private
     { Private declarations }
     financeLookupList : TKeyPairList;
@@ -509,6 +510,11 @@ destructor TfrmItems2.Destroy;
 begin
   financeLookupList.Free;
   inherited;
+end;
+
+procedure TfrmItems2.dsItemsStateChange(Sender: TObject);
+begin
+  tvDataItem.Options.Editing := (m_Items.State = dsInsert);
 end;
 
 procedure TfrmItems2.GetSelectedItems(theData : TrecItemHolderList);

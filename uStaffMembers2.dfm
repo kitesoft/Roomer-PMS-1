@@ -251,6 +251,7 @@ object frmStaffMembers2: TfrmStaffMembers2
       object tvDataInitials: TcxGridDBBandedColumn
         Tag = 6
         DataBinding.FieldName = 'Initials'
+        Options.Editing = False
         Width = 69
         Position.BandIndex = 0
         Position.ColIndex = 1
@@ -528,6 +529,7 @@ object frmStaffMembers2: TfrmStaffMembers2
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 208
     Top = 176
   end

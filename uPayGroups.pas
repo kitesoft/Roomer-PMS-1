@@ -182,6 +182,7 @@ type
     procedure m_BeforeInsert(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -341,7 +342,7 @@ end;
 
 procedure TfrmPayGroups.changeAllowgridEdit;
 begin
-  tvDataPayGroup.Options.Editing       := zAllowGridEdit;
+//  tvDataPayGroup.Options.Editing       := zAllowGridEdit;
   tvDataDescription.Options.Editing    := zAllowGridEdit;
   tvDataActive.Options.Editing    := zAllowGridEdit;
   tvDataCash.Options.Editing    := zAllowGridEdit;
@@ -376,6 +377,11 @@ begin
   end;
 end;
 
+
+procedure TfrmPayGroups.DSStateChange(Sender: TObject);
+begin
+  tvDatapayGroup.Options.Editing := (m_.State = dsInsert);
+end;
 
 /////////////////////////////////////////////////////////////
 // Form actions

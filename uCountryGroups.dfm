@@ -322,6 +322,7 @@ object frmCountryGroups: TfrmCountryGroups
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 496
     Top = 160
   end

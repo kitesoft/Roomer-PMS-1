@@ -1759,6 +1759,7 @@ begin
   constants.Add('shTx_MarketType_Business', 'Business');
   constants.Add('shTx_MarketType_Leisure', 'Leisure');
 
+  constants.Add('shExportMenuCaption', 'Export grid to:');
 end;
 
 procedure AddConstants_OfflineReports;

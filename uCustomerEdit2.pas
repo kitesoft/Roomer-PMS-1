@@ -199,7 +199,7 @@ implementation
 uses
   uCurrencies
   , uCountries
-  , uPriceCodes
+  , ufrmPriceCodesGrid
   , uCustomerTypes2
   , uAppGlobal
   , uChannels
@@ -211,7 +211,7 @@ uses
   , uDImages
   , uUtils
   , uResourceTypeDefinitions
-  , UITypes;
+  , UITypes, uRoomerGridForm;
 
 
 function openCustomerEdit(var theData : recCustomerHolder; isInsert : boolean; _financeCustomerList : TKeyPairList = nil) : boolean;
@@ -690,7 +690,7 @@ var
   theData : recPriceCodeHolder;
 begin
   theData.pcCode := edPcCode.text;
-  priceCodes(actlookup,theData);
+  priceCodes(TRoomerGridFormMode.SelectSingle,theData);
   if theData.pcCode <> '' then
   begin
     edPcCode.text := theData.pcCode;

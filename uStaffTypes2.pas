@@ -164,10 +164,11 @@ type
     procedure mnuiGridToHtmlClick(Sender: TObject);
     procedure mnuiGridToTextClick(Sender: TObject);
     procedure mnuiGridToXmlClick(Sender: TObject);
-    procedure btnEditClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
     procedure tvDatastaffTypePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure DSStateChange(Sender: TObject);
+    procedure btnInsertClick(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -291,7 +292,7 @@ begin
   begin
     tvDataID.Options.Editing                := false;
     tvDataActive.Options.Editing            := true;
-    tvDataStaffType.Options.Editing         := true;
+//    tvDataStaffType.Options.Editing         := true;
     tvDataDescription.Options.Editing       := true;
     tvDataAccessPrivilidges.Options.Editing := true;
     tvDataAuthValue.Options.Editing         := true;
@@ -323,6 +324,11 @@ begin
   end;
 end;
 
+
+procedure TfrmStaffTypes2.DSStateChange(Sender: TObject);
+begin
+  tvDatastaffType.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmStaffTypes2.edFilterChange(Sender: TObject);
 begin
@@ -710,8 +716,9 @@ begin
   m_.Delete;
 end;
 
-procedure TfrmStaffTypes2.btnEditClick(Sender: TObject);
+procedure TfrmStaffTypes2.btnInsertClick(Sender: TObject);
 begin
+  m_.Insert;
 end;
 
 //---------------------------------------------------------------------------

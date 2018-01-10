@@ -135,136 +135,45 @@ inherited frmCurrencies: TfrmCurrencies
     TabOrder = 3
     ExplicitWidth = 847
     ExplicitHeight = 89
-    object cLabFilter: TsLabel
-      Left = 19
-      Top = 42
-      Width = 31
-      Height = 13
-      Alignment = taRightJustify
-      Caption = 'Filter :'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-    end
-    object btnClear: TsSpeedButton
-      Left = 273
-      Top = 39
-      Width = 59
-      Height = 21
-      Caption = 'Clear'
-      OnClick = btnClearClick
-      SkinData.SkinSection = 'SPEEDBUTTON'
-      Images = DImages.PngImageList1
-      ImageIndex = 10
-    end
-    object btnInsert: TsButton
-      Left = 10
-      Top = 7
-      Width = 82
-      Height = 26
-      Hint = 'Add new record'
-      Caption = 'New'
-      ImageIndex = 23
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 0
-      OnClick = btnInsertClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnEdit: TsButton
-      Left = 98
-      Top = 7
-      Width = 82
-      Height = 26
-      Hint = 'Edit current record'
-      Caption = 'Edit'
-      ImageIndex = 25
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
+    inherited pnlFilter: TsPanel
+      Width = 847
+      Height = 48
       TabOrder = 1
-      OnClick = btnEditClick
-      SkinData.SkinSection = 'BUTTON'
+      ExplicitWidth = 847
+      ExplicitHeight = 48
+      inherited btnClear: TsSpeedButton
+        OnClick = nil
+      end
+      inherited chkActive: TsCheckBox
+        OnClick = nil
+      end
+      inherited edFilter: TsEdit
+        OnChange = nil
+      end
     end
-    object btnDelete: TsButton
-      Left = 186
-      Top = 7
-      Width = 81
-      Height = 26
-      Hint = 'Delete current record'
-      Caption = 'Delete'
-      ImageIndex = 24
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 2
-      OnClick = btnDeleteClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnOther: TsButton
-      Left = 273
-      Top = 7
-      Width = 144
-      Height = 26
-      Hint = 'Other actions - Select from menu'
-      Caption = 'Other actions'
-      DropDownMenu = mnuOther
-      ImageIndex = 76
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      Style = bsSplitButton
-      TabOrder = 3
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object chkActive: TsCheckBox
-      Left = 56
-      Top = 63
-      Width = 273
-      Height = 20
-      Caption = 'Active (if checked then just active are visible else all)'
-      Checked = True
-      State = cbChecked
-      TabOrder = 4
-      OnClick = chkActiveClick
-      SkinData.SkinSection = 'CHECKBOX'
-      ImgChecked = 0
-      ImgUnchecked = 0
-    end
-    object edFilter: TsEdit
-      Left = 56
-      Top = 39
-      Width = 206
-      Height = 21
-      Color = clWhite
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 5
-      OnChange = edFilterChange
-      SkinData.SkinSection = 'EDIT'
-    end
-    object btnHistory: TsButton
-      Left = 423
-      Top = 7
-      Width = 81
-      Height = 26
-      Hint = 'Delete current record'
-      Caption = 'History'
-      ImageIndex = 138
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 6
-      OnClick = btnHistoryClick
-      SkinData.SkinSection = 'BUTTON'
+    inherited pnlGridButons: TsPanel
+      Width = 847
+      TabOrder = 0
+      ExplicitWidth = 847
+      inherited btnInsert: TsButton
+        TabOrder = 4
+      end
+      object btnHistory: TsButton
+        AlignWithMargins = True
+        Left = 423
+        Top = 4
+        Width = 90
+        Height = 33
+        Align = alLeft
+        Caption = 'History'
+        ImageIndex = 138
+        Images = DImages.PngImageList1
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+        OnClick = btnHistoryClick
+        SkinData.SkinSection = 'BUTTON'
+      end
     end
   end
   inherited pnlButtons: TsPanel
@@ -307,7 +216,7 @@ inherited frmCurrencies: TfrmCurrencies
     Left = 88
     Top = 224
   end
-  object m_: TdxMemData
+  object m_: TdxMemData [7]
     Indexes = <>
     SortOptions = []
     BeforePost = m_BeforePost
@@ -346,7 +255,7 @@ inherited frmCurrencies: TfrmCurrencies
       Size = 6
     end
   end
-  object mnuOther: TPopupMenu
+  object mnuOther: TPopupMenu [8]
     Images = DImages.PngImageList1
     Left = 248
     Top = 216
@@ -382,29 +291,9 @@ inherited frmCurrencies: TfrmCurrencies
       end
     end
   end
-  object grPrinter: TdxComponentPrinter
-    CurrentLink = prLink_grData
-    Version = 0
-    Left = 88
-    Top = 336
-    object prLink_grData: TdxGridReportLink
-      Active = True
-      Component = grData
-      PageNumberFormat = pnfNumeral
-      PrinterPage.DMPaper = 9
-      PrinterPage.Footer = 6350
-      PrinterPage.GrayShading = True
-      PrinterPage.Header = 6350
-      PrinterPage.Margins.Bottom = 12700
-      PrinterPage.Margins.Left = 12700
-      PrinterPage.Margins.Right = 12700
-      PrinterPage.Margins.Top = 12700
-      PrinterPage.PageSize.X = 210000
-      PrinterPage.PageSize.Y = 297000
-      PrinterPage._dxMeasurementUnits_ = 0
-      PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43108.395747534720000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+  inherited grPrinter: TdxComponentPrinter
+    inherited prLink_grData: TdxGridReportLink
+      ReportDocument.CreationDate = 43108.585563333330000000
       BuiltInReportLink = True
     end
   end

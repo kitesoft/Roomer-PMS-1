@@ -203,6 +203,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure m_AfterScroll(DataSet: TDataSet);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -343,7 +344,7 @@ procedure TfrmStaffMembers2.changeAllowgridEdit;
 begin
   tvDataID.Options.Editing             := false;
   tvDataActive       .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataActive.Tag);
-  tvDataInitials     .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataInitials     .Tag);
+//  tvDataInitials     .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataInitials     .Tag);
   tvDataPassword     .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataPassword     .Tag);
   tvDataStaffPID     .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataStaffPID     .Tag);
   tvDataName         .Options.Editing  := zAllowGridEdit AND glb.AccessAllowed(tvDataName         .Tag);
@@ -800,6 +801,11 @@ begin
   end;
 end;
 
+
+procedure TfrmStaffMembers2.DSStateChange(Sender: TObject);
+begin
+  tvDataInitials.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmStaffMembers2.btnInsertClick(Sender: TObject);
 begin

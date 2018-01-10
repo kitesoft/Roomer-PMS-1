@@ -96,7 +96,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Constraints.MinHeight = 50
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 572
     object panNotesPayment: TsPanel
       Left = 407
       Top = 1

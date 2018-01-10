@@ -162,6 +162,7 @@ type
     procedure m_BeforePost(DataSet: TDataSet);
     procedure mnuiAllowGridEditClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -284,6 +285,11 @@ begin
   end;
 end;
 
+
+procedure TfrmBookKeepingCodes.DSStateChange(Sender: TObject);
+begin
+  tvDatacode.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmBookKeepingCodes.edFilterChange(Sender: TObject);
 begin
@@ -556,7 +562,7 @@ end;
 procedure TfrmBookKeepingCodes.SetEditOnOff(setOn : Boolean);
 begin
   tvDataID.Options.Editing             := setOn;
-  tvDataCode.Options.Editing           := setOn;
+//  tvDataCode.Options.Editing           := setOn;
   tvDataDescription.Options.Editing    := setOn;
   __tvDatatxStatus.Options.Editing       := setOn;
   tvDatabookOnCustomer.Options.Editing := setOn;

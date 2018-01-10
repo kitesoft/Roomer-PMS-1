@@ -215,6 +215,7 @@ type
     procedure btnInsertClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -552,7 +553,7 @@ begin
   begin
     tvDataID.Options.Editing             := false;
     tvDataActive.Options.Editing         := true;
-    tvDataCountry.Options.Editing        := true;
+//    tvDataCountry.Options.Editing        := true;
     tvDataCountryName.Options.Editing    := true;
     tvDataislCountryName.Options.Editing := true;
     tvDataOrderIndex.Options.Editing     := true;
@@ -590,6 +591,11 @@ begin
   zFirstTime := false;
 end;
 
+
+procedure TfrmCountries.DSStateChange(Sender: TObject);
+begin
+  tvDataCountry.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmCountries.edFilterChange(Sender: TObject);
 begin
