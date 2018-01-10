@@ -25,6 +25,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.PriorPage.Visible = False
       Navigator.Buttons.NextPage.Visible = False
+      Navigator.Buttons.Refresh.Visible = False
       Navigator.Buttons.SaveBookmark.Visible = False
       Navigator.Buttons.GotoBookmark.Visible = False
       Navigator.Buttons.Filter.Visible = False
@@ -35,9 +36,9 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
-      NewItemRow.Visible = True
       OptionsBehavior.FocusCellOnTab = True
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       Styles.StyleSheet = cxssRoomerGridBandedTableView
       Bands = <
         item
@@ -150,10 +151,10 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
         Hint = 'Other actions - Select from menu'
         Align = alLeft
         Caption = 'Other'
+        DropDownMenu = pmnuOther
         ImageIndex = 76
         Images = DImages.PngImageList1
         ParentShowHint = False
-        PopupMenu = pmnuOther
         ShowHint = True
         Style = bsSplitButton
         TabOrder = 1
@@ -236,6 +237,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     end
   end
   object dsData: TDataSource
+    OnStateChange = dsDataStateChange
     Left = 72
     Top = 152
   end
@@ -281,6 +283,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -293,7 +296,8 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43109.344961412040000000
+      ReportDocument.CreationDate = 43110.555139097230000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

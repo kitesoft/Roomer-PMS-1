@@ -136,6 +136,7 @@ object frmStaffTypes2: TfrmStaffTypes2
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+      OnClick = btnInsertClick
     end
     object btnEdit: TButton
       Left = 80
@@ -149,7 +150,6 @@ object frmStaffTypes2: TfrmStaffTypes2
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
-      OnClick = btnEditClick
     end
   end
   object sbMain: TsStatusBar
@@ -348,6 +348,7 @@ object frmStaffTypes2: TfrmStaffTypes2
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 208
     Top = 176
   end
@@ -357,7 +358,6 @@ object frmStaffTypes2: TfrmStaffTypes2
     Left = 368
     Top = 224
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -371,7 +371,6 @@ object frmStaffTypes2: TfrmStaffTypes2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

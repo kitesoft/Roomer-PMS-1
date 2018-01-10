@@ -300,6 +300,7 @@ object frmRoomTypes2: TfrmRoomTypes2
             Properties.CharCase = ecUpperCase
             Properties.MaxLength = 5
             Properties.OnValidate = tvDataRoomTypePropertiesValidate
+            Options.Editing = False
             Width = 70
           end
           object tvDataDescription: TcxGridDBColumn
@@ -417,6 +418,7 @@ object frmRoomTypes2: TfrmRoomTypes2
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 368
     Top = 288
   end

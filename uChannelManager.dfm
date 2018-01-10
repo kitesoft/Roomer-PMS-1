@@ -316,6 +316,7 @@ object frmChannelManager: TfrmChannelManager
       end
       object tvDatacode: TcxGridDBColumn
         DataBinding.FieldName = 'code'
+        Options.Editing = False
       end
       object tvDataDescription: TcxGridDBColumn
         DataBinding.FieldName = 'Description'
@@ -450,6 +451,7 @@ object frmChannelManager: TfrmChannelManager
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 520
     Top = 232
   end

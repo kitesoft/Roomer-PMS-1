@@ -171,6 +171,7 @@ type
     procedure btnEditClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -298,7 +299,7 @@ begin
   tvDataID.Options.Editing             := false;
   tvDataActive.Options.Editing         := zAllowGridEdit;
   tvDataDescription.Options.Editing    := zAllowGridEdit;
-  tvDataItemtype.Options.Editing       := zAllowGridEdit;
+//  tvDataItemtype.Options.Editing       := zAllowGridEdit;
   tvDataVATCode.Options.Editing        := zAllowGridEdit;
   tvDataAccItemLink.Options.Editing    := zAllowGridEdit;
   __tvDatacategory.Options.Editing       := zAllowGridEdit;
@@ -321,6 +322,11 @@ begin
   end;
 end;
 
+
+procedure TfrmItemTypes2.DSStateChange(Sender: TObject);
+begin
+  tvDataItemtype.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmItemTypes2.edFilterChange(Sender: TObject);
 begin

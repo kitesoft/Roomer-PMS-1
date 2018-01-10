@@ -30,6 +30,7 @@ inherited frmPriceCodesGrid: TfrmPriceCodesGrid
       object tvDatapcCode: TcxGridDBBandedColumn
         Caption = 'Price Code'
         DataBinding.FieldName = 'pcCode'
+        Options.Editing = False
         Width = 144
         Position.BandIndex = 0
         Position.ColIndex = 2
@@ -78,7 +79,6 @@ inherited frmPriceCodesGrid: TfrmPriceCodesGrid
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43109.601824074070000000
-      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end

@@ -254,6 +254,7 @@ object frmItemTypes2: TfrmItemTypes2
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.CharCase = ecUpperCase
         Properties.OnValidate = tvDataItemtypePropertiesValidate
+        Options.Editing = False
       end
       object tvDataDescription: TcxGridDBColumn
         DataBinding.FieldName = 'Description'
@@ -340,6 +341,7 @@ object frmItemTypes2: TfrmItemTypes2
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 368
     Top = 288
   end

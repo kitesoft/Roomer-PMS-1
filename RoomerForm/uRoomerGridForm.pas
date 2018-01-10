@@ -16,7 +16,7 @@ uses
   dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd,
   dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers,
   dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, sLabel, sEdit, sCheckBox,
-  Vcl.Buttons, sSpeedButton, Vcl.Menus, dxCore
+  Vcl.Buttons, sSpeedButton, Vcl.Menus, dxCore, uRoomerGridExporters
   ;
 
 type
@@ -68,10 +68,12 @@ type
     procedure acDeleteExecute(Sender: TObject);
     procedure tvDataCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
       AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+    procedure dsDataStateChange(Sender: TObject);
   private
     FFormMode: TRoomerGridFormMode;
     FActiveFieldName: string;
     FCodeFieldName: string;
+    FGridExporter: TRoomerGridExporters;
     procedure ApplyFilter;
     function GetSelectedCode: string;
     procedure SetSelectedCode(const Value: string);
@@ -92,6 +94,8 @@ type
     procedure DoUpdateControls; override;
     property FormMode: TRoomerGridFormMode read FFormMode;
   public
+    constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
     { Public declarations }
     function ShowModal(aMode: TRoomerGridFormMode): TModalresult; reintroduce; overload;
     function ShowModal(aMode: TActTableAction): TModalresult; reintroduce; overload; deprecated 'Use TRoomerGridFormMode in stead';
@@ -121,7 +125,6 @@ procedure TfrmBaseRoomerGridForm.Loaded;
 begin
   inherited;
   AddViewColumnPropsToStore(grData);
-
   InitializeGridProperties;
 end;
 
@@ -173,6 +176,18 @@ begin
   ApplyFilter;
 end;
 
+constructor TfrmBaseRoomerGridForm.Create(aOwner: TComponent);
+begin
+  inherited;
+  FGridExporter := TRoomerGridExporters.Create(grData, Caption);
+end;
+
+destructor TfrmBaseRoomerGridForm.Destroy;
+begin
+  FGridExporter.Free;
+  inherited;
+end;
+
 procedure TfrmBaseRoomerGridForm.DoClose(var Action: TCloseAction);
 begin
   if assigned(dsData.DataSet) and (dsData.Dataset.Active) then
@@ -183,10 +198,12 @@ end;
 procedure TfrmBaseRoomerGridForm.DoShow;
 begin
   inherited;
+  pmnuOther.Items.Add(FGridExporter.ExportSubMenu);
+
   if not FCodeFieldName.IsEmpty then
     with tvData.GetColumnByFieldName(FCodeFieldName) do
     begin
-      Editing := false;
+      Options.Editing := false;
       SortOrder := soAscending;
     end;
 
@@ -196,7 +213,6 @@ begin
   end;
 
   chkActive.Visible := not FActiveFieldName.IsEmpty;
-  ApplyFilter;
 end;
 
 procedure TfrmBaseRoomerGridForm.DoUpdateControls;
@@ -212,6 +228,13 @@ begin
   end;
 
   btnOk.Enabled := tvData.DataController.DataSet.Active and not tvData.DataController.IsEOF;
+end;
+
+procedure TfrmBaseRoomerGridForm.dsDataStateChange(Sender: TObject);
+begin
+  inherited;
+  if not FCodeFieldName.IsEmpty then
+    tvData.GetColumnByFieldName(FCodeFieldName).Options.Editing := (dsData.State = dsInsert);
 end;
 
 procedure TfrmBaseRoomerGridForm.edFilterChange(Sender: TObject);

@@ -329,6 +329,7 @@ object frmLocations: TfrmLocations
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 8
     Top = 184
   end

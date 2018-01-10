@@ -1002,6 +1002,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TableCache\uCachedVATTable.pas"/>
+        <DCCReference Include="TableCache\uCachedPriceCodesTable.pas"/>
+        <DCCReference Include="RoomerForm\uRoomerGridExporters.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

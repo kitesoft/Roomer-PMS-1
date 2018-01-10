@@ -101,7 +101,7 @@ uses
   , uFileSystemUtils
   , uAppGlobal
   , PrjConst
-  , uCachedDataHandler, ufrmVatCodesGrid, uCachedVATTable;
+  , uCachedDataHandler, ufrmVatCodesGrid, uCachedVATTable, uCachedPriceCodesTable;
 
 { TTableDictionary }
 
@@ -159,7 +159,7 @@ begin
   Add('personprofiles', TCachedTableEntity.Create('personprofiles', FCachedTimestampHandler));
   Add('bookkeepingcodes', TCachedTableEntity.Create('bookkeepingcodes', FCachedTimestampHandler));
   Add('tblseasons', TCachedTableEntity.Create('tblseasons', FCachedTimestampHandler));
-  Add('tblpricecodes', TCachedTableEntity.Create('tblpricecodes', FCachedTimestampHandler));
+  Add('tblpricecodes', TCachedPriceCodesTable.Create('tblpricecodes', FCachedTimestampHandler));
   Add('customertypes', TCachedTableEntity.Create('customertypes', FCachedTimestampHandler));
 
   Add('channelplancodes', TCachedTableEntity.Create('channelplancodes', FCachedTimestampHandler));

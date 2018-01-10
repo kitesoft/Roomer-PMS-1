@@ -335,7 +335,9 @@ uses
   uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory: {$R *.RES},
   ufrmVatCodesGrid in 'GridForms\ufrmVatCodesGrid.pas' {frmVatCodesGrid},
   ufrmPriceCodesGrid in 'GridForms\ufrmPriceCodesGrid.pas' {frmPriceCodesGrid},
-  uCachedVATTable in 'TableCache\uCachedVATTable.pas';
+  uCachedVATTable in 'TableCache\uCachedVATTable.pas',
+  uCachedPriceCodesTable in 'TableCache\uCachedPriceCodesTable.pas',
+  uRoomerGridExporters in 'RoomerForm\uRoomerGridExporters.pas';
 
 {$R *.RES}
 

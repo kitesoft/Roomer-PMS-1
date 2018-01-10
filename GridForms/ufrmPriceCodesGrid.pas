@@ -63,16 +63,16 @@ function PriceCodes(aMode: TRoomerGridFormMode; var theData: recPriceCodeHolder)
 begin
   with TfrmPriceCodesGrid.Create(nil) do
   try
-    glb.TableList['pricecodes'].RefreshEnabled := false;
+    glb.TableList['tblpricecodes'].RefreshEnabled := false;
     SelectedCode := theData.pcCode;
     Result := ShowModal(aMode) in [mrClose, mrOk];
     if Result then
       theData.pcCode := SelectedCode;
 
   finally
-    glb.TableList['pricecodes'].RefreshEnabled := true;
+    glb.TableList['tblpricecodes'].RefreshEnabled := true;
     if aMode = TRoomerGridFormMode.Browse then
-      glb.TableList['pricecodes'].RefreshFromServer;
+      glb.TableList['tblpricecodes'].RefreshFromServer;
     Free;
   end;
 end;

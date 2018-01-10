@@ -235,6 +235,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
+    procedure DSStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -491,6 +492,11 @@ begin
 end;
 
 
+
+procedure TfrmChannelManager.DSStateChange(Sender: TObject);
+begin
+  tvDatacode.Options.Editing := (m_.State = dsInsert);
+end;
 
 /////////////////////////////////////////////////////////////
 // Form actions

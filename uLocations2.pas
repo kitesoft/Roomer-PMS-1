@@ -174,6 +174,7 @@ type
     procedure tvDataChannelManagerNamePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -306,7 +307,7 @@ begin
   begin
     tvDataID.Options.Editing             := false;
     tvDataActive.Options.Editing         := true;
-    tvDataLocation.Options.Editing       := true;
+//    tvDataLocation.Options.Editing       := true;
     tvDataDescription.Options.Editing    := true;
   end else
   begin
@@ -334,6 +335,11 @@ begin
   end;
 end;
 
+
+procedure TfrmLocations.DSStateChange(Sender: TObject);
+begin
+  tvDataLocation.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmLocations.edFilterChange(Sender: TObject);
 begin

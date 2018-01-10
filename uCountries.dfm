@@ -167,8 +167,8 @@ object frmCountries: TfrmCountries
       object chkActive: TsCheckBox
         Left = 55
         Top = 63
-        Width = 234
-        Height = 20
+        Width = 242
+        Height = 17
         Caption = 'Active (if checked then just active are visible'
         Checked = True
         State = cbChecked
@@ -307,6 +307,7 @@ object frmCountries: TfrmCountries
           Properties.CharCase = ecUpperCase
           Properties.ValidateOnEnter = True
           Properties.OnValidate = tvDataCountryPropertiesValidate
+          Options.Editing = False
           Width = 66
           Position.BandIndex = 0
           Position.ColIndex = 0
@@ -467,6 +468,7 @@ object frmCountries: TfrmCountries
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 416
     Top = 184
   end
@@ -524,7 +526,6 @@ object frmCountries: TfrmCountries
     Top = 184
     object prLink_grData: TdxGridReportLink
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -537,7 +538,6 @@ object frmCountries: TfrmCountries
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

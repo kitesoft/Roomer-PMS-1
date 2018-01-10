@@ -154,7 +154,6 @@ inherited frmCurrencies: TfrmCurrencies
     inherited pnlGridButons: TsPanel
       Width = 847
       TabOrder = 0
-      ExplicitTop = 0
       ExplicitWidth = 847
       inherited btnInsert: TsButton
         TabOrder = 4

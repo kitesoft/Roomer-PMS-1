@@ -33,6 +33,7 @@ inherited frmVatCodesGrid: TfrmVatCodesGrid
       object tvDataVATCode: TcxGridDBBandedColumn
         DataBinding.FieldName = 'VATCode'
         PropertiesClassName = 'TcxTextEditProperties'
+        Options.Editing = False
         Width = 78
         Position.BandIndex = 0
         Position.ColIndex = 1

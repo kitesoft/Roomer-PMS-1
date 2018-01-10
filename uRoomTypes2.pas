@@ -194,6 +194,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure tvDatalocationPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -385,7 +386,7 @@ begin
   begin
     tvDataID.Options.Editing             := false;
     tvDataActive.Options.Editing         := true;
-    tvDataRoomType.Options.Editing       := true;
+//    tvDataRoomType.Options.Editing       := true;
     tvDataDescription.Options.Editing    := true;
     tvDataNumberGuests.Options.Editing   := true;
     tvDataPriceType.Options.Editing      := true;
@@ -427,6 +428,11 @@ begin
   end;
 end;
 
+
+procedure TfrmRoomTypes2.DSStateChange(Sender: TObject);
+begin
+  tvDataRoomType.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmRoomTypes2.edFilterChange(Sender: TObject);
 begin

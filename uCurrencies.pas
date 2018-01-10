@@ -178,6 +178,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btnHistoryClick(Sender: TObject);
+    procedure dsDataStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -278,7 +279,7 @@ procedure TfrmCurrencies.changeAllowgridEdit;
 begin
   if zAllowGridEdit then
   begin
-    tvDataCurrency.Options.Editing       := true;
+//    tvDataCurrency.Options.Editing       := true;
     tvDataDescription.Options.Editing    := true;
     tvDataAValue.Options.Editing         := true;
     tvDataActive.Options.Editing         := true;
@@ -481,6 +482,12 @@ begin
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowGridEdit;
   chkFilter;
+end;
+
+procedure TfrmCurrencies.dsDataStateChange(Sender: TObject);
+begin
+  inherited;
+  tvDataCurrency.Options.Editing := (m_.State = dsInsert);
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////

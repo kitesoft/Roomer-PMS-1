@@ -179,6 +179,7 @@ type
     procedure m_BeforeEdit(DataSet: TDataSet);
     procedure btnClearClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -361,7 +362,7 @@ procedure TfrmCountryGroups.changeAllowgridEdit;
 begin
   if zAllowGridEdit then
   begin
-    tvDataCountryGroup.Options.Editing := true;
+//    tvDataCountryGroup.Options.Editing := true;
     tvDataGroupName.Options.Editing    := true;
     tvDataislGroupName.Options.Editing := true;
     tvDataOrderIndex.Options.Editing   := true;
@@ -426,6 +427,11 @@ begin
 end;
 
 
+
+procedure TfrmCountryGroups.DSStateChange(Sender: TObject);
+begin
+  tvDataCountryGroup.Options.Editing := (m_.State = dsInsert);
+end;
 
 /////////////////////////////////////////////////////////////
 // Form actions

@@ -141,8 +141,8 @@ object frmBookKeepingCodes: TfrmBookKeepingCodes
       object chkActive: TsCheckBox
         Left = 55
         Top = 63
-        Width = 234
-        Height = 20
+        Width = 242
+        Height = 17
         Caption = 'Active (if checked then just active are visible'
         Checked = True
         State = cbChecked
@@ -276,6 +276,7 @@ object frmBookKeepingCodes: TfrmBookKeepingCodes
           Caption = 'Code'
           DataBinding.FieldName = 'code'
           PropertiesClassName = 'TcxTextEditProperties'
+          Options.Editing = False
         end
         object tvDatadescription: TcxGridDBColumn
           Caption = 'Description'
@@ -305,6 +306,7 @@ object frmBookKeepingCodes: TfrmBookKeepingCodes
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 152
     Top = 192
   end
