@@ -191,6 +191,7 @@ begin
   begin
     InitializeXmlElements;
 
+    try
     if NOT assigned(CustomersLookupList) then
       CustomersLookupList := RetrieveFinanceConnectKeypair(FKP_CUSTOMERS);
 
@@ -211,6 +212,24 @@ begin
 
     if (NOT assigned(MappingsLookupMap)) then
          RetrieveFinanceConnectMappings;
+    except
+      On e: Exception do
+      begin
+        MessageDlg('Roomer was unable to retrieve mapping information.' + #13 +
+                   'Please check the following: ' + #13#13 +
+                   '  - Is the login information correct?' + #13 +
+                   '  - Has login been blocked for this user?' + #13 +
+                   '  - Is the organization code correct?' + #13, mtError, [mbOk], 0);
+
+        CustomersLookupList := TKeyPairList.Create(True);
+        ItemsLookupList := TKeyPairList.Create(True);
+        VatsLookupList := TKeyPairList.Create(True);
+        PayGroupsBalanceAccountLookupList := TKeyPairList.Create(True);
+        PayGroupsCashBookLookupList := TKeyPairList.Create(True);
+        SystemsLookupList := TKeyPairList.Create(True);
+        MappingsLookupMap := TObjectDictionary<String,String>.Create;
+      end;
+    end;
 
   end;
 end;
@@ -402,7 +421,7 @@ begin
                        XmlElements := VatXmlElements;
                      end;
       FKP_PAYGROUPS: begin
-                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/items'));
+                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/paygroups'));
                        XmlElements := PayGroupsXmlElements;
                      end;
       FKP_CASHBOOKS: begin
