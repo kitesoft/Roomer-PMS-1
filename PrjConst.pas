@@ -972,7 +972,7 @@ begin
   constants.Add('shFailedUpdateBreakfastCount', 'Failed to update number of breakfasts. Please review the relevant invoicelines.');
   constants.Add('shTx_AccountType_GroupAccount', 'Group Account');
   constants.Add('shTx_AccountType_RoomAccount', 'Room Account');
-
+  constants.Add('shDecreaseRoomResGuestCount', 'Decrease the number of guests in this room?');
 
   constants.Add('shTx_CalculationType_FixedAmount', 'Fixed amount');
   constants.Add('shTx_CalculationType_Percentage', 'Percentage');

@@ -2652,6 +2652,7 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
+      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2710,7 +2711,6 @@ object frmMain: TfrmMain
       Index = 3
     end
     object rbTabData: TdxRibbonTab
-      Active = True
       Caption = 'Data'
       Groups = <
         item

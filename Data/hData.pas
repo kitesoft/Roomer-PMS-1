@@ -2101,6 +2101,7 @@ procedure initPersonHolder(var rec: recPersonHolder);
 procedure initPersonHolderFromProfileID(var personData: recPersonHolder; aProfileId: integer);
 function INS_Person(theData: recPersonHolder; var NewID: integer): boolean;
 function SQL_INS_Person(theData: recPersonHolder): string;
+function SQL_DEL_Person(theData: recPersonHolder): string;
 
 function DEL_Person(theData: recPersonHolder): boolean;
 function UPD_person(theData: recPersonHolder): boolean;
@@ -13759,6 +13760,7 @@ begin
 
 end;
 
+
 procedure initPersonHolder(var rec: recPersonHolder);
 begin
   with rec do
@@ -13916,6 +13918,15 @@ begin
   result := s;
 end;
 
+function SQL_DEL_Person(theData: recPersonHolder): string;
+begin
+  Result := '';
+  Result := Result + ' DELETE ' + chr(10);
+  Result := Result + '   FROM persons ' + chr(10);
+  Result := Result + ' WHERE  ' + chr(10);
+  Result := Result + '   (ID =' + _db(theData.id) + ') ';
+end;
+
 function INS_Person(theData: recPersonHolder; var NewID: integer): boolean;
 var
   s: string;
@@ -14042,11 +14053,7 @@ function DEL_Person(theData: recPersonHolder): boolean;
 var
   s: string;
 begin
-  s := '';
-  s := s + ' DELETE ' + chr(10);
-  s := s + '   FROM persons ' + chr(10);
-  s := s + ' WHERE  ' + chr(10);
-  s := s + '   (ID =' + _db(theData.id) + ') ';
+  s := SQL_DEL_Person(theData);
   result := cmd_bySQL(s);
 end;
 

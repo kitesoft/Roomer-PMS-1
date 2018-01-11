@@ -2009,6 +2009,8 @@ object frmReservationProfile: TfrmReservationProfile
         PopupMenu = mnuGrid
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = -151
+        ExplicitTop = 102
         object tvRooms: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -2474,7 +2476,6 @@ object frmReservationProfile: TfrmReservationProfile
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.OnButtonClick = tvRoomsGuestCountPropertiesButtonClick
             Width = 106
             Position.BandIndex = 0
             Position.ColIndex = 17
@@ -2483,52 +2484,12 @@ object frmReservationProfile: TfrmReservationProfile
           object tvRoomsGuestCount: TcxGridDBBandedColumn
             Caption = 'Guests'
             DataBinding.FieldName = 'GuestCount'
-            PropertiesClassName = 'TcxButtonEditProperties'
+            PropertiesClassName = 'TcxSpinEditProperties'
             Properties.Alignment.Horz = taCenter
-            Properties.Buttons = <
-              item
-                Default = True
-                Glyph.Data = {
-                  36040000424D3604000000000000360000002800000010000000100000000100
-                  20000000000000040000C30E0000C30E00000000000000000000254B5CD62E50
-                  618C364851373942472333383B23303233223031311C31313117303030113030
-                  300C3030300730303004303030023030300100000000000000002D5163756C94
-                  A7FF638597FA334955B82C33375E3131313E3131313D31313139313131333131
-                  312B313131233030301B313131143030300C3030300500000000456A7C0E5D84
-                  98F19AC3D8FF96BBCEFF688A9DFC203A4AB327353D2E2F3334183030301C3131
-                  311F3030301F3131311C31313117313131123131310A00000000000000004366
-                  798E99C9E0FF90B8CCFF4F8398FF4FABC9FF0C4967DB2651641D2A444F012B34
-                  38042E3031062F2F2F072F2F2F07313131063131310400000000000000004B73
-                  871B658EA3F94E8095FF66D6F5FF64DBFCFF5AC1E0FF0C4A68DC245D741C0000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000275268A542ABC5FF69E5FEFF51DBFEFF5CD9FDFF5AC1E0FF0C4C6BDC246E
-                  8C1C000000000000000000000000000000000000000000000000000000000000
-                  0000276F8B1A0C5677DA6DCDE3FF8AEAFFFF52DBFEFF5CD9FDFF5BC2E1FF0C4C
-                  6CDC2371911D0000000000000000000000000000000000000000000000000000
-                  0000000000002B7D9B1B0E587ADA6FCDE4FF8AEAFFFF52DCFEFF5CD9FDFF5BC2
-                  E1FF0D4D6DDC2572921E00000000000000000000000000000000000000000000
-                  000000000000000000002D7E9D1B0E5A7CDA6FCDE4FF8AEAFFFF53DCFEFF5CD9
-                  FDFF5BC3E2FF0D4F6FDD2F667E1E000000000000000000000000000000000000
-                  00000000000000000000000000002D809E1A0D5B7DD96ECDE4FF8AEAFFFF54DC
-                  FEFF5BD9FDFF598E9EFF41525CDD485F721E0000000000000000000000000000
-                  0000000000000000000000000000000000002D809F1A0D5B7FD96ECDE4FF8AEA
-                  FFFF66ADBEFF898787FF9C9A9AFF45505DDE3C437D1E00000000000000000000
-                  000000000000000000000000000000000000000000002F809F1A0E5B7ED972A4
-                  B1FFB4B3B4FFD2D1D2FFA9A8A8FF5F5D76FF161689D93033A01A000000000000
-                  00000000000000000000000000000000000000000000000000003D78901A5265
-                  6FD9AEADADFFCDCCCDFF7B7A92FF6868E0FF5858D8FF131497C3000000000000
-                  0000000000000000000000000000000000000000000000000000000000005972
-                  88195A6572D97C7F90FF7384E4FF7487E9FF6B81E8FF1C20ADFB000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  00004A539A1F171AACD9657ADFFF8F9FF1FF4050CCFF1B1FB583000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000003841B9171011B7B21E20BFF01D22BD7F00000000}
-                Kind = bkGlyph
-              end>
-            Properties.ViewStyle = vsHideCursor
-            Properties.OnButtonClick = tvRoomsGuestCountPropertiesButtonClick
+            Properties.MinValue = 1.000000000000000000
+            Properties.SpinButtons.Visible = False
             HeaderAlignmentHorz = taCenter
-            Options.ShowEditButtons = isebAlways
+            Options.ShowEditButtons = isebNever
             Width = 58
             Position.BandIndex = 0
             Position.ColIndex = 18
@@ -2538,29 +2499,86 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Children'
             DataBinding.FieldName = 'childrencount'
             PropertiesClassName = 'TcxSpinEditProperties'
+            Properties.Alignment.Horz = taCenter
             Properties.AssignedValues.MinValue = True
+            Properties.SpinButtons.Visible = False
             HeaderAlignmentHorz = taCenter
             Position.BandIndex = 0
-            Position.ColIndex = 19
+            Position.ColIndex = 20
             Position.RowIndex = 0
           end
           object tvRoomsinfantcount: TcxGridDBBandedColumn
             Caption = 'Infants'
             DataBinding.FieldName = 'infantcount'
             PropertiesClassName = 'TcxSpinEditProperties'
+            Properties.Alignment.Horz = taCenter
             Properties.AssignedValues.MinValue = True
+            Properties.SpinButtons.Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 55
             Position.BandIndex = 0
-            Position.ColIndex = 20
+            Position.ColIndex = 21
             Position.RowIndex = 0
           end
           object tvRoomsdefGuestCount: TcxGridDBBandedColumn
             DataBinding.FieldName = 'defGuestCount'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 21
+            Position.ColIndex = 22
             Position.RowIndex = 0
+          end
+          object tvRoomsGuestlist: TcxGridDBBandedColumn
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                ImageIndex = 97
+                Glyph.Data = {
+                  36040000424D3604000000000000360000002800000010000000100000000100
+                  2000000000000004000000000000000000000000000000000000B2733500B172
+                  3500B1723500B1723500B1723500A6703B009A6F44009A77550087725D3F7369
+                  5F7F918A847F79736E30787573307272717F8383837F8181813FB1723500B172
+                  3500B1723500B0723500B0723500A97039009E6F40009D7752007E6E5E7F5A5A
+                  5AFEC5C5C5FF716C685673706E56656565FE979797FF9998987FB1723500B172
+                  3500B1723551B977389BB47435DEB17235FDB17235FFB17235FF8B6C4DFF5A5A
+                  5AFFC5C5C5FF6D6762966D6B698C656565FE979797FF9998977FB1723500B172
+                  3583AF7134FFB07235FFB07235FFB07235FFB07235FFB07235FF976E45FF6B64
+                  5DFF8A8A8AFF6D6D6DFF656565FF727272FE7A7A7AE17B797754B1723500B273
+                  35F6B07235FFB07235FFB07235FFB07235FFB07235FFB07235FFB07235FF806A
+                  54FF9A9A9AFF898989FF656565FF999999FE898989A27D787300B1723500B374
+                  35D3B07235FFB07235FFB07235FFB07235FFB07235FFB07235FFB07235FF8D6C
+                  4BFF828281FF847B73FF726A61FF8B8B8BFC6C6C6C757E787200B0723500B374
+                  3585B07235FFB07235FFB07235FFB07235FFAD703589AD713796B07235FFAF72
+                  35FF82776CFF94785BFF886C51EF858585D1857C73017D767000B0723500B172
+                  3508AE7134E7B07235FFB07235FFAE71347EAB703700A8733E00AC713791B072
+                  35FFA4703CFFA36F3CD286715D2881736628867B70007E766E00B0723500B072
+                  3400AF713431AE7134E0AF7134B5AF713400AC703500AB723B00A8723E00AD71
+                  37BEAE7134D1A073481E9775540091775E008B7B6B0082776B00B0723500B072
+                  3500B0723500B0723500AF713406B273359AB17235F5B17235F5B0733699A972
+                  3B04A4734100A17344009E734800977350008E765F0086746200B0723400B072
+                  3400B0723400B0723400B07134C7B07235FFB07235FFB07235FFB07235FFAF71
+                  34C5A9713900A8713A00A5703C00A0704000926F4C00896E5400B0723400B072
+                  3400B0723400B0723463AF7134FFB07235FFB07235FFB07235FFB07235FFAF71
+                  35FFAE713461AD713500AD713500AC703600A56F39009D6D3F00B0723500B072
+                  3400B0723400B6763783B07235FFB07235FFB07235FFB07235FFB07235FFB072
+                  35FFAF713481AF713400AF713400AE713400AD7034002B1C0D00B2733500B072
+                  3500B0723400B0723465AF7135FFB07235FFB07235FFB07235FFB07235FFAF72
+                  35FFAE713463AF713400AF713400AF71340057381A0000000000B2733500B072
+                  3500B0723500B0723500AF7134CAB07235FFB07235FFB07235FFB07235FFAE71
+                  34C8AF713400AF713400AF713400AF71340057381A0000000000B2733500B072
+                  3500B0723500B0723500AF723409B072359EAF7235F9B07235F8B071349DAE70
+                  3407AF713400AF713400AF713400AE71340057381A0000000000}
+                Kind = bkGlyph
+              end>
+            Properties.HideSelection = False
+            Properties.Images = DImages.PngImageList1
+            HeaderImageIndex = 97
+            Options.ShowEditButtons = isebAlways
+            Width = 25
+            Position.BandIndex = 0
+            Position.ColIndex = 19
+            Position.RowIndex = 0
+            IsCaptionAssigned = True
           end
           object tvRoomsratePlanCode: TcxGridDBBandedColumn
             Caption = 'Rate Code'
@@ -2570,7 +2588,7 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.OnCloseUp = tvRoomsratePlanCodePropertiesCloseUp
             Width = 63
             Position.BandIndex = 0
-            Position.ColIndex = 22
+            Position.ColIndex = 23
             Position.RowIndex = 0
           end
           object tvRoomsunpaidRentPrice: TcxGridDBBandedColumn
@@ -2585,7 +2603,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.ShowEditButtons = isebAlways
             Width = 74
             Position.BandIndex = 0
-            Position.ColIndex = 23
+            Position.ColIndex = 24
             Position.RowIndex = 0
           end
           object __PriceViewer: TcxGridDBBandedColumn
@@ -2636,7 +2654,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.ShowEditButtons = isebAlways
             Width = 24
             Position.BandIndex = 0
-            Position.ColIndex = 24
+            Position.ColIndex = 25
             Position.RowIndex = 0
           end
           object tvRoomsRateOrPackagePerDay: TcxGridDBBandedColumn
@@ -2649,7 +2667,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Width = 96
             Position.BandIndex = 0
-            Position.ColIndex = 25
+            Position.ColIndex = 26
             Position.RowIndex = 0
           end
           object tvRoomsCurrency: TcxGridDBBandedColumn
@@ -2657,7 +2675,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Width = 55
             Position.BandIndex = 0
-            Position.ColIndex = 26
+            Position.ColIndex = 27
             Position.RowIndex = 0
           end
           object tvRoomsisGroupAccount: TcxGridDBBandedColumn
@@ -2666,35 +2684,35 @@ object frmReservationProfile: TfrmReservationProfile
             Visible = False
             Width = 38
             Position.BandIndex = 0
-            Position.ColIndex = 27
+            Position.ColIndex = 28
             Position.RowIndex = 0
           end
           object tvRoomsisNoRoom: TcxGridDBBandedColumn
             DataBinding.FieldName = 'isNoRoom'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 28
+            Position.ColIndex = 29
             Position.RowIndex = 0
           end
           object tvRoomsuseStayTax: TcxGridDBBandedColumn
             DataBinding.FieldName = 'useStayTax'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 29
+            Position.ColIndex = 30
             Position.RowIndex = 0
           end
           object tvRoomsRoomAlias: TcxGridDBBandedColumn
             DataBinding.FieldName = 'RoomAlias'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 30
+            Position.ColIndex = 31
             Position.RowIndex = 0
           end
           object tvRoomsRoomTypeAlias: TcxGridDBBandedColumn
             DataBinding.FieldName = 'RoomTypeAlias'
             Visible = False
             Position.BandIndex = 0
-            Position.ColIndex = 31
+            Position.ColIndex = 32
             Position.RowIndex = 0
           end
           object tvRoomsbreakfastText: TcxGridDBBandedColumn
@@ -2708,7 +2726,7 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.OnCloseUp = tvRoomsbreakfastTextPropertiesChange
             Width = 81
             Position.BandIndex = 0
-            Position.ColIndex = 32
+            Position.ColIndex = 33
             Position.RowIndex = 0
           end
           object tvRoomsStockItemsCount: TcxGridDBBandedColumn
@@ -2725,7 +2743,7 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.OnButtonClick = tvRoomsStockItemsCountPropertiesButtonClick
             Options.ShowEditButtons = isebAlways
             Position.BandIndex = 0
-            Position.ColIndex = 33
+            Position.ColIndex = 34
             Position.RowIndex = 0
           end
           object tvRoomsStockitemsPrice: TcxGridDBBandedColumn
@@ -2739,7 +2757,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Width = 56
             Position.BandIndex = 0
-            Position.ColIndex = 34
+            Position.ColIndex = 35
             Position.RowIndex = 0
           end
           object tvRoomsaccountTypeText: TcxGridDBBandedColumn
@@ -2753,7 +2771,7 @@ object frmReservationProfile: TfrmReservationProfile
             Properties.OnCloseUp = tvRoomsaccountTypeTextPropertiesChange
             Width = 87
             Position.BandIndex = 0
-            Position.ColIndex = 35
+            Position.ColIndex = 36
             Position.RowIndex = 0
           end
           object rgrinvoice: TcxGridDBBandedColumn
@@ -2775,7 +2793,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.ShowEditButtons = isebAlways
             Width = 54
             Position.BandIndex = 0
-            Position.ColIndex = 36
+            Position.ColIndex = 37
             Position.RowIndex = 0
           end
           object tvRoomsTotalUnpaidRoomRent: TcxGridDBBandedColumn
@@ -2787,7 +2805,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Width = 84
             Position.BandIndex = 0
-            Position.ColIndex = 37
+            Position.ColIndex = 38
             Position.RowIndex = 0
           end
           object tvRoomsDiscountUnpaidRoomRent: TcxGridDBBandedColumn
@@ -2799,7 +2817,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Width = 71
             Position.BandIndex = 0
-            Position.ColIndex = 38
+            Position.ColIndex = 39
             Position.RowIndex = 0
           end
           object tvRoomsunPaidRoomRent: TcxGridDBBandedColumn
@@ -2810,7 +2828,7 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Position.BandIndex = 0
-            Position.ColIndex = 39
+            Position.ColIndex = 40
             Position.RowIndex = 0
           end
           object tvRoomsunpaidRentNights: TcxGridDBBandedColumn
@@ -2819,14 +2837,14 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Position.BandIndex = 0
-            Position.ColIndex = 40
+            Position.ColIndex = 41
             Position.RowIndex = 0
           end
           object tvRoomsPriceCode: TcxGridDBBandedColumn
             DataBinding.FieldName = 'PriceCode'
             Options.Editing = False
             Position.BandIndex = 0
-            Position.ColIndex = 41
+            Position.ColIndex = 42
             Position.RowIndex = 0
           end
           object tvRoomsunPaidItems: TcxGridDBBandedColumn
@@ -2834,7 +2852,7 @@ object frmReservationProfile: TfrmReservationProfile
             Options.Editing = False
             Width = 73
             Position.BandIndex = 0
-            Position.ColIndex = 42
+            Position.ColIndex = 43
             Position.RowIndex = 0
           end
           object tvRoomsPersonsProfilesId: TcxGridDBBandedColumn
@@ -2842,7 +2860,7 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Width = 84
             Position.BandIndex = 0
-            Position.ColIndex = 43
+            Position.ColIndex = 44
             Position.RowIndex = 0
           end
           object tvRoomsManualChannelId: TcxGridDBBandedColumn
@@ -2850,7 +2868,7 @@ object frmReservationProfile: TfrmReservationProfile
             HeaderAlignmentHorz = taRightJustify
             Width = 78
             Position.BandIndex = 0
-            Position.ColIndex = 44
+            Position.ColIndex = 45
             Position.RowIndex = 0
           end
           object tvRoomsblockMoveReason: TcxGridDBBandedColumn
@@ -2859,7 +2877,7 @@ object frmReservationProfile: TfrmReservationProfile
             OnGetDisplayText = tvRoomsblockMoveReasonGetDisplayText
             Options.Editing = False
             Position.BandIndex = 0
-            Position.ColIndex = 45
+            Position.ColIndex = 46
             Position.RowIndex = 0
           end
         end
@@ -4247,11 +4265,29 @@ object frmReservationProfile: TfrmReservationProfile
       OnClick = OpenGroupInvoice1Click
     end
   end
-  object mGuests: TdxMemData
-    Indexes = <>
+  object mGuests: TkbmMemTable
+    DesignActivation = True
+    AttachedAutoRefresh = True
+    AttachMaxCount = 1
+    FieldDefs = <>
+    IndexFieldNames = 'roomreservation;person'
+    IndexDefs = <>
     SortOptions = []
-    Left = 112
-    Top = 536
+    PersistentBackup = False
+    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
+    LoadedCompletely = False
+    SavedCompletely = False
+    FilterOptions = []
+    Version = '7.22.00 Standard Edition'
+    LanguageID = 0
+    SortID = 0
+    SubLanguageID = 1
+    LocaleID = 1024
+    Left = 152
+    Top = 416
+    object mGuestsID: TIntegerField
+      FieldName = 'ID'
+    end
     object mGuestsPerson: TIntegerField
       FieldName = 'Person'
     end
@@ -4292,11 +4328,14 @@ object frmReservationProfile: TfrmReservationProfile
     object mGuestsPersonsProfilesId: TIntegerField
       FieldName = 'PersonsProfilesId'
     end
+    object mGuestsMainName: TBooleanField
+      FieldName = 'MainName'
+    end
   end
   object mGuestsDS: TDataSource
     DataSet = mGuests
-    Left = 160
-    Top = 544
+    Left = 208
+    Top = 416
   end
   object mGuestRooms: TdxMemData
     Indexes = <>
@@ -4506,7 +4545,7 @@ object frmReservationProfile: TfrmReservationProfile
   object mInvoiceLines: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 744
+    Left = 392
     Top = 544
     object mInvoiceLinesInvoiceNumber: TIntegerField
       FieldName = 'InvoiceNumber'

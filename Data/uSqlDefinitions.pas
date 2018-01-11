@@ -1204,7 +1204,8 @@ select_ReservationProfile_guestRoomsSQL : string =
 //TESTED NOT
 select_ReservationProfile_guestsSQL : string =
 ' SELECT '+
-'      Person '+
+'      ID'+
+'    , Person '+
 '    , PersonsProfilesId '+
 '    , RoomReservation '+
 '    , Reservation '+
@@ -1215,11 +1216,12 @@ select_ReservationProfile_guestsSQL : string =
 '    , Address4 '+
 '    , PID '+
 '    , Country '+
+'    , MainName '+
 ' FROM '+
 '   persons '+
 ' WHERE '+
 '  Reservation =%d '+
-' ORDER BY Person ';
+' ORDER BY MainName, Person ';
 
 //TESTED NOT
 select_ReservationProfile_allGuestsSQL : string =
@@ -4962,31 +4964,7 @@ select_ItemType_ByItemType : string =
 
 
 select_PERSON : string =
-'  SELECT '#10+
-'     Person '#10+
-'    ,RoomReservation '#10+
-'    ,Reservation '#10+
-'    ,Name '#10+
-'    ,Surname '#10+
-'    ,Address1 '#10+
-'    ,Address2 '#10+
-'    ,Address3 '#10+
-'    ,Address4 '#10+
-'    ,Country '#10+
-'    ,Nationality '#10+
-'    ,Company '#10+
-'    ,GuestType '#10+
-'    ,Information '#10+
-'    ,PID '#10+
-'    ,MainName '#10+
-'    ,Customer '#10+
-'    ,peTmp '#10+
-'    ,hgrID '#10+
-'    ,HallReservation '#10+
-'    ,Tel1 '#10+
-'    ,Tel2 '#10+
-'    ,Fax '#10+
-'    ,Email '#10+
+'  SELECT * '#10+
 '  FROM '#10+
 '    Persons '#10+
 '  WHERE '#10+
