@@ -601,8 +601,9 @@ begin
   try
     if zInvoicenumber > 0 then
     begin
-      s := '';
-      s := 'SELECT * FROM invoiceheads WHERE invoicenumber ='+_db(zInvoicenumber)+' ';
+      s := 'SELECT * '#10;
+      s := s + ' , coalesce( (Select max(invoicenumber) from invoiceheads where originalinvoice = '+_db(zInvoicenumber)+'), -1) as creditedBy '#10;
+      s := s + ' FROM invoiceheads WHERE invoicenumber ='+_db(zInvoicenumber)+' ';
       ExecutionPlan.AddQuery(s);
       s := 'SELECT * FROM invoicelines WHERE invoicenumber ='+_db(zInvoicenumber)+' ORDER BY itemNumber ';
       ExecutionPlan.AddQuery(s);
@@ -651,7 +652,14 @@ begin
             showmessage('This is a CreditInvoice');
             edInvoicenumber.Text := '0';
             Exit;
-          end;
+          end
+          else if kbmInvoiceHeads.FieldByName('creditedBy').asinteger > 0 then
+          begin
+            showmessage(Format(GetTranslatedText('shInvoiceAlreadyCredited'), [kbmInvoiceHeads.FieldByName('creditedBy').asinteger]));
+            edInvoicenumber.Text := '0';
+            Exit;
+          end
+
         end else
         begin
           if zInvoicenumber > 0 then showmessage('invoice not found');

@@ -276,6 +276,7 @@ type
     procedure chkActiveClick(Sender: TObject);
     procedure tvDataCustomerPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     financeLookupList : TKeyPairList;
@@ -782,6 +783,11 @@ destructor TfrmCustomers2.Destroy;
 begin
   financeLookupList.Free;
   inherited;
+end;
+
+procedure TfrmCustomers2.DSStateChange(Sender: TObject);
+begin
+  tvDataCustomer.Options.Editing := (m_.State = dsInsert);
 end;
 
 procedure TfrmCustomers2.m_BeforeDelete(DataSet: TDataSet);

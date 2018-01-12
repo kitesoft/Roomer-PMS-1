@@ -178,6 +178,7 @@ type
     function FreeQueryThreaded(const query: String; SetLastAccess: boolean = true): String;
     procedure SetAppKey(const Value: String);
     procedure SetAppSecret(const Value: String);
+    procedure CollectTablesToSubmit(list: TList<String>);
   protected
     { Protected declarations }
     FUsername: String;
@@ -186,6 +187,8 @@ type
     FHotelId: String;
     FLastSql: String;
 
+    procedure InternalDelete; override;
+    procedure internalPost; override;
     function activeRoomerDataSet: TRoomerDataSet;
   public
     { Public declarations }
@@ -194,7 +197,6 @@ type
 
     function CreateRoomerClient(aAddAuthenticationHeader: boolean = false): TRoomerHttpClient;
     function GetFloatValue(Field: TField): Double; deprecated;
-    procedure Post; override;
     procedure OpenDataset(const SqlResult: String);
     procedure OpenDatasetFromUrlAsString(aEndPoint: String; SetLastAccess: boolean = true; loggingInOut: Integer = 0;contentType: String = '');
     procedure DoQuery(aSql: String);
@@ -1691,7 +1693,7 @@ begin
   end;
 end;
 
-procedure TRoomerDataSet.Post;
+procedure TRoomerDataSet.InternalPost;
 
   procedure UpdateData;
   var
@@ -1728,19 +1730,6 @@ procedure TRoomerDataSet.Post;
     DoAfterPost;
   end;
 
-  procedure CollectTablesToSubmit(list: TList<String>);
-  var
-    i: Integer;
-    tableName: String;
-  begin
-    for i := 0 to Recordset.Fields.Count - 1 do
-    begin
-      tableName := Recordset.Fields[i].Properties['BASETABLENAME'].Value;
-      if NOT list.Contains(tableName) then
-        list.add(tableName);
-    end;
-  end;
-
   procedure PerformUpdate(aTableName: String; aSql: String);
   var
     res: string;
@@ -1752,7 +1741,7 @@ procedure TRoomerDataSet.Post;
       res := self.activeRoomerDataSet.SystemFreeExecute(aSql);
       if not TryStrToInt(res, lID) then
         raise Exception.CreateFmt('Error updating %s, [%s]', [aTableName, res]);
-      GlueToRecordSet;
+//      GlueToRecordSet;
     end;
   end;
 
@@ -1802,7 +1791,7 @@ procedure TRoomerDataSet.Post;
         raise Exception.CreateFmt('Error inserting into %s, [%s]', [aTableName, res]);
 
       FieldByName(FPrimaryKeyField).AsInteger := newID;
-      GlueToRecordSet;
+//      GlueToRecordSet;
     end;
   end;
 
@@ -1848,13 +1837,13 @@ begin
   if OfflineMode then
   begin
     try
-      inherited Post;
+      inherited InternalPost;
     except
     end;
     exit;
   end;
 
-  UpdateRecord;
+//  UpdateRecord;
   case State of
     dsEdit, dsInsert:
       begin
@@ -1868,6 +1857,7 @@ begin
             else
               UpdateTable(tables[i]);
           end;
+          inherited InternalPost;
         finally
           tables.Clear;
           tables.Free;
@@ -1875,6 +1865,51 @@ begin
       end;
   end;
 
+end;
+
+procedure TRoomerDataSet.CollectTablesToSubmit(list: TList<String>);
+var
+  i: Integer;
+  tableName: String;
+begin
+  for i := 0 to Recordset.Fields.Count - 1 do
+  begin
+    tableName := Recordset.Fields[i].Properties['BASETABLENAME'].Value;
+    if NOT list.Contains(tableName) then
+      list.add(tableName);
+  end;
+end;
+
+procedure TRoomerDataSet.InternalDelete;
+var
+  aSql: string;
+  res: string;
+  lID: integer;
+  tables: TList<String>;
+
+begin
+  if OfflineMode then
+  begin
+    inherited InternalDelete;
+    exit;
+  end;
+
+  tables := TList<String>.Create;
+  try
+    CollectTablesToSubmit(tables);
+    if tables.Count = 1 then
+    begin
+      aSql := format('DELETE FROM `%s` WHERE %s=%d', [tables[0], FPrimaryKeyField, FieldByName(FPrimaryKeyField).AsInteger]);
+      res := self.activeRoomerDataSet.SystemFreeExecute(aSql);
+      if not TryStrToInt(res, lID) then
+        raise Exception.CreateFmt('Error deleting from %s, [%s]', [tables[0], res])
+      else
+        inherited internalDelete;
+    end;
+  finally
+    tables.Clear;
+    tables.Free;
+  end;
 end;
 
 procedure TRoomerDataSet.AssignToDataset(SqlResult: String; DataSet: TRoomerDataSet);

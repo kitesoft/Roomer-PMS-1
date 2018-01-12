@@ -172,6 +172,7 @@ begin
   begin
     Result.FValue := a.FValue + b.FValue;
     Result.FCurCode := a.FCurCode;
+    Result.FCurrencyRate := a.FCurrencyRate;
   end;
 end;
 
@@ -179,12 +180,14 @@ class operator TAmount.Add(a: TAmount; c: Currency): TAmount;
 begin
   Result.FValue := a.FValue + c;
   Result.FCurCode := a.FCurCode;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Add(a: TAmount; c: extended): TAmount;
 begin
   Result.FValue := a.FValue + c;
   Result.FCurCode := a.FCurCode;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 function TAmount.AsDisplayString: string;
@@ -230,19 +233,20 @@ class operator TAmount.Divide(a: TAmount; d: double): TAmount;
 begin
   Result.FCurCode := a.FCurCode;
   Result.FValue := a.FValue / d;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Divide(a: TAmount; d: integer): TAmount;
 begin
   Result.FCurCode := a.FCurCode;
   Result.FValue := a.FValue / d;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Equal(a, b: TAmount): boolean;
 begin
   Result := IsSameCurrency(a,b) and (a.FValue = b.FValue);
 end;
-
 
 class operator TAmount.Explicit(a: TAmount): integer;
 begin
@@ -285,8 +289,7 @@ end;
 
 class operator TAmount.Implicit(a: Currency): TAmount;
 begin
-  Result.FValue := a;
-  Result.FCurCode := CurrencyManager.DefaultCurrency;
+  Result := TAmount.Create(a, CurrencyManager.DefaultCurrency);
 end;
 
 class operator TAmount.Implicit(a: TAmount): double;
@@ -323,7 +326,7 @@ end;
 
 class function TAmount.IsSameCurrency(a1, a2: TAmount): boolean;
 begin
-  Result := a1.FCurCode = a2.FCurCode;
+  Result := (a1.FCurCode = a2.FCurCode) and SameValue(a1.CurrencyRate, a2.CurrencyRate, 0.0000);
 end;
 
 class function TAmount.IsValidCurrencyCode(const c: TCurrencyCode): boolean;
@@ -356,6 +359,7 @@ class operator TAmount.Multiply(a: TAmount; e: Extended): TAmount;
 begin
   Result.FCurCode := a.FCurCode;
   Result.FValue := a.FValue * e;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Multiply(a, b: TAmount): TAmount;
@@ -370,17 +374,21 @@ class operator TAmount.Multiply(a: TAmount; d: double): TAmount;
 begin
   Result.FCurCode := a.FCurCode;
   Result.FValue := a.FValue * d;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Multiply(a: TAmount; d: integer): TAmount;
 begin
   Result.FCurCode := a.FCurCode;
   Result.FValue := a.FValue * d;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Multiply(d: integer; a: TAmount): TAmount;
 begin
-  Result := a * d;
+  Result.FCurCode := a.FCurCode;
+  Result.FValue := a.FValue * d;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Multiply(a: TAmount; c: Currency): TAmount;
@@ -403,6 +411,7 @@ function TAmount.Rounded: TAmount;
 begin
   Result.FCurCode := Self.CurrencyCode;
   Result.FValue := CurrencyDefinition.RoundedValue(Self.Value);
+  Result.FCurrencyRate := Self.FCurrencyRate;
 end;
 
 procedure TAmount.SetCurrencyRate(const Value: double);
@@ -414,8 +423,8 @@ class operator TAmount.Subtract(a: TAmount; c: extended): TAmount;
 begin
   Result.FValue := a.Value - c;
   Result.FCurCode := a.FCurCode;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
-
 
 function TAmount.ToCurrency(aCurId: integer): TAmount;
 begin
@@ -441,6 +450,7 @@ class operator TAmount.Subtract(a: TAmount; c: Currency): TAmount;
 begin
   Result.FValue := a.Value - c;
   Result.FCurCode := a.FCurCode;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Subtract(a, b: TAmount): TAmount;
@@ -451,6 +461,7 @@ begin
   begin
     Result.FValue := a.FValue - b.FValue;
     Result.FCurCode := a.FCurCode;
+    Result.FCurrencyRate := a.FCurrencyRate;
   end;
 end;
 
@@ -528,6 +539,7 @@ begin
   begin
     Result.FValue := a.FValue / b.FValue;
     Result.FCurCode := a.FCurCode;
+    Result.FCurrencyRate := a.FCurrencyRate;
   end;
 
 end;

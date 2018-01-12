@@ -664,6 +664,10 @@ object frmMakeKreditInvoice: TfrmMakeKreditInvoice
         Name = 'Location'
         DataType = ftWideString
         Size = 20
+      end
+      item
+        Name = 'creditedBy'
+        DataType = ftInteger
       end>
     IndexDefs = <>
     SortOptions = []

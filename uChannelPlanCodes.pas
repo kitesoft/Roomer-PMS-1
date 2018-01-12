@@ -186,6 +186,7 @@ type
     procedure btnEditClick(Sender: TObject);
     procedure tvDataCodePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure chkActiveClick(Sender: TObject);
+    procedure DSStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -352,7 +353,7 @@ procedure TfrmChannelPlanCodes.changeAllowgridEdit;
 begin
   if zAllowGridEdit then
   begin
-    tvDataCode.Options.Editing        := true;
+//    tvDataCode.Options.Editing        := true;
     tvDataDescription.Options.Editing    := true;
     tvDataActive.Options.Editing  := true;
     tvDatadefaultPlan.Options.Editing  := true;
@@ -400,6 +401,11 @@ begin
   end;
 end;
 
+
+procedure TfrmChannelPlanCodes.DSStateChange(Sender: TObject);
+begin
+  tvDataCode.Options.Editing        := (m_.State = dsInsert)
+end;
 
 /////////////////////////////////////////////////////////////
 // Form actions

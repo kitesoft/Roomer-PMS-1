@@ -76,7 +76,7 @@ uses
   , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
-  , uTokenHelpers, ToolPanels, RoomerExceptionHandling
+  , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable
   ;
 
 type
@@ -172,7 +172,7 @@ type
     btnRemoveRoom: TsButton;
     btnProvideRoom: TsButton;
     InvoicesTab: TsTabSheet;
-    mGuests: TdxMemData;
+    mGuests: TkbmMemTable;
     Panel10: TsPanel;
     btnGuestsRefresh: TsButton;
     Panel11: TsPanel;
@@ -619,6 +619,9 @@ type
     acCopyValueAll: TAction;
     acManagePaycards: TAction;
     mRoomsPAYCARD_TOKEN_ID: TIntegerField;
+    mGuestsMainName: TBooleanField;
+    mGuestsID: TIntegerField;
+    tvRoomsGuestlist: TcxGridDBBandedColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -669,7 +672,6 @@ type
     procedure tvRoomsDeparturePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsArrivalPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsdayCountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure tvRoomsGuestCountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure timStartTimer(Sender: TObject);
     procedure rgrinvoicePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure cxButton3Click(Sender: TObject);
@@ -807,6 +809,7 @@ type
     procedure ShowMainGuestProfile;
     procedure mnuOtherResStateChangeClick(Sender: TObject);
     procedure PropagateValue(aDirection: TPropagateDirection);
+    procedure ChangeGuestCount(aRoomReservation, aNewGuestCount: integer);
 
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
@@ -2378,6 +2381,15 @@ begin
       if not d.UpdateInfantCount(zReservation, zRoomReservation, mRoomsinfantcount.AsInteger) then
         Abort;
 
+    if mRoomsGuestCount.OldValue <> mRoomsGuestCount.AsInteger then
+    begin
+      if (mRoomsGuestCount.OldValue < mRoomsGuestCount.AsInteger) or
+         (MessageDlg(GetTranslatedText('shDecreaseRoomResGuestCount'), mtConfirmation, mbYesNo, 0) = mrYes) then
+        ChangeGuestCount(mRoomsRoomReservation.AsInteger, mRoomsGuestCount.AsInteger)
+      else
+        Abort
+    end
+
   finally
     FValidating := False;
   end;
@@ -2761,47 +2773,87 @@ begin
 
 end;
 
-procedure TfrmReservationProfile.tvRoomsGuestCountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+procedure TfrmReservationProfile.ChangeGuestCount(aRoomReservation: integer; aNewGuestCount: integer);
 var
-  lOrigCount: integer;
-  theData: recPersonHolder;
-  s: string;
+  i: integer;
+  personData: recPersonHolder;
+  lExecPLan: TRoomerExecutionPlan;
+  lOldCount: integer;
 begin
-  if mRoomsDS.State = dsEdit then
-  begin
-    mRooms.Post;
-  end;
 
-  lOrigCount := mRoomsGuestCount.asInteger;
-  s := mRoomsGuestname.asstring;
-  initPersonHolder(theData);
-  theData.reservation := mRoomsReservation.asInteger;
-  theData.roomReservation := mRoomsRoomReservation.asInteger;
-  theData.name := s;
-
-  openGuestProfile(actNone, theData);
-
-  screen.Cursor := crHourGlass;
-  mRooms.DisableControls;
+  mGuests.DisableControls;
   try
-    mRooms.Edit;
-    try
-      mRoomsGuestName.asstring := d.RR_GetFirstGuestName(mRoomsRoomReservation.asInteger);
-      mRoomsGuestCount.asInteger := d.RR_GetGuestCount(zRoomReservation);
-      mRooms.Post;
-    except
-      mRooms.Cancel;
-      raise;
+    mGuests.Filter := format('roomreservation=%d', [aRoomReservation]);
+    mGuests.Filtered := true;
+    lOldCount := mGuests.RecordCount;
+
+    if (aNewGuestCount > 0) and (aNewGuestCount <> lOldCount) then
+    begin
+
+      lExecPLan := d.roomerMainDataSet.CreateExecutionPlan;
+      try
+        if mGuests.Locate('roomreservation;mainname', VarArrayOf([aRoomReservation, true]), []) then
+          personData := GET_pesson(mGuestsPerson.AsInteger)
+        else
+          initPersonHolder(personData);
+
+        for i := lOldCount+1 to aNewGuestCount do
+        begin
+          personData.Person := PE_SetNewID();
+          personData.name := 'RoomGuest';
+          personData.MainName := false;
+          personData.PersonsProfilesId := 0;
+
+          lExecPLan.AddExec(SQL_INS_Person(personData));
+        end;
+
+        if (aNewGuestCount < lOldCount) then
+        begin
+          initPersonHolder(personData);
+          mGuests.Filtered := false;
+          mGuests.Filter := format('roomreservation=%d and not mainname', [aRoomReservation]);
+          mGuests.Filtered := true;
+          mGuests.Last;
+
+          for i := aNewGuestCount to lOldCount-1 do
+          begin
+            if not mGuests.Bof then
+            begin
+              personData.id := mGuestsID.AsInteger;
+              lExecPLan.AddExec(SQL_DEL_Person(personData));
+              mGuests.Prior;
+            end else
+              Break;
+          end;
+
+        end;
+
+        if lExecPLan.Execute(ptExec, true, true) then
+          WriteReservationActivityLog(CreateReservationActivityLog(g.qUser
+                                                     , mRoomsReservation.AsInteger
+                                                     , aRoomReservation
+                                                     , CHANGE_NUMBER_OF_GUESTS
+                                                     , inttostr(mRoomsGuestCount.asInteger) //old value
+                                                     , inttostr(aNewGuestCount) //New vlaue
+                                                     , '' //Moreinfo
+                                       ))
+        else
+          raise Exception.CreateFmt('Changing guestcount to %d failed', [aNewGuestCount]);
+
+        if not mRoomsBreakFast.AsBoolean then
+          if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
+             d.INV_UpdateBreakfastGuests(zReservation, zRoomReservation, mRoomsGuestCount.AsInteger * mRoomsdayCount.AsInteger);
+
+      finally
+        lExecPlan.Free;
+        getGuestData(aRoomReservation);
+      end;
+
     end;
-
-    if (lOrigCount <> mRoomsGuestCount.asInteger) and not mRoomsBreakFast.AsBoolean then
-      if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
-         d.INV_UpdateBreakfastGuests(zReservation, zRoomReservation, mRoomsGuestCount.AsInteger * mRoomsdayCount.AsInteger);
-
-    Display_rGrid(mRoomsRoomReservation.asInteger);
   finally
-    screen.Cursor := crDefault;
-    mRooms.EnableControls;
+    mGuests.Filtered := false;
+    mGuests.Filter := '';
+    mGuests.EnableControls;
   end;
 end;
 
@@ -3540,7 +3592,7 @@ begin
           mGuests.Close;
         mGuests.Open;
 
-        mGuests.LoadFromDataSet(rSet);
+        mGuests.LoadFromDataSet(rSet, []);
 
       finally
         screen.Cursor := crDefault;

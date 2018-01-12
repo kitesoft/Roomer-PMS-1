@@ -150,8 +150,8 @@ object frmPayTypes: TfrmPayTypes
     object chkActive: TsCheckBox
       Left = 57
       Top = 64
-      Width = 281
-      Height = 17
+      Width = 273
+      Height = 20
       Caption = 'Active (if checked then just active are visible else all)'
       Checked = True
       State = cbChecked
@@ -283,6 +283,7 @@ object frmPayTypes: TfrmPayTypes
         Properties.ReadOnly = False
         Properties.ValidateOnEnter = True
         Properties.OnValidate = tvDatapayTypePropertiesValidate
+        Options.Editing = False
       end
       object tvDataDescription: TcxGridDBColumn
         DataBinding.FieldName = 'Description'
@@ -461,6 +462,7 @@ object frmPayTypes: TfrmPayTypes
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 400
     Top = 128
   end
@@ -484,7 +486,7 @@ object frmPayTypes: TfrmPayTypes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43105.686941134260000000
+      ReportDocument.CreationDate = 43110.478534131940000000
       BuiltInReportLink = True
     end
   end

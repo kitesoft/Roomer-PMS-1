@@ -335,6 +335,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.CharCase = ecUpperCase
           Properties.OnValidate = tvDataCodePropertiesValidate
+          Options.Editing = False
         end
         object tvDataRATE_PLAN_TYPE: TcxGridDBColumn
           Caption = 'Rate plan type'
@@ -727,6 +728,7 @@ object frmRoomTypesGroups2: TfrmRoomTypesGroups2
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 152
     Top = 192
   end

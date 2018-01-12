@@ -527,9 +527,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uMultiSelection.pas">
             <Form>frmMultiSelection</Form>
         </DCCReference>
-        <DCCReference Include="uVatCodes.pas">
-            <Form>frmVatCodes</Form>
-        </DCCReference>
         <DCCReference Include="uNationalReport3.pas">
             <Form>frmNationalReport3</Form>
         </DCCReference>
@@ -996,6 +993,17 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>frmCurrencyHistory</Form>
             <DesignClass>{$R *.RES</DesignClass>
         </DCCReference>
+        <DCCReference Include="GridForms\ufrmVatCodesGrid.pas">
+            <Form>frmVatCodesGrid</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="GridForms\ufrmPriceCodesGrid.pas">
+            <Form>frmPriceCodesGrid</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TableCache\uCachedVATTable.pas"/>
+        <DCCReference Include="TableCache\uCachedPriceCodesTable.pas"/>
+        <DCCReference Include="RoomerForm\uRoomerGridExporters.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

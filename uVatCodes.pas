@@ -146,15 +146,15 @@ type
     tvDatavalueFormula: TcxGridDBColumn;
     m_BookKeepCode: TWideStringField;
     tvDataBookKeepCode: TcxGridDBColumn;
+    m_active: TBooleanField;
+    tvDataActive: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure BtnOkClick(Sender: TObject);
     procedure mnuExitClick(Sender: TObject);
-    procedure btnOtherClick(Sender: TObject);
     procedure mnuiPrintClick(Sender: TObject);
     procedure mnuiAllowGridEditClick(Sender: TObject);
     procedure mnuiGridToExcelClick(Sender: TObject);
@@ -315,8 +315,13 @@ begin
   s := s+ '   ,VATPercentage '+#10;
   s := s+ '   ,valueFormula '+#10;
   s := s+ '   ,BookKeepCode '+#10;
+  s := s+ '   ,Active'+#10;
   s := s+ ' FROM '+#10;
   s := s+ '   vatcodes '+#10;
+
+  if zAct = actLookup then
+    s := s + ' WHERE active ' +#10;
+
   s := s+ ' ORDER BY '+#10;
   s := s+ '  '+zSortStr+' ';
 
@@ -346,6 +351,7 @@ procedure  TfrmVatCodes.fillHolder;
 begin
   initVatCodeHolder(zData);
   zData.VATCode         := m_.fieldbyname('VATCode').asstring;
+  zData.Active          := m_.fieldbyname('active').asBoolean;
   zData.Description     := m_.fieldbyname('Description').asstring;
   zData.VATPercentage   := m_.fieldbyname('VATPercentage').asFloat;
   zData.ValueFormula     := m_.fieldbyname('ValueFormula').asstring;
@@ -354,7 +360,7 @@ end;
 
 procedure TfrmVatCodes.changeAllowgridEdit;
 begin
-  tvDataVATCode.Options.Editing        := zAllowGridEdit;
+  tvDataActive.Options.Editing        := zAllowGridEdit;
   tvDataDescription.Options.Editing    := zAllowGridEdit;
   tvDataVATPercentage.Options.Editing  := zAllowGridEdit;
   tvDataValueFormula.Options.Editing   := zAllowGridEdit;
@@ -373,11 +379,6 @@ begin
 
   zFilterON := rc1 <> rc2;
 
-  if zFilterON then
-  begin
-  end else
-  begin
-  end;
 end;
 
 
@@ -387,19 +388,8 @@ end;
 
 procedure TfrmVatCodes.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  try
-    fillHolder;
-    if tvdata.DataController.DataSet.State = dsInsert then
-    begin
-      tvdata.DataController.Post;
-    end;
-    if tvdata.DataController.DataSet.State = dsEdit then
-    begin
-      tvdata.DataController.Post;
-    end;
-  except
-
-  end;
+  fillHolder;
+  tvdata.DataController.DataSet.CheckBrowseMode;
   glb.EnableOrDisableTableRefresh('vatcodes', True);
 end;
 
@@ -440,17 +430,10 @@ begin
   zFirstTime := false;
 end;
 
-procedure TfrmVatCodes.FormDestroy(Sender: TObject);
-begin
-  glb.EnableOrDisableTableRefresh('vatcodes', True);
-  //
-end;
-
 procedure TfrmVatCodes.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
     btnCancel.Click;
-
 end;
 
 procedure TfrmVatCodes.FormKeyPress(Sender: TObject; var Key: Char);
@@ -525,6 +508,7 @@ begin
 
   initVatCodeHolder(zData);
   zData.VatCode      := dataset.fieldbyname('VatCode').asstring;
+  zData.Active       := dataset.FieldByName('acive').AsBoolean;
   zData.Description  := dataset.fieldbyname('Description').asstring;
   zData.VATPercentage:= dataset.fieldbyname('VATPercentage').asFloat;
   zData.ValueFormula := dataset.fieldbyname('ValueFormula').asstring;
@@ -540,8 +524,8 @@ begin
       abort;
       exit;
     end;
-  end;
-  if tvData.DataController.DataSource.State = dsInsert then
+  end
+  else if tvData.DataController.DataSource.State = dsInsert then
   begin
 
     if dataset.FieldByName('VatCode').AsString = ''  then
@@ -569,6 +553,7 @@ end;
 procedure TfrmVatCodes.m_NewRecord(DataSet: TDataSet);
 begin
   dataset.fieldbyname('VATPercentage').asFloat := 0.00;
+  dataset.fieldByName('active').AsBoolean := True;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -723,11 +708,6 @@ end;
 procedure TfrmVatCodes.mnuExitClick(Sender: TObject);
 begin
   Close;
-end;
-
-procedure TfrmVatCodes.btnOtherClick(Sender: TObject);
-begin
-  //
 end;
 
 procedure TfrmVatCodes.btnDeleteClick(Sender: TObject);

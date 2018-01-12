@@ -207,6 +207,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure tvDataBookKeepCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -411,7 +412,7 @@ end;
 
 procedure TfrmPayTypes.changeAllowgridEdit;
 begin
-  tvDatapayType    .Options.Editing    := zAllowGridEdit;
+//  tvDatapayType    .Options.Editing    := zAllowGridEdit;
   tvDataDescription.Options.Editing    := zAllowGridEdit;
   tvDataPayGroup   .Options.Editing    := zAllowGridEdit;
   tvDataBookKey    .Options.Editing    := zAllowGridEdit;
@@ -457,6 +458,11 @@ destructor TfrmPayTypes.Destroy;
 begin
   financePayTypeList.Free;
   inherited;
+end;
+
+procedure TfrmPayTypes.DSStateChange(Sender: TObject);
+begin
+  tvDatapayType.Options.Editing := (m_.State = dsInsert);
 end;
 
 procedure TfrmPayTypes.ApplyFilter;

@@ -157,8 +157,8 @@ object frmCustomers2: TfrmCustomers2
     object chkActive: TsCheckBox
       Left = 52
       Top = 64
-      Width = 242
-      Height = 17
+      Width = 234
+      Height = 20
       Caption = 'Active (if checked then just active are visible'
       Checked = True
       State = cbChecked
@@ -614,6 +614,7 @@ object frmCustomers2: TfrmCustomers2
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 304
     Top = 280
   end

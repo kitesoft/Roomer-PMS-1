@@ -29,7 +29,6 @@ object frmPackages: TfrmPackages
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 744
     object labFilterWarning: TsLabel
       Left = 1
       Top = 67
@@ -162,8 +161,6 @@ object frmPackages: TfrmPackages
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
-    ExplicitTop = 528
-    ExplicitWidth = 744
   end
   object panBtn: TsPanel
     Left = 0
@@ -173,8 +170,6 @@ object frmPackages: TfrmPackages
     Align = alBottom
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 498
-    ExplicitWidth = 744
     DesignSize = (
       975
       30)
@@ -194,7 +189,6 @@ object frmPackages: TfrmPackages
       TabOrder = 0
       OnClick = btnCancelClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 658
     end
     object BtnOk: TsButton
       Left = 798
@@ -210,7 +204,6 @@ object frmPackages: TfrmPackages
       TabOrder = 1
       OnClick = BtnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 567
     end
   end
   object grData: TcxGrid
@@ -222,8 +215,6 @@ object frmPackages: TfrmPackages
     Constraints.MinWidth = 450
     TabOrder = 3
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 744
-    ExplicitHeight = 417
     object tvData: TcxGridDBTableView
       OnDblClick = tvDataDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -318,6 +309,7 @@ object frmPackages: TfrmPackages
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.CharCase = ecUpperCase
         Properties.OnValidate = tvDataPackagePropertiesValidate
+        Options.Editing = False
         Width = 138
       end
       object tvDataDescription: TcxGridDBColumn
@@ -473,6 +465,7 @@ object frmPackages: TfrmPackages
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 176
     Top = 160
   end

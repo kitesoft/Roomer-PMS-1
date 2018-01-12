@@ -174,8 +174,8 @@ object frmItems2: TfrmItems2
     object chkActive: TsCheckBox
       Left = 55
       Top = 63
-      Width = 238
-      Height = 20
+      Width = 246
+      Height = 17
       Caption = 'Active (if checked then just active are visible)'
       Checked = True
       State = cbChecked
@@ -386,6 +386,7 @@ object frmItems2: TfrmItems2
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.CharCase = ecUpperCase
         Properties.OnValidate = tvDataItemPropertiesValidate
+        Options.Editing = False
         Width = 84
       end
       object tvDataDescription: TcxGridDBColumn
@@ -601,6 +602,7 @@ object frmItems2: TfrmItems2
   end
   object dsItems: TDataSource
     DataSet = m_Items
+    OnStateChange = dsItemsStateChange
     Left = 168
     Top = 144
   end
@@ -610,7 +612,6 @@ object frmItems2: TfrmItems2
     Left = 80
     Top = 136
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -624,7 +625,6 @@ object frmItems2: TfrmItems2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

@@ -117,7 +117,7 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMaskEdit
-  , uRoomerGridForm, cxCheckBox
+  , uRoomerGridForm, cxCheckBox, System.Actions, Vcl.ActnList
   ;
 
 type
@@ -135,22 +135,12 @@ type
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
     m_AValue: TFloatField;
-    grPrinter: TdxComponentPrinter;
-    prLink_grData: TdxGridReportLink;
     m_ID: TIntegerField;
     m_active: TBooleanField;
     m_displayformat: TWideStringField;
     m_decimals: TIntegerField;
     m_SellValue: TFloatField;
     m_CurrencySign: TWideStringField;
-    cLabFilter: TsLabel;
-    btnClear: TsSpeedButton;
-    btnInsert: TsButton;
-    btnEdit: TsButton;
-    btnDelete: TsButton;
-    btnOther: TsButton;
-    chkActive: TsCheckBox;
-    edFilter: TsEdit;
     btnHistory: TsButton;
     tvDataRecId: TcxGridDBBandedColumn;
     tvDataCurrency: TcxGridDBBandedColumn;
@@ -188,6 +178,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btnHistoryClick(Sender: TObject);
+    procedure dsDataStateChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -251,7 +242,7 @@ begin
 //    end
 //    else
 //    begin
-      _frmCurrencies.ShowModal;
+      _frmCurrencies.ShowModal(act);
       if _frmCurrencies.modalresult = mrOk then
       begin
         theData := _frmCurrencies.zData;
@@ -288,7 +279,7 @@ procedure TfrmCurrencies.changeAllowgridEdit;
 begin
   if zAllowGridEdit then
   begin
-    tvDataCurrency.Options.Editing       := true;
+//    tvDataCurrency.Options.Editing       := true;
     tvDataDescription.Options.Editing    := true;
     tvDataAValue.Options.Editing         := true;
     tvDataActive.Options.Editing         := true;
@@ -491,6 +482,12 @@ begin
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowGridEdit;
   chkFilter;
+end;
+
+procedure TfrmCurrencies.dsDataStateChange(Sender: TObject);
+begin
+  inherited;
+  tvDataCurrency.Options.Editing := (m_.State = dsInsert);
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////

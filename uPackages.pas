@@ -197,6 +197,7 @@ type
     procedure tvDataColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -341,7 +342,7 @@ begin
     tvDataID.Options.Editing                  := false;
     tvDataActive.Options.Editing              := true;
     tvDataDescription.Options.Editing         := true;
-    tvDataPackage.Options.Editing             := true;
+//    tvDataPackage.Options.Editing             := true;
     tvDatashowItemsOnInvoice.Options.Editing  := true;
     tvDataCurrency.Options.Editing  := true;
     tvDataInvoiceText.Options.Editing  := true;
@@ -380,6 +381,11 @@ begin
   end;
 end;
 
+
+procedure TfrmPackages.DSStateChange(Sender: TObject);
+begin
+  tvDataPackage.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmPackages.edFilterChange(Sender: TObject);
 begin

@@ -944,6 +944,7 @@ type
 
   recVatCodeHolder = record
     VatCode: string; // nvarchar(10)	Checked
+    Active: boolean;
     Description: string; // nvarchar(30)	Checked
     VATPercentage: double; // float	Checked
     valueFormula: string; // nvarchar(255)	Checked
@@ -2100,6 +2101,7 @@ procedure initPersonHolder(var rec: recPersonHolder);
 procedure initPersonHolderFromProfileID(var personData: recPersonHolder; aProfileId: integer);
 function INS_Person(theData: recPersonHolder; var NewID: integer): boolean;
 function SQL_INS_Person(theData: recPersonHolder): string;
+function SQL_DEL_Person(theData: recPersonHolder): string;
 
 function DEL_Person(theData: recPersonHolder): boolean;
 function UPD_person(theData: recPersonHolder): boolean;
@@ -8029,6 +8031,7 @@ begin
     begin
       result := true;
       theData.VatCode := rSet.fieldbyname('VATCode').asString;
+      theData.Active := rSet.fieldbyname('active').asBoolean;
       theData.Description := rSet.fieldbyname('description').asString;
       theData.VATPercentage := rSet.fieldbyname('VATPercentage').AsFloat;
       theData.valueFormula := rSet.fieldbyname('valueFormula').asString;
@@ -8044,18 +8047,16 @@ function UPD_VatCode(theData: recVatCodeHolder): boolean;
 var
   s: string;
 begin
-  if theData.tmp = '' then
-    theData.tmp := theData.VatCode;
   s := '';
   s := s + ' UPDATE vatcodes ' + #10;
   s := s + ' SET ' + #10;
-  s := s + '     VATCode = ' + _db(theData.VatCode) + ' ' + #10;
+  s := s + '     Active = ' + _db(theData.active) + ' ' + #10;
   s := s + '   , Description =' + _db(theData.Description) + ' ' + #10;
   s := s + '   , VATPercentage =' + _db(theData.VATPercentage) + ' ' + #10;
   s := s + '   , valueFormula =' + _db(theData.valueFormula) + ' ' + #10;
   s := s + '   , BookKeepCode =' + _db(theData.BookKeepCode) + ' ' + #10;
   s := s + ' WHERE ' + #10;
-  s := s + '   (VATCode = ' + _db(theData.tmp) + ') ';
+  s := s + '   (VATCode = ' + _db(theData.VatCode) + ') ';
   result := cmd_bySQL(s);
 end;
 
@@ -8068,6 +8069,7 @@ begin
   s := s + 'INSERT INTO vatcodes ' + #10;
   s := s + '   ( ' + #10;
   s := s + '   VATCode ' + #10;
+  s := s + '   Active' + #10;
   s := s + '  ,description ' + #10;
   s := s + '  ,VATPercentage ' + #10;
   s := s + '  ,valueFormula ' + #10;
@@ -8076,6 +8078,7 @@ begin
   s := s + '    VALUES ' + #10;
   s := s + '   ( ' + #10;
   s := s + '     ' + _db(theData.VatCode) + ' ' + #10;
+  s := s + '     ' + _db(theData.Active) + ' ' + #10;
   s := s + '     ,' + _db(theData.Description) + ' ' + #10;
   s := s + '     ,' + _db(theData.VATPercentage) + ' ' + #10;
   s := s + '     ,' + _db(theData.valueFormula) + ' ' + #10;
@@ -13757,6 +13760,7 @@ begin
 
 end;
 
+
 procedure initPersonHolder(var rec: recPersonHolder);
 begin
   with rec do
@@ -13914,6 +13918,15 @@ begin
   result := s;
 end;
 
+function SQL_DEL_Person(theData: recPersonHolder): string;
+begin
+  Result := '';
+  Result := Result + ' DELETE ' + chr(10);
+  Result := Result + '   FROM persons ' + chr(10);
+  Result := Result + ' WHERE  ' + chr(10);
+  Result := Result + '   (ID =' + _db(theData.id) + ') ';
+end;
+
 function INS_Person(theData: recPersonHolder; var NewID: integer): boolean;
 var
   s: string;
@@ -14040,11 +14053,7 @@ function DEL_Person(theData: recPersonHolder): boolean;
 var
   s: string;
 begin
-  s := '';
-  s := s + ' DELETE ' + chr(10);
-  s := s + '   FROM persons ' + chr(10);
-  s := s + ' WHERE  ' + chr(10);
-  s := s + '   (ID =' + _db(theData.id) + ') ';
+  s := SQL_DEL_Person(theData);
   result := cmd_bySQL(s);
 end;
 

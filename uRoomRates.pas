@@ -284,14 +284,14 @@ uses
   , prjConst
   , uSqlDefinitions
   , uCurrencies
-  , uPriceCodes
+  , ufrmPriceCodesGrid
   , uRoomTypes2
   , uSeasons2
   , uRates
   , uUtils
   , uSQLUtils
   , UITypes
-  ;
+  , uRoomerGridForm;
 
 
 
@@ -1061,7 +1061,7 @@ var
 begin
   fillholder;
   theData.pcCode := zData.pcCode;
-  priceCodes(actlookup,theData);
+  priceCodes(TRoomerGridFormMode.SelectSingle, theData);
   if theData.pcCode <> '' then
   begin
     if tvData.DataController.DataSource.State <> dsInsert then m_.Edit;

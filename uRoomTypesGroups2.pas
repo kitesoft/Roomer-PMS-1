@@ -293,6 +293,7 @@ type
       var AText: string);
     procedure tvDataCalculationTypeExtraGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure DSStateChange(Sender: TObject);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -508,7 +509,7 @@ begin
 
     tvDataRecId.Options.Editing         := zAllowGridEdit;
     tvDataActive.Options.Editing         := zAllowGridEdit;
-    tvDataCode.Options.Editing         := zAllowGridEdit;
+//    tvDataCode.Options.Editing         := zAllowGridEdit;
     tvDataDescription.Options.Editing         := zAllowGridEdit;
     tvDataPriorityRule.Options.Editing         := zAllowGridEdit;
     tvDataminGuests.Options.Editing         := zAllowGridEdit;
@@ -592,6 +593,11 @@ begin
   end;
 end;
 
+
+procedure TfrmRoomTypesGroups2.DSStateChange(Sender: TObject);
+begin
+  tvDataCode.Options.Editing := (m_.State = dsInsert);
+end;
 
 procedure TfrmRoomTypesGroups2.edFilterChange(Sender: TObject);
 begin

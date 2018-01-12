@@ -171,7 +171,6 @@ inherited frmRoomPrices: TfrmRoomPrices
     Align = alClient
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 91
     object tvRoomRes: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = mRoomResDS
@@ -214,6 +213,7 @@ inherited frmRoomPrices: TfrmRoomPrices
       OptionsBehavior.FocusCellOnTab = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
@@ -279,6 +279,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         Properties.CanEdit = False
         Properties.MaxValue = 100.000000000000000000
         Properties.MinValue = 1.000000000000000000
+        Options.Editing = False
         Width = 45
       end
       object tvRoomResChildrenCount: TcxGridDBColumn
@@ -287,6 +288,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         PropertiesClassName = 'TcxSpinEditProperties'
         Properties.CanEdit = False
         Properties.MaxValue = 10.000000000000000000
+        Options.Editing = False
         Width = 45
       end
       object tvRoomResinfantCount: TcxGridDBColumn
@@ -295,6 +297,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         PropertiesClassName = 'TcxSpinEditProperties'
         Properties.CanEdit = False
         Properties.MaxValue = 10.000000000000000000
+        Options.Editing = False
         Width = 45
       end
       object tvRoomResAveragePriceDB: TcxGridDBColumn

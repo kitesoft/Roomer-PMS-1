@@ -17,7 +17,6 @@ object frmVatCodes: TfrmVatCodes
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnShow = FormShow
@@ -94,7 +93,6 @@ object frmVatCodes: TfrmVatCodes
       ShowHint = True
       Style = bsSplitButton
       TabOrder = 1
-      OnClick = btnOtherClick
       SkinData.SkinSection = 'BUTTON'
     end
     object edFilter: TsEdit
@@ -262,7 +260,17 @@ object frmVatCodes: TfrmVatCodes
         Properties.ReadOnly = False
         Properties.ValidateOnEnter = True
         Properties.OnValidate = tvDataVATCodePropertiesValidate
+        Options.Editing = False
+        SortIndex = 0
+        SortOrder = soAscending
         Width = 91
+      end
+      object tvDataActive: TcxGridDBColumn
+        Caption = 'Active'
+        DataBinding.FieldName = 'active'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        BestFitMaxWidth = 50
+        Width = 58
       end
       object tvDataDescription: TcxGridDBColumn
         DataBinding.FieldName = 'Description'
@@ -325,6 +333,9 @@ object frmVatCodes: TfrmVatCodes
       FieldName = 'valueFormula'
       Size = 255
     end
+    object m_active: TBooleanField
+      FieldName = 'active'
+    end
   end
   object mnuOther: TPopupMenu
     Images = DImages.PngImageList1
@@ -381,6 +392,7 @@ object frmVatCodes: TfrmVatCodes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -393,7 +405,8 @@ object frmVatCodes: TfrmVatCodes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43105.686975474530000000
+      ReportDocument.CreationDate = 43109.344969618050000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

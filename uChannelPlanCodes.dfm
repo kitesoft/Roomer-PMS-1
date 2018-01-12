@@ -148,7 +148,6 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
       ParentFont = False
       TabOrder = 3
       Transparent = False
-      ExplicitWidth = 8
     end
     object edFilter: TsEdit
       Left = 54
@@ -199,8 +198,8 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
     object chkActive: TsCheckBox
       Left = 54
       Top = 62
-      Width = 278
-      Height = 19
+      Width = 273
+      Height = 20
       Caption = 'Active (if checked then just active are visible else all)'
       Checked = True
       State = cbChecked
@@ -323,6 +322,7 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.CharCase = ecUpperCase
         Properties.OnValidate = tvDataCodePropertiesValidate
+        Options.Editing = False
       end
       object tvDataDescription: TcxGridDBColumn
         DataBinding.FieldName = 'Description'
@@ -402,6 +402,7 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
   end
   object DS: TDataSource
     DataSet = m_
+    OnStateChange = DSStateChange
     Left = 400
     Top = 128
   end
@@ -413,6 +414,7 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -425,7 +427,8 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43105.686931458330000000
+      ReportDocument.CreationDate = 43110.393213784720000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
