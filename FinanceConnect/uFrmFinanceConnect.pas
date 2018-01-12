@@ -92,7 +92,6 @@ type
     sLabel4: TsLabel;
     sLabel5: TsLabel;
     sLabel6: TsLabel;
-    sLabel7: TsLabel;
     cbxSystemSelection: TsComboBox;
     cbxActive: TsCheckBox;
     __edServiceUrl: TsEdit;
@@ -100,7 +99,19 @@ type
     edPassword: TsEdit;
     edOrg: TsEdit;
     edOffice: TsEdit;
-    edCompany: TsEdit;
+    gbMappingResources: TsGroupBox;
+    sLabel7: TsLabel;
+    edCustomersList: TsEdit;
+    sLabel9: TsLabel;
+    edSystemName: TsEdit;
+    sLabel10: TsLabel;
+    edItemsList: TsEdit;
+    sLabel11: TsLabel;
+    edVatList: TsEdit;
+    sLabel17: TsLabel;
+    edCashBookList: TsEdit;
+    sLabel18: TsLabel;
+    edPaygroupList: TsEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tabsMappingsChange(Sender: TObject);
@@ -108,7 +119,6 @@ type
     procedure tvListExternalCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure HandleChange(Sender: TObject);
     procedure cbxActiveClick(Sender: TObject);
-    procedure cbxSystemSelectionCloseUp(Sender: TObject);
     procedure edtSearchChange(Sender: TObject);
     procedure edtSearchRightButtonClick(Sender: TObject);
     procedure tvPayGroupsBalanceAccountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -119,6 +129,7 @@ type
     procedure memCustomersBeforePost(DataSet: TDataSet);
     procedure btnOKClick(Sender: TObject);
     procedure pgMainChange(Sender: TObject);
+    procedure cbxSystemSelectionChange(Sender: TObject);
   private
     FinanceConnectService : TFinanceConnectService;
     procedure PrepareTabs;
@@ -126,8 +137,8 @@ type
     function CurrentTableView: TcxGridDBTableView;
     procedure ClearAllTableViewFilters;
     procedure ReStartDataPreparation;
-    function CheckEnableSaveButton: Boolean;
     procedure NewTypeSelection;
+    function MandatoryFieldsValid: boolean;
     { Private declarations }
   protected
     procedure DoUpdateControls; override;
@@ -174,12 +185,41 @@ end;
 procedure TFrmFinanceConnect.cbxActiveClick(Sender: TObject);
 begin
   UpdateControls;
+  HandleChange(nil);
 end;
 
-procedure TFrmFinanceConnect.cbxSystemSelectionCloseUp(Sender: TObject);
+procedure TFrmFinanceConnect.cbxSystemSelectionChange(Sender: TObject);
 begin
+  inherited;
   NewTypeSelection;
   UpdateControls;
+  btnOk.Enabled := MandatoryFieldsValid;
+end;
+
+function TFrmFinanceConnect.MandatoryFieldsValid : boolean;
+begin
+  result := False;
+  if SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value = 'TWINFIELD' then
+  begin
+    result := (cbxSystemSelection.ItemIndex > 0) AND
+      (Length(__edServiceUrl.Text) > 5) AND
+      (Length(edUsername.Text) > 0) AND
+      (Length(edPassword.Text) > 0) AND
+      (Length(edOrg.Text) > 0) AND
+      (Length(edOffice.Text) > 0) AND
+      (Length(edSalesCode.Text) > 0) AND
+      (Length(edCurrency.Text) > 0) AND
+      (Length(edReceivableAccount.Text) > 0);
+  end else
+  if SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value = 'GENERIC' then
+  begin
+    result := (cbxSystemSelection.ItemIndex > 0) AND
+      (Length(edSystemName.Text) > 1) AND
+      (Length(edOrg.Text) > 0) AND
+      (Length(edSalesCode.Text) > 0) AND
+      (Length(edCurrency.Text) > 0) AND
+      (Length(edReceivableAccount.Text) > 0);
+  end;
 end;
 
 procedure TFrmFinanceConnect.NewTypeSelection;
@@ -191,29 +231,13 @@ begin
         __edServiceUrl.Text := '{cluster}/webservices/';
         __edServiceUrl.ReadOnly := True;
       end;
-end;
-
-function TFrmFinanceConnect.CheckEnableSaveButton : Boolean;
-begin
-  result := (cbxSystemSelection.ItemIndex > 0) AND
-    (Length(__edServiceUrl.Text) > 5) AND
-    (Length(edUsername.Text) > 0) AND
-    (Length(edPassword.Text) > 0) AND
-    (Length(edOrg.Text) > 0) AND
-    (Length(edOffice.Text) > 0) AND
-//    (Length(edCompany.Text) > 0) AND
-    (Length(edSalesCode.Text) > 0) AND
-//    (Length(edCashCode.Text) > 0) AND
-    (Length(edCurrency.Text) > 0) AND
-//    (Length(edCashAccount.Text) > 0) AND
-    (Length(edReceivableAccount.Text) > 0);
-//    (Length(edPreInvoiceNumber.Text) > 0) AND
-//    (Length(edSuccInvoiceNumber.Text) > 0);
+  pgMain.Pages[1].Visible := cbxSystemSelection.ItemIndex > 0;
 end;
 
 procedure TFrmFinanceConnect.HandleChange(Sender: TObject);
 begin
   UpdateControls;
+  btnOk.Enabled := MandatoryFieldsValid;
 end;
 
 procedure TFrmFinanceConnect.edtSearchChange(Sender: TObject);
@@ -255,7 +279,6 @@ end;
 procedure TFrmFinanceConnect.DoUpdateControls;
 begin
   inherited;
-  btnOK.Enabled := CheckEnableSaveButton;
 end;
 
 procedure TFrmFinanceConnect.ClearAllTableViewFilters;
@@ -585,12 +608,17 @@ begin
     edPassword.Text := password;
     edOrg.Text := organizationId;
     edOffice.Text := officeCode;
-    edCompany.Text := companyGuid;
     edSalesCode.Text := invoiceCode;
     edReceivableAccount.Text := receivableBalanceAccount;
     edPreInvoiceNumber.Text := preceedingInvoiceNumber;
     edSuccInvoiceNumber.Text := succeedingInvoiceNumber;
     edCurrency.Text := usedCurrency;
+    edCustomersList.Text := customersListUri;
+    edItemsList.Text := itemsListUri;
+    edVatList.Text := vatListUri;
+    edPaygroupList.Text := payGroupsListUri;
+    edCashBookList.Text := cashBooksListUri;
+    edSystemName.Text := systemName;
   end;
 
   pgMain.ActivePageIndex := InitialPage;
@@ -618,12 +646,17 @@ begin
     password := edPassword.Text;
     organizationId := edOrg.Text;
     officeCode := edOffice.Text;
-    companyGuid := edCompany.Text;
     invoiceCode := edSalesCode.Text;
     usedCurrency := edCurrency.Text;
     receivableBalanceAccount := edReceivableAccount.Text;
     preceedingInvoiceNumber := edPreInvoiceNumber.Text;
     succeedingInvoiceNumber := edSuccInvoiceNumber.Text;
+    customersListUri := edCustomersList.Text;
+    itemsListUri := edItemsList.Text;
+    vatListUri:= edVatList.Text;
+    payGroupsListUri := edPaygroupList.Text;
+    cashBooksListUri := edCashBookList.Text;
+    systemName := edSystemName.Text;
   end;
 
   FinanceConnectService.SaveFinanceConnectSettings(FinanceConnectSettings);

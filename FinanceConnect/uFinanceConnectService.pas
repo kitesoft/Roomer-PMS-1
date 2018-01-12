@@ -36,7 +36,13 @@ type
       usedCurrency,
       username,
       preceedingInvoiceNumber,
-      succeedingInvoiceNumber : String;
+      succeedingInvoiceNumber,
+      customersListUri,
+      itemsListUri,
+      vatListUri,
+      payGroupsListUri,
+      cashBooksListUri,
+      systemName : String;
 
       constructor Create(_systemActive: Boolean;
                          _cashBalanceAccount,
@@ -53,7 +59,13 @@ type
                          _usedCurrency,
                          _username,
                          _preceedingInvoiceNumber,
-                         _succeedingInvoiceNumber : String);
+                         _succeedingInvoiceNumber,
+                         _customersListUri,
+                         _itemsListUri,
+                         _vatListUri,
+                         _payGroupsListUri,
+                         _cashBooksListUri,
+                         _systemName : String);
     end;
 
     TFinanceConnectService = class
@@ -155,6 +167,12 @@ const MAP_ENTITY_PATH = 'financeconnect/mappings/%s/%s/%s';
       XML_USERNAME = 'username';
       XML_PRE_INVOICE_NUMBER = 'preceedingInvoiceNumber';
       XML_SUC_INVOICE_NUMBER = 'succeedingInvoiceNumber';
+      XML_CUST_LIST_URI = 'customersListUri';
+      XML_ITEM_LIST_URI = 'itemsListUri';
+      XML_VAT_LIST_URI = 'vatListUri';
+      XML_PAY_LIST_URI = 'payGroupsListUri';
+      XML_CASH_BOOK_LIST_URI = 'cashBooksListUri';
+      XML_SYSTEM_NAME = 'systemName';
 
 { TFinanceConnectService }
 
@@ -342,7 +360,25 @@ begin
                preceedingInvoiceNumber := rootNode.text
             else
             if rootNode.nodeName = XML_SUC_INVOICE_NUMBER then
-               succeedingInvoiceNumber := rootNode.text;
+               succeedingInvoiceNumber := rootNode.text
+            else
+            if rootNode.nodeName = XML_CUST_LIST_URI then
+               customersListUri := rootNode.text
+            else
+            if rootNode.nodeName = XML_ITEM_LIST_URI then
+               itemsListUri := rootNode.text
+            else
+            if rootNode.nodeName = XML_VAT_LIST_URI then
+               vatListUri := rootNode.text
+            else
+            if rootNode.nodeName = XML_PAY_LIST_URI then
+               payGroupsListUri := rootNode.text
+            else
+            if rootNode.nodeName = XML_CASH_BOOK_LIST_URI then
+               cashBooksListUri := rootNode.text
+            else
+            if rootNode.nodeName = XML_SYSTEM_NAME then
+               systemName := rootNode.text;
           end;
         end;
       end;
@@ -386,6 +422,12 @@ begin
     AddDataElement(XML_USERNAME, username);
     AddDataElement(XML_PRE_INVOICE_NUMBER, preceedingInvoiceNumber);
     AddDataElement(XML_SUC_INVOICE_NUMBER, succeedingInvoiceNumber);
+    AddDataElement(XML_CUST_LIST_URI, customersListUri);
+    AddDataElement(XML_ITEM_LIST_URI, itemsListUri);
+    AddDataElement(XML_VAT_LIST_URI, vatListUri);
+    AddDataElement(XML_PAY_LIST_URI, payGroupsListUri);
+    AddDataElement(XML_CASH_BOOK_LIST_URI, cashBooksListUri);
+    AddDataElement(XML_SYSTEM_NAME, systemName);
   end;
   xmlDoc.SaveToXML(result);
 end;
@@ -607,10 +649,27 @@ end;
 { TFinanceConnectSettings }
 
 constructor TFinanceConnectSettings.Create(_systemActive: Boolean;
-                         _cashBalanceAccount, _cashCode, _companyGuid, _hotelId, _invoiceCode, _officeCode, _organizationId,
-  _password, _receivableBalanceAccount, _serviceUri, _systemCode, _usedCurrency, _username,
+                         _cashBalanceAccount,
+                         _cashCode,
+                         _companyGuid,
+                         _hotelId,
+                         _invoiceCode,
+                         _officeCode,
+                         _organizationId,
+                         _password,
+                         _receivableBalanceAccount,
+                         _serviceUri,
+                         _systemCode,
+                         _usedCurrency,
+                         _username,
                          _preceedingInvoiceNumber,
-                         _succeedingInvoiceNumber : String);
+                         _succeedingInvoiceNumber,
+                         _customersListUri,
+                         _itemsListUri,
+                         _vatListUri,
+                         _payGroupsListUri,
+                         _cashBooksListUri,
+                         _systemName : String);
 begin
   cashBalanceAccount := _cashBalanceAccount;
   cashCode := _cashCode;
@@ -628,6 +687,12 @@ begin
   username := _username;
   preceedingInvoiceNumber := _preceedingInvoiceNumber;
   succeedingInvoiceNumber := _succeedingInvoiceNumber;
+  customersListUri := _customersListUri;
+  itemsListUri := _itemsListUri;
+  vatListUri := _vatListUri;
+  payGroupsListUri := _payGroupsListUri;
+  cashBooksListUri := _cashBooksListUri;
+  systemName := _systemName;
 end;
 
 initialization
