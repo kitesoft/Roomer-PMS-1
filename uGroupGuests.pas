@@ -69,26 +69,19 @@ uses
   dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv,
   dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, Vcl.Menus, dxPSCore, dxPScxCommon, cxPropertiesStore, cxButtonEdit, dxPScxPivotGridLnk,
-  dxmdaset, ALHttpClient, ALWininetHttpClient
+  dxmdaset, cxMemo, cxDropDownEdit, sMemo
 
-
+  , Generics.Collections, cxGridDBTableView, uReservationStateDefinitions
+  , uRoomerGridForm, System.Actions, Vcl.ActnList, sStatusBar, sSplitter, Vcl.DBCtrls
   ;
 
 type
-  TfrmGroupGuests = class(TForm)
-    sPanel1: TsPanel;
-    panBtn: TsPanel;
-    BtnOk: TsButton;
-    sPageControl1: TsPageControl;
-    sTabSheet1: TsTabSheet;
-    sPanel2: TsPanel;
+  TfrmGroupGuests = class(TfrmBaseRoomerGridForm)
+    pnlSelection: TsPanel;
+    pnlGridButtons: TsPanel;
     lvGuests: TcxGridLevel;
-    grGuests: TcxGrid;
     tvGuests: TcxGridDBBandedTableView;
-    _kbmGuests: TkbmMemTable;
-    kbmGuestsDS: TDataSource;
-    _kbmCompare: TkbmMemTable;
-    CompareDS: TDataSource;
+    dsGuests: TDataSource;
     rgrShow: TsRadioGroup;
     btnExcel: TsButton;
     sButton1: TsButton;
@@ -100,8 +93,6 @@ type
     chkCompactView: TsCheckBox;
     tvGuestsId: TcxGridDBBandedColumn;
     tvGuestsPerson: TcxGridDBBandedColumn;
-    tvGuestsReservation: TcxGridDBBandedColumn;
-    tvGuestsRoomReservation: TcxGridDBBandedColumn;
     tvGuestsPersonsProfilesId: TcxGridDBBandedColumn;
     tvGueststitle: TcxGridDBBandedColumn;
     tvGuestsname: TcxGridDBBandedColumn;
@@ -122,29 +113,12 @@ type
     tvGuestsPersonalIdentificationId: TcxGridDBBandedColumn;
     tvGuestsDateOfBirth: TcxGridDBBandedColumn;
     tvGuestsSocialSecurityNumber: TcxGridDBBandedColumn;
-    tvGuestsroom: TcxGridDBBandedColumn;
-    tvGuestsBreakfast: TcxGridDBBandedColumn;
-    tvGuestsrrArrival: TcxGridDBBandedColumn;
-    tvGuestsrrDeparture: TcxGridDBBandedColumn;
-    tvGuestsnumGuests: TcxGridDBBandedColumn;
-    tvGuestsRoomDescription: TcxGridDBBandedColumn;
-    tvGuestsStatusText: TcxGridDBBandedColumn;
-    tvGuestsroomDetails: TcxGridDBBandedColumn;
-    FormStore: TcxPropertiesStore;
-    grPrinter: TdxComponentPrinter;
-    mnuOther: TPopupMenu;
+    pmnuOther: TPopupMenu;
     mnuiPrint: TMenuItem;
     N2: TMenuItem;
-    Export1: TMenuItem;
-    mnuiGridToExcel: TMenuItem;
-    mnuiGridToHtml: TMenuItem;
-    mnuiGridToText: TMenuItem;
-    mnuiGridToXml: TMenuItem;
-    grPrinterLink1: TdxGridReportLink;
     mGuests: TdxMemData;
     mGuestsId: TIntegerField;
     mGuestsPerson: TIntegerField;
-    mGuestsReservation: TIntegerField;
     mGuestsRoomReservation: TIntegerField;
     mGuestsPersonsProfilesId: TIntegerField;
     mGueststitle: TWideStringField;
@@ -166,14 +140,6 @@ type
     mGuestsPersonalIdentificationId: TWideStringField;
     mGuestsDateOfBirth: TDateTimeField;
     mGuestsSocialSecurityNumber: TWideStringField;
-    mGuestsRoom: TWideStringField;
-    mGuestsBreakfast: TBooleanField;
-    mGuestsrrArrival: TDateTimeField;
-    mGuestsrrDeparture: TDateTimeField;
-    mGuestsnumGuests: TIntegerField;
-    mGuestsRoomDescription: TWideStringField;
-    mGuestsStatusText: TWideStringField;
-    mGuestsroomDetails: TWideStringField;
     mGuestsCompanyName: TStringField;
     mGuestsCompVATNumber: TWideStringField;
     mGuestsCompAddress1: TStringField;
@@ -184,8 +150,6 @@ type
     mGuestsCompTel: TWideStringField;
     mGuestsCompFax: TWideStringField;
     mGuestsCompEmail: TWideStringField;
-    mGuestsRoomType: TWideStringField;
-    tvGuestsRoomType: TcxGridDBBandedColumn;
     mCompare: TdxMemData;
     IntegerField1: TIntegerField;
     IntegerField2: TIntegerField;
@@ -230,20 +194,59 @@ type
     WideStringField28: TWideStringField;
     WideStringField29: TWideStringField;
     WideStringField30: TWideStringField;
-    ALWinInetHTTPClient1: TALWinInetHTTPClient;
-    procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure BtnOkClick(Sender: TObject);
+    mCompareRoomNotes: TWideMemoField;
+    mRooms: TdxMemData;
+    mRoomsRoomReservation: TIntegerField;
+    mRoomsRoom: TWideStringField;
+    mRomsBreakfast: TBooleanField;
+    mRoomsArrival: TDateTimeField;
+    mRoomsDeparture: TDateTimeField;
+    mRoomsNumGuests: TIntegerField;
+    mRoomsRoomDescription: TWideStringField;
+    mRoomsStatus: TWideStringField;
+    mRoomsRoomDetails: TWideStringField;
+    mRoomsRoomtype: TWideStringField;
+    mRoomsRoomNotes: TWideMemoField;
+    tvRoomsRecId: TcxGridDBBandedColumn;
+    tvRoomsRoomReservation: TcxGridDBBandedColumn;
+    tvRoomsRoom: TcxGridDBBandedColumn;
+    tvRoomsBreakfast: TcxGridDBBandedColumn;
+    tvRoomsrrArrival: TcxGridDBBandedColumn;
+    tvRoomsrrDeparture: TcxGridDBBandedColumn;
+    tvRoomsnumGuests: TcxGridDBBandedColumn;
+    tvRoomsRoomDescription: TcxGridDBBandedColumn;
+    tvRoomsStatusText: TcxGridDBBandedColumn;
+    tvRoomsroomDetails: TcxGridDBBandedColumn;
+    tvRoomsRoomType: TcxGridDBBandedColumn;
+    mRoomsCompare: TdxMemData;
+    IntegerField7: TIntegerField;
+    WideStringField31: TWideStringField;
+    WideStringField32: TWideStringField;
+    BooleanField3: TBooleanField;
+    DateTimeField4: TDateTimeField;
+    DateTimeField5: TDateTimeField;
+    IntegerField8: TIntegerField;
+    WideStringField33: TWideStringField;
+    WideStringField34: TWideStringField;
+    WideStringField35: TWideStringField;
+    mRoomsCompareRoomNotes: TWideMemoField;
+    tvguestsRoomreservation: TcxGridDBBandedColumn;
+    mRoomsReservation: TIntegerField;
+    mRoomsCompareReservation: TIntegerField;
+    pnlNotes: TsPanel;
+    memReservationPMInfo: TsMemo;
+    memRoomNotes: TDBMemo;
+    lblReservationNotes: TsLabel;
+    lblRoomNotes: TsLabel;
+    memReservationInformation: TsMemo;
+    splClient: TsSplitter;
+    mGuestsReservation: TIntegerField;
     procedure chkCompactViewClick(Sender: TObject);
     procedure rgrShowClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
     procedure sButton1Click(Sender: TObject);
     procedure btnExpandClick(Sender: TObject);
     procedure btnCollapseClick(Sender: TObject);
-    procedure mnuiPrintClick(Sender: TObject);
-    procedure mnuiGridToHtmlClick(Sender: TObject);
-    procedure mnuiGridToTextClick(Sender: TObject);
-    procedure mnuiGridToXmlClick(Sender: TObject);
     procedure btnClearAddressClick(Sender: TObject);
     procedure tvGuestsCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvGuestsCountryPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
@@ -251,28 +254,31 @@ type
     procedure tvGuestsNationalityPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
       var Error: Boolean);
     procedure btnEditClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvRoomsStatusTextGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure btnOKClick(Sender: TObject);
+    procedure mRoomsBeforePost(DataSet: TDataSet);
+    procedure mGuestsAfterPost(DataSet: TDataSet);
   private
     { Private declarations }
-    zReservation : integer;
-    zRoomreservation : integer;
-
-    procedure getReservation(reservation : integer);
+    FHasUnsavedChanges: boolean;
     function  updateSQL(id : integer) : string;
-    procedure setView;
-    procedure doupdate;
+    procedure SaveChanges;
     function CountryValidate(country : string) : boolean;
+    procedure DefineFilterOnMainName;
+
+  protected
+    procedure DoLoadData; override;
+    procedure DoUpdateControls; override;
+    procedure DoShow; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
 
   public
-    { Public declarations }
+    zReservation : integer;
+    zRoomreservation : integer;
   end;
 
 function GroupGuests(reservation,roomreservation : integer) : boolean;
-
-var
-  frmGroupGuests: TfrmGroupGuests;
-
-
 
 implementation
 
@@ -282,7 +288,7 @@ uses
    uD
    ,uGuestCheckInForm
    ,uEditGuest
-   ,uCountries, uSQLUtils;
+   ,uCountries, uSQLUtils, PrjConst;
 
 
 function TfrmGroupGuests.CountryValidate(country : string) : boolean;
@@ -292,132 +298,188 @@ end;
 
 
 function GroupGuests(reservation,roomreservation : integer) : boolean;
+var
+  frm: TfrmGroupGuests;
 begin
   result := false;
-  frmGroupGuests := TfrmGroupGuests.Create(nil);
+  frm := TfrmGroupGuests.Create(nil);
   try
-    frmGroupGuests.zReservation     := Reservation;
-    frmGroupGuests.zRoomreservation := RoomReservation;
-    frmGroupGuests.ShowModal;
-    if frmGroupGuests.modalresult = mrOk then
-    begin
-      result := true;
-    end
+    frm.zReservation     := Reservation;
+    frm.zRoomreservation := RoomReservation;
+    frm.ShowModal;
+    Result := (frm.modalresult = mrOk);
   finally
-    freeandnil(frmGroupGuests);
+    frm.Free;
   end;
-  //240627-2569
 end;
 
-
-procedure TfrmGroupGuests.FormCreate(Sender: TObject);
-begin
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
-end;
-
-procedure TfrmGroupGuests.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TfrmGroupGuests.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
-    Close;
+    if mRooms.State = dsEdit then
+    begin
+      mRooms.Cancel;
+      Key := 0;
+    end
+    else if mGuests.State = dsEdit then
+    begin
+      mGuests.Cancel;
+      Key := 0;
+    end;
+
+  inherited;
 end;
 
-procedure TfrmGroupGuests.FormShow(Sender: TObject);
+procedure TfrmGroupGuests.mGuestsAfterPost(DataSet: TDataSet);
 begin
-  getReservation(zreservation);
-  setView;
-  rgrShowClick(self);
+  inherited;
+  FHasUnsavedChanges := true;
 end;
 
-procedure TfrmGroupGuests.getReservation(reservation: integer);
+procedure TfrmGroupGuests.mRoomsBeforePost(DataSet: TDataSet);
+begin
+  inherited;
+
+  if LoadingData then
+    Exit;
+
+  if mRoomsNumGuests.OldValue <> mRoomsNumGuests.AsInteger then
+  begin
+    if (mRoomsNumGuests.OldValue < mRoomsNumGuests.AsInteger) or
+       (MessageDlg(GetTranslatedText('shDecreaseRoomResGuestCount'), mtConfirmation, mbYesNo, 0) = mrYes) then
+    begin
+      d.RR_ChangeGuestCount(mRoomsRoomReservation.AsInteger, mGuests, mRoomsNumGuests.AsInteger);
+      RefreshData;
+    end
+    else
+      Abort
+  end
+  else
+    FHasUnsavedChanges := true;
+
+end;
+
+procedure TfrmGroupGuests.DoShow;
+begin
+  inherited;
+  DefineFilterOnMainName;
+  pmnuOther.Items.Add(GridExporter.ExportSubMenu);
+  DialogButtons := mbOKCancel;
+end;
+
+procedure TfrmGroupGuests.DoLoadData;
 var
   s : string;
   rSet : TroomerDataset;
+  lExecPlan: TRoomerExecutionPlan;
 begin
-  s := '';
-  s := s+'SELECT '#10;
-  s := s+'   pe.ID '#10;
-  s := s+'  ,pe.Person '#10;
-  s := s+'  ,pe.Reservation '#10;
-  s := s+'  ,pe.RoomReservation '#10;
-  s := s+'  ,pe.PersonsProfilesId '#10;
-  s := s+'  ,pe.title '#10;
-  s := s+'  ,pe.Name '#10;
-//  s := s+'  ,pe.Surname '#10;
-  s := s+'  ,pe.Address1 '#10;
-  s := s+'  ,pe.Address2 '#10;
-  s := s+'  ,pe.Address3 '#10;
-  s := s+'  ,pe.Address4 '#10;
-  s := s+'  ,pe.Country '#10;
-  s := s+'  ,pe.Tel1 '#10;
-  s := s+'  ,pe.Tel2 '#10;
-  s := s+'  ,pe.Fax '#10;
-  s := s+'  ,pe.Email '#10;
-//  s := s+'  ,pe.GuestType '#10;
-//  s := s+'  ,pe.Information '#10;
-  s := s+'  ,pe.Nationality '#10;
-  s := s+'  ,pe.PID '#10;
-  s := s+'  ,pe.MainName '#10;
-  s := s+'  ,pe.Customer '#10;
-//  s := s+'  ,pe.Company '#10;
-  s := s+'  ,pe.CompanyName '#10;
-  s := s+'  ,pe.CompVATNumber '#10;
-  s := s+'  ,pe.CompAddress1 '#10;
-  s := s+'  ,pe.CompAddress2 '#10;
-  s := s+'  ,pe.CompZip '#10;
-  s := s+'  ,pe.CompCity '#10;
-  s := s+'  ,pe.CompCountry '#10;
-  s := s+'  ,pe.CompTel '#10;
-  s := s+'  ,pe.CompFax '#10;
-  s := s+'  ,pe.CompEmail '#10;
+  if zReservation = 0 then
+    Exit;
 
-  //  s := s+'  ,pe.peTmp '#10;
-//  s := s+'  ,pe.HallReservation '#10;
-//  s := s+'  ,pe.hgrID '#10;
-  s := s+'  ,pe.state '#10;
-//  s := s+'  ,pe.sourceId '#10;
-  s := s+'  ,pe.PersonalIdentificationId '#10;
-  s := s+'  ,pe.DateOfBirth '#10;
-  s := s+'  ,pe.SocialSecurityNumber '#10;
+  if FHasUnsavedChanges then
+    case MessageDlg(GetTranslatedText('shSaveChangesBeforeReloadingData'), mtConfirmation, mbYesNoCancel, 0) of
+      mrYes:    SaveChanges;
+      mrNo:     begin end;
+      mrCancel: Exit;
+    end;
 
-  s := s+'  ,rr.room '#10;
-  s := s+'  ,rr.roomType '#10;
-//  s := s+'  ,rr.status '#10;
-//  s := s+'  ,rr.groupaccount '#10;
-  s := s+'  ,rr.invBreakfast AS Breakfast'#10;
-  s := s+'  ,rr.rrArrival '#10;
-  s := s+'  ,rr.rrDeparture '#10;
-  s := s+'  ,rr.numGuests '#10;
-//  s := s+'  ,rr.roomclass '#10;
-//  s := s+'  ,rr.package '#10;
-  s := s+'  ,(SELECT description from rooms where rooms.room = rr.room) as RoomDescription '#10;
-  s := s+'  ,(SELECT Result from dictionary where dictionary.code = rr.status) as StatusText '#10;
-  s := s+'  ,concat(room," - ", (SELECT description from rooms where rooms.room = rr.room)," - ",rr.numGuests,". Guests") as roomDetails '#10;
-
-  s := s+' FROM '#10;
-  s := s+'  persons pe '#10;
-  s := s+'  LEFT JOIN roomreservations rr on pe.roomreservation = rr.roomreservation '#10;
-  s := s+' WHERE '#10;
-  s := s+'  (pe.Reservation='+_db(reservation)+') '#10;
-
-
-  if rgrShow.ItemIndex = 1 then
-  begin
-    s := s+'   and (pe.name <> '+_db('')+') '#10;
-    s := s+'   and (pe.name <> '+_db('RoomGuest')+') '#10;
-    s := s+'   and (pe.name <> '+_db('MainGuest')+') '#10;
-    s := s+'   and (pe.name <> '+_db('Added Guest')+') '#10;
-  end;
-
-  s := s+'  ORDER BY ROOM, Mainname desc '#10;
-
-//     copyToClipboard(s);
-//     DebugMessage(s);
-
-  rSet := CreateNewDataSet;
+  lExecPLan := d.roomerMainDataSet.CreateExecutionPlan;
   try
-    if hData.rSet_bySQL(rSet, s, false) then
-    begin
+    s := '';
+    s := s+'SELECT '#10;
+    s := s+'   pe.ID '#10;
+    s := s+'  ,pe.Person '#10;
+    s := s+'  ,pe.Reservation '#10;
+    s := s+'  ,pe.RoomReservation '#10;
+    s := s+'  ,pe.PersonsProfilesId '#10;
+    s := s+'  ,pe.title '#10;
+    s := s+'  ,pe.Name '#10;
+    s := s+'  ,pe.Address1 '#10;
+    s := s+'  ,pe.Address2 '#10;
+    s := s+'  ,pe.Address3 '#10;
+    s := s+'  ,pe.Address4 '#10;
+    s := s+'  ,pe.Country '#10;
+    s := s+'  ,pe.Tel1 '#10;
+    s := s+'  ,pe.Tel2 '#10;
+    s := s+'  ,pe.Fax '#10;
+    s := s+'  ,pe.Email '#10;
+    s := s+'  ,pe.Nationality '#10;
+    s := s+'  ,pe.PID '#10;
+    s := s+'  ,pe.MainName '#10;
+    s := s+'  ,pe.Customer '#10;
+    s := s+'  ,pe.CompanyName '#10;
+    s := s+'  ,pe.CompVATNumber '#10;
+    s := s+'  ,pe.CompAddress1 '#10;
+    s := s+'  ,pe.CompAddress2 '#10;
+    s := s+'  ,pe.CompZip '#10;
+    s := s+'  ,pe.CompCity '#10;
+    s := s+'  ,pe.CompCountry '#10;
+    s := s+'  ,pe.CompTel '#10;
+    s := s+'  ,pe.CompFax '#10;
+    s := s+'  ,pe.CompEmail '#10;
+    s := s+'  ,pe.state '#10;
+    s := s+'  ,pe.PersonalIdentificationId '#10;
+    s := s+'  ,pe.DateOfBirth '#10;
+    s := s+'  ,pe.SocialSecurityNumber '#10;
+    s := s+' FROM '#10;
+    s := s+'  persons pe '#10;
+    s := s+' JOIN roomreservations rr on rr.roomreservation = pe.roomreservation and rr.status not in (''X'', ''C'') '#10;
+    s := s+' WHERE '#10;
+    s := s+'  (pe.Reservation='+_db(zReservation)+') '#10;
+
+    if rgrShow.itemindex = 1 then
+      s := s + '  AND pe.MainName '#10;
+
+    s := s+'  ORDER BY Mainname desc, person asc'#10;
+    CopyToClipboard(s);
+    lExecPLan.AddQuery(s);
+
+    s :=      'SELECT '#10;
+    s := s+'   rr.reservation '#10;
+    s := s+'  ,rr.roomreservation '#10;
+    s := s+'  ,rr.room '#10;
+    s := s+'  ,rr.roomType '#10;
+    s := s+'  ,rr.invBreakfast AS Breakfast'#10;
+    s := s+'  ,CAST((SELECT Min(aDate) from roomsdate rd where rd.roomreservation = rr.roomreservation and rd.resflag not in (''X'', ''C'')) as DateTime) as Arrival '#10;
+    s := s+'  ,CAST((SELECT DATE_ADD(Max(aDate), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation = rr.roomreservation and rd.resflag not in (''X'', ''C'')) as DateTime) as Departure '#10;
+    s := s+'  ,(SELECT count(*) from persons p where p.roomreservation = rr.roomreservation) as numGuests '#10;
+    s := s+'  ,rr.status '#10;
+    s := s+'  ,rooms.description as RoomDescription '#10;
+    s := s+'  ,concat(rr.room," - ", rooms.description," - ",rr.numGuests,". Guests") as roomDetails '#10;
+    s := s+'  ,rr.HiddenInfo as roomNotes'#10;
+    s := s+' FROM '#10;
+    s := s+'  roomreservations rr '#10;
+    s := s+' JOIN rooms on rooms.room = rr.room'#10;
+    s := s+' WHERE '#10;
+    s := s+'  (rr.Reservation='+_db(zReservation)+') '#10;
+    s := s+'  AND rr.status not in (''X'', ''C'') '#10;
+    s := s+'  ORDER BY rr.room asc '#10;
+    CopyToClipboard(s);
+    lExecPLan.AddQuery(s);
+
+    s := 'SELECT information, pminfo from reservations where reservation ='+_db(zReservation);
+    lExecPLan.AddQuery(s);
+
+    if lExecPlan.Execute() then
+    begin
+      rSet := lExecPlan.Results[1];
+      mROoms.DisableControls;
+      try
+        if mRooms.active then mRooms.Close;
+        if mRoomsCompare.active then mRoomsCompare.Close;
+        mRoomsCompare.open;
+        mRooms.open;
+        rSet.First;
+        mRooms.LoadFromDataSet(rset);
+        mRooms.First;
+        rSet.First;
+        mRoomsCompare.LoadFromDataSet(rset);
+        mRooms.First;
+      finally
+        mRooms.EnableControls;
+      end;
+
+      rSet := lExecPlan.Results[0];
       mGuests.disableControls;
       try
         if mGuests.active then mGuests.Close;
@@ -429,45 +491,32 @@ begin
         mGuests.First;
         rSet.First;
         mCompare.LoadFromDataSet(rset);
-//      showmessage(inttostr(rSet.RecordCount)+' / '+inttostr(rSet.RecordCount));
-        mGuests.First;
       finally
         mGuests.enableControls;
       end;
+
+      rSet := lExecPlan.Results[2];
+      memReservationPMInfo.Lines.Text := rSet.FieldByName('pminfo').AsString;
+      memReservationInformation.Lines.Text := rSet.FieldByName('information').asString;
+
     end;
   finally
-    freeandnil(rset);
+    lExecPlan.Free;
   end;
-end;
-
-
-procedure TfrmGroupGuests.mnuiPrintClick(Sender: TObject);
-begin
-  grPrinter.PrintTitle := caption;
-  grPrinterLink1.ReportTitle.Text := caption;
-  grPrinter.Preview(true, grPrinterLink1);
 end;
 
 procedure TfrmGroupGuests.rgrShowClick(Sender: TObject);
 begin
-  screen.Cursor := crHourglass;
-  try
-    doupdate;
-    getReservation(zreservation);
+  RefreshData;
+end;
 
-    btnCollapse.visible  := rgrShow.ItemIndex = 0; // chkGroup.Checked;
-    btnExpand.visible    := rgrShow.ItemIndex = 0;
-    tvGuestsroom.Visible := rgrShow.ItemIndex = 1;
-
-    if rgrShow.ItemIndex = 0 then
-    begin
-      tvGuestsroomDetails.GroupIndex := 1;
-      tvGuests.DataController.Groups.FullExpand;
-    end else
-      tvGuestsroomDetails.GroupIndex := -1;
-
-  finally
-    screen.cursor := crdefault;
+procedure TfrmGroupGuests.DefineFilterOnMainName;
+begin
+  with tvGuests.DataController.Filter do
+  begin
+    Options := [fcoCaseInsensitive];
+    Root.Clear;
+    Root.AddItem(tvGuestsMainName, foEqual, True, 'True');
   end;
 end;
 
@@ -478,9 +527,6 @@ begin
   s := '';
   s := s+'UPDATE persons '#10;
   s := s+'SET '#10;
-//  s := s+'Person = '+_db(mGuests.fieldbyname('Person').asinteger)+' '#10;
-//  s := s+',RoomReservation = '+_db(mGuests.fieldbyname('RoomReservation').asinteger)+' '#10;
-//  s := s+',Reservation =  '+_db(mGuests.FieldByName('Reservation').asinteger)+' '#10;
   s := s+' PersonsProfilesId =  '+_db(mGuests.FieldByName('PersonsProfilesId').asInteger)+' '#10;
   s := s+',title = '+_db(mGuests.FieldByName('title').asString)+' '#10;
   s := s+',Name =  '+_db(mGuests.FieldByName('Name').asString)+' '#10;
@@ -493,14 +539,9 @@ begin
   s := s+',Tel2 = '+_db(mGuests.FieldByName('Tel2').asString)+' '#10;
   s := s+',Fax = '+_db(mGuests.FieldByName('Fax').asString)+' '#10;
   s := s+',Email = '+_db(mGuests.FieldByName('Email').asString)+' '#10;
-//  s := s+',GuestType = '+_db(mGuests.FieldByName('GuestType').asString)+' '#10;
-//  s := s+',Information = '+_db(mGuests.FieldByName('Information').asString)+' '#10;
   s := s+',Nationality = '+_db(mGuests.FieldByName('Nationality').asString)+' '#10;
   s := s+',PID = '+_db(mGuests.FieldByName('PID').asString)+' '#10;
   s := s+',MainName = '+_db(mGuests.FieldByName('MainName').asBoolean)+' '#10;
-
-//  s := s+',Customer = '+_db(mGuests.FieldByName('Customer').asString)+' '#10;
-//  s := s+',Company = '+_db(mGuests.FieldByName('Company').asString)+' '#10;
   s := s+',CompanyName = '+_db(mGuests.FieldByName('CompanyName').asString)+' '#10;
   s := s+',CompVATNumber = '+_db(mGuests.FieldByName('CompVATNumber').asString)+' '#10;
   s := s+',CompAddress1 = '+_db(mGuests.FieldByName('CompAddress1').asString)+' '#10;
@@ -511,17 +552,12 @@ begin
   s := s+',CompTel = '+_db(mGuests.FieldByName('CompTel').asString)+' '#10;
   s := s+',CompFax = '+_db(mGuests.FieldByName('CompFax').asString)+' '#10;
   s := s+',CompEmail = '+_db(mGuests.FieldByName('CompEmail').asString)+' '#10;
-//  s := s+',peTmp = '+_db(mGuests.FieldByName('peTmp').asString)+' '#10;
-//  s := s+',ID = '+_db(mGuests.FieldByName('ID').asInteger)+' '#10;
   s := s+',state = '+_db(mGuests.FieldByName('state').asString)+' '#10;
-//  s := s+',sourceId = '+_db(mGuests.FieldByName('sourceId').asString)+' '#10;
   s := s+',PersonalIdentificationId = '+_db(mGuests.FieldByName('PersonalIdentificationId').asString)+' '#10;
   s := s+',DateOfBirth = '+_db(mGuests.FieldByName('DateOfBirth').asDateTime)+' '#10;
   s := s+',SocialSecurityNumber = '+_db(mGuests.FieldByName('SocialSecurityNumber').asString)+' '#10;
   s := s+'WHERE '#10;
   s := s+'  ID = '+_db(id)+' ';
-//  copyToClipboard(s);
-//  debugMessage(s);
   result := s;
 end;
 
@@ -562,8 +598,10 @@ begin
   PersonRec.PersonalIdentificationId := mGuests.FieldByName('PersonalIdentificationId').AsString ;
   PersonRec.SocialSecurityNumber     := mGuests.FieldByName('SocialSecurityNumber').AsString     ;
   PersonRec.Country                  := mGuests.FieldByName('Country').AsString                  ;
+  PersonRec.Nationality              := mGuests.FieldByName('Nationality').AsString              ;
   PersonRec.Tel1                     := mGuests.FieldByName('tel1').AsString                     ;
   PersonRec.Tel2                     := mGuests.FieldByName('tel2').AsString                     ;
+  PersonRec.Fax                      := mGuests.FieldByName('fax').AsString                      ;
   PersonRec.Email                    := mGuests.FieldByName('Email').AsString                    ;
 
   PersonRec.CompanyName     :=   mGuests.FieldByName('CompanyName').AsString     ;
@@ -593,8 +631,10 @@ begin
     mGuests.FieldByName('PersonalIdentificationId').AsString  := PersonRec.PersonalIdentificationId;
     mGuests.FieldByName('SocialSecurityNumber').AsString      := PersonRec.SocialSecurityNumber;
     mGuests.FieldByName('Country').AsString                   := PersonRec.Country;
+    mGuests.FieldByName('nationality').AsString               := PersonRec.Nationality;
     mGuests.FieldByName('tel1').AsString                      := PersonRec.Tel1;
     mGuests.FieldByName('tel2').AsString                      := PersonRec.Tel2;
+    mGuests.FieldByName('fax').AsString                       := PersonRec.Fax;
     mGuests.FieldByName('Email').AsString                     := PersonRec.Email;
 
     mGuests.FieldByName('CompanyName'  ).AsString    := PersonRec.CompanyName     ;
@@ -608,25 +648,12 @@ begin
     mGuests.FieldByName('CompCity'     ).AsString    := PersonRec.CompCity        ;
     mGuests.FieldByName('CompCountry'  ).AsString    := PersonRec.CompCountry     ;
     mGuests.post;
-  end else
-  begin
-    //
   end;
-
-
-
-
 end;
 
 procedure TfrmGroupGuests.btnExcelClick(Sender: TObject);
-var
-  sFilename : string;
-  s         : string;
 begin
-  dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFilename := g.qProgramPath + s + '_GoupGuests';
-  ExportGridToExcel(sFilename, grGuests, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
+  GridExporter.ExportToExcel;
 end;
 
 procedure TfrmGroupGuests.btnExpandClick(Sender: TObject);
@@ -634,68 +661,20 @@ begin
   tvGuests.DataController.Groups.FullExpand;
 end;
 
-procedure TfrmGroupGuests.BtnOkClick(Sender: TObject);
+procedure TfrmGroupGuests.btnOKClick(Sender: TObject);
 begin
-  doUpdate;
+  inherited;
+  SaveChanges;
 end;
 
 procedure TfrmGroupGuests.chkCompactViewClick(Sender: TObject);
 begin
-  setView;
+  UpdateControls;
 end;
 
 procedure TfrmGroupGuests.sButton1Click(Sender: TObject);
-var
-  iReservation : integer;
 begin
-  iReservation := mGuests.fieldbyname('Reservation').AsInteger;
-  g.openresMemo(iReservation);
-end;
-
-procedure TfrmGroupGuests.setView;
-begin
-    // main
-    tvGuestsroom.Visible := true;
-    tvGueststitle.Visible := true;
-    tvGuestsname.Visible := true;
-    tvGuestsMainName.Visible := true;
-
-    tvGuestsRoomDescription.Visible := not  chkCompactView.Checked;
-    tvGuestsRoomtype.Visible := not  chkCompactView.Checked;
-    tvGuestsrrArrival.Visible := not  chkCompactView.Checked;
-    tvGuestsrrDeparture.Visible := not  chkCompactView.Checked;
-    tvGuestsnumGuests.Visible := not  chkCompactView.Checked;
-    tvGuestsStatusText.Visible := not  chkCompactView.Checked;
-    tvGuestsBreakfast.Visible := not  chkCompactView.Checked;
-
-    //Contact
-    tvGuests.Bands[1].Visible := not  chkCompactView.Checked;
-    tvGuestsTel1.Visible  := not  chkCompactView.Checked;
-    tvGuestsTel2.Visible  := not  chkCompactView.Checked;
-    tvGuestsFax.Visible   := not  chkCompactView.Checked;
-    tvGuestsEmail.Visible := not  chkCompactView.Checked;
-
-    //Address
-    tvGuests.Bands[2].Visible := not  chkCompactView.Checked;
-    tvGuestsAddress1.Visible    := not  chkCompactView.Checked;
-    tvGuestsAddress2.Visible    := not  chkCompactView.Checked;
-    tvGuestsAddress3.Visible    := not  chkCompactView.Checked;
-    tvGuestsAddress4.Visible    := not  chkCompactView.Checked;
-    tvGuestsState.Visible       := not  chkCompactView.Checked;
-    tvGuestsCountry.Visible     := not  chkCompactView.Checked;
-    tvGuestsNationality.Visible := not  chkCompactView.Checked;
-
-
-    //Other
-    tvGuests.Bands[3].Visible := not  chkCompactView.Checked;
-    tvGuestsCustomer.Visible                 := not  chkCompactView.Checked;
-    tvGuestsPID.Visible                      := not  chkCompactView.Checked;
-    tvGuestsDateOfBirth.Visible              := not  chkCompactView.Checked;
-    tvGuestsPersonalIdentificationId.Visible := not  chkCompactView.Checked;
-    tvGuestsSocialSecurityNumber.Visible     := not  chkCompactView.Checked;
-    tvGuests.applyBestFit;
-
-    btnClearAddress.visible :=  not  chkCompactView.Checked;
+  g.openresMemo(mRoomsReservation.AsInteger);
 end;
 
 
@@ -739,21 +718,32 @@ begin
   error := not countryValidate(DisplayValue);
 end;
 
-procedure TfrmGroupGuests.doupdate;
+procedure TfrmGroupGuests.tvRoomsStatusTextGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  aText := TReservationState.FromResStatus(mRoomsStatus.AsString).asReadableString;
+end;
+
+procedure TfrmGroupGuests.SaveChanges;
 var
   s : string;
   diff : boolean;
   ExecutionPlan: TRoomerExecutionPlan;
+  lRoomResUpdateList: TDictionary<integer, string>;
+  lRoomresUpdate: TPair<integer, string>;
+  i: integer;
 begin
-  if tvGuests.DataController.DataSet.State = dsInActive then
+  if tvData.DataController.DataSet.State = dsInActive then
     Exit;
 
-  if tvGuests.DataController.DataSet.State = dsEdit then
-    tvGuests.DataController.Post;
+  if FHasUnsavedChanges then
+
+  mGuests.CheckBrowseMode;
+  mRooms.CheckBrowseMode;
 
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  lRoomResUpdateList := TDictionary<integer, string>.Create;
   try
-    ExecutionPlan.BeginTransaction;
     try
       mGuests.DisableControls;
       try
@@ -796,64 +786,78 @@ begin
             s := updateSQL(mGuests.FieldByName('ID').AsInteger);
             ExecutionPlan.AddExec(s);
           end;
+
           mGuests.Next;
           mCompare.Next;
         end;
+
+          if not lRoomResUpdateList.ContainsKey(mGuestsRoomReservation.AsInteger) and (mRoomsRoomNotes.AsString <> mRoomsCompareRoomNotes.AsString) then
+            lRoomResUpdateList.Add(mRoomsRoomReservation.AsInteger, mRoomsRoomNotes.AsString);
+
+        s := 'UPDATE roomreservations SET hiddeninfo = %s WHERE roomreservation = %d ';
+
+        for lRoomresUpdate in lRoomResUpdateList do
+          ExecutionPlan.AddExec(Format(s, [_db(lRoomResUpdate.Value), lRoomResUpdate.Key]));
+
+        if not ExecutionPlan.Execute(ptExec, True, True) then
+          raise Exception.Create(ExecutionPlan.ExecException);
+
+        FHasUnsavedChanges := false;
       finally
         mGuests.EnableControls;
         tvGuests.applyBestFit;
       end;
-      if ExecutionPlan.Execute(ptExec, False, True) then
-      begin
-         ExecutionPlan.CommitTransaction
-      end else
-      begin
-        raise Exception.Create(ExecutionPlan.ExecException);
-      end;
     except
       on e: exception do
       begin
-        ExecutionPlan.RollbackTransaction;
         showMessage('Error on Updating Person : '+e.message);
       end;
     end;
   finally
     freeandNil(ExecutionPlan);
+    lRoomResUpdateList.Free;
   end;
-//  slabel1.Caption := s;
 end;
 
-
-
-
-procedure TfrmGroupGuests.mnuiGridToHtmlClick(Sender: TObject);
-var
-  sFilename : string;
+procedure TfrmGroupGuests.DoUpdateControls;
 begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToHtml(sFilename, grGuests, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.html'), nil, nil, sw_shownormal);
+  inherited;
+
+  tvData.DataController.Filter.Active := (rgrShow.ItemIndex = 1);
+
+  //Contact
+  tvGuests.Bands[1].Visible := not  chkCompactView.Checked;
+  tvGuestsTel1.Visible  := not  chkCompactView.Checked;
+  tvGuestsTel2.Visible  := not  chkCompactView.Checked;
+  tvGuestsFax.Visible   := not  chkCompactView.Checked;
+  tvGuestsEmail.Visible := not  chkCompactView.Checked;
+
+  //Address
+  tvGuests.Bands[2].Visible := not  chkCompactView.Checked;
+  tvGuestsAddress1.Visible    := not  chkCompactView.Checked;
+  tvGuestsAddress2.Visible    := not  chkCompactView.Checked;
+  tvGuestsAddress3.Visible    := not  chkCompactView.Checked;
+  tvGuestsAddress4.Visible    := not  chkCompactView.Checked;
+  tvGuestsState.Visible       := not  chkCompactView.Checked;
+  tvGuestsCountry.Visible     := not  chkCompactView.Checked;
+  tvGuestsNationality.Visible := not  chkCompactView.Checked;
+
+
+  //Other
+  tvGuests.Bands[3].Visible := not  chkCompactView.Checked;
+  tvGuestsCustomer.Visible                 := not  chkCompactView.Checked;
+  tvGuestsPID.Visible                      := not  chkCompactView.Checked;
+  tvGuestsDateOfBirth.Visible              := not  chkCompactView.Checked;
+  tvGuestsPersonalIdentificationId.Visible := not  chkCompactView.Checked;
+  tvGuestsSocialSecurityNumber.Visible     := not  chkCompactView.Checked;
+  tvGuests.applyBestFit;
+
+  btnClearAddress.visible :=  not  chkCompactView.Checked;
+
+  btnCollapse.Enabled := rgrShow.ItemIndex = 0;
+  btnExpand.Enabled   := rgrShow.ItemIndex = 0;
+
 end;
-
-procedure TfrmGroupGuests.mnuiGridToTextClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToText(sFilename, grGuests, true, true,';','','','txt');
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.txt'), nil, nil, sw_shownormal);
-end;
-
-procedure TfrmGroupGuests.mnuiGridToXmlClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToXml(sFilename, grGuests, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xml'), nil, nil, sw_shownormal);
-end;
-
-
 
 end.
 

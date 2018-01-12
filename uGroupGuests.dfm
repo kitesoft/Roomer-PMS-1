@@ -1,1167 +1,723 @@
-object frmGroupGuests: TfrmGroupGuests
-  Left = 0
-  Top = 0
+inherited frmGroupGuests: TfrmGroupGuests
   Caption = 'Group Guests'
   ClientHeight = 654
   ClientWidth = 1121
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
-  OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
-  OnShow = FormShow
+  ParentFont = False
+  ExplicitWidth = 1137
+  ExplicitHeight = 693
   PixelsPerInch = 96
   TextHeight = 13
-  object sPanel1: TsPanel
-    Left = 0
-    Top = 0
+  inherited sbStatusBar: TsStatusBar
+    Top = 634
     Width = 1121
-    Height = 113
-    Align = alTop
-    TabOrder = 0
-    SkinData.SkinSection = 'PANEL'
-    object rgrShow: TsRadioGroup
-      Left = 14
-      Top = 10
-      Width = 147
-      Height = 64
-      Caption = 'Select'
-      TabOrder = 0
-      OnClick = rgrShowClick
-      SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
-      ItemIndex = 1
-      Items.Strings = (
-        'All Guests'
-        'Just Main Guests')
+    ExplicitTop = 634
+    ExplicitWidth = 1121
+  end
+  inherited pnlButtons: TsPanel
+    Top = 591
+    Width = 1121
+    ExplicitTop = 591
+    ExplicitWidth = 1121
+    inherited btnOK: TsButton
+      Left = 805
+      OnClick = btnOKClick
+      ExplicitLeft = 805
     end
-    object chkCompactView: TsCheckBox
-      Left = 14
-      Top = 84
-      Width = 87
-      Height = 20
-      Caption = 'Compact view'
-      Checked = True
-      State = cbChecked
-      TabOrder = 1
-      OnClick = chkCompactViewClick
-      SkinData.SkinSection = 'CHECKBOX'
-      ImgChecked = 0
-      ImgUnchecked = 0
+    inherited btnCancel: TsButton
+      Left = 911
+      ExplicitLeft = 911
+    end
+    inherited btnClose: TsButton
+      Left = 1017
+      ExplicitLeft = 1017
     end
   end
-  object panBtn: TsPanel
-    Left = 0
-    Top = 621
+  inherited pnlTop: TsPanel
     Width = 1121
-    Height = 33
-    Align = alBottom
-    TabOrder = 1
-    SkinData.SkinSection = 'PANEL'
-    DesignSize = (
-      1121
-      33)
-    object BtnOk: TsButton
-      Left = 1029
-      Top = 3
-      Width = 83
-      Height = 25
-      Hint = 'Apply and close'
-      Anchors = [akTop, akRight]
-      Caption = 'OK'
-      ImageIndex = 82
-      Images = DImages.PngImageList1
-      ModalResult = 1
+    Height = 154
+    TabOrder = 3
+    ExplicitWidth = 1121
+    ExplicitHeight = 154
+    object pnlSelection: TsPanel
+      Left = 0
+      Top = 0
+      Width = 1121
+      Height = 113
+      Align = alTop
       TabOrder = 0
-      OnClick = BtnOkClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-  end
-  object sPageControl1: TsPageControl
-    Left = 0
-    Top = 113
-    Width = 1121
-    Height = 508
-    ActivePage = sTabSheet1
-    Align = alClient
-    TabOrder = 2
-    SkinData.SkinSection = 'PAGECONTROL'
-    object sTabSheet1: TsTabSheet
-      Caption = 'Guests'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object sPanel2: TsPanel
-        Left = 0
-        Top = 0
-        Width = 1113
-        Height = 35
-        Align = alTop
+      SkinData.SkinSection = 'PANEL'
+      object rgrShow: TsRadioGroup
+        Left = 14
+        Top = 10
+        Width = 147
+        Height = 64
+        Caption = 'Select'
         TabOrder = 0
-        SkinData.SkinSection = 'PANEL'
-        object btnExcel: TsButton
-          Left = 1
-          Top = 1
-          Width = 120
-          Height = 33
-          Align = alLeft
-          Caption = 'Excel'
-          ImageIndex = 132
-          Images = DImages.PngImageList1
-          TabOrder = 0
-          OnClick = btnExcelClick
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object sButton1: TsButton
-          Left = 121
-          Top = 1
-          Width = 120
-          Height = 33
-          Align = alLeft
-          Caption = 'Notes'
-          ImageIndex = 94
-          Images = DImages.PngImageList1
-          TabOrder = 1
-          OnClick = sButton1Click
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnExpand: TsButton
-          Left = 601
-          Top = 1
-          Width = 120
-          Height = 33
-          Align = alLeft
-          Caption = 'Expand'
-          ImageIndex = 94
-          TabOrder = 2
+        OnClick = rgrShowClick
+        SkinData.SkinSection = 'GROUPBOX'
+        ItemIndex = 0
+        Items.Strings = (
+          'All Guests'
+          'Just Main Guests')
+      end
+      object chkCompactView: TsCheckBox
+        Left = 14
+        Top = 80
+        Width = 95
+        Height = 17
+        Caption = 'Compact view'
+        Checked = True
+        State = cbChecked
+        TabOrder = 1
+        OnClick = chkCompactViewClick
+        SkinData.SkinSection = 'CHECKBOX'
+        ImgChecked = 0
+        ImgUnchecked = 0
+      end
+    end
+    object pnlGridButtons: TsPanel
+      Left = 0
+      Top = 113
+      Width = 1121
+      Height = 41
+      Align = alTop
+      TabOrder = 1
+      SkinData.SkinSection = 'PANEL'
+      object btnExcel: TsButton
+        AlignWithMargins = True
+        Left = 4
+        Top = 4
+        Width = 120
+        Height = 33
+        Align = alLeft
+        Caption = 'Excel'
+        ImageIndex = 132
+        Images = DImages.PngImageList1
+        TabOrder = 0
+        OnClick = btnExcelClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object sButton1: TsButton
+        AlignWithMargins = True
+        Left = 130
+        Top = 4
+        Width = 120
+        Height = 33
+        Align = alLeft
+        Caption = 'Notes'
+        ImageIndex = 94
+        Images = DImages.PngImageList1
+        TabOrder = 1
+        OnClick = sButton1Click
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnExpand: TsButton
+        AlignWithMargins = True
+        Left = 634
+        Top = 4
+        Width = 120
+        Height = 33
+        Align = alLeft
+        Caption = 'Expand'
+        ImageIndex = 94
+        TabOrder = 2
+        Visible = False
+        OnClick = btnExpandClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnCollapse: TsButton
+        AlignWithMargins = True
+        Left = 508
+        Top = 4
+        Width = 120
+        Height = 33
+        Align = alLeft
+        Caption = 'Collapse'
+        ImageIndex = 94
+        TabOrder = 3
+        Visible = False
+        OnClick = btnCollapseClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnEdit: TsButton
+        AlignWithMargins = True
+        Left = 256
+        Top = 4
+        Width = 120
+        Height = 33
+        Hint = 'Edit current record'
+        Align = alLeft
+        Caption = 'Edit'
+        ImageIndex = 25
+        Images = DImages.PngImageList1
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 4
+        OnClick = btnEditClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnOther: TsButton
+        AlignWithMargins = True
+        Left = 760
+        Top = 4
+        Width = 120
+        Height = 33
+        Hint = 'Other actions - Select from menu'
+        Align = alLeft
+        Caption = 'Other actions'
+        DropDownMenu = pmnuOther
+        ImageIndex = 76
+        Images = DImages.PngImageList1
+        ParentShowHint = False
+        ShowHint = True
+        Style = bsSplitButton
+        TabOrder = 5
+        SkinData.SkinSection = 'BUTTON'
+      end
+      object btnClearAddress: TsButton
+        AlignWithMargins = True
+        Left = 382
+        Top = 4
+        Width = 120
+        Height = 33
+        Align = alLeft
+        Caption = 'Clear Address'
+        ImageIndex = 11
+        Images = DImages.PngImageList1
+        TabOrder = 6
+        Visible = False
+        OnClick = btnClearAddressClick
+        SkinData.SkinSection = 'BUTTON'
+      end
+    end
+  end
+  inherited pnlClient: TsPanel
+    Top = 154
+    Width = 1121
+    Height = 437
+    TabOrder = 2
+    ExplicitTop = 154
+    ExplicitWidth = 1121
+    ExplicitHeight = 437
+    object splClient: TsSplitter [0]
+      Left = 1
+      Top = 330
+      Width = 1119
+      Height = 6
+      Cursor = crVSplit
+      Align = alBottom
+      Color = clActiveCaption
+      ParentColor = False
+      ExplicitTop = 1
+      ExplicitWidth = 335
+    end
+    inherited grData: TcxGrid
+      Width = 1119
+      Height = 329
+      ExplicitLeft = 2
+      ExplicitTop = -5
+      ExplicitWidth = 1119
+      ExplicitHeight = 329
+      inherited tvData: TcxGridDBBandedTableView
+        DataController.KeyFieldNames = 'RecId'
+        DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
+        OptionsData.Editing = True
+        OptionsView.BandHeaders = False
+        Styles.Content = nil
+        Styles.ContentEven = nil
+        Styles.ContentOdd = nil
+        Styles.Selection = nil
+        Styles.Footer = nil
+        Styles.Group = nil
+        Styles.GroupSummary = nil
+        Styles.Header = nil
+        Styles.Preview = nil
+        Bands = <
+          item
+          end>
+        object tvRoomsRecId: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RecId'
           Visible = False
-          OnClick = btnExpandClick
-          SkinData.SkinSection = 'BUTTON'
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
         end
-        object btnCollapse: TsButton
-          Left = 481
-          Top = 1
-          Width = 120
-          Height = 33
-          Align = alLeft
-          Caption = 'Collapse'
-          ImageIndex = 94
-          TabOrder = 3
+        object tvRoomsRoomReservation: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RoomReservation'
           Visible = False
-          OnClick = btnCollapseClick
-          SkinData.SkinSection = 'BUTTON'
+          Width = 85
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
         end
-        object btnEdit: TsButton
-          Left = 241
-          Top = 1
-          Width = 120
-          Height = 33
-          Hint = 'Edit current record'
-          Align = alLeft
-          Caption = 'Edit'
-          ImageIndex = 25
-          Images = DImages.PngImageList1
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 4
-          OnClick = btnEditClick
-          SkinData.SkinSection = 'BUTTON'
+        object tvRoomsRoom: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Room'
+          Options.Editing = False
+          Width = 62
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
         end
-        object btnOther: TsButton
-          Left = 721
-          Top = 1
-          Width = 120
-          Height = 33
-          Hint = 'Other actions - Select from menu'
-          Align = alLeft
-          Caption = 'Other actions'
-          DropDownMenu = mnuOther
-          ImageIndex = 76
-          Images = DImages.PngImageList1
-          ParentShowHint = False
-          ShowHint = True
-          Style = bsSplitButton
-          TabOrder = 5
-          SkinData.SkinSection = 'BUTTON'
+        object tvRoomsBreakfast: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Breakfast'
+          Options.Editing = False
+          Width = 88
+          Position.BandIndex = 0
+          Position.ColIndex = 8
+          Position.RowIndex = 0
         end
-        object btnClearAddress: TsButton
-          Left = 361
-          Top = 1
-          Width = 120
-          Height = 33
-          Align = alLeft
-          Caption = 'Clear Address'
-          ImageIndex = 11
-          Images = DImages.PngImageList1
-          TabOrder = 6
-          Visible = False
-          OnClick = btnClearAddressClick
-          SkinData.SkinSection = 'BUTTON'
+        object tvRoomsrrArrival: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Arrival'
+          Options.Editing = False
+          Width = 72
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object tvRoomsrrDeparture: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Departure'
+          Options.Editing = False
+          Width = 72
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object tvRoomsnumGuests: TcxGridDBBandedColumn
+          Caption = 'Nr of Guests'
+          DataBinding.FieldName = 'numGuests'
+          Width = 95
+          Position.BandIndex = 0
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object tvRoomsRoomDescription: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RoomDescription'
+          Options.Editing = False
+          Width = 109
+          Position.BandIndex = 0
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object tvRoomsStatusText: TcxGridDBBandedColumn
+          Caption = 'Status'
+          DataBinding.FieldName = 'status'
+          OnGetDisplayText = tvRoomsStatusTextGetDisplayText
+          Options.Editing = False
+          Width = 121
+          Position.BandIndex = 0
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object tvRoomsroomDetails: TcxGridDBBandedColumn
+          Caption = 'Room Details'
+          DataBinding.FieldName = 'roomDetails'
+          Options.Editing = False
+          Width = 203
+          Position.BandIndex = 0
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+        object tvRoomsRoomType: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RoomType'
+          Options.Editing = False
+          Width = 105
+          Position.BandIndex = 0
+          Position.ColIndex = 10
+          Position.RowIndex = 0
         end
       end
-      object grGuests: TcxGrid
-        Left = 0
-        Top = 35
-        Width = 1113
-        Height = 445
-        Align = alClient
-        TabOrder = 1
-        ExplicitTop = 33
-        object tvGuests: TcxGridDBBandedTableView
-          Navigator.Buttons.CustomButtons = <>
-          Navigator.InfoPanel.Visible = True
-          DataController.DataModeController.GridMode = True
-          DataController.DataSource = kbmGuestsDS
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsBehavior.FocusCellOnTab = True
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.GroupByBox = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          OptionsView.BandHeaderEndEllipsis = True
-          Bands = <
-            item
-              Caption = 'Main'
-            end
-            item
-              Caption = 'Address'
-            end
-            item
-              Caption = 'Contact'
-            end
-            item
-              Caption = 'Other'
-            end>
-          object tvGuestsroomDetails: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'roomDetails'
-            Visible = False
-            Width = 250
-            Position.BandIndex = 0
-            Position.ColIndex = 0
-            Position.RowIndex = 0
+      object tvGuests: TcxGridDBBandedTableView [1]
+        Navigator.Buttons.CustomButtons = <>
+        Navigator.InfoPanel.Visible = True
+        FilterBox.Visible = fvNever
+        DataController.DataSource = dsGuests
+        DataController.DetailKeyFieldNames = 'RoomReservation'
+        DataController.KeyFieldNames = 'Id'
+        DataController.MasterKeyFieldNames = 'RoomReservation'
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsBehavior.FocusCellOnTab = True
+        OptionsBehavior.GoToNextCellOnEnter = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Inserting = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        OptionsView.Indicator = True
+        OptionsView.BandHeaderEndEllipsis = True
+        Styles.StyleSheet = cxssRoomerGridBandedTableView
+        Bands = <
+          item
+            Caption = 'Main'
+            Width = 381
           end
-          object tvGuestsroom: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'room'
-            Width = 50
-            Position.BandIndex = 0
-            Position.ColIndex = 1
-            Position.RowIndex = 0
+          item
+            Caption = 'Address'
+            Width = 706
           end
-          object tvGueststitle: TcxGridDBBandedColumn
-            Caption = 'Title'
-            DataBinding.FieldName = 'title'
-            Width = 50
-            Position.BandIndex = 0
-            Position.ColIndex = 2
-            Position.RowIndex = 0
+          item
+            Caption = 'Contact'
           end
-          object tvGuestsname: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'name'
-            MinWidth = 150
-            Width = 210
-            Position.BandIndex = 0
-            Position.ColIndex = 3
-            Position.RowIndex = 0
-          end
-          object tvGuestsMainName: TcxGridDBBandedColumn
-            Caption = 'Main Name'
-            DataBinding.FieldName = 'MainName'
-            Options.Editing = False
-            Position.BandIndex = 0
-            Position.ColIndex = 4
-            Position.RowIndex = 0
-          end
-          object tvGuestsRoomDescription: TcxGridDBBandedColumn
-            Caption = 'Room Description'
-            DataBinding.FieldName = 'RoomDescription'
-            Options.Editing = False
-            Width = 120
-            Position.BandIndex = 0
-            Position.ColIndex = 5
-            Position.RowIndex = 0
-          end
-          object tvGuestsRoomType: TcxGridDBBandedColumn
-            Caption = 'Room Type'
-            DataBinding.FieldName = 'RoomType'
-            Position.BandIndex = 0
-            Position.ColIndex = 11
-            Position.RowIndex = 0
-          end
-          object tvGuestsrrArrival: TcxGridDBBandedColumn
-            Caption = 'Arrival'
-            DataBinding.FieldName = 'rrArrival'
-            Options.Editing = False
-            Width = 64
-            Position.BandIndex = 0
-            Position.ColIndex = 6
-            Position.RowIndex = 0
-          end
-          object tvGuestsrrDeparture: TcxGridDBBandedColumn
-            Caption = 'Departure'
-            DataBinding.FieldName = 'rrDeparture'
-            Options.Editing = False
-            Width = 64
-            Position.BandIndex = 0
-            Position.ColIndex = 7
-            Position.RowIndex = 0
-          end
-          object tvGuestsStatusText: TcxGridDBBandedColumn
-            Caption = 'Status'
-            DataBinding.FieldName = 'StatusText'
-            Options.Editing = False
-            Width = 80
-            Position.BandIndex = 0
-            Position.ColIndex = 8
-            Position.RowIndex = 0
-          end
-          object tvGuestsnumGuests: TcxGridDBBandedColumn
-            Caption = 'Guests'
-            DataBinding.FieldName = 'numGuests'
-            Options.Editing = False
-            Position.BandIndex = 0
-            Position.ColIndex = 9
-            Position.RowIndex = 0
-          end
-          object tvGuestsBreakfast: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Breakfast'
-            Position.BandIndex = 0
-            Position.ColIndex = 10
-            Position.RowIndex = 0
-          end
-          object tvGuestsTel1: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Tel1'
-            Width = 100
-            Position.BandIndex = 2
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object tvGuestsTel2: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Tel2'
-            Width = 100
-            Position.BandIndex = 2
-            Position.ColIndex = 1
-            Position.RowIndex = 0
-          end
-          object tvGuestsFax: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Fax'
-            Width = 100
-            Position.BandIndex = 2
-            Position.ColIndex = 2
-            Position.RowIndex = 0
-          end
-          object tvGuestsEmail: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Email'
-            Width = 142
-            Position.BandIndex = 2
-            Position.ColIndex = 3
-            Position.RowIndex = 0
-          end
-          object tvGuestsAddress1: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Address1'
-            Width = 100
-            Position.BandIndex = 1
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object tvGuestsAddress2: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Address2'
-            Width = 100
-            Position.BandIndex = 1
-            Position.ColIndex = 1
-            Position.RowIndex = 0
-          end
-          object tvGuestsAddress3: TcxGridDBBandedColumn
-            Caption = 'Zip code'
-            DataBinding.FieldName = 'Address3'
-            Width = 100
-            Position.BandIndex = 1
-            Position.ColIndex = 2
-            Position.RowIndex = 0
-          end
-          object tvGuestsAddress4: TcxGridDBBandedColumn
-            Caption = 'City'
-            DataBinding.FieldName = 'Address4'
-            Width = 100
-            Position.BandIndex = 1
-            Position.ColIndex = 3
-            Position.RowIndex = 0
-          end
-          object tvGuestsState: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'State'
-            Width = 118
-            Position.BandIndex = 1
-            Position.ColIndex = 4
-            Position.RowIndex = 0
-          end
-          object tvGuestsCountry: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Country'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.CharCase = ecUpperCase
-            Properties.OnButtonClick = tvGuestsCountryPropertiesButtonClick
-            Properties.OnValidate = tvGuestsCountryPropertiesValidate
-            Width = 64
-            Position.BandIndex = 1
-            Position.ColIndex = 5
-            Position.RowIndex = 0
-          end
-          object tvGuestsNationality: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Nationality'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.CharCase = ecUpperCase
-            Properties.OnButtonClick = tvGuestsNationalityPropertiesButtonClick
-            Properties.OnValidate = tvGuestsNationalityPropertiesValidate
-            Width = 59
-            Position.BandIndex = 1
-            Position.ColIndex = 6
-            Position.RowIndex = 0
-          end
-          object tvGuestsCustomer: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Customer'
-            Options.Editing = False
-            Width = 80
-            Position.BandIndex = 3
-            Position.ColIndex = 9
-            Position.RowIndex = 0
-          end
-          object tvGuestsPID: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'PID'
-            Width = 65
-            Position.BandIndex = 3
-            Position.ColIndex = 8
-            Position.RowIndex = 0
-          end
-          object tvGuestsDateOfBirth: TcxGridDBBandedColumn
-            Caption = 'Date of Birth'
-            DataBinding.FieldName = 'DateOfBirth'
-            Width = 65
-            Position.BandIndex = 3
-            Position.ColIndex = 6
-            Position.RowIndex = 0
-          end
-          object tvGuestsPersonalIdentificationId: TcxGridDBBandedColumn
-            Caption = 'Personal ID number'
-            DataBinding.FieldName = 'PersonalIdentificationId'
-            Width = 65
-            Position.BandIndex = 3
-            Position.ColIndex = 7
-            Position.RowIndex = 0
-          end
-          object tvGuestsSocialSecurityNumber: TcxGridDBBandedColumn
-            Caption = 'Social Security Number'
-            DataBinding.FieldName = 'SocialSecurityNumber'
-            Width = 65
-            Position.BandIndex = 3
-            Position.ColIndex = 5
-            Position.RowIndex = 0
-          end
-          object tvGuestsId: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Id'
-            Visible = False
-            Position.BandIndex = 3
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object tvGuestsPerson: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Person'
-            Visible = False
-            Position.BandIndex = 3
-            Position.ColIndex = 1
-            Position.RowIndex = 0
-          end
-          object tvGuestsReservation: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Reservation'
-            Visible = False
-            Position.BandIndex = 3
-            Position.ColIndex = 2
-            Position.RowIndex = 0
-          end
-          object tvGuestsRoomReservation: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'RoomReservation'
-            Visible = False
-            Position.BandIndex = 3
-            Position.ColIndex = 3
-            Position.RowIndex = 0
-          end
-          object tvGuestsPersonsProfilesId: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'PersonsProfilesId'
-            Visible = False
-            Position.BandIndex = 3
-            Position.ColIndex = 4
-            Position.RowIndex = 0
-          end
+          item
+            Caption = 'Other'
+            Width = 541
+          end>
+        object tvguestsRoomreservation: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RoomReservation'
+          Visible = False
+          Options.Editing = False
+          Width = 540
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
         end
+        object tvGueststitle: TcxGridDBBandedColumn
+          Caption = 'Title'
+          DataBinding.FieldName = 'title'
+          Width = 45
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object tvGuestsname: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'name'
+          MinWidth = 150
+          Width = 226
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object tvGuestsMainName: TcxGridDBBandedColumn
+          Caption = 'Mainguest'
+          DataBinding.FieldName = 'MainName'
+          MinWidth = 40
+          Options.Editing = False
+          SortIndex = 0
+          SortOrder = soDescending
+          Width = 93
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object tvGuestsTel1: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Tel1'
+          Width = 100
+          Position.BandIndex = 2
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object tvGuestsTel2: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Tel2'
+          Width = 100
+          Position.BandIndex = 2
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object tvGuestsFax: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Fax'
+          Width = 100
+          Position.BandIndex = 2
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object tvGuestsEmail: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Email'
+          Width = 142
+          Position.BandIndex = 2
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object tvGuestsAddress1: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Address1'
+          Width = 147
+          Position.BandIndex = 1
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object tvGuestsAddress2: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Address2'
+          Width = 147
+          Position.BandIndex = 1
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object tvGuestsAddress3: TcxGridDBBandedColumn
+          Caption = 'Zip code'
+          DataBinding.FieldName = 'Address3'
+          Width = 93
+          Position.BandIndex = 1
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object tvGuestsAddress4: TcxGridDBBandedColumn
+          Caption = 'City'
+          DataBinding.FieldName = 'Address4'
+          Width = 94
+          Position.BandIndex = 1
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object tvGuestsState: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'State'
+          Width = 84
+          Position.BandIndex = 1
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object tvGuestsCountry: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Country'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.CharCase = ecUpperCase
+          Properties.OnButtonClick = tvGuestsCountryPropertiesButtonClick
+          Properties.OnValidate = tvGuestsCountryPropertiesValidate
+          Width = 74
+          Position.BandIndex = 1
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object tvGuestsNationality: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Nationality'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.CharCase = ecUpperCase
+          Properties.OnButtonClick = tvGuestsNationalityPropertiesButtonClick
+          Properties.OnValidate = tvGuestsNationalityPropertiesValidate
+          Width = 67
+          Position.BandIndex = 1
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object tvGuestsCustomer: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Customer'
+          Options.Editing = False
+          Width = 80
+          Position.BandIndex = 3
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object tvGuestsPID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PID'
+          Options.Editing = False
+          Width = 65
+          Position.BandIndex = 3
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object tvGuestsDateOfBirth: TcxGridDBBandedColumn
+          Caption = 'Date of Birth'
+          DataBinding.FieldName = 'DateOfBirth'
+          Width = 65
+          Position.BandIndex = 3
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object tvGuestsPersonalIdentificationId: TcxGridDBBandedColumn
+          Caption = 'Personal ID number'
+          DataBinding.FieldName = 'PersonalIdentificationId'
+          Width = 65
+          Position.BandIndex = 3
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object tvGuestsSocialSecurityNumber: TcxGridDBBandedColumn
+          Caption = 'Social Security Number'
+          DataBinding.FieldName = 'SocialSecurityNumber'
+          Width = 65
+          Position.BandIndex = 3
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object tvGuestsId: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Id'
+          Visible = False
+          Options.Editing = False
+          Position.BandIndex = 3
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object tvGuestsPerson: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'Person'
+          Visible = False
+          Options.Editing = False
+          Position.BandIndex = 3
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object tvGuestsPersonsProfilesId: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PersonsProfilesId'
+          Visible = False
+          Options.Editing = False
+          Position.BandIndex = 3
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+      end
+      inherited lvData: TcxGridLevel
         object lvGuests: TcxGridLevel
           GridView = tvGuests
         end
       end
     end
+    object pnlNotes: TsPanel
+      Left = 1
+      Top = 336
+      Width = 1119
+      Height = 100
+      Align = alBottom
+      TabOrder = 1
+      object lblReservationNotes: TsLabel
+        Left = 5
+        Top = 4
+        Width = 93
+        Height = 13
+        Caption = 'Reservation Notes:'
+      end
+      object lblRoomNotes: TsLabel
+        Left = 507
+        Top = 4
+        Width = 62
+        Height = 13
+        Caption = 'Room Notes:'
+      end
+      object memReservationPMInfo: TsMemo
+        AlignWithMargins = True
+        Left = 255
+        Top = 21
+        Width = 245
+        Height = 75
+        Margins.Top = 20
+        Align = alLeft
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 0
+      end
+      object memRoomNotes: TDBMemo
+        AlignWithMargins = True
+        Left = 506
+        Top = 21
+        Width = 609
+        Height = 75
+        Margins.Top = 20
+        Align = alClient
+        Color = clWhite
+        DataField = 'RoomNotes'
+        DataSource = dsData
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        ExplicitLeft = 759
+        ExplicitTop = 20
+        ExplicitWidth = 356
+      end
+      object memReservationInformation: TsMemo
+        AlignWithMargins = True
+        Left = 4
+        Top = 21
+        Width = 245
+        Height = 75
+        Margins.Top = 20
+        Align = alLeft
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 2
+      end
+    end
   end
-  object _kbmGuests: TkbmMemTable
-    DesignActivation = True
-    AttachedAutoRefresh = False
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'Id'
-        DataType = ftInteger
-      end
-      item
-        Name = 'Person'
-        DataType = ftInteger
-      end
-      item
-        Name = 'Reservation'
-        DataType = ftInteger
-      end
-      item
-        Name = 'RoomReservation'
-        DataType = ftInteger
-      end
-      item
-        Name = 'PersonsProfilesId'
-        DataType = ftInteger
-      end
-      item
-        Name = 'title'
-        DataType = ftWideString
-        Size = 20
-      end
-      item
-        Name = 'name'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address1'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address2'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address3'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address4'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Country'
-        DataType = ftWideString
-        Size = 4
-      end
-      item
-        Name = 'Tel1'
-        DataType = ftWideString
-        Size = 80
-      end
-      item
-        Name = 'Tel2'
-        DataType = ftWideString
-        Size = 80
-      end
-      item
-        Name = 'Fax'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Email'
-        DataType = ftWideString
-        Size = 255
-      end
-      item
-        Name = 'Nationality'
-        DataType = ftWideString
-        Size = 4
-      end
-      item
-        Name = 'PID'
-        DataType = ftWideString
-        Size = 60
-      end
-      item
-        Name = 'MainName'
-        DataType = ftBoolean
-      end
-      item
-        Name = 'Customer'
-        DataType = ftWideString
-        Size = 30
-      end
-      item
-        Name = 'State'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'PersonalIdentificationId'
-        DataType = ftWideString
-        Size = 60
-      end
-      item
-        Name = 'DateOfBirth'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'SocialSecurityNumber'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'room'
-        DataType = ftWideString
-        Size = 30
-      end
-      item
-        Name = 'Roomtype'
-        DataType = ftWideString
-        Size = 30
-      end
-      item
-        Name = 'Breakfast'
-        DataType = ftBoolean
-      end
-      item
-        Name = 'rrArrival'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'rrDeparture'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'numGuests'
-        DataType = ftInteger
-      end
-      item
-        Name = 'RoomDescription'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'StatusText'
-        DataType = ftWideString
-        Size = 60
-      end
-      item
-        Name = 'roomDetails'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'CompanyName'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'CompVATNumber'
-        DataType = ftWideString
-        Size = 45
-      end
-      item
-        Name = 'CompAddress1'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'CompAddress2'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'CompZip'
-        DataType = ftWideString
-        Size = 45
-      end
-      item
-        Name = 'CompCity'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'CompCountry'
-        DataType = ftWideString
-        Size = 2
-      end
-      item
-        Name = 'CompTel'
-        DataType = ftWideString
-        Size = 40
-      end
-      item
-        Name = 'CompFax'
-        DataType = ftWideString
-        Size = 40
-      end
-      item
-        Name = 'CompEmail'
-        DataType = ftWideString
-        Size = 255
-      end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 192
-    Top = 336
-  end
-  object kbmGuestsDS: TDataSource
-    DataSet = mGuests
-    Left = 528
-    Top = 336
-  end
-  object _kbmCompare: TkbmMemTable
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <
-      item
-        Name = 'Id'
-        DataType = ftInteger
-      end
-      item
-        Name = 'Person'
-        DataType = ftInteger
-      end
-      item
-        Name = 'Reservation'
-        DataType = ftInteger
-      end
-      item
-        Name = 'RoomReservation'
-        DataType = ftInteger
-      end
-      item
-        Name = 'PersonsProfilesId'
-        DataType = ftInteger
-      end
-      item
-        Name = 'title'
-        DataType = ftWideString
-        Size = 20
-      end
-      item
-        Name = 'name'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'surname'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address1'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address2'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address3'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Address4'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Country'
-        DataType = ftWideString
-        Size = 4
-      end
-      item
-        Name = 'Tel1'
-        DataType = ftWideString
-        Size = 80
-      end
-      item
-        Name = 'Tel2'
-        DataType = ftWideString
-        Size = 80
-      end
-      item
-        Name = 'Fax'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Email'
-        DataType = ftWideString
-        Size = 255
-      end
-      item
-        Name = 'GuestType'
-        DataType = ftWideString
-        Size = 5
-      end
-      item
-        Name = 'Information'
-        DataType = ftWideMemo
-      end
-      item
-        Name = 'Nationality'
-        DataType = ftWideString
-        Size = 4
-      end
-      item
-        Name = 'PID'
-        DataType = ftWideString
-        Size = 60
-      end
-      item
-        Name = 'MainName'
-        DataType = ftBoolean
-      end
-      item
-        Name = 'Company'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'Customer'
-        DataType = ftWideString
-        Size = 30
-      end
-      item
-        Name = 'CompanyName'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'CompAddress1'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'CompAddress2'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'CompZip'
-        DataType = ftWideString
-        Size = 45
-      end
-      item
-        Name = 'CompCity'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'CompCountry'
-        DataType = ftWideString
-        Size = 4
-      end
-      item
-        Name = 'CompTel'
-        DataType = ftWideString
-        Size = 80
-      end
-      item
-        Name = 'CompEmail'
-        DataType = ftWideString
-        Size = 255
-      end
-      item
-        Name = 'CompFax'
-        DataType = ftWideString
-        Size = 80
-      end
-      item
-        Name = 'CompVATNumber'
-        DataType = ftWideString
-        Size = 90
-      end
-      item
-        Name = 'State'
-        DataType = ftWideString
-        Size = 200
-      end
-      item
-        Name = 'SourceID'
-        DataType = ftWideString
-        Size = 20
-      end
-      item
-        Name = 'PersonalIdentificationId'
-        DataType = ftWideString
-        Size = 60
-      end
-      item
-        Name = 'DateOfBirth'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'SocialSecurityNumber'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'confirmDate'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'lastUpdate'
-        DataType = ftDateTime
-      end>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.22.00 Standard Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 192
-    Top = 408
-  end
-  object CompareDS: TDataSource
-    Left = 528
-    Top = 400
-  end
-  object FormStore: TcxPropertiesStore
+  inherited psRoomerBase: TcxPropertiesStore
     Components = <
       item
         Component = chkCompactView
         Properties.Strings = (
-          'Action'
-          'Align'
-          'Alignment'
-          'AlignWithMargins'
-          'AllowGrayed'
-          'Anchors'
-          'AnimatEvents'
-          'AutoSize'
-          'BiDiMode'
-          'Caption'
-          'Checked'
-          'Color'
-          'Constraints'
-          'Ctl3D'
-          'Cursor'
-          'CustomHint'
-          'DisabledKind'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'Enabled'
-          'Font'
-          'GlyphChecked'
-          'GlyphUnChecked'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'Images'
-          'ImgChecked'
-          'ImgUnchecked'
-          'Left'
-          'Margin'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCtl3D'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'ReadOnly'
-          'ShowFocus'
-          'ShowHint'
-          'SkinData'
-          'State'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextIndent'
-          'Top'
-          'VerticalAlign'
-          'Visible'
-          'Width'
-          'WordWrap')
-      end
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Position'
-          'Top'
-          'Width')
-      end
-      item
-        Component = rgrShow
-        Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AnimatEvents'
-          'BiDiMode'
-          'Caption'
-          'CaptionLayout'
-          'CaptionMargin'
-          'CaptionSkin'
-          'CaptionWidth'
-          'CaptionYOffset'
-          'Color'
-          'Columns'
-          'Constraints'
-          'Ctl3D'
-          'Cursor'
-          'CustomHint'
-          'DockSite'
-          'DoubleBuffered'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'Enabled'
-          'Font'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ItemIndex'
-          'Items'
-          'Left'
-          'Margins'
-          'Name'
-          'Padding'
-          'ParentBackground'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCtl3D'
-          'ParentCustomHint'
-          'ParentDoubleBuffered'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'ShowFocus'
-          'ShowHint'
-          'SkinData'
-          'StyleElements'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Checked')
       end>
-    StorageName = 'Software\Roomer\FormStatus\GroupGuests'
-    StorageType = stRegistry
-    Left = 787
-    Top = 448
+    Left = 248
+    Top = 56
   end
-  object grPrinter: TdxComponentPrinter
-    CurrentLink = grPrinterLink1
-    Version = 0
-    Left = 792
-    Top = 384
-    object grPrinterLink1: TdxGridReportLink
-      Component = grGuests
-      PageNumberFormat = pnfNumeral
-      PrinterPage.DMPaper = 9
-      PrinterPage.Footer = 6350
-      PrinterPage.GrayShading = True
-      PrinterPage.Header = 6350
-      PrinterPage.Margins.Bottom = 12700
-      PrinterPage.Margins.Left = 12700
-      PrinterPage.Margins.Right = 12700
-      PrinterPage.Margins.Top = 12700
-      PrinterPage.PageSize.X = 210000
-      PrinterPage.PageSize.Y = 297000
-      PrinterPage._dxMeasurementUnits_ = 0
-      PrinterPage._dxLastMU_ = 2
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+  inherited cxsrRoomerStyleRepository: TcxStyleRepository
+    Left = 248
+    Top = 8
+    PixelsPerInch = 96
+    inherited cxstContent: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clInfoBk
+    end
+    inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      BuiltIn = True
+    end
+    inherited cxssRoomerGridBandedTableView: TcxGridBandedTableViewStyleSheet
+      BuiltIn = True
+    end
+  end
+  inherited dsData: TDataSource
+    DataSet = mRooms
+    Left = 80
+    Top = 328
+  end
+  inherited alGridActions: TActionList
+    Left = 184
+    Top = 208
+  end
+  inherited grPrinter: TdxComponentPrinter
+    Left = 264
+    Top = 208
+    inherited prLink_grData: TdxGridReportLink
+      ReportDocument.CreationDate = 43112.424664120370000000
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end
-  object mnuOther: TPopupMenu
+  object dsGuests: TDataSource
+    DataSet = mGuests
+    Left = 192
+    Top = 328
+  end
+  object pmnuOther: TPopupMenu
     Images = DImages.PngImageList1
-    Left = 792
-    Top = 336
+    Left = 760
+    Top = 200
     object mnuiPrint: TMenuItem
-      Caption = 'Print'
-      OnClick = mnuiPrintClick
+      Action = acPrint
     end
     object N2: TMenuItem
       Caption = '-'
-    end
-    object Export1: TMenuItem
-      Caption = 'Export'
-      object mnuiGridToExcel: TMenuItem
-        Caption = 'Grid to Excel'
-      end
-      object mnuiGridToHtml: TMenuItem
-        Caption = 'Grid to HTML'
-        OnClick = mnuiGridToHtmlClick
-      end
-      object mnuiGridToText: TMenuItem
-        Caption = 'Grid to text'
-        OnClick = mnuiGridToTextClick
-      end
-      object mnuiGridToXml: TMenuItem
-        Caption = 'Grid to XML'
-        OnClick = mnuiGridToXmlClick
-      end
     end
   end
   object mGuests: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 456
-    Top = 328
+    SortedField = 'RoomReservation'
+    AfterPost = mGuestsAfterPost
+    Left = 192
+    Top = 376
     object mGuestsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1250,33 +806,6 @@ object frmGroupGuests: TfrmGroupGuests
       FieldName = 'SocialSecurityNumber'
       Size = 45
     end
-    object mGuestsRoom: TWideStringField
-      FieldName = 'Room'
-      Size = 8
-    end
-    object mGuestsBreakfast: TBooleanField
-      FieldName = 'Breakfast'
-    end
-    object mGuestsrrArrival: TDateTimeField
-      FieldName = 'rrArrival'
-    end
-    object mGuestsrrDeparture: TDateTimeField
-      FieldName = 'rrDeparture'
-    end
-    object mGuestsnumGuests: TIntegerField
-      FieldName = 'numGuests'
-    end
-    object mGuestsRoomDescription: TWideStringField
-      FieldName = 'RoomDescription'
-    end
-    object mGuestsStatusText: TWideStringField
-      FieldName = 'StatusText'
-      Size = 45
-    end
-    object mGuestsroomDetails: TWideStringField
-      FieldName = 'roomDetails'
-      Size = 200
-    end
     object mGuestsCompanyName: TStringField
       FieldName = 'CompanyName'
       Size = 100
@@ -1317,16 +846,12 @@ object frmGroupGuests: TfrmGroupGuests
       FieldName = 'CompEmail'
       Size = 255
     end
-    object mGuestsRoomType: TWideStringField
-      FieldName = 'RoomType'
-      Size = 10
-    end
   end
   object mCompare: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 456
-    Top = 392
+    Left = 192
+    Top = 424
     object IntegerField1: TIntegerField
       FieldName = 'Id'
     end
@@ -1486,10 +1011,105 @@ object frmGroupGuests: TfrmGroupGuests
       FieldName = 'RoomType'
       Size = 10
     end
+    object mCompareRoomNotes: TWideMemoField
+      FieldName = 'RoomNotes'
+      BlobType = ftWideMemo
+    end
   end
-  object ALWinInetHTTPClient1: TALWinInetHTTPClient
-    AccessType = wHttpAt_Direct
-    Left = 872
-    Top = 296
+  object mRooms: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    SortedField = 'Room'
+    BeforePost = mRoomsBeforePost
+    Left = 80
+    Top = 376
+    object mRoomsReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object mRoomsRoomReservation: TIntegerField
+      FieldName = 'RoomReservation'
+    end
+    object mRoomsRoom: TWideStringField
+      FieldName = 'Room'
+      Size = 8
+    end
+    object mRoomsRoomtype: TWideStringField
+      FieldName = 'RoomType'
+      Size = 10
+    end
+    object mRomsBreakfast: TBooleanField
+      FieldName = 'Breakfast'
+    end
+    object mRoomsArrival: TDateTimeField
+      FieldName = 'Arrival'
+    end
+    object mRoomsDeparture: TDateTimeField
+      FieldName = 'Departure'
+    end
+    object mRoomsNumGuests: TIntegerField
+      FieldName = 'numGuests'
+    end
+    object mRoomsStatus: TWideStringField
+      FieldName = 'status'
+      Size = 45
+    end
+    object mRoomsRoomDescription: TWideStringField
+      FieldName = 'RoomDescription'
+    end
+    object mRoomsRoomDetails: TWideStringField
+      FieldName = 'roomDetails'
+      Size = 200
+    end
+    object mRoomsRoomNotes: TWideMemoField
+      FieldName = 'RoomNotes'
+      BlobType = ftWideMemo
+    end
+  end
+  object mRoomsCompare: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 80
+    Top = 424
+    object mRoomsCompareReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object IntegerField7: TIntegerField
+      FieldName = 'RoomReservation'
+    end
+    object WideStringField31: TWideStringField
+      FieldName = 'Room'
+      Size = 8
+    end
+    object WideStringField32: TWideStringField
+      FieldName = 'RoomType'
+      Size = 10
+    end
+    object BooleanField3: TBooleanField
+      FieldName = 'Breakfast'
+    end
+    object DateTimeField4: TDateTimeField
+      FieldName = 'Arrival'
+    end
+    object DateTimeField5: TDateTimeField
+      FieldName = 'Departure'
+    end
+    object IntegerField8: TIntegerField
+      FieldName = 'numGuests'
+    end
+    object WideStringField33: TWideStringField
+      FieldName = 'status'
+      Size = 45
+    end
+    object WideStringField34: TWideStringField
+      FieldName = 'RoomDescription'
+    end
+    object WideStringField35: TWideStringField
+      FieldName = 'roomDetails'
+      Size = 200
+    end
+    object mRoomsCompareRoomNotes: TWideMemoField
+      FieldName = 'RoomNotes'
+      BlobType = ftWideMemo
+    end
   end
 end

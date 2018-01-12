@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uRoomerGridForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxStyles, dxSkinsCore, dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, dxPSGlbl,
   dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns,
@@ -15,10 +15,11 @@ uses
   Vcl.Buttons, sSpeedButton, Vcl.ExtCtrls, sPanel, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridDBBandedTableView, cxGrid, Vcl.ComCtrls, sStatusBar, dxmdaset
   , hData
+  , uRoomerEditGridForm, uRoomerGridForm
   ;
 
 type
-  TfrmPriceCodesGrid = class(TfrmBaseRoomerGridForm)
+  TfrmPriceCodesGrid = class(TfrmBaseRoomerEditGridForm)
     m_: TdxMemData;
     m_ID: TIntegerField;
     m_pcCode: TWideStringField;
@@ -71,7 +72,7 @@ begin
 
   finally
     glb.TableList['tblpricecodes'].RefreshEnabled := true;
-    if aMode = TRoomerGridFormMode.Browse then
+    if aMode = TRoomerGridFormMode.Edit then
       glb.TableList['tblpricecodes'].RefreshFromServer;
     Free;
   end;

@@ -22,7 +22,7 @@ uses
 type
 
   {$SCOPEDENUMS ON}
-  TRoomerGridFormMode = (Browse, SelectSingle {,SelectMultiple});
+  TRoomerGridFormMode = (Browse, Edit, SelectSingle {,SelectMultiple});
 
   /// <summary>
   ///   RoomerDialogForm extended with a Grid with a basic dataview.
@@ -39,42 +39,18 @@ type
     lvData: TcxGridLevel;
     cxssRoomerGridBandedTableView: TcxGridBandedTableViewStyleSheet;
     alGridActions: TActionList;
-    acNew: TAction;
-    acEdit: TAction;
-    acDelete: TAction;
     acPrint: TAction;
     acAllowGridEdit: TAction;
-    pnlFilter: TsPanel;
-    pnlGridButons: TsPanel;
-    btnDelete: TsButton;
-    btnOther: TsButton;
-    btnInsert: TsButton;
-    btnEdit: TsButton;
     grPrinter: TdxComponentPrinter;
     prLink_grData: TdxGridReportLink;
-    btnClear: TsSpeedButton;
-    chkActive: TsCheckBox;
-    edFilter: TsEdit;
-    cLabFilter: TsLabel;
-    pmnuOther: TPopupMenu;
-    Print1: TMenuItem;
-    procedure alGridActionsUpdate(Action: TBasicAction; var Handled: Boolean);
     procedure acPrintExecute(Sender: TObject);
-    procedure btnClearClick(Sender: TObject);
-    procedure edFilterChange(Sender: TObject);
-    procedure chkActiveClick(Sender: TObject);
-    procedure acNewExecute(Sender: TObject);
-    procedure acEditExecute(Sender: TObject);
-    procedure acDeleteExecute(Sender: TObject);
     procedure tvDataCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
       AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
-    procedure dsDataStateChange(Sender: TObject);
+    procedure alGridActionsUpdate(Action: TBasicAction; var Handled: Boolean);
   private
     FFormMode: TRoomerGridFormMode;
-    FActiveFieldName: string;
     FCodeFieldName: string;
     FGridExporter: TRoomerGridExporters;
-    procedure ApplyFilter;
     function GetSelectedCode: string;
     procedure SetSelectedCode(const Value: string);
   protected
@@ -92,19 +68,16 @@ type
     procedure DoClose(var Action: TCloseAction); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure DoUpdateControls; override;
+    function HasData: boolean;
     property FormMode: TRoomerGridFormMode read FFormMode;
+    property GridExporter: TRoomerGridExporters read FGridExporter;
   public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
-    { Public declarations }
     function ShowModal(aMode: TRoomerGridFormMode): TModalresult; reintroduce; overload;
     function ShowModal(aMode: TActTableAction): TModalresult; reintroduce; overload; deprecated 'Use TRoomerGridFormMode in stead';
 
     property CodeFieldName: string read FCodeFieldName write FCodeFieldName;
-    /// <summary>
-    ///   Name of the boolean field in the dataset that should be used to filter out non-active records
-    /// </summary>
-    property ActiveFieldName: string read FActiveFieldName write FActiveFieldName;
     /// <summary>
     ///   Identifying code of the currently selected record, can also be set to navigate to that record
     /// </summary>
@@ -156,26 +129,6 @@ begin
     btnOk.Click;
 end;
 
-procedure TfrmBaseRoomerGridForm.alGridActionsUpdate(Action: TBasicAction; var Handled: Boolean);
-begin
-  inherited;
-  acNew.Enabled := FFormMode in [TRoomerGridFormMode.Browse];
-  acEdit.Enabled := (FFormMode in [TRoomerGridFormMode.Browse]) and not dsData.DataSet.IsEmpty;
-  acDelete.Enabled := (FormMode in [TRoomerGridFormMode.Browse]) and not dsData.DataSet.IsEmpty;
-end;
-
-procedure TfrmBaseRoomerGridForm.btnClearClick(Sender: TObject);
-begin
-  inherited;
-  edFilter.Text := '';
-end;
-
-procedure TfrmBaseRoomerGridForm.chkActiveClick(Sender: TObject);
-begin
-  inherited;
-  ApplyFilter;
-end;
-
 constructor TfrmBaseRoomerGridForm.Create(aOwner: TComponent);
 begin
   inherited;
@@ -198,7 +151,6 @@ end;
 procedure TfrmBaseRoomerGridForm.DoShow;
 begin
   inherited;
-  pmnuOther.Items.Add(FGridExporter.ExportSubMenu);
 
   if not FCodeFieldName.IsEmpty then
     with tvData.GetColumnByFieldName(FCodeFieldName) do
@@ -209,37 +161,17 @@ begin
 
   case FFormMode of
     TRoomerGridFormMode.Browse:       DialogButtons := [mbClose];
+    TRoomerGridFormMode.Edit:       DialogButtons := [mbClose];
     TRoomerGridFormMode.SelectSingle: DialogButtons := mbOKCancel;
   end;
 
-  chkActive.Visible := not FActiveFieldName.IsEmpty;
 end;
 
 procedure TfrmBaseRoomerGridForm.DoUpdateControls;
 begin
   inherited;
 
-  with tvData.OptionsData do
-  begin
-    Appending := FFormMode in [TRoomerGridFormMode.Browse];
-    Deleting  := FFormMode in [TRoomerGridFormMode.Browse];
-    Editing   := FFormMode in [TRoomerGridFormMode.Browse];
-    Inserting := FFormMode in [TRoomerGridFormMode.Browse];
-  end;
-
-  btnOk.Enabled := tvData.DataController.DataSet.Active and not tvData.DataController.IsEOF;
-end;
-
-procedure TfrmBaseRoomerGridForm.dsDataStateChange(Sender: TObject);
-begin
-  inherited;
-  if not FCodeFieldName.IsEmpty then
-    tvData.GetColumnByFieldName(FCodeFieldName).Options.Editing := (dsData.State = dsInsert);
-end;
-
-procedure TfrmBaseRoomerGridForm.edFilterChange(Sender: TObject);
-begin
-  ApplyFilter;
+  btnOk.Enabled := HasData;
 end;
 
 function TfrmBaseRoomerGridForm.GetSelectedCode: string;
@@ -248,38 +180,6 @@ begin
     Result := dsData.DataSet.FieldByName(FCodeFieldName).AsString
   else
     Result := '';
-end;
-
-procedure TfrmBaseRoomerGridForm.ApplyFilter;
-var
-  lText: string;
-  i: integer;
-begin
-
-  tvData.DataController.Filter.Options := [fcoCaseInsensitive];
-  tvData.DataController.Filter.Root.BoolOperatorKind := fboOr;
-  tvData.DataController.Filter.Root.Clear;
-
-  if edFilter.Text <> '' then
-  begin
-    lText := '%' + UpperCase(edFilter.Text) + '%';
-    for i := 0 to tvData.ColumnCount -1 do
-    begin
-      if tvData.Columns[i].Visible then
-        tvData.DataController.Filter.Root.AddItem(tvData.Columns[i], foLike, lText, lText);
-    end;
-  end;
-  tvData.DataController.Filter.Active := True;
-
-  if chkActive.Checked and not FActiveFieldName.IsEmpty then
-  begin
-    dsData.DataSet.Filter := FActiveFieldName + ' = true';
-    dsData.dataset.Filtered := true;
-  end
-  else
-    dsData.dataset.Filtered := false;
-
-  UpdateControls;
 end;
 
 procedure TfrmBaseRoomerGridForm.InitializeGridProperties;
@@ -293,24 +193,6 @@ begin
     dsData.DataSet.Cancel
   else
     inherited;
-end;
-
-procedure TfrmBaseRoomerGridForm.acDeleteExecute(Sender: TObject);
-begin
-  inherited;
-  tvData.Controller.DeleteSelection;
-end;
-
-procedure TfrmBaseRoomerGridForm.acEditExecute(Sender: TObject);
-begin
-  inherited;
-  tvData.DataController.Edit;
-end;
-
-procedure TfrmBaseRoomerGridForm.acNewExecute(Sender: TObject);
-begin
-  inherited;
-  tvData.DataController.Insert;
 end;
 
 procedure TfrmBaseRoomerGridForm.acPrintExecute(Sender: TObject);
@@ -340,6 +222,17 @@ begin
             lStoreComp.Properties.Add('Width');
           end;
         end;
+end;
+
+procedure TfrmBaseRoomerGridForm.alGridActionsUpdate(Action: TBasicAction; var Handled: Boolean);
+begin
+  inherited;
+  acPrint.Enabled := HasData;
+end;
+
+function TfrmBaseRoomerGridForm.HasData: boolean;
+begin
+  Result := assigned(dsData.dataset) and dsData.DataSet.Active and not dsData.DataSet.IsEmpty;
 end;
 
 end.

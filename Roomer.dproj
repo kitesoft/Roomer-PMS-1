@@ -1004,6 +1004,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="TableCache\uCachedVATTable.pas"/>
         <DCCReference Include="TableCache\uCachedPriceCodesTable.pas"/>
         <DCCReference Include="RoomerForm\uRoomerGridExporters.pas"/>
+        <DCCReference Include="RoomerForm\uRoomerEditGridForm.pas">
+            <Form>frmBaseRoomerEditGridForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

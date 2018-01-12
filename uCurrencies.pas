@@ -117,11 +117,11 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMaskEdit
-  , uRoomerGridForm, cxCheckBox, System.Actions, Vcl.ActnList
+  , uRoomerEditGridForm, cxCheckBox, System.Actions, Vcl.ActnList
   ;
 
 type
-  TfrmCurrencies = class(TfrmBaseRoomerGridForm)
+  TfrmCurrencies = class(TfrmBaseRoomerEditGridForm)
     m_: TdxMemData;
     m_Currency: TWideStringField;
     m_Description: TWideStringField;

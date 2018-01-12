@@ -404,11 +404,6 @@ type
       var Room: String): string;
     Procedure GetInvoiceCurrencyAndRate(InvoiceNumber: Integer; var Currency: string; var Rate: Double);
 
-    procedure AddPerson(iRoomReservation, iReservation: Integer; ciCustomerInfo: recCustomerHolderEX; sType: string;
-      bTransaction: boolean);
-
-    procedure RemovePerson(iRoomReservation: Integer; bTransaction: boolean);
-
     procedure UpdateUsersLanguage(Staff: string; iLanguage: Integer);
 
     procedure CheckInGuest(RoomReservation: Integer);
@@ -581,7 +576,6 @@ type
     function RR_Upd_Paycard_Token_Id(iRoomReservation: Integer; tokenId : Integer): boolean;
 
     procedure RR_Upd_FirstGuestName(iRoomReservation: Integer; newName: string);
-    function RR_Upd_GuestCount(iRoomReservation, NewCount: Integer): boolean;
     function RE_Upd_MarketSegment(newValue: string; reservation: Integer): boolean;
     function IH_Upd_UnPaid_RR(RoomReservation: Integer): boolean;
     function RR_Upd_Package(iRoomReservation: Integer; package: string): boolean;
@@ -590,6 +584,7 @@ type
     function RR_GetNumberOfRooms(iReservation: Integer): Integer;
 
     function RR_GetGuestCount(iRoomReservation: Integer): Integer;
+    procedure RR_ChangeGuestCount(aRoomReservation: integer; aGuestDataset: TDataset; aNewGuestCount: integer);
     function RR_GetRoomNr(iRoomReservation: Integer): string;
     function RR_GetRoomArrivalAndDeparture(iRoomReservation: Integer; var Room: String;
       var Arrival, departure: TdateTime): boolean;
@@ -4478,97 +4473,6 @@ begin
     end;
   finally
     freeandnil(rSet);
-  end;
-end;
-
-procedure Td.AddPerson(iRoomReservation, iReservation: Integer; ciCustomerInfo: recCustomerHolderEX; sType: string;
-  bTransaction: boolean);
-var
-  iLastPerson: Integer;
-  s: string;
-begin
-
-  if bTransaction then
-    roomerMainDataSet.SystemStartTransaction;
-  try
-    iLastPerson := PE_SetNewID();
-
-    // SQL 315  xINSERT Persons
-    s := '';
-    s := s + 'INSERT into persons ' + chr(10);
-    s := s + '(' + chr(10);
-    s := s + '  Person ' + chr(10);
-    s := s + ', RoomReservation ' + chr(10);
-    s := s + ', Reservation ' + chr(10);
-    s := s + ', SurName ' + chr(10);
-    s := s + ', Name ' + chr(10);
-    s := s + ', Address1 ' + chr(10);
-    s := s + ', Address2 ' + chr(10);
-    s := s + ', Address3 ' + chr(10);
-    s := s + ', Address4 ' + chr(10);
-    s := s + ', Country ' + chr(10);
-    s := s + ', Nationality ' + chr(10);
-    s := s + ', Company ' + chr(10);
-    s := s + ', GuestType ' + chr(10);
-    s := s + ', Information ' + chr(10);
-    s := s + ' )' + chr(10);
-
-    s := s + ' Values ' + chr(10);
-    s := s + ' (' + chr(10);
-    s := s + '  ' + inttostr(iLastPerson) + chr(10);
-    s := s + ', ' + inttostr(iRoomReservation) + chr(10);
-    s := s + ', ' + inttostr(iReservation) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.CustomerName) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.DisplayName) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.Address1) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.Address2) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.Address3) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.Address4) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.Country) + chr(10);
-    s := s + ', ' + _db(ciCustomerInfo.Country) + chr(10);
-    s := s + ', ' + _db('') + chr(10);
-    s := s + ', ' + _db(sType) + chr(10);
-    s := s + ', ' + _db('') + chr(10);
-    s := s + ' )' + chr(10);
-    if not cmd_bySQL(s) then
-    begin
-    end;
-
-    if bTransaction then
-      roomerMainDataSet.SystemCommitTransaction;
-  except
-    if bTransaction then
-      roomerMainDataSet.SystemRollbackTransaction;
-    raise;
-  end;
-end;
-
-procedure Td.RemovePerson(iRoomReservation: Integer; bTransaction: boolean);
-var
-  s: string;
-  Id: Integer;
-begin
-  Id := RR_GetLastGuestID(iRoomReservation);
-
-  if Id = 0 then
-    exit;
-
-  if bTransaction then
-    roomerMainDataSet.SystemStartTransaction;
-  try
-    s := '';
-    s := s + ' DELETE FROM persons ' + chr(10);
-    s := s + ' WHERE Person=' + inttostr(Id) + ' ' + chr(10);
-
-    if not cmd_bySQL(s) then
-    begin
-    end;
-    if bTransaction then
-      roomerMainDataSet.SystemCommitTransaction;
-  except
-    if bTransaction then
-      roomerMainDataSet.SystemRollbackTransaction;
-    raise;
   end;
 end;
 
@@ -9192,8 +9096,8 @@ begin
     // s := s + 'SELECT Room FROM RoomReservations'+chr(10);
     // s := s + ' WHERE RoomReservation = ' + inttostr(iRoomReservation)+chr(10);
     s := 'SELECT roomres.Room, ' +
-      '(SELECT ADate FROM roomsdate WHERE RoomReservation=rr.RoomReservation ORDER BY ADate LIMIT 1) AS Arrival, ' +
-      'DATE_ADD((SELECT ADate FROM roomsdate WHERE RoomReservation=rr.RoomReservation ORDER BY ADate DESC LIMIT 1), INTERVAL 1 DAY) AS Departure '
+      '(SELECT min(ADate) FROM roomsdate WHERE RoomReservation=rr.RoomReservation) AS Arrival, ' +
+      'DATE_ADD((SELECT max(ADate) FROM roomsdate WHERE RoomReservation=rr.RoomReservation), INTERVAL 1 DAY) AS Departure '
       +
       'FROM roomreservations roomres, ' +
       '(SELECT ' + inttostr(iRoomReservation) + ' AS RoomReservation) rr ' +
@@ -9534,64 +9438,6 @@ begin
   end;
 end;
 
-function Td.RR_Upd_GuestCount(iRoomReservation, NewCount: Integer): boolean;
-var
-  oldCount: Integer;
-  addCount: Integer; // +tala B�ta vi� -Tala ey�a
-  sCountry: string;
-
-  i: Integer;
-
-  GuestInfo: recCustomerHolderEX;
-  iReservation: Integer;
-  sType: string;
-
-begin
-  result := False;
-  if NewCount < 1 then
-    exit;
-
-  oldCount := RR_GetGuestCount(iRoomReservation);
-
-  addCount := NewCount - oldCount;
-
-  if addCount = 0 then
-    exit;
-
-  if addCount > 0 then
-  begin
-    sCountry := RR_GetFirstGuestCountry(iRoomReservation);
-    iReservation := RR_GetReservation(iRoomReservation);
-    sType := RR_GetFirstGuestType(iRoomReservation);
-
-    GuestInfo.CustomerName := RR_GetReservationName(iRoomReservation);
-    GuestInfo.DisplayName := 'RoomGuest';
-    GuestInfo.PID := '';
-    GuestInfo.Address1 := '';
-    GuestInfo.Address2 := '';
-    GuestInfo.Address3 := '';
-    GuestInfo.Address4 := '';
-    GuestInfo.Country := sCountry;
-    GuestInfo.Tel1 := '';
-    GuestInfo.Tel2 := '';
-    GuestInfo.Fax := '';
-    GuestInfo.EmailAddress := '';
-    GuestInfo.CustMemoText := '';
-
-    for i := 1 to addCount do
-    begin
-      AddPerson(iRoomReservation, iReservation, GuestInfo, sType, True);
-    end;
-  end
-  else
-  begin
-    addCount := ABS(addCount);
-    for i := 1 to addCount do
-    begin
-      RemovePerson(iRoomReservation, True);
-    end;
-  end;
-end;
 
 function Td.RR_GetStatus(iRoomReservation: Integer): string;
 var
@@ -15521,6 +15367,105 @@ begin
   else
     tempEntry.Add(_Amount, _AmountWoVat, _VatAmount, Code, _Description, _count, _adate, _lineNo);
 end;
+
+procedure Td.RR_ChangeGuestCount(aRoomReservation: integer; aGuestDataset: TDataset; aNewGuestCount: integer);
+var
+  i: integer;
+  personData: recPersonHolder;
+  lExecPLan: TRoomerExecutionPlan;
+  lOldCount: integer;
+  lReservation: integer;
+  lRoom: string;
+  lArrival: TDateTime;
+  lDeparture: TDateTime;
+begin
+  Assert(assigned(aGuestDataset.FindField('reservation')), 'aGuestDataaset should contain reservation field');
+  Assert(assigned(aGuestDataset.FindField('roomreservation')), 'aGuestDataaset should contain roomreservation field');
+  Assert(assigned(aGuestDataset.FindField('mainname')), 'aGuestDataaset should contain mainname field');
+  Assert(assigned(aGuestDataset.FindField('ID')), 'aGuestDataaset should contain ID field');
+  Assert(assigned(aGuestDataset.FindField('person')), 'aGuestDataaset should contain ID field');
+
+  aGuestDataset.DisableControls;
+  try
+    aGuestDataset.Filter := format('roomreservation=%d', [aRoomReservation]);
+    aGuestDataset.Filtered := true;
+    lOldCount := aGuestDataset.RecordCount;
+
+    if (aNewGuestCount > 0) and (aNewGuestCount <> lOldCount) then
+    begin
+
+      lExecPLan := d.roomerMainDataSet.CreateExecutionPlan;
+      try
+        if aGuestDataset.Locate('roomreservation;mainname', VarArrayOf([aRoomReservation, true]), []) then
+        begin
+          personData := GET_pesson(aGuestDataset.FieldByName('person').AsInteger);
+          lreservation := aGuestDataset.FieldByName('reservation').AsInteger;
+        end
+        else
+          initPersonHolder(personData);
+
+        for i := lOldCount+1 to aNewGuestCount do
+        begin
+          personData.Person := PE_SetNewID();
+          personData.name := 'RoomGuest';
+          personData.MainName := false;
+          personData.PersonsProfilesId := 0;
+
+          lExecPLan.AddExec(SQL_INS_Person(personData));
+        end;
+
+        if (aNewGuestCount < lOldCount) then
+        begin
+          initPersonHolder(personData);
+          aGuestDataset.Filtered := false;
+          aGuestDataset.Filter := format('roomreservation=%d and not mainname', [aRoomReservation]);
+          aGuestDataset.Filtered := true;
+          aGuestDataset.Last;
+
+          for i := aNewGuestCount to lOldCount-1 do
+          begin
+            if not aGuestDataset.Bof then
+            begin
+              personData.id := aGuestDataset.FieldByName('ID').AsInteger;
+              lExecPLan.AddExec(SQL_DEL_Person(personData));
+              aGuestDataset.Prior;
+            end else
+              Break;
+          end;
+
+        end;
+
+        if lExecPLan.Execute(ptExec, true, true) then
+          WriteReservationActivityLog(CreateReservationActivityLog(g.qUser
+                                                     , lReservation
+                                                     , aRoomReservation
+                                                     , CHANGE_NUMBER_OF_GUESTS
+                                                     , inttostr(lOldCount) //old value
+                                                     , inttostr(aNewGuestCount) //New vlaue
+                                                     , '' //Moreinfo
+                                       ))
+        else
+          raise Exception.CreateFmt('Changing guestcount to %d failed', [aNewGuestCount]);
+
+        if not GetBreakfastIncluted(lReservation, aRoomReservation) then
+          if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
+          begin
+            RR_GetRoomArrivalAndDeparture(aRoomReservation, lRoom, lArrival, lDeparture);
+            INV_UpdateBreakfastGuests(lReservation, aRoomReservation, aNewGuestCount * (trunc(lDeparture) - trunc(lArrival)));
+          end;
+
+      finally
+        lExecPlan.Free;
+      end;
+
+    end;
+  finally
+    aGuestDataset.Filtered := false;
+    aGuestDataset.Filter := '';
+    aGuestDataset.EnableControls;
+  end;
+end;
+
 
 procedure TRoomPackageLineEntry.Add(_Amount, _AmountWoVat, _VatAmount: Double; _Code, _Description: string;
   _count: Double; _adate: Tdate; _lineNo: Integer);

@@ -26,6 +26,11 @@ type
   public
     constructor Create(aGrid: TcxGrid; const aCaption: string = '');
     destructor Destroy; override;
+
+    procedure ExportToExcel;
+    procedure ExportToHtml;
+    procedure ExportToText;
+    procedure ExportToXml;
     property ExportSubMenu: TMenuItem read FmnuExportMenu;
     property Caption: string read FCaption write FCaption;
   end;
@@ -52,6 +57,26 @@ destructor TRoomerGridExporters.Destroy;
 begin
   inherited;
   FmnuExportMenu.Free;
+end;
+
+procedure TRoomerGridExporters.ExportToExcel;
+begin
+  FmnuiGridToExcel.Click;
+end;
+
+procedure TRoomerGridExporters.ExportToHtml;
+begin
+  FmnuiGridToHtml.Click;
+end;
+
+procedure TRoomerGridExporters.ExportToText;
+begin
+  FmnuiGridToText.Click;
+end;
+
+procedure TRoomerGridExporters.ExportToXml;
+begin
+  FmnuiGridToXml.Click;
 end;
 
 procedure TRoomerGridExporters.ConstructMenu;

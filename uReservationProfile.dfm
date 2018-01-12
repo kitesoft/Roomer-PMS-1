@@ -2009,8 +2009,6 @@ object frmReservationProfile: TfrmReservationProfile
         PopupMenu = mnuGrid
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = -151
-        ExplicitTop = 102
         object tvRooms: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True

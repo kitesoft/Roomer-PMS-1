@@ -1,5 +1,7 @@
 inherited frmPriceCodesGrid: TfrmPriceCodesGrid
   Caption = 'Rate codes'
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited grData: TcxGrid
@@ -79,6 +81,7 @@ inherited frmPriceCodesGrid: TfrmPriceCodesGrid
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43109.601824074070000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

@@ -337,7 +337,8 @@ uses
   ufrmPriceCodesGrid in 'GridForms\ufrmPriceCodesGrid.pas' {frmPriceCodesGrid},
   uCachedVATTable in 'TableCache\uCachedVATTable.pas',
   uCachedPriceCodesTable in 'TableCache\uCachedPriceCodesTable.pas',
-  uRoomerGridExporters in 'RoomerForm\uRoomerGridExporters.pas';
+  uRoomerGridExporters in 'RoomerForm\uRoomerGridExporters.pas',
+  uRoomerEditGridForm in 'RoomerForm\uRoomerEditGridForm.pas' {frmBaseRoomerEditGridForm};
 
 {$R *.RES}
 
@@ -368,7 +369,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

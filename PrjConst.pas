@@ -1761,6 +1761,7 @@ begin
 
   constants.Add('shExportMenuCaption', 'Export grid to');
   constants.Add('shInvoiceAlreadyCredited', 'Creditinvoice for this invoice already exist with number %d');
+  constants.Add('shSaveChangesBeforeReloadingData', 'Not all changes have been saved. Save changes before reloading data?');
 end;
 
 procedure AddConstants_OfflineReports;
@@ -1950,7 +1951,7 @@ begin
   frmRptCashier := TfrmRptCashier.Create(nil); frmRptCashier.Free; frmRptCashier := nil;
 
   frmPhoneRates := TfrmPhoneRates.Create(nil); frmPhoneRates.Free; frmPhoneRates := nil;
-  frmGroupGuests := TfrmGroupGuests.Create(nil); frmGroupGuests.Free; frmGroupGuests := nil;
+  TfrmGroupGuests.Create(nil).Free;
 
   FrmEmailExcelSheet := TFrmEmailExcelSheet.Create(nil); FrmEmailExcelSheet.Free; FrmEmailExcelSheet := nil;
 

@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uRoomerGridForm, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxStyles, dxSkinsCore, dxSkinCaramel, dxSkinCoffee, dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, dxPSGlbl,
   dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns,
@@ -14,10 +14,12 @@ uses
   cxGridBandedTableView, cxGridTableView, cxClasses, cxPropertiesStore, Vcl.StdCtrls, sButton, sEdit, sCheckBox, sLabel,
   Vcl.Buttons, sSpeedButton, Vcl.ExtCtrls, sPanel, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridDBBandedTableView, cxGrid, Vcl.ComCtrls, sStatusBar
-  , hData, Vcl.Menus, dxmdaset, cxTextEdit, cxCalc, cxButtonEdit;
+  , hData, Vcl.Menus, dxmdaset, cxTextEdit, cxCalc, cxButtonEdit
+  , uRoomerEditGridForm, uRoomerGridForm
+  ;
 
 type
-  TfrmVatCodesGrid = class(TfrmBaseRoomerGridForm)
+  TfrmVatCodesGrid = class(TfrmBaseRoomerEditGridForm)
     m_: TdxMemData;
     m_VATCode: TWideStringField;
     m_Description: TWideStringField;
@@ -57,6 +59,7 @@ uses
   , uFinanceConnectService
   , uFrmFinanceConnect
   , PrjConst
+  , UITypes
   ;
 
 { TfrmVatCodesGrid }
@@ -78,7 +81,7 @@ begin
 
   finally
     glb.TableList['vatcodes'].RefreshEnabled := true;
-    if aMode = TRoomerGridFormMode.Browse then
+    if aMode = TRoomerGridFormMode.Edit then
       glb.TableList['vatcodes'].RefreshFromServer;
     Free;
   end;

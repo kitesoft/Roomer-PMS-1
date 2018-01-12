@@ -12058,7 +12058,7 @@ procedure TfrmMain._VatCodesList;
 var
   theData: recVatCodeHolder;
 begin
-  ufrmVatCodesGrid.vatCodes(TRoomerGridFormMode.Browse, theData);
+  ufrmVatCodesGrid.vatCodes(TRoomerGridFormMode.Edit, theData);
 end;
 
 procedure TfrmMain._PayGroupList;
@@ -12153,7 +12153,7 @@ var
   theData: recPriceCodeHolder;
 begin
   initPriceCodeHolder(theData);
-  priceCodes(TRoomerGridFormMode.Browse, theData);
+  priceCodes(TRoomerGridFormMode.edit, theData);
 end;
 
 procedure TfrmMain._Seasons;

@@ -809,7 +809,6 @@ type
     procedure ShowMainGuestProfile;
     procedure mnuOtherResStateChangeClick(Sender: TObject);
     procedure PropagateValue(aDirection: TPropagateDirection);
-    procedure ChangeGuestCount(aRoomReservation, aNewGuestCount: integer);
 
     property OutOfOrderBlocking: Boolean read FOutOfOrderBlocking write SetOutOfOrderBlocking;
   public
@@ -2385,7 +2384,10 @@ begin
     begin
       if (mRoomsGuestCount.OldValue < mRoomsGuestCount.AsInteger) or
          (MessageDlg(GetTranslatedText('shDecreaseRoomResGuestCount'), mtConfirmation, mbYesNo, 0) = mrYes) then
-        ChangeGuestCount(mRoomsRoomReservation.AsInteger, mRoomsGuestCount.AsInteger)
+      begin
+        d.RR_ChangeGuestCount(mRoomsRoomReservation.AsInteger, mGuests, mRoomsGuestCount.AsInteger);
+        getGuestData(mRoomsRoomReservation.AsInteger);
+      end
       else
         Abort
     end
@@ -2773,89 +2775,6 @@ begin
 
 end;
 
-procedure TfrmReservationProfile.ChangeGuestCount(aRoomReservation: integer; aNewGuestCount: integer);
-var
-  i: integer;
-  personData: recPersonHolder;
-  lExecPLan: TRoomerExecutionPlan;
-  lOldCount: integer;
-begin
-
-  mGuests.DisableControls;
-  try
-    mGuests.Filter := format('roomreservation=%d', [aRoomReservation]);
-    mGuests.Filtered := true;
-    lOldCount := mGuests.RecordCount;
-
-    if (aNewGuestCount > 0) and (aNewGuestCount <> lOldCount) then
-    begin
-
-      lExecPLan := d.roomerMainDataSet.CreateExecutionPlan;
-      try
-        if mGuests.Locate('roomreservation;mainname', VarArrayOf([aRoomReservation, true]), []) then
-          personData := GET_pesson(mGuestsPerson.AsInteger)
-        else
-          initPersonHolder(personData);
-
-        for i := lOldCount+1 to aNewGuestCount do
-        begin
-          personData.Person := PE_SetNewID();
-          personData.name := 'RoomGuest';
-          personData.MainName := false;
-          personData.PersonsProfilesId := 0;
-
-          lExecPLan.AddExec(SQL_INS_Person(personData));
-        end;
-
-        if (aNewGuestCount < lOldCount) then
-        begin
-          initPersonHolder(personData);
-          mGuests.Filtered := false;
-          mGuests.Filter := format('roomreservation=%d and not mainname', [aRoomReservation]);
-          mGuests.Filtered := true;
-          mGuests.Last;
-
-          for i := aNewGuestCount to lOldCount-1 do
-          begin
-            if not mGuests.Bof then
-            begin
-              personData.id := mGuestsID.AsInteger;
-              lExecPLan.AddExec(SQL_DEL_Person(personData));
-              mGuests.Prior;
-            end else
-              Break;
-          end;
-
-        end;
-
-        if lExecPLan.Execute(ptExec, true, true) then
-          WriteReservationActivityLog(CreateReservationActivityLog(g.qUser
-                                                     , mRoomsReservation.AsInteger
-                                                     , aRoomReservation
-                                                     , CHANGE_NUMBER_OF_GUESTS
-                                                     , inttostr(mRoomsGuestCount.asInteger) //old value
-                                                     , inttostr(aNewGuestCount) //New vlaue
-                                                     , '' //Moreinfo
-                                       ))
-        else
-          raise Exception.CreateFmt('Changing guestcount to %d failed', [aNewGuestCount]);
-
-        if not mRoomsBreakFast.AsBoolean then
-          if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
-             d.INV_UpdateBreakfastGuests(zReservation, zRoomReservation, mRoomsGuestCount.AsInteger * mRoomsdayCount.AsInteger);
-
-      finally
-        lExecPlan.Free;
-        getGuestData(aRoomReservation);
-      end;
-
-    end;
-  finally
-    mGuests.Filtered := false;
-    mGuests.Filter := '';
-    mGuests.EnableControls;
-  end;
-end;
 
 procedure TfrmReservationProfile.tvRoomsInitEdit(Sender: TcxCustomGridTableView;
   AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);

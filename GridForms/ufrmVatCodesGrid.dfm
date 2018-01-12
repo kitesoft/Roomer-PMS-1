@@ -1,5 +1,7 @@
 inherited frmVatCodesGrid: TfrmVatCodesGrid
   Caption = 'Vatcodes'
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited grData: TcxGrid
@@ -100,7 +102,6 @@ inherited frmVatCodesGrid: TfrmVatCodesGrid
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43108.629184525460000000
-      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end
