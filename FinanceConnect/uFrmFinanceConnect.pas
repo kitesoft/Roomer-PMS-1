@@ -86,13 +86,11 @@ type
     edPreInvoiceNumber: TsEdit;
     edSuccInvoiceNumber: TsEdit;
     edCurrency: TsEdit;
-    sLabel1: TsLabel;
-    sLabel2: TsLabel;
-    sLabel3: TsLabel;
-    sLabel4: TsLabel;
+    lbServiceUrl: TsLabel;
+    lbUsername: TsLabel;
+    lbPassword: TsLabel;
     sLabel5: TsLabel;
     sLabel6: TsLabel;
-    cbxSystemSelection: TsComboBox;
     cbxActive: TsCheckBox;
     __edServiceUrl: TsEdit;
     edUsername: TsEdit;
@@ -112,6 +110,9 @@ type
     edCashBookList: TsEdit;
     sLabel18: TsLabel;
     edPaygroupList: TsEdit;
+    pnlFinanceSystem: TsPanel;
+    sLabel1: TsLabel;
+    cbxSystemSelection: TsComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tabsMappingsChange(Sender: TObject);
@@ -199,7 +200,9 @@ end;
 function TFrmFinanceConnect.MandatoryFieldsValid : boolean;
 begin
   result := False;
-  if SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value = 'TWINFIELD' then
+  if cbxSystemSelection.ItemIndex < 0 then exit;
+
+  if UpperCase(SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value) = 'TWINFIELD' then
   begin
     result := (cbxSystemSelection.ItemIndex > 0) AND
       (Length(__edServiceUrl.Text) > 5) AND
@@ -211,7 +214,7 @@ begin
       (Length(edCurrency.Text) > 0) AND
       (Length(edReceivableAccount.Text) > 0);
   end else
-  if SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value = 'GENERIC' then
+  if UpperCase(SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value) = 'GENERIC' then
   begin
     result := (cbxSystemSelection.ItemIndex > 0) AND
       (Length(edSystemName.Text) > 1) AND
@@ -226,12 +229,40 @@ procedure TFrmFinanceConnect.NewTypeSelection;
 begin
   if __edServiceUrl.Text='' then
     if cbxSystemSelection.ItemIndex > 0 then
-      if SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value = 'TWINFIELD' then
+      if UpperCase(SystemsLookupList[cbxSystemSelection.ItemIndex - 1].Value) = 'TWINFIELD' then
       begin
         __edServiceUrl.Text := '{cluster}/webservices/';
         __edServiceUrl.ReadOnly := True;
       end;
   pgMain.Pages[1].Visible := cbxSystemSelection.ItemIndex > 0;
+
+  edPassword.Visible := cbxSystemSelection.ItemIndex IN [1];
+  lbPassword.Visible := cbxSystemSelection.ItemIndex IN [1];
+
+  edUsername.Visible := cbxSystemSelection.ItemIndex IN [1];
+  lbUsername.Visible := cbxSystemSelection.ItemIndex IN [1];
+
+  __edServiceUrl.Visible := cbxSystemSelection.ItemIndex IN [1];
+  lbServiceUrl.Visible := cbxSystemSelection.ItemIndex IN [1];
+
+  if cbxSystemSelection.ItemIndex IN [2] then
+  begin
+    gbxConnectionSettings.Height := 135;
+  end else
+  begin
+    gbxConnectionSettings.Height := 212;
+  end;
+
+  gbxConnectionSettings.Visible := cbxSystemSelection.ItemIndex > 0;
+  gbxBookkeeping.Visible := cbxSystemSelection.ItemIndex > 0;
+
+  gbMappingResources.Visible := cbxSystemSelection.ItemIndex IN [2];
+
+  gbxConnectionSettings.Top := pnlFinanceSystem.Top + pnlFinanceSystem.Height;
+
+  pgMain.ActivePageIndex := 1;
+  pgMain.ActivePageIndex := InitialPage;
+
 end;
 
 procedure TFrmFinanceConnect.HandleChange(Sender: TObject);
@@ -319,6 +350,7 @@ begin
   FinanceConnectService.PrepareForMapping;
 
   PrepareTabs;
+  NewTypeSelection;
 end;
 
 procedure TFrmFinanceConnect.tabsMappingsChange(Sender: TObject);
@@ -478,6 +510,7 @@ begin
     if KeyAndValue.Key = ActiveFinanceConnectSystemCode then index := i;
   end;
   cbxSystemSelection.ItemIndex := index;
+  NewTypeSelection;
 end;
 
 procedure TFrmFinanceConnect.LoadSet(rSet : TRoomerDataSet; KeyPairType : TKeyPairType; mem : TdxMemData; CodeField, NameField, MappedField : String);
@@ -625,6 +658,9 @@ begin
   tabsMappings.TabIndex := InitialWorkingTab;
   tabsMappingsChange(tabsMappings);
 
+  cbxSystemSelection.ItemIndex := cbxSystemSelection.Items.IndexOf(cbxSystemSelection.Text);
+  if cbxSystemSelection.ItemIndex < 0 then
+    cbxSystemSelection.ItemIndex := 0;
 end;
 
 procedure TFrmFinanceConnect.btnOKClick(Sender: TObject);

@@ -1,17 +1,17 @@
 inherited FrmFinanceConnect: TFrmFinanceConnect
   BorderStyle = bsSizeable
   Caption = 'Finance Connect'
-  ClientHeight = 679
+  ClientHeight = 686
   ClientWidth = 866
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   ExplicitWidth = 882
-  ExplicitHeight = 718
+  ExplicitHeight = 725
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 659
+    Top = 666
     Width = 866
     ExplicitTop = 659
     ExplicitWidth = 866
@@ -20,21 +20,21 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     Left = 0
     Top = 0
     Width = 866
-    Height = 616
+    Height = 623
     ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
     OnChange = pgMainChange
-    ExplicitHeight = 528
+    ExplicitHeight = 616
     object tsSettings: TsTabSheet
       Caption = 'Settings'
-      ExplicitHeight = 500
+      ExplicitHeight = 588
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
-        Top = 3
+        Top = 45
         Width = 852
-        Height = 250
+        Height = 212
         Align = alTop
         Caption = 'Finance Connect settings'
         Color = clBtnFace
@@ -47,23 +47,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        object sLabel1: TsLabel
-          Left = 64
-          Top = 33
-          Width = 122
-          Height = 13
-          Alignment = taRightJustify
-          Caption = 'Finance Connect System:'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object sLabel2: TsLabel
+        object lbServiceUrl: TsLabel
           Left = 125
-          Top = 163
+          Top = 128
           Width = 61
           Height = 13
           Alignment = taRightJustify
@@ -75,9 +61,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel3: TsLabel
+        object lbUsername: TsLabel
           Left = 90
-          Top = 190
+          Top = 155
           Width = 96
           Height = 13
           Alignment = taRightJustify
@@ -89,9 +75,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel4: TsLabel
+        object lbPassword: TsLabel
           Left = 136
-          Top = 217
+          Top = 182
           Width = 50
           Height = 13
           Alignment = taRightJustify
@@ -105,7 +91,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         end
         object sLabel5: TsLabel
           Left = 95
-          Top = 110
+          Top = 75
           Width = 91
           Height = 13
           Alignment = taRightJustify
@@ -119,7 +105,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         end
         object sLabel6: TsLabel
           Left = 127
-          Top = 136
+          Top = 101
           Width = 59
           Height = 13
           Alignment = taRightJustify
@@ -133,7 +119,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         end
         object sLabel9: TsLabel
           Left = 118
-          Top = 84
+          Top = 49
           Width = 68
           Height = 13
           Alignment = taRightJustify
@@ -145,28 +131,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object cbxSystemSelection: TsComboBox
-          Left = 200
-          Top = 30
-          Width = 164
-          Height = 21
-          Alignment = taLeftJustify
-          VerticalAlignment = taAlignTop
-          Style = csDropDownList
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ItemIndex = -1
-          ParentFont = False
-          TabOrder = 0
-          OnChange = cbxSystemSelectionChange
-        end
         object cbxActive: TsCheckBox
           Left = 200
-          Top = 57
+          Top = 22
           Width = 58
           Height = 17
           Caption = 'Active'
@@ -176,75 +143,14 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 1
+          TabOrder = 0
           OnClick = cbxActiveClick
           ImgChecked = 0
           ImgUnchecked = 0
         end
         object __edServiceUrl: TsEdit
           Left = 200
-          Top = 160
-          Width = 505
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 5
-          OnChange = HandleChange
-        end
-        object edUsername: TsEdit
-          Left = 200
-          Top = 187
-          Width = 505
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 6
-          OnChange = HandleChange
-        end
-        object edPassword: TsEdit
-          Left = 200
-          Top = 214
-          Width = 505
-          Height = 24
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          PasswordChar = '*'
-          TabOrder = 7
-          OnChange = HandleChange
-        end
-        object edOrg: TsEdit
-          Left = 200
-          Top = 107
-          Width = 505
-          Height = 21
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 3
-          OnChange = HandleChange
-        end
-        object edOffice: TsEdit
-          Left = 200
-          Top = 133
+          Top = 125
           Width = 505
           Height = 21
           Color = clWhite
@@ -257,9 +163,40 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           TabOrder = 4
           OnChange = HandleChange
         end
-        object edSystemName: TsEdit
+        object edUsername: TsEdit
           Left = 200
-          Top = 81
+          Top = 152
+          Width = 505
+          Height = 21
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 5
+          OnChange = HandleChange
+        end
+        object edPassword: TsEdit
+          Left = 200
+          Top = 179
+          Width = 505
+          Height = 24
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          PasswordChar = '*'
+          TabOrder = 6
+          OnChange = HandleChange
+        end
+        object edOrg: TsEdit
+          Left = 200
+          Top = 72
           Width = 505
           Height = 21
           Color = clWhite
@@ -272,11 +209,41 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           TabOrder = 2
           OnChange = HandleChange
         end
+        object edOffice: TsEdit
+          Left = 200
+          Top = 98
+          Width = 505
+          Height = 21
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 3
+          OnChange = HandleChange
+        end
+        object edSystemName: TsEdit
+          Left = 200
+          Top = 46
+          Width = 505
+          Height = 21
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+          OnChange = HandleChange
+        end
       end
       object gbxBookkeeping: TsGroupBox
         AlignWithMargins = True
         Left = 3
-        Top = 259
+        Top = 263
         Width = 852
         Height = 159
         Align = alTop
@@ -285,6 +252,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         ParentColor = False
         TabOrder = 1
         SkinData.SkinSection = 'PANEL'
+        ExplicitTop = 259
         object sLabel8: TsLabel
           Left = 100
           Top = 27
@@ -434,18 +402,17 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
       object gbMappingResources: TsGroupBox
         AlignWithMargins = True
         Left = 3
-        Top = 424
+        Top = 428
         Width = 852
-        Height = 161
+        Height = 164
         Align = alClient
         Caption = 'Mapping resources'
         Color = clBtnFace
         ParentColor = False
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitLeft = 6
-        ExplicitTop = 277
-        ExplicitHeight = 280
+        ExplicitTop = 424
+        ExplicitHeight = 161
         object sLabel7: TsLabel
           Left = 123
           Top = 28
@@ -597,10 +564,51 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           OnChange = HandleChange
         end
       end
+      object pnlFinanceSystem: TsPanel
+        Left = 0
+        Top = 0
+        Width = 858
+        Height = 42
+        Align = alTop
+        TabOrder = 3
+        object sLabel1: TsLabel
+          Left = 67
+          Top = 13
+          Width = 122
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Finance Connect System:'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object cbxSystemSelection: TsComboBox
+          Left = 203
+          Top = 10
+          Width = 164
+          Height = 21
+          Alignment = taLeftJustify
+          VerticalAlignment = taAlignTop
+          Style = csDropDownList
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = -1
+          ParentFont = False
+          TabOrder = 0
+          OnChange = cbxSystemSelectionChange
+        end
+      end
     end
     object tsMappings: TsTabSheet
       Caption = 'Mappings'
-      ExplicitHeight = 557
+      ExplicitHeight = 588
       object tabsMappings: TsTabControl
         AlignWithMargins = True
         Left = 3
@@ -893,9 +901,9 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     end
   end
   inherited pnlButtons: TsPanel
-    Top = 616
+    Top = 623
     Width = 866
-    ExplicitTop = 528
+    ExplicitTop = 616
     ExplicitWidth = 866
     inherited btnOK: TsButton
       Left = 550

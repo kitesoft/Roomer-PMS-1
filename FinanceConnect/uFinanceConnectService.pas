@@ -87,6 +87,7 @@ type
       procedure ParseList(XmlString: String; KeyPairList: TKeyPairList; XmlElements : TFinanceXmlListElements);
       procedure RetrieveFinanceConnectMappings;
       function ParseSettings(XmlString : String) : TFinanceConnectSettings;
+    function RetrieveListForKeyPairAsString(url : String): String;
     public
       constructor Create;
       procedure PrepareForMapping;
@@ -133,7 +134,8 @@ uses
   , Xml.Xmldom
   , Xml.XMLIntf
   , uUtils
-  , Dialogs;
+  , Dialogs
+  , PrjConst;
 
 function FinanceConnectActive : Boolean;
 begin
@@ -204,48 +206,68 @@ begin
 end;
 
 procedure TFinanceConnectService.PrepareForMapping;
+const mappings : Array[0..4] OF TKeyPairType = (FKP_CUSTOMERS, FKP_PRODUCTS, FKP_VAT, FKP_PAYGROUPS, FKP_CASHBOOKS);
+   function GetListUri(KeyPairType : TKeyPairType) : TKeyPairList;
+   begin
+     result := nil;
+     case KeyPairType of
+       FKP_CUSTOMERS : result := CustomersLookupList;
+       FKP_PRODUCTS : result := ItemsLookupList;
+       FKP_VAT : result := VatsLookupList;
+       FKP_PAYGROUPS : result := PayGroupsBalanceAccountLookupList;
+       FKP_CASHBOOKS : result := PayGroupsCashBookLookupList;
+     end;
+   end;
+   procedure SetListUri(KeyPairType : TKeyPairType; list : TKeyPairList);
+   begin
+     case KeyPairType of
+       FKP_CUSTOMERS : CustomersLookupList := list;
+       FKP_PRODUCTS : ItemsLookupList := list;
+       FKP_VAT : VatsLookupList := list;
+       FKP_PAYGROUPS : PayGroupsBalanceAccountLookupList := list;
+       FKP_CASHBOOKS : PayGroupsCashBookLookupList := list;
+     end;
+   end;
+   function GetListName(KeyPairType : TKeyPairType) : String;
+   begin
+     result := 'UNKNOWN';
+     case KeyPairType of
+       FKP_CUSTOMERS : result := 'Customers';
+       FKP_PRODUCTS : result := 'Items';
+       FKP_VAT : result := 'Vats';
+       FKP_PAYGROUPS : result := 'Pay Groups Balance Accounts';
+       FKP_CASHBOOKS : result := 'Cash Books';
+     end;
+   end;
+var
+  i: Integer;
 begin
   if ActiveFinanceConnectSystemCode <> '' then
   begin
     InitializeXmlElements;
-
-    try
-    if NOT assigned(CustomersLookupList) then
-      CustomersLookupList := RetrieveFinanceConnectKeypair(FKP_CUSTOMERS);
-
-    if NOT assigned(ItemsLookupList) then
-      ItemsLookupList := RetrieveFinanceConnectKeypair(FKP_PRODUCTS);
-
-    if NOT assigned(VatsLookupList) then
-      VatsLookupList := RetrieveFinanceConnectKeypair(FKP_VAT);
-
-    if NOT assigned(PayGroupsBalanceAccountLookupList) then
-      PayGroupsBalanceAccountLookupList := RetrieveFinanceConnectKeypair(FKP_PAYGROUPS);
-
-    if NOT assigned(PayGroupsCashBookLookupList) then
-      PayGroupsCashBookLookupList := RetrieveFinanceConnectKeypair(FKP_CASHBOOKS);
 
     if NOT assigned(SystemsLookupList) then
       SystemsLookupList := RetrieveFinanceConnectAvailableSystems;
 
     if (NOT assigned(MappingsLookupMap)) then
          RetrieveFinanceConnectMappings;
-    except
-      On e: Exception do
-      begin
-        MessageDlg('Roomer was unable to retrieve mapping information.' + #13 +
-                   'Please check the following: ' + #13#13 +
-                   '  - Is the login information correct?' + #13 +
-                   '  - Has login been blocked for this user?' + #13 +
-                   '  - Is the organization code correct?' + #13, mtError, [mbOk], 0);
 
-        CustomersLookupList := TKeyPairList.Create(True);
-        ItemsLookupList := TKeyPairList.Create(True);
-        VatsLookupList := TKeyPairList.Create(True);
-        PayGroupsBalanceAccountLookupList := TKeyPairList.Create(True);
-        PayGroupsCashBookLookupList := TKeyPairList.Create(True);
-        SystemsLookupList := TKeyPairList.Create(True);
-        MappingsLookupMap := TObjectDictionary<String,String>.Create;
+    for i := LOW(mappings) to HIGH(mappings) do
+    begin
+      try
+        if NOT assigned(GetListUri(mappings[i])) then
+          SetListUri(mappings[i], RetrieveFinanceConnectKeypair(mappings[i]));
+      except
+        On e: Exception do
+        begin
+          MessageDlg(format(GetTranslatedText('shFinanceConnectUnableToRetrieveMapping'), [GetListName(mappings[i])]), mtError, [mbOk], 0);
+
+          CustomersLookupList := TKeyPairList.Create(True);
+          ItemsLookupList := TKeyPairList.Create(True);
+          VatsLookupList := TKeyPairList.Create(True);
+          PayGroupsBalanceAccountLookupList := TKeyPairList.Create(True);
+          PayGroupsCashBookLookupList := TKeyPairList.Create(True);
+        end;
       end;
     end;
 
@@ -439,39 +461,91 @@ begin
   s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsStringUsingPut(d.roomerMainDataSet.RoomerUri + 'financeconnect', s));
 end;
 
+function TFinanceConnectService.RetrieveListForKeyPairAsString(url : String): String;
+var s : String;
+begin
+  s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + url));
+  result := s;
+end;
+
 function TFinanceConnectService.RetrieveFinanceConnectKeypair(keyPairType: TKeyPairType): TKeyPairList;
 var
   cursorWas : SmallInt;
   s: String;
   XmlElements : TFinanceXmlListElements;
+  FinanceConnectSettings : TFinanceConnectSettings;
+
+  function RetrieveAsFile(url : String) : TKeyPairList;
+  var filename : String;
+      stl, line : TStrings;
+      s, key, value : String;
+  begin
+    result := nil;
+    if Lowercase(Copy(url, 1, 8)) = 'file:///' then
+    begin
+      result := TKeyPairList.Create(True);
+      filename := ReplaceString(copy(url, 9, MAXINT), '/', '\');
+      stl := TStringList.Create;
+      try
+        stl.LoadFromFile(filename);
+        for s IN stl do
+        begin
+          line := Split(s, '=');
+          try
+            if line.Count > 0 then
+            begin
+              if line[0] <> '' then
+                result.Add(TKeyAndValue.Create(line[0], line[1]));
+            end;
+          finally
+            line.Free;
+          end;
+        end;
+
+      finally
+        stl.Free;
+      end;
+    end;
+  end;
+
 begin
   cursorWas := Screen.Cursor;
   Screen.Cursor := crHourglass;
   Application.ProcessMessages;
   try
+    FinanceConnectSettings := FinanceConnectConfiguration;
     case keyPairType of
       FKP_CUSTOMERS: begin
-                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/customers'));
+                       result := RetrieveAsFile(FinanceConnectSettings.customersListUri);
+                       if Assigned(result) then exit;
+                       s := RetrieveListForKeyPairAsString('financeconnect/customers');
                        XmlElements := CustomerXmlElements;
                      end;
       FKP_PRODUCTS : begin
-                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/items'));
+                       result := RetrieveAsFile(FinanceConnectSettings.itemsListUri);
+                       if Assigned(result) then exit;
+                       s := RetrieveListForKeyPairAsString('financeconnect/items');
                        XmlElements := ItemXmlElements;
                      end;
       FKP_VAT      : begin
-                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/vatcodes'));
+                       result := RetrieveAsFile(FinanceConnectSettings.vatListUri);
+                       if Assigned(result) then exit;
+                       s := RetrieveListForKeyPairAsString('financeconnect/vatcodes');
                        XmlElements := VatXmlElements;
                      end;
       FKP_PAYGROUPS: begin
-                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/paygroups'));
+                       result := RetrieveAsFile(FinanceConnectSettings.payGroupsListUri);
+                       if Assigned(result) then exit;
+                       s := RetrieveListForKeyPairAsString('financeconnect/paygroups');
                        XmlElements := PayGroupsXmlElements;
                      end;
       FKP_CASHBOOKS: begin
-                       s := Utf8ToString(d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'financeconnect/cashbooks'));
+                       result := RetrieveAsFile(FinanceConnectSettings.cashBooksListUri);
+                       if Assigned(result) then exit;
+                       s := RetrieveListForKeyPairAsString('financeconnect/cashbooks');
                        XmlElements := CashBooksXmlElements;
                      end;
     end;
-
 
     result := TKeyPairList.Create(True);
     ParseList(s, result, XmlElements);
