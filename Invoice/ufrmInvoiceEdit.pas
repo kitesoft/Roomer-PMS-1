@@ -362,6 +362,7 @@ type
     fraInvoiceCurrency: TfraCurrencyPanel;
     acAggregateCityTax: TAction;
     mnuAggregateCitytax: TMenuItem;
+    mPaymentscurrencyRate: TFloatField;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -2549,6 +2550,7 @@ begin
       mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
       mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
       mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
+      mPaymentscurrencyRate.AsFloat := eSet.FieldByName('CurrencyRate').AsFloat;
       if FIsCredit then
         mPaymentsNativeAmount.AsFloat := eSet.FieldByName('Amount').AsFloat * -1
       else
@@ -2894,8 +2896,9 @@ end;
 procedure TfrmInvoiceEdit.mPaymentsCalcFields(DataSet: TDataSet);
 begin
   mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
-  if not mPaymentsCurrency.IsNull then
-    mPaymentsCurrencyAmount.AsFloat := TAmount(mPaymentsNativeAmount.AsFloat).ToCurrency(mPaymentsCurrency.AsString).Value;
+  if not SameValue(mPaymentsCurrencyRate.AsFloat, 0.00) then
+    // Should be solved with CurrencyRate as (optionally fixed) property of a TAmount. This is part of TAmount as of PMS 1.9.19
+    mPaymentsCurrencyAmount.AsFloat := mPaymentsNativeAmount.AsFloat / mPaymentsCurrencyRate.AsFloat
 end;
 
 procedure TfrmInvoiceEdit.ExternalRoomsClick(Sender: TObject);
