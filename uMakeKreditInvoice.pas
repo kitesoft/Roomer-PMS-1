@@ -205,7 +205,10 @@ uses
   , uFrmHandleBookKeepingException
   , uMain
   , RoomerCloudEntities
-  , uSQLUtils, uInvoiceDefinitions, ufrmInvoiceEdit;
+  , uSQLUtils
+  , uInvoiceDefinitions
+  , ufrmInvoiceEdit
+  , uFinanceConnectService;
 
 
 function MakeKreditInvoice(number : integer; var createNew : boolean) : boolean;
@@ -490,6 +493,7 @@ begin
     ShowPackage     := kbmInvoiceHeads['ShowPackage'];
 
     SendInvoicesToFinancePacket(zCreditInvoiceNumber);
+    SendInvoiceToActiveFinanceConnector(zCreditInvoiceNumber);
     ViewInvoice2(zCreditInvoiceNumber, true, false, true, ShowPackage, EmailAddress);
     if zdoRestore then
     begin

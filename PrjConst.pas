@@ -1762,6 +1762,14 @@ begin
   constants.Add('shExportMenuCaption', 'Export grid to');
   constants.Add('shInvoiceAlreadyCredited', 'Creditinvoice for this invoice already exist with number %d');
   constants.Add('shSaveChangesBeforeReloadingData', 'Not all changes have been saved. Save changes before reloading data?');
+
+  constants.Add('shFinanceConnectUnableToRetrieveMapping', 'Roomer was unable to retrieve mapping information for ''%s''.' + #13 +
+                   'Please check the following: ' + #13#13 +
+                   '  - Are the resources correctly defined?' + #13 +
+                   '  - Does the resource exist?' + #13 +
+                   '  - Is the login information correct?' + #13 +
+                   '  - Has login been blocked for this user?' + #13 +
+                   '  - Is the organization code correct?' + #13);
 end;
 
 procedure AddConstants_OfflineReports;
