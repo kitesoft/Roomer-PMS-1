@@ -463,7 +463,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 4
           Top = 6
-          Width = 56
+          Width = 338
           Height = 18
           Margins.Top = 5
           Align = alTop
@@ -475,6 +475,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Height = -15
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ExplicitWidth = 56
         end
         object clabRoomGuest: TsLabel
           Left = 44
@@ -2375,6 +2376,9 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       FieldKind = fkCalculated
       FieldName = 'ChargedOnCC'
       Calculated = True
+    end
+    object mPaymentscurrencyRate: TFloatField
+      FieldName = 'currencyRate'
     end
   end
   object mnuMoveItem: TPopupMenu [9]
