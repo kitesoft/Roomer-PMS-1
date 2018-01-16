@@ -188,7 +188,7 @@ type
     FLastSql: String;
 
     procedure InternalDelete; override;
-    procedure internalPost; override;
+    procedure InternalPost; override;
     function activeRoomerDataSet: TRoomerDataSet;
   public
     { Public declarations }
