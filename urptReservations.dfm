@@ -145,6 +145,7 @@ inherited frmRptReservations: TfrmRptReservations
           PopupMenu = PopupMenu1
           TabOrder = 1
           LookAndFeel.NativeStyle = False
+          ExplicitTop = 42
           object tvReservations: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Insert.Visible = False
@@ -573,10 +574,6 @@ inherited frmRptReservations: TfrmRptReservations
       end
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44

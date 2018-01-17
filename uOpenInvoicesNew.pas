@@ -136,6 +136,8 @@ type
     procedure tvRoomsDateTotalGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvRoomsDatestatusDescriptionGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
     zsDateFrom : string;
@@ -344,13 +346,13 @@ begin
   if currency <> nativeCurrency then
   begin
     rate := GetRate(Currency);
-    currencyrate  := dataset.FieldByName('Totalrate').asFloat;
+    currencyrate  := dataset.FieldByName('NetUnpaidRoomRent').asFloat;
     nativeRate    := currencyRate*rate;
-    dataset.FieldByName('Totalrate').AsFloat := nativerate;
+    dataset.FieldByName('NetUnpaidRoomRent').AsFloat := nativerate;
     Dataset.FieldByName('Total').AsFloat := nativerate;
   end else
   begin
-    Dataset.FieldByName('Total').AsFloat := Dataset.FieldByName('TotalRate').AsFloat+TotalItems;
+    Dataset.FieldByName('Total').AsFloat := Dataset.FieldByName('NetUnpaidRoomRent').AsFloat+TotalItems;
   end;
 
 end;
@@ -390,6 +392,12 @@ begin
   end;
 
 
+end;
+
+procedure TfrmOpenInvoicesNew.tvRoomsDatestatusDescriptionGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  aText := TReservationState.FromResStatus(aRecord.Values[Sender.Index]).AsReadableString;
 end;
 
 procedure TfrmOpenInvoicesNew.tvRoomsDateTotalGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -443,64 +451,67 @@ begin
         s := '';
         sqlStr := '';
 
-        if not chkShownull.checked then
-        begin
-          s := s+' SELECT * FROM ( ';
-        end;
+//        if not chkShownull.checked then
+//        begin
+//          s := s+' SELECT * FROM ( ';
+//        end;
 
         s := s+' SELECT '#10;
-        s := s+'   rd.roomReservation '#10;
-        s := s+' , rd.Reservation '#10;
-        s := s+' , rd.Room '#10;
-        s := s+' , rd.RoomType '#10;
-        s := s+' , rd.isNoroom '#10;
-        s := s+' , rd.ResFlag '#10;
-        s := s+' , rd.currency '#10;
-        s := s+' , rd.discount '#10;
-        s := s+' , rd.isPercentage '#10;
-        s := s+' , sum(rd.roomrate) as TotalRate '#10;
-        s := s+' , rd.paid '#10;
-        s := s+ ', rr.rrArrival as Arrival'#10;
-        s := s+ ', rr.rrDeparture as Departure'#10;
-        s := s+ ', rr.GroupAccount as isGroupAccount '#10;
-        s := s+ ', rr.RoomRentPaymentInvoice '#10;
+        s := s+'  rr.* '#10;
+//        s := s+' , sum(rd.roomrate) as TotalRate '#10;
+//        s := s+'   rd.roomReservation '#10;
+//        s := s+' , rd.Reservation '#10;
+//        s := s+' , rd.Room '#10;
+//        s := s+' , rd.RoomType '#10;
+//        s := s+' , rd.isNoroom '#10;
+//        s := s+' , rd.ResFlag '#10;
+//        s := s+' , rd.currency '#10;
+//        s := s+' , rd.discount '#10;
+//        s := s+' , rd.isPercentage '#10;
+//        s := s+' , rd.paid '#10;
+//        s := s+ ', rr.rrArrival as Arrival'#10;
+//        s := s+ ', rr.rrDeparture as Departure'#10;
+//        s := s+ ', rr.GroupAccount as isGroupAccount '#10;
+//        s := s+ ', rr.RoomRentPaymentInvoice '#10;
         s := s+ ', rv.Customer '#10;
         s := s+' , rv.name as ReservationName'#10;
-        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=rd.roomreservation LIMIT 1) AS GuestName '#10;
-        s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
-        s := s+' , (SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) and (roomsdate.ResFlag not in('+_db(STATUS_DELETED)+','+_db(STATUS_DELETED)+') ) ) AS unPaidRoomRent '#10;
-        s := s+' , (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE roomsdate.roomreservation=rr.roomreservation AND roomsdate.paid=0)  AS DiscountUnPaidRoomRent '#10;
-        s := s+' , ((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag not in ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELED)+') )  ) '#10;
-        s := s+'      - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag <> '+_db(STATUS_DELETED)+' )  )) AS TotalUnpaidRoomRent '#10;
-        s := s+', (SELECT curr.AValue from currencies curr  WHERE curr.Currency = rd.Currency) AS CurrencyRate '#10;
-        s := s+', (SELECT di.result from dictionary di  WHERE di.code = rd.Resflag) AS statusDescription '#10;
+//        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=rd.roomreservation LIMIT 1) AS GuestName '#10;
+//        s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
+//        s := s+' , (SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) and (roomsdate.ResFlag not in('+_db(STATUS_DELETED)+','+_db(STATUS_DELETED)+') ) ) AS unPaidRoomRent '#10;
+//        s := s+' , (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE roomsdate.roomreservation=rr.roomreservation AND roomsdate.paid=0)  AS DiscountUnPaidRoomRent '#10;
+//        s := s+' , ((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag not in ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELED)+') )  ) '#10;
+//        s := s+'      - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag <> '+_db(STATUS_DELETED)+' )  )) AS TotalUnpaidRoomRent '#10;
+//        s := s+', (SELECT curr.AValue from currencies curr  WHERE curr.Currency = rd.Currency) AS CurrencyRate '#10;
+//        s := s+', (SELECT di.result from dictionary di  WHERE di.code = rd.Resflag) AS statusDescription '#10;
         s := s+' FROM '#10;
-        s := s+'   roomsdate rd '#10;
+//        s := s+'   roomsdate rd '#10;
+        s := s+'   vwroomreservations_excancelled rr '#10;
+//        s := s+' INNER JOIN '#10;
+//        s := s+'   roomreservations rr ON rd.roomreservation = rr.roomreservation '#10;
         s := s+' INNER JOIN '#10;
-        s := s+'   roomreservations rr ON rd.roomreservation = rr.roomreservation '#10;
-        s := s+' INNER JOIN '#10;
-        s := s+'   reservations rv ON rd.reservation = rv.reservation '#10;
+        s := s+'   reservations rv ON rr.reservation = rv.reservation '#10;
         s := s+' WHERE '#10;
-        s := s+'   (rd.roomreservation in '+zRRinlist+') '#10;  //**zxhj breytti ekki h�r �v� er teki� � rrList
+        s := s+'   (rr.roomreservation in '+zRRinlist+') '#10;  //**zxhj breytti ekki h�r �v� er teki� � rrList
         s := s+'   AND (rr.RoomRentPaymentInvoice > -999 ) '#10;
-        s := s+'   AND rd.ResFlag not in (''X'', ''C'') '#10;
+//        s := s+'   AND rd.ResFlag not in (''X'', ''C'') '#10;
         s := s+' GROUP BY '#10;
-        s := s+'     rd.roomreservation '#10;
-        s := s+'   , rd.Room '#10;
-        s := s+'   , rd.RoomType '#10;
-        s := s+'   , rd.resflag '#10;
-        s := s+'   , rd.currency '#10;
-        s := s+'   , rd.paid '#10;
-        s := s+' ORDER BY roomReservation '#10;
+        s := s+'     rr.roomreservation '#10;
+        s := s+'   , rr.Room '#10;
+        s := s+'   , rr.RoomType '#10;
+//        s := s+'   , rd.resflag '#10;
+        s := s+'   , rr.currency '#10;
+        s := s+'   , rr.FullyPaid '#10;
 
         if not chkShownull.checked then
-        begin
-          s := s+' ) tmp '#10;
-          s := s+'WHERE TotalRate <> 0 '#10;
-        end;
+          s := s+'HAVING TotalRate <> 0 '#10;
+
+        s := s+' ORDER BY roomReservation '#10;
+
       end
       else // if rrcount>0
         s := 'select null limit 0';
+
+      CopyToClipboard(s);
       ExecutionPlan.AddQuery(s);
       sqlStr := s + ';';
 
@@ -508,46 +519,43 @@ begin
       begin
         s := '';
 
-        if not chkShownull.checked then
-          s := s+' SELECT * FROM ( ';
-
         s := s+' SELECT '#10;
         s := s+'   il.Reservation '#10;
         s := s+' , il.RoomReservation '#10;
-        s := s+' , rr.rrArrival as Arrival '#10;
-        s := s+' , rr.rrDeparture as Departure '#10;
-        s := s+' , rr.GroupAccount as isGroupAccount '#10;
+        s := s+' , rr.Arrival '#10;
+        s := s+' , rr.Departure '#10;
+        s := s+' , rr.GroupAccount as GroupAccount '#10;
         s := s+' , rr.RoomRentPaymentInvoice '#10;
         s := s+' , rr.Status '#10;
         s := s+' , rr.Currency '#10;
+        s := s+' , rr.CurrencyRate '#10;
         s := s+' , rv.Customer '#10;
         s := s+' , rr.Room '#10;
         s := s+' , rr.RoomType '#10;
         s := s+' , rr.rrIsNoRoom '#10;
         s := s+' , rv.name AS ReservationName '#10;
         s := s+' , sum(il.total) as Amount '#10;
-        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=il.roomreservation LIMIT 1) AS GuestName '#10;
-        s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=il.roomreservation) AS GuestCount '#10;
-        s := s+' , (SELECT curr.AValue from currencies curr  WHERE curr.Currency = rr.Currency) AS CurrencyRate '#10;
-        s := s+' , (SELECT di.result from dictionary di  WHERE di.code = rr.Status) AS statusDescription '#10;
+        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=il.roomreservation and persons.mainname LIMIT 1) AS GuestName '#10;
+        s := s+' , rr.numGuests as GuestCount '#10;
+//        s := s+' , (SELECT di.result from dictionary di  WHERE di.code = rr.Status) AS statusDescription '#10;
         s := s+' FROM '#10;
         s := s+'   invoicelines il '#10;
-        s := s+' INNER JOIN '#10;
-        s := s+'   roomreservations rr ON il.roomreservation = rr.roomreservation '#10;
+        s := s+' LEFT OUTER JOIN '#10;
+        s := s+'   vwroomreservations_excancelled rr ON il.roomreservationalias = rr.roomreservation'#10;
         s := s+' INNER JOIN '#10;
         s := s+'   reservations rv ON il.reservation = rv.reservation '#10;
         s := s+' WHERE '#10;
         s := s+'   il.reservation in '+zRVinlist+' AND (il.invoicenumber=-1) AND (il.roomreservation <> 0) AND (rr.RoomRentpaymentInvoice > -999) '#10;
+        s := s+'   AND ((rr.roomreservation IS NOT NULL) or (il.roomreservationalias > 0)) '#10;
 
         s := s+' GROUP BY '#10;
         s := s+'   il.roomreservation '#10;
-        s := s+' ORDER BY roomReservation '#10;
 
         if not chkShownull.checked then
-        begin
-          s := s+' ) tmp '#10;
-          s := s+'WHERE Amount <> 0 '#10;
-        end;
+          s := s+ ' HAVING Amount <> 0 '#10;
+
+        s := s+' ORDER BY il.roomReservation '#10;
+
       end
       else // rvcount > 0
         s := 'SELECT NULL LIMIT 0';
@@ -559,9 +567,6 @@ begin
       if zReservationCount > 0 then
       begin
         s := '';
-        if not chkShownull.checked then
-          s := s+' SELECT * FROM ( ';
-
         s := s+' SELECT '#10;
         s := s+'   il.Reservation '#10;
         s := s+' , il.RoomReservation '#10;
@@ -575,29 +580,25 @@ begin
         s := s+'   invoicelines il '#10;
         s := s+' INNER JOIN '#10;
         s := s+'   reservations rv ON il.reservation = rv.reservation '#10;
+        s := s+' INNER JOIN '#10; // exclude lines from cancelled roomreservations
+        s := s+'   vwroomreservations_excancelled rr ON il.roomreservationAlias = rr.roomreservation '#10;
         s := s+' WHERE '#10;
-        s := s+'   (il.itemID <> '+_db(g.qRoomRentItem)+') AND (il.invoicenumber=-1) AND (roomreservation=0) '#10;
+        s := s+'   (il.itemID <> '+_db(g.qRoomRentItem)+') AND (il.invoicenumber=-1) AND (il.roomreservation=0) '#10;
         s := s+'   AND il.reservation in '+zRVinlist + #10;
 
         s := s+' GROUP BY '#10;
-
         s := s+'   il.reservation '#10;
-        s := s+' ORDER BY Reservation '#10;
 
         if not chkShownull.checked then
-        begin
-          s := s+' ) tmp '#10;
-          s := s+'WHERE Amount <> 0 '#10;
-        end;
+          s := s+ ' HAVING Amount <> 0 '#10;
+
+        s := s+' ORDER BY Reservation '#10;
 
       end
       else
         s := 'SELECT NULL LIMIT 0';
 
       ExecutionPlan.AddQuery(s);
-
-      sqlStr := #10+#10+sqlStr+s + ';';
-      copytoclipboard(sqlstr);
 
       ExecutionPlan.Execute(ptQuery);
 
@@ -714,7 +715,7 @@ begin
       begin
         kbmRoomsDate_.Edit;
         kbmRoomsDate_.FieldByName('TotalItems').AsFloat := TotalItems;
-        kbmRoomsDate_.FieldByName('Total').AsFloat := TotalItems+kbmRoomsDate_.FieldByName('TotalRate').AsFloat;
+        kbmRoomsDate_.FieldByName('Total').AsFloat := TotalItems+kbmRoomsDate_.FieldByName('NetUnpaidRoomRent').AsFloat;
         kbmRoomsDate_.post;
       end else
       begin
@@ -728,10 +729,10 @@ begin
         kbmRoomsDate_.FieldByName('currency').AsString                :=  currency                  ;
         kbmRoomsDate_.FieldByName('discount').AsFloat                 :=  discount                  ;
         kbmRoomsDate_.FieldByName('isPercentage').AsBoolean           :=  isPercentage              ;
-        kbmRoomsDate_.FieldByName('TotalRate').AsFloat                :=  TotalRate                 ;
+        kbmRoomsDate_.FieldByName('NetUnpaidRoomRent').AsFloat                :=  TotalRate                 ;
         kbmRoomsDate_.FieldByName('Arrival').AsDateTime               :=  Arrival                   ;
         kbmRoomsDate_.FieldByName('Departure').AsDateTime             :=  Departure                 ;
-        kbmRoomsDate_.FieldByName('isGroupAccount').AsBoolean         :=  GroupAccount              ;
+        kbmRoomsDate_.FieldByName('GroupAccount').AsBoolean         :=  GroupAccount              ;
         kbmRoomsDate_.FieldByName('RoomRentPaymentInvoice').AsInteger :=  RoomRentPaymentInvoice    ;
         kbmRoomsDate_.FieldByName('Customer').AsString                :=  Customer                  ;
         kbmRoomsDate_.FieldByName('ReservationName').AsString         :=  ReservationName           ;
@@ -783,10 +784,10 @@ begin
       kbmRoomsDate_.FieldByName('currency').AsString                :=  nativeCurrency            ;
       kbmRoomsDate_.FieldByName('discount').AsFloat                 :=  0                         ;
       kbmRoomsDate_.FieldByName('isPercentage').AsBoolean           :=  true                      ;
-      kbmRoomsDate_.FieldByName('TotalRate').AsFloat                :=  0                         ;
+      kbmRoomsDate_.FieldByName('NetUnpaidRoomRent').AsFloat                :=  0                         ;
       kbmRoomsDate_.FieldByName('Arrival').AsDateTime               :=  Arrival                   ;
       kbmRoomsDate_.FieldByName('Departure').AsDateTime             :=  Departure                 ;
-      kbmRoomsDate_.FieldByName('isGroupAccount').AsBoolean         :=  GroupAccount              ;
+      kbmRoomsDate_.FieldByName('GroupAccount').AsBoolean         :=  GroupAccount              ;
       kbmRoomsDate_.FieldByName('RoomRentPaymentInvoice').AsInteger :=  RoomRentPaymentInvoice    ;
       kbmRoomsDate_.FieldByName('Customer').AsString                :=  Customer                  ;
       kbmRoomsDate_.FieldByName('ReservationName').AsString         :=  ReservationName  ;
