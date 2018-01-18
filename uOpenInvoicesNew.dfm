@@ -44,8 +44,8 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     object chkShowNull: TsCheckBox
       Left = 152
       Top = 37
-      Width = 158
-      Height = 17
+      Width = 150
+      Height = 20
       Caption = 'Show invoices with 0 prices'
       TabOrder = 1
       SkinData.SkinSection = 'CHECKBOX'
@@ -122,6 +122,10 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     object sTabSheet2: TsTabSheet
       Caption = 'Rent'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
@@ -245,12 +249,10 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
           OptionsView.HeaderAutoHeight = True
           object tvRoomsDateArrival: TcxGridDBColumn
             DataBinding.FieldName = 'Arrival'
-            PropertiesClassName = 'TcxDateEditProperties'
             Width = 94
           end
           object tvRoomsDateDeparture: TcxGridDBColumn
             DataBinding.FieldName = 'Departure'
-            PropertiesClassName = 'TcxDateEditProperties'
             Width = 89
           end
           object tvRoomsDateRoom: TcxGridDBColumn
@@ -264,7 +266,7 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
           end
           object tvRoomsDateTotalRate: TcxGridDBColumn
             Caption = 'Room amount'
-            DataBinding.FieldName = 'NetUnpaidRoomRent'
+            DataBinding.FieldName = 'TotalRate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             OnGetProperties = tvRoomsDateTotalRateGetProperties
@@ -284,12 +286,11 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
           end
           object tvRoomsDateisGroupAccount: TcxGridDBColumn
             Caption = 'Group'
-            DataBinding.FieldName = 'GroupAccount'
+            DataBinding.FieldName = 'isGroupAccount'
           end
           object tvRoomsDatestatusDescription: TcxGridDBColumn
             Caption = 'Status'
             DataBinding.FieldName = 'statusDescription'
-            OnGetDisplayText = tvRoomsDatestatusDescriptionGetDisplayText
             Width = 122
           end
           object tvRoomsDateReservationName: TcxGridDBColumn
@@ -316,7 +317,6 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
           end
           object tvRoomsDateRoomRentPaymentInvoice: TcxGridDBColumn
             DataBinding.FieldName = 'RoomRentPaymentInvoice'
-            Visible = False
           end
           object tvRoomsDateunPaidRoomRent: TcxGridDBColumn
             DataBinding.FieldName = 'unPaidRoomRent'
@@ -509,7 +509,7 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
         Size = 5
       end
       item
-        Name = 'NetUnpaidRoomRent'
+        Name = 'TotalRate'
         DataType = ftFloat
       end
       item
@@ -529,7 +529,7 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
         DataType = ftDateTime
       end
       item
-        Name = 'GroupAccount'
+        Name = 'isGroupAccount'
         DataType = ftBoolean
       end
       item
