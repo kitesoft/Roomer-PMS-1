@@ -983,9 +983,12 @@ select_PayTypes_fillGridFromDataset : string =
 '   ,AskCode '+
 '   ,ptDays '+
 '   ,doExport '+
+'   ,Active '+
 '   ,BookKey '+
 '   ,BookKeepCode '+
+'   ,ID '+
 ' FROM paytypes '+
+' %s ' +
 ' ORDER BY '+
 '  %s ' ;  //zSortStr
 

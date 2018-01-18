@@ -586,13 +586,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           ExplicitLeft = 125
           ExplicitTop = 103
           ExplicitWidth = 217
+          ExplicitHeight = 20
           inherited pnlLookup: TsPanel
             Width = 217
             ExplicitWidth = 217
-            inherited lblDescription: TLabel
-              Width = 124
-              Height = 20
-            end
           end
         end
       end
@@ -2375,6 +2372,9 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       FieldKind = fkCalculated
       FieldName = 'ChargedOnCC'
       Calculated = True
+    end
+    object mPaymentscurrencyRate: TFloatField
+      FieldName = 'currencyRate'
     end
   end
   object mnuMoveItem: TPopupMenu [9]

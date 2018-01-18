@@ -45,7 +45,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Left = 21
       Top = 19
       Width = 755
-      Height = 17
+      Height = 20
       Margins.Left = 20
       Margins.Top = 18
       Margins.Bottom = 10
@@ -914,7 +914,7 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Left = 20
       Top = 3
       Width = 197
-      Height = 26
+      Height = 13
       Margins.Left = 20
       Align = alLeft
       Caption = 'Map Creditcard types to PayTypes:'
@@ -925,7 +925,6 @@ inherited FrmManagePCIConnection: TFrmManagePCIConnection
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
-      ExplicitHeight = 13
     end
   end
   inherited psRoomerBase: TcxPropertiesStore

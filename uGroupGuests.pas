@@ -72,7 +72,7 @@ uses
   dxmdaset, cxMemo, cxDropDownEdit, sMemo
 
   , Generics.Collections, cxGridDBTableView, uReservationStateDefinitions
-  , uRoomerGridForm, System.Actions, Vcl.ActnList, sStatusBar, sSplitter, Vcl.DBCtrls
+  , uRoomerGridForm, System.Actions, Vcl.ActnList, sStatusBar, sSplitter, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids
   ;
 
 type
@@ -241,6 +241,7 @@ type
     memReservationInformation: TsMemo;
     splClient: TsSplitter;
     mGuestsReservation: TIntegerField;
+    cxMasterBackground: TcxStyle;
     procedure chkCompactViewClick(Sender: TObject);
     procedure rgrShowClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
@@ -259,6 +260,7 @@ type
     procedure btnOKClick(Sender: TObject);
     procedure mRoomsBeforePost(DataSet: TDataSet);
     procedure mGuestsAfterPost(DataSet: TDataSet);
+    procedure tvGuestsCompCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
   private
     { Private declarations }
     FHasUnsavedChanges: boolean;
@@ -288,7 +290,10 @@ uses
    uD
    ,uGuestCheckInForm
    ,uEditGuest
-   ,uCountries, uSQLUtils, PrjConst;
+   ,uCountries
+   , uSQLUtils
+   , PrjConst
+   , UITypes;
 
 
 function TfrmGroupGuests.CountryValidate(country : string) : boolean;
@@ -301,7 +306,6 @@ function GroupGuests(reservation,roomreservation : integer) : boolean;
 var
   frm: TfrmGroupGuests;
 begin
-  result := false;
   frm := TfrmGroupGuests.Create(nil);
   try
     frm.zReservation     := Reservation;
@@ -499,6 +503,7 @@ begin
       memReservationPMInfo.Lines.Text := rSet.FieldByName('pminfo').AsString;
       memReservationInformation.Lines.Text := rSet.FieldByName('information').asString;
 
+      FHasUnsavedChanges := false;
     end;
   finally
     lExecPlan.Free;
@@ -577,7 +582,7 @@ end;
 
 procedure TfrmGroupGuests.btnCollapseClick(Sender: TObject);
 begin
-  tvGuests.DataController.Groups.FullCollapse;
+  tvData.ViewData.Expand(false);
 end;
 
 procedure TfrmGroupGuests.btnEditClick(Sender: TObject);
@@ -658,7 +663,7 @@ end;
 
 procedure TfrmGroupGuests.btnExpandClick(Sender: TObject);
 begin
-  tvGuests.DataController.Groups.FullExpand;
+  tvData.ViewData.Expand(true);
 end;
 
 procedure TfrmGroupGuests.btnOKClick(Sender: TObject);
@@ -677,6 +682,20 @@ begin
   g.openresMemo(mRoomsReservation.AsInteger);
 end;
 
+
+procedure TfrmGroupGuests.tvGuestsCompCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var
+  theData : recCountryHolder;
+begin
+  theData.country := mGuests.fieldbyname('CompCountry').asstring;
+  Countries(actlookup,theData);
+  if theData.country <> '' then
+  begin
+    if tvGuests.DataController.DataSource.State <> dsInsert then mGuests.Edit;
+    mGuests.FieldByName('CompCountry').asstring   := theData.country;
+    mGuests.post;
+  end;
+end;
 
 procedure TfrmGroupGuests.tvGuestsCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var
@@ -731,7 +750,6 @@ var
   ExecutionPlan: TRoomerExecutionPlan;
   lRoomResUpdateList: TDictionary<integer, string>;
   lRoomresUpdate: TPair<integer, string>;
-  i: integer;
 begin
   if tvData.DataController.DataSet.State = dsInActive then
     Exit;
@@ -823,7 +841,7 @@ procedure TfrmGroupGuests.DoUpdateControls;
 begin
   inherited;
 
-  tvData.DataController.Filter.Active := (rgrShow.ItemIndex = 1);
+  tvGuests.DataController.Filter.Active := (rgrShow.ItemIndex = 1);
 
   //Contact
   tvGuests.Bands[1].Visible := not  chkCompactView.Checked;

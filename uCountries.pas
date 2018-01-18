@@ -268,7 +268,7 @@ uses
   , uSqlDefinitions
   , uDimages
   , UITypes
-  ;
+  , uRoomerGridForm;
 
 {$R *.dfm}
 
@@ -873,7 +873,7 @@ begin
   fillholder;
   theData.Currency := zData.Currency;
   theData.Description := zData.CurrenciesDescription;
-  currencies(actlookup,theData);
+  currencies(TRoomerGridFormMode.SelectSingle, theData);
   if theData.Currency <> '' then
   begin
     zPostData := true;

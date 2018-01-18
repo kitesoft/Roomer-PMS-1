@@ -478,7 +478,7 @@ var
   function RetrieveAsFile(url : String) : TKeyPairList;
   var filename : String;
       stl, line : TStrings;
-      s, key, value : String;
+      s: String;
   begin
     result := nil;
     if Lowercase(Copy(url, 1, 8)) = 'file:///' then

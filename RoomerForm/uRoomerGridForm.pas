@@ -112,7 +112,7 @@ begin
   if aMode = actLookup then
     Result := ShowModal(TRoomerGridFormMode.SelectSingle)
   else
-    Result := ShowModal(TRoomerGridFormMode.Browse);
+    Result := ShowModal(TRoomerGridFormMode.Edit);
 end;
 
 function TfrmBaseRoomerGridForm.ShowModal(aMode: TRoomerGridFormMode): TModalresult;

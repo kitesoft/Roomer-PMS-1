@@ -117,7 +117,7 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMaskEdit
-  , uRoomerEditGridForm, cxCheckBox, System.Actions, Vcl.ActnList
+  , uRoomerEditGridForm, cxCheckBox, System.Actions, Vcl.ActnList, uRoomerGridForm
   ;
 
 type
@@ -203,7 +203,7 @@ type
 
   end;
 
-function Currencies(act : TActTableAction; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
+function Currencies(aMode: TRoomerGridFormMode; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
 
 var
   frmCurrencies: TfrmCurrencies;
@@ -223,14 +223,14 @@ uses
 //  unit global functions
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-function Currencies(act : TActTableAction; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
+function Currencies(aMode: TRoomerGridFormMode; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
 var _frmCurrencies: TfrmCurrencies;
 begin
   result := false;
   _frmCurrencies := TfrmCurrencies.Create(nil);
   try
     _frmCurrencies.zData := theData;
-    _frmCurrencies.zAct := act;
+//    _frmCurrencies.zAct := act;
 //    _frmCurrencies.embedded := (act = actNone) AND
 //                                    (embedPanel <> nil);
 //    _frmCurrencies.EmbedWindowCloseEvent := WindowCloseEvent;
@@ -242,7 +242,7 @@ begin
 //    end
 //    else
 //    begin
-      _frmCurrencies.ShowModal(act);
+      _frmCurrencies.ShowModal(aMode);
       if _frmCurrencies.modalresult = mrOk then
       begin
         theData := _frmCurrencies.zData;
@@ -350,15 +350,6 @@ end;
 procedure TfrmCurrencies.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   glb.EnableOrDisableTableRefresh('currencies', True);
-//  pnlHolder.Parent := self;
-//  update;
-//  if embedded then
-//    Action := caFree;
-//  if Assigned(EmbedWindowCloseEvent) then
-//    EmbedWindowCloseEvent(self);
-
-  //TODO: implement this via an OnUpdate event on the AppGlobal.currencies recordset
-//  RoomerCurrencyManager.UpdateDefinitions();
 end;
 
 procedure TfrmCurrencies.FormCreate(Sender: TObject);

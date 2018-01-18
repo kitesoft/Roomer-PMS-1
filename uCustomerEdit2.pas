@@ -590,7 +590,7 @@ var
   theData : recCurrencyHolder;
 begin
   theData.Currency := edCurrency.text;
-  Currencies(actlookup,theData);
+  Currencies(TRoomerGridFormMode.SelectSingle, theData);
   if theData.Currency <> '' then
   begin
     edCurrency.text := theData.Currency;

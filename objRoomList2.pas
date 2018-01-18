@@ -176,6 +176,7 @@ uses //uDSp
   , uD
   , uAppGlobal
   , uSqlDefinitions
+  , UITypes
   ;
 
 

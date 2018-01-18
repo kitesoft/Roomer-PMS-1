@@ -1841,6 +1841,8 @@ object frmMain: TfrmMain
           OnMouseEnter = tabsViewMouseEnter
           SkinData.SkinSection = 'PAGECONTROL'
           SkinData.OuterEffects.Visibility = ovAlways
+          ExplicitLeft = 47
+          ExplicitTop = -2
         end
       end
       object __PanGridsHeader: TsPanel

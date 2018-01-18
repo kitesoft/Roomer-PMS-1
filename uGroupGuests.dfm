@@ -121,7 +121,6 @@ inherited frmGroupGuests: TfrmGroupGuests
         Caption = 'Expand'
         ImageIndex = 94
         TabOrder = 2
-        Visible = False
         OnClick = btnExpandClick
         SkinData.SkinSection = 'BUTTON'
       end
@@ -135,7 +134,6 @@ inherited frmGroupGuests: TfrmGroupGuests
         Caption = 'Collapse'
         ImageIndex = 94
         TabOrder = 3
-        Visible = False
         OnClick = btnCollapseClick
         SkinData.SkinSection = 'BUTTON'
       end
@@ -214,12 +212,10 @@ inherited frmGroupGuests: TfrmGroupGuests
     inherited grData: TcxGrid
       Width = 1119
       Height = 329
-      ExplicitLeft = 2
-      ExplicitTop = -5
       ExplicitWidth = 1119
       ExplicitHeight = 329
       inherited tvData: TcxGridDBBandedTableView
-        DataController.KeyFieldNames = 'RecId'
+        DataController.KeyFieldNames = 'RoomReservation'
         DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
         OptionsData.Editing = True
         OptionsView.BandHeaders = False
@@ -332,7 +328,6 @@ inherited frmGroupGuests: TfrmGroupGuests
         FilterBox.Visible = fvNever
         DataController.DataSource = dsGuests
         DataController.DetailKeyFieldNames = 'RoomReservation'
-        DataController.KeyFieldNames = 'Id'
         DataController.MasterKeyFieldNames = 'RoomReservation'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -565,6 +560,7 @@ inherited frmGroupGuests: TfrmGroupGuests
       inherited lvData: TcxGridLevel
         object lvGuests: TcxGridLevel
           GridView = tvGuests
+          Options.DetailFrameColor = clCream
         end
       end
     end
@@ -625,9 +621,6 @@ inherited frmGroupGuests: TfrmGroupGuests
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitLeft = 759
-        ExplicitTop = 20
-        ExplicitWidth = 356
       end
       object memReservationInformation: TsMemo
         AlignWithMargins = True
@@ -666,6 +659,10 @@ inherited frmGroupGuests: TfrmGroupGuests
     inherited cxstContent: TcxStyle
       AssignedValues = [svColor, svFont]
       Color = clInfoBk
+    end
+    object cxMasterBackground: TcxStyle [26]
+      AssignedValues = [svColor]
+      Color = clSkyBlue
     end
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
       BuiltIn = True
@@ -769,6 +766,7 @@ inherited frmGroupGuests: TfrmGroupGuests
       Size = 40
     end
     object mGuestsFax: TWideStringField
+      DisplayWidth = 40
       FieldName = 'Fax'
       Size = 31
     end
@@ -903,6 +901,7 @@ inherited frmGroupGuests: TfrmGroupGuests
       Size = 40
     end
     object WideStringField10: TWideStringField
+      DisplayWidth = 40
       FieldName = 'Fax'
       Size = 31
     end

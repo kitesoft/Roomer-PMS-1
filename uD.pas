@@ -15378,6 +15378,9 @@ var
   lRoom: string;
   lArrival: TDateTime;
   lDeparture: TDateTime;
+  lRoomResFld: TField;
+  lMainNameFld: TFIeld;
+  bm: TBookmark;
 begin
   Assert(assigned(aGuestDataset.FindField('reservation')), 'aGuestDataaset should contain reservation field');
   Assert(assigned(aGuestDataset.FindField('roomreservation')), 'aGuestDataaset should contain roomreservation field');
@@ -15385,24 +15388,36 @@ begin
   Assert(assigned(aGuestDataset.FindField('ID')), 'aGuestDataaset should contain ID field');
   Assert(assigned(aGuestDataset.FindField('person')), 'aGuestDataaset should contain ID field');
 
+  lRoomResFld := aGuestDataset.FieldByName('roomreservation');
+  lMainNameFld := aGuestDataset.FieldByName('mainname');
+  bm := aGuestDataset.Bookmark;
   aGuestDataset.DisableControls;
   try
-    aGuestDataset.Filter := format('roomreservation=%d', [aRoomReservation]);
-    aGuestDataset.Filtered := true;
-    lOldCount := aGuestDataset.RecordCount;
+    lOldCOunt := 0;
+    aGuestDataset.First;
+    while not aGuestDataset.EOF do
+    begin
+      if (lRoomResFld.AsInteger = aRoomReservation) then
+        inc(lOldCount);
+      aGuestDataset.Next;
+    end;
 
     if (aNewGuestCount > 0) and (aNewGuestCount <> lOldCount) then
     begin
 
       lExecPLan := d.roomerMainDataSet.CreateExecutionPlan;
       try
+        aGuestDataset.First;
         if aGuestDataset.Locate('roomreservation;mainname', VarArrayOf([aRoomReservation, true]), []) then
         begin
           personData := GET_pesson(aGuestDataset.FieldByName('person').AsInteger);
           lreservation := aGuestDataset.FieldByName('reservation').AsInteger;
         end
         else
+        begin
           initPersonHolder(personData);
+          lReservation := RR_GetReservation(aRoomReservation);
+        end;
 
         for i := lOldCount+1 to aNewGuestCount do
         begin
@@ -15417,10 +15432,11 @@ begin
         if (aNewGuestCount < lOldCount) then
         begin
           initPersonHolder(personData);
-          aGuestDataset.Filtered := false;
-          aGuestDataset.Filter := format('roomreservation=%d and not mainname', [aRoomReservation]);
-          aGuestDataset.Filtered := true;
+
+          // Find last record for this roomres
           aGuestDataset.Last;
+          while not aGuestDataset.BOF and ((lRoomResFld.AsInteger <> aRoomReservation) or lMainNameFld.AsBoolean) do
+            aGuestDataset.Prior;
 
           for i := aNewGuestCount to lOldCount-1 do
           begin
@@ -15428,7 +15444,11 @@ begin
             begin
               personData.id := aGuestDataset.FieldByName('ID').AsInteger;
               lExecPLan.AddExec(SQL_DEL_Person(personData));
+
+              // Find next prior record for this roomres
               aGuestDataset.Prior;
+              while not aGuestDataset.BOF and ((lRoomResFld.AsInteger <> aRoomReservation) or lMainNameFld.AsBoolean) do
+                aGuestDataset.Prior;
             end else
               Break;
           end;
@@ -15460,8 +15480,7 @@ begin
 
     end;
   finally
-    aGuestDataset.Filtered := false;
-    aGuestDataset.Filter := '';
+    aGuestDataset.Bookmark := bm;
     aGuestDataset.EnableControls;
   end;
 end;

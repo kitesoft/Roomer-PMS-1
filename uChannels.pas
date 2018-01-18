@@ -262,7 +262,7 @@ uses
   cmpRoomerDataset,
   cxGridExportLink,
   ShellApi,
-  uConfigurationItemsAPICaller;
+  uConfigurationItemsAPICaller, uRoomerGridForm;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////
 // unit global functions
@@ -832,7 +832,7 @@ begin
   fillHolder;
   theData.currency := zData.currency;
   theData.ID := zData.currencyId;
-  currencies(actLookup, theData);
+  currencies(TRoomerGridFormMode.SelectSingle, theData);
 
   if theData.currency <> '' then
   begin

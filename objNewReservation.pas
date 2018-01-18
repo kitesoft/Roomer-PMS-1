@@ -1526,7 +1526,7 @@ begin
 
             decodedate(now, AYear, AMon, ADay);
             invoiceLineData.ItemID          := Item;
-            invoiceLineData.AutoGen         := _db(_GetCurrentTick);
+            invoiceLineData.AutoGen         := _GetCurrentTick;
             invoiceLineData.Reservation     := FReservationId;
             if lNewRoomRes.FBreakfastCostGroupAccount then
               invoiceLineData.RoomReservation := 0
@@ -1560,6 +1560,7 @@ begin
             invoiceLineData.InvoiceIndex          := 0;
             invoiceLineData.Revenue           := lRevenue;
             invoiceLineData.VisibleOnInvoice  := True;
+            invoicelineData.ilAccountKey      := ItemInfo.AccountKey;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
@@ -1595,7 +1596,7 @@ begin
 
             decodedate(now, AYear, AMon, ADay);
             invoiceLineData.ItemID          := Item;
-            invoiceLineData.AutoGen         := _db(_GetCurrentTick);
+            invoiceLineData.AutoGen         := _GetCurrentTick;
             invoiceLineData.Reservation     := FReservationId;
             if lNewRoomRes.FExtraBedCostGroupAccount then
               invoiceLineData.RoomReservation := 0
@@ -1630,6 +1631,7 @@ begin
             invoiceLineData.InvoiceIndex       := 0;
             invoiceLineData.Revenue            := lRevenue;
             invoicelineData.VisibleOnInvoice   := True;
+            invoicelineData.ilAccountKey      := ItemInfo.AccountKey;
             ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
             //***Add invoice log here
                lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
@@ -1911,7 +1913,7 @@ begin
 
     decodedate(now, lYear, lMon, lDay);
     invoiceLineData.ItemID          := Item;
-    invoiceLineData.AutoGen         := _db(_GetCurrentTick);
+    invoiceLineData.AutoGen         := _GetCurrentTick;
     invoiceLineData.Reservation     := FRoomReservationItem.Reservation;
     invoiceLineData.RoomReservation := FRoomReservationItem.FRoomReservation;
     invoiceLineData.PurchaseDate    := FromDate;

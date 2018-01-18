@@ -240,7 +240,7 @@ uses
   , uPackageItems
   , uDImages
   , UITypes
-  ;
+  , uRoomerGridForm;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -729,7 +729,7 @@ begin
   theData.Currency := zData.Currency;
   theData.ID := zData.CurrencyID;
 
-  currencies(actlookup,theData);
+  currencies(TRoomerGridFormMode.SelectSingle, theData);
 
   if theData.Currency <> '' then
   begin

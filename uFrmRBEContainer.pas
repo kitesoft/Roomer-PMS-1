@@ -109,7 +109,7 @@ uses uRoomTypes2, uRoomTypesGroups2, uAboutRoomer, uChannelAvailabilityManager,
   uFrmResources, uCountries, uCurrencies, uTaxes, uTaxCalc, uMain, uG, uD, uUtils,
   uFrmRbePreferences, uRptReservations,
   uRoomerLanguage, uResourceManagement
-  ;
+  , uRoomerGridForm;
 
 procedure TFrmRBEContainer.CheckforOpenWindow(nextTo : Integer);
 var i, index : Integer;
@@ -232,7 +232,7 @@ begin
                         frmCountriesX.pnlHolder.Parent := pnlForm
                       else
                         Countries(actNone, theCountriesHolder, pnlForm, WindowCloseEvent);
-    rwCurrencies:     Currencies(actNone, theCurrencyHolder, pnlForm, WindowCloseEvent);
+    rwCurrencies:     Currencies(TRoomerGridFormMode.Edit, theCurrencyHolder, pnlForm, WindowCloseEvent);
     rwTaxes:          EditTaxes();
     rwEmailResource:  if RBEWindowTypes[rwEmailResource] then
                         FrmResourcesX.pnlHolder.Parent := pnlForm

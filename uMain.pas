@@ -1378,8 +1378,9 @@ type
     function GroupFiltered(Reservation: integer): boolean;
     procedure DrawRectanglOnCanvas(_Canvas: TCanvas; iColor: integer; chRect: TRect);
     function getChannelColor(Reservation: TSingleReservations): integer;
+    function getInvoiceMadeColor(aRoom: TRoomObject): integer; overload;
     function getInvoiceMadeColor(PaymentInvoice: integer; NoRent: boolean; offColor, onColor, onGroupColor: integer;
-      GroupAccount: boolean): integer;
+      GroupAccount: boolean; aState: TReservationState): integer; overload; deprecated;
     function getUnpaidItemsColor(Value: boolean; defaultColor: integer): integer;
     function getChannelColorByChannel(Channel: integer): integer;
     procedure AutoSizePeriodColumns;
@@ -5656,13 +5657,36 @@ begin
     result := 15793151;
 end;
 
+function TfrmMain.getInvoiceMadeColor(aRoom: TRoomObject): integer;
+const
+  offColor = -1;
+  onColor = clWhite;
+  onGroupColor = clAqua;
+begin
+  result := offColor;
+  if (aRoom.OngoingRent = 0) AND glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero then
+    exit;
+
+  if (aRoom.ResStatus = rsCancelled) then
+    Exit;
+
+  case aRoom.PaymentInvoice of
+    -1, -2: result := IIF(aRoom.GroupAccount, onGroupColor, onColor);
+  else
+    IF not SameValue(aRoom.OngoingRent, 0.00) then
+      result := IIF(aRoom.GroupAccount, onGroupColor, onColor);
+  end;
+end;
+
 function TfrmMain.getInvoiceMadeColor(PaymentInvoice: integer; NoRent: boolean;
-  offColor, onColor, onGroupColor: integer; GroupAccount: boolean): integer;
+  offColor, onColor, onGroupColor: integer; GroupAccount: boolean; aState: TReservationState): integer;
 begin
   result := offColor;
   if (NoRent AND glb.PMSSettings.InvoiceSettings.ShowInvoiceAsPaidWhenStatusIsZero) then
     exit;
 
+  if aState = rsCancelled then
+    Exit;
   case PaymentInvoice of
     -1, -2: result := IIF(GroupAccount, onGroupColor, onColor);
   else
@@ -6824,10 +6848,9 @@ begin
                 chRect.Top := myRect.Top + 3;
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-                iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].PaymentInvoice,
-                  (round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) = 0), Brush.Color, clWhite,
-                  clAqua,
-                  FReservationsModel.Reservations[iRes].Rooms[iRoom].GroupAccount);
+                iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+                if iTempColor = -1 then
+                  iTempColor := Brush.Color;
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
               end;
             end;
@@ -6899,9 +6922,9 @@ begin
               chRect.Top := myRect.Top + 3;
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-              iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].PaymentInvoice,
-                round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) = 0, Brush.Color, clWhite, clAqua,
-                FReservationsModel.Reservations[iRes].Rooms[iRoom].GroupAccount);
+              iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+              if iTempColor = -1 then
+                iTempColor := Brush.Color;
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
             end;
 
@@ -7001,9 +7024,9 @@ begin
           chRect.Top := Rect.Top + 3;
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-          iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].PaymentInvoice,
-            round(FReservationsModel.Reservations[iRes].Rooms[iRoom].OngoingRent) = 0, Brush.Color, clWhite, clAqua,
-            FReservationsModel.Reservations[iRes].Rooms[iRoom].GroupAccount);
+          iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+          if iTempColor = -1 then
+            iTempColor := Brush.Color;
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
         end;
 
@@ -9758,7 +9781,7 @@ begin
             chRect.Bottom := Rect.Bottom - 3;
             chRect.Right := chRect.Left + iExtraSpace;
             iTempColor := getInvoiceMadeColor(rri.PaymentInvoice, round(rri.OngoingRent) = 0, Brush.Color, clWhite,
-              clAqua, rri.GroupAccount);
+              clAqua, rri.GroupAccount, TReservationState.fromResStatus(rri.resFlag));
             DrawRectanglOnCanvas(TAdvStringGrid(Sender).Canvas, iTempColor, chRect);
           end;
 
@@ -12036,11 +12059,9 @@ end;
 procedure TfrmMain._CurrencyList;
 var
   theData: recCurrencyHolder;
-  act: TActTableAction;
 begin
-  act := actNone;
   theData.init;
-  Currencies(act, theData);
+  Currencies(TRoomerGridFormMode.Edit, theData);
 end;
 
 procedure TfrmMain._LostAndFound;

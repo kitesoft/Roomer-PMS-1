@@ -362,6 +362,7 @@ type
     fraInvoiceCurrency: TfraCurrencyPanel;
     acAggregateCityTax: TAction;
     mnuAggregateCitytax: TMenuItem;
+    mPaymentscurrencyRate: TFloatField;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -2169,6 +2170,7 @@ var
   lRoomAdditionalText: string;
   lParentlineGUID: string;
   lParentLine: TInvoiceLine;
+  lCurrency: string;
 
   procedure SetInvoiceAddressTypeIndex(Index: integer);
   begin
@@ -2412,15 +2414,23 @@ begin
         ItemId := trim(eSet.FieldByName('ItemId').asString);
         LineId := eSet.FieldByName('Id').asinteger;
 
-        CurrencyRate := eSet.FieldByName('CurrencyRate').AsFloat;
-
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
-        Price := 0;
-        if not SameValue(dNumber, 0.00) then
+        if SameValue(dNumber, 0.00) or SameValue(eSet.FieldByName('revenue').asFloat , 0.00) then
+          Price := eSet.FieldByName('Price').AsFloat
+        else
           Price := eSet.FieldByName('revenue').asFloat / eSet.fieldByName('Number').AsFloat;
 
-        //if SameValue(Price,0.00) then // fallback
-        //  Price := eSet.FieldByName('Price').AsFloat;
+        // Older package items are not save with revenues filled
+        if SameValue(Price, 0.00) and eSet.fieldByName('isPackage').AsBoolean then
+          Price := eSet.FieldByName('Price').AsFloat;
+
+
+        // Externally added items have amounts in native currency, but currency and currencyrate can be set
+        // to a different currency (WHY??)
+        if eSet.fieldByName('itemsource').AsString = 'EXTERNAL' then
+          lCurrency := g.qNativeCurrency
+        else
+          lCurrency := eSet.fieldByName('Currency').AsString;
 
         // Manually added roomrent
         Room := '';
@@ -2443,6 +2453,7 @@ begin
         else
           lParentLine := nil;
 
+        CurrencyRate := eSet.FieldByName('CurrencyRate').AsFloat;
         if Item_isRoomRent(ItemId) and (CurrencyRate <> 0) then
             Price := Price / CurrencyRate;
 
@@ -2450,10 +2461,11 @@ begin
           LineId,
           lParentLine,
           SQLToGUID(eset.FieldByName('lineGUID').asString),
-          ItemId, _s,
+          ItemId,
+          _s,
           dNumber,
           Price,
-          eSet.fieldByName('Currency').AsString, //  g.qNativeCurrency,
+          lCurrency,
           eSet.FieldByName('VATType').asString,
           SQLToDate(eSet.FieldByName('PurchaseDate').asString),
           false {not generated},
@@ -2537,6 +2549,7 @@ begin
       mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
       mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
       mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
+      mPaymentscurrencyRate.AsFloat := eSet.FieldByName('CurrencyRate').AsFloat;
       if FIsCredit then
         mPaymentsNativeAmount.AsFloat := eSet.FieldByName('Amount').AsFloat * -1
       else
@@ -2882,8 +2895,9 @@ end;
 procedure TfrmInvoiceEdit.mPaymentsCalcFields(DataSet: TDataSet);
 begin
   mPaymentsChargedOnCC.AsBoolean := mPaymentsPaycardTraceIndex.AsInteger > 0;
-  if not mPaymentsCurrency.IsNull then
-    mPaymentsCurrencyAmount.AsFloat := TAmount(mPaymentsNativeAmount.AsFloat).ToCurrency(mPaymentsCurrency.AsString).Value;
+  if not SameValue(mPaymentsCurrencyRate.AsFloat, 0.00) then
+    // Should be solved with CurrencyRate as (optionally fixed) property of a TAmount. This is part of TAmount as of PMS 1.9.19
+    mPaymentsCurrencyAmount.AsFloat := mPaymentsNativeAmount.AsFloat / mPaymentsCurrencyRate.AsFloat
 end;
 
 procedure TfrmInvoiceEdit.ExternalRoomsClick(Sender: TObject);

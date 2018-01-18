@@ -40,7 +40,7 @@ uses
   , uCurrencies
   , hData
   , uRoomerCurrencymanager
-  , uG;
+  , uG, uRoomerGridForm;
 
 { TfraCurrencyPanel }
 
@@ -49,7 +49,7 @@ var
   theData: recCurrencyHolder;
 begin
   theData.Currency := edCode.Text;
-  if currencies(actLookup, theData) then
+  if currencies(TRoomerGridFormMode.SelectSingle, theData) then
     edCode.Text := theData.Currency;
 end;
 
