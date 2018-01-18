@@ -136,6 +136,8 @@ type
     procedure tvRoomsDateTotalGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvRoomsDateRoomRentPaymentInvoiceGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
   private
     { Private declarations }
     zsDateFrom : string;
@@ -392,6 +394,13 @@ begin
 
 end;
 
+procedure TfrmOpenInvoicesNew.tvRoomsDateRoomRentPaymentInvoiceGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  if aRecord.Values[Sender.Index] = -1 then
+    aText := '';
+end;
+
 procedure TfrmOpenInvoicesNew.tvRoomsDateTotalGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
@@ -460,18 +469,21 @@ begin
         s := s+' , rd.isPercentage '#10;
         s := s+' , sum(rd.roomrate) as TotalRate '#10;
         s := s+' , rd.paid '#10;
-        s := s+ ', rr.rrArrival as Arrival'#10;
-        s := s+ ', rr.rrDeparture as Departure'#10;
+        s := s+' , RR_Arrival(rr.roomreservation) AS Arrival '#10;
+        s := s+' , RR_Departure(rr.roomreservation) AS Departure '#10;
         s := s+ ', rr.GroupAccount as isGroupAccount '#10;
         s := s+ ', rr.RoomRentPaymentInvoice '#10;
         s := s+ ', rv.Customer '#10;
         s := s+' , rv.name as ReservationName'#10;
-        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=rd.roomreservation LIMIT 1) AS GuestName '#10;
+        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=rd.roomreservation and persons.mainname LIMIT 1) AS GuestName '#10;
         s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
-        s := s+' , (SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) and (roomsdate.ResFlag not in('+_db(STATUS_DELETED)+','+_db(STATUS_DELETED)+') ) ) AS unPaidRoomRent '#10;
-        s := s+' , (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE roomsdate.roomreservation=rr.roomreservation AND roomsdate.paid=0)  AS DiscountUnPaidRoomRent '#10;
-        s := s+' , ((SELECT SUM(RoomRate) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag not in ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELED)+') )  ) '#10;
-        s := s+'      - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag <> '+_db(STATUS_DELETED)+' )  )) AS TotalUnpaidRoomRent '#10;
+        s := s+' , (SELECT SUM(RoomRate) FROM roomsdate '#10;
+        s := s+'       WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) and (roomsdate.ResFlag not in('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELLED)+') ) ) AS unPaidRoomRent '#10;
+        s := s+' , (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate '#10;
+        s := s+'       WHERE roomsdate.roomreservation=rr.roomreservation AND roomsdate.paid=0 AND rd.resflag not in (''X'', ''C''))  AS DiscountUnPaidRoomRent '#10;
+        s := s+' , ((SELECT SUM(RoomRate) FROM roomsdate '#10;
+        s := s+'       WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag not in ('+_db(STATUS_DELETED)+','+_db(STATUS_CANCELED)+') )  ) '#10;
+        s := s+'      - (SELECT SUM(IF(isPercentage, RoomRate*Discount/100, Discount)) FROM roomsdate WHERE (roomsdate.roomreservation=rr.roomreservation) AND (roomsdate.paid=0) AND (roomsdate.ResFlag not in (''X'', ''C'') )  )) AS TotalUnpaidRoomRent '#10;
         s := s+', (SELECT curr.AValue from currencies curr  WHERE curr.Currency = rd.Currency) AS CurrencyRate '#10;
         s := s+', (SELECT di.result from dictionary di  WHERE di.code = rd.Resflag) AS statusDescription '#10;
         s := s+' FROM '#10;
@@ -514,8 +526,8 @@ begin
         s := s+' SELECT '#10;
         s := s+'   il.Reservation '#10;
         s := s+' , il.RoomReservation '#10;
-        s := s+' , rr.rrArrival as Arrival '#10;
-        s := s+' , rr.rrDeparture as Departure '#10;
+        s := s+' , RR_Arrival(rr.roomreservation) AS Arrival '#10;
+        s := s+' , RR_Departure(rr.roomreservation) AS Departure '#10;
         s := s+' , rr.GroupAccount as isGroupAccount '#10;
         s := s+' , rr.RoomRentPaymentInvoice '#10;
         s := s+' , rr.Status '#10;
@@ -526,14 +538,14 @@ begin
         s := s+' , rr.rrIsNoRoom '#10;
         s := s+' , rv.name AS ReservationName '#10;
         s := s+' , sum(il.total) as Amount '#10;
-        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=il.roomreservation LIMIT 1) AS GuestName '#10;
+        s := s+' , (SELECT name FROM persons WHERE persons.roomreservation=il.roomreservation and persons.mainname LIMIT 1) AS GuestName '#10;
         s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=il.roomreservation) AS GuestCount '#10;
         s := s+' , (SELECT curr.AValue from currencies curr  WHERE curr.Currency = rr.Currency) AS CurrencyRate '#10;
         s := s+' , (SELECT di.result from dictionary di  WHERE di.code = rr.Status) AS statusDescription '#10;
         s := s+' FROM '#10;
         s := s+'   invoicelines il '#10;
         s := s+' INNER JOIN '#10;
-        s := s+'   roomreservations rr ON il.roomreservation = rr.roomreservation '#10;
+        s := s+'   roomreservations rr ON il.roomreservation = rr.roomreservation and rr.status not in (''X'', ''C'') '#10;
         s := s+' INNER JOIN '#10;
         s := s+'   reservations rv ON il.reservation = rv.reservation '#10;
         s := s+' WHERE '#10;
@@ -566,8 +578,8 @@ begin
         s := s+'   il.Reservation '#10;
         s := s+' , il.RoomReservation '#10;
         s := s+' , il.itemID '#10;
-        s := s+' , Date(rv.Arrival) as dtArrival'#10;
-        s := s+' , Date(rv.Departure) as dtDeparture'#10;
+        s := s+' , RV_Arrival(il.reservation) AS Arrival '#10;
+        s := s+' , RV_Departure(il.reservation) AS Departure '#10;
         s := s+' , rv.Customer '#10;
         s := s+' , rv.name AS ReservationName'#10;
         s := s+'  ,sum(il.total) as Amount '#10;
@@ -742,6 +754,7 @@ begin
         kbmRoomsDate_.FieldByName('CurrencyRate').AsFloat             :=  CurrencyRate              ;
         kbmRoomsDate_.FieldByName('statusDescription').AsString       :=  statusDescription         ;
         kbmRoomsDate_.FieldByName('TotalItems').AsFloat               :=  TotalItems                ;
+        kbmRoomsDate_.FieldByName('Total').AsFloat                    :=  TotalItems + TotalRate;
         kbmRoomsDate_.post;
       end;
       kbmInvoicelines_.next;
@@ -756,8 +769,8 @@ begin
     while not kbmGroupInvoiceLines_.eof do
     begin
      ResFlag                 := 'X';
-     Arrival                 := kbmGroupInvoiceLines_.FieldByName('dtArrival').AsDateTime;
-     Departure               := kbmGroupInvoiceLines_.FieldByName('dtDeparture').AsDateTime;
+     Arrival                 := kbmGroupInvoiceLines_.FieldByName('Arrival').AsDateTime;
+     Departure               := kbmGroupInvoiceLines_.FieldByName('Departure').AsDateTime;
      GroupAccount            := true;
      RoomRentPaymentInvoice  := 0;
      Customer                := kbmGroupInvoiceLines_.FieldByName('Customer').AsString;
@@ -797,6 +810,7 @@ begin
       kbmRoomsDate_.FieldByName('CurrencyRate').AsFloat             :=  CurrencyRate              ;
       kbmRoomsDate_.FieldByName('statusDescription').AsString       :=  statusDescription         ;
       kbmRoomsDate_.FieldByName('TotalItems').AsFloat               :=  TotalItems                ;
+      kbmRoomsDate_.FieldByName('Total').AsFloat                    :=  TotalItems;
       kbmRoomsDate_.post;
 
       kbmGroupInvoiceLines_.next;

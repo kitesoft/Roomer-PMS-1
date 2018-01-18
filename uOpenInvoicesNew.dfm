@@ -31,10 +31,11 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     SkinData.SkinSection = 'PANEL'
     object btnExecute: TsButton
       Left = 151
-      Top = 9
+      Top = 16
       Width = 100
       Height = 25
       Caption = 'Refresh'
+      Default = True
       ImageIndex = 28
       Images = DImages.PngImageList1
       TabOrder = 0
@@ -42,8 +43,8 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
       SkinData.SkinSection = 'BUTTON'
     end
     object chkShowNull: TsCheckBox
-      Left = 152
-      Top = 37
+      Left = 151
+      Top = 46
       Width = 150
       Height = 20
       Caption = 'Show invoices with 0 prices'
@@ -119,13 +120,11 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitLeft = -8
+    ExplicitTop = 86
     object sTabSheet2: TsTabSheet
       Caption = 'Rent'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
@@ -249,10 +248,16 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
           OptionsView.HeaderAutoHeight = True
           object tvRoomsDateArrival: TcxGridDBColumn
             DataBinding.FieldName = 'Arrival'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.Alignment.Horz = taRightJustify
+            Properties.ShowTime = False
             Width = 94
           end
           object tvRoomsDateDeparture: TcxGridDBColumn
             DataBinding.FieldName = 'Departure'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.Alignment.Horz = taRightJustify
+            Properties.ShowTime = False
             Width = 89
           end
           object tvRoomsDateRoom: TcxGridDBColumn
@@ -317,6 +322,7 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
           end
           object tvRoomsDateRoomRentPaymentInvoice: TcxGridDBColumn
             DataBinding.FieldName = 'RoomRentPaymentInvoice'
+            OnGetDisplayText = tvRoomsDateRoomRentPaymentInvoiceGetDisplayText
           end
           object tvRoomsDateunPaidRoomRent: TcxGridDBColumn
             DataBinding.FieldName = 'unPaidRoomRent'
@@ -633,11 +639,11 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
         DataType = ftFloat
       end
       item
-        Name = 'dtArrival'
+        Name = 'Arrival'
         DataType = ftDateTime
       end
       item
-        Name = 'dtDeparture'
+        Name = 'Departure'
         DataType = ftDateTime
       end
       item

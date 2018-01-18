@@ -2415,8 +2415,7 @@ begin
         LineId := eSet.FieldByName('Id').asinteger;
 
         dNumber := GetCalculatedNumberOfItems(ItemId, eSet.FieldByName('Number').AsFloat);
-        Price := 0;
-        if SameValue(dNumber, 0.00) then
+        if SameValue(dNumber, 0.00) or SameValue(eSet.FieldByName('revenue').asFloat , 0.00) then
           Price := eSet.FieldByName('Price').AsFloat
         else
           Price := eSet.FieldByName('revenue').asFloat / eSet.fieldByName('Number').AsFloat;
