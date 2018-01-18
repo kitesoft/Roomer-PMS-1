@@ -338,7 +338,10 @@ uses
   uCachedVATTable in 'TableCache\uCachedVATTable.pas',
   uCachedPriceCodesTable in 'TableCache\uCachedPriceCodesTable.pas',
   uRoomerGridExporters in 'RoomerForm\uRoomerGridExporters.pas',
-  uRoomerEditGridForm in 'RoomerForm\uRoomerEditGridForm.pas' {frmBaseRoomerEditGridForm};
+  uRoomerEditGridForm in 'RoomerForm\uRoomerEditGridForm.pas' {frmBaseRoomerEditGridForm},
+  uFrmConnectionsStatistics in 'Connections\uFrmConnectionsStatistics.pas' {FrmConnectionsStatistics},
+  uConnectionsStatisticsService in 'Connections\uConnectionsStatisticsService.pas',
+  uSnapshotService in 'Connections\uSnapshotService.pas';
 
 {$R *.RES}
 

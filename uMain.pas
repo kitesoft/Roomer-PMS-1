@@ -690,6 +690,7 @@ type
     dxbtnReleaseNotes: TdxBarButton;
     btnFinanceMutationTraces: TdxBarLargeButton;
     btnDailySalesAndStatistics: TdxBarLargeButton;
+    btnConnectionsStatistics: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -987,6 +988,7 @@ type
     procedure btnFinanceMutationTracesClick(Sender: TObject);
     procedure btnDailySalesAndStatisticsClick(Sender: TObject);
     procedure dxbtnReleaseNotesClick(Sender: TObject);
+    procedure btnConnectionsStatisticsClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1653,7 +1655,7 @@ uses
 	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid;
+    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -10926,6 +10928,11 @@ procedure TfrmMain.btnConfirmAllottedBookingClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   ConfirmABooking;
+end;
+
+procedure TfrmMain.btnConnectionsStatisticsClick(Sender: TObject);
+begin
+  ShowStatisticsSettings;
 end;
 
 procedure TfrmMain.btnContactTypesClick(Sender: TObject);
