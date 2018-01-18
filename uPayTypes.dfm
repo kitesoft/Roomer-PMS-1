@@ -150,8 +150,8 @@ object frmPayTypes: TfrmPayTypes
     object chkActive: TsCheckBox
       Left = 57
       Top = 64
-      Width = 273
-      Height = 20
+      Width = 281
+      Height = 17
       Caption = 'Active (if checked then just active are visible else all)'
       Checked = True
       State = cbChecked
@@ -474,6 +474,7 @@ object frmPayTypes: TfrmPayTypes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -486,7 +487,8 @@ object frmPayTypes: TfrmPayTypes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43110.478534131940000000
+      ReportDocument.CreationDate = 43118.059190555560000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

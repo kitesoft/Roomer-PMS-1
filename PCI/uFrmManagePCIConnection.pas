@@ -292,7 +292,8 @@ begin
       glb.PaytypesSet.First;
       while NOT glb.PaytypesSet.Eof do
       begin
-        ptList.Add(glb.PaytypesSet['PayType']);
+        if glb.PaytypesSet.FieldByName('active').AsBoolean then
+          ptList.Add(glb.PaytypesSet['PayType']);
         glb.PaytypesSet.Next;
       end;
       for combo in combos.Values do
@@ -323,8 +324,7 @@ begin
       sKey := rSet['key'];
       sValue := rSet['value'];
       if combos.TryGetValue(TPayCardType.FromString(sKey.Substring(Length(PMS_MAPPING_PREFIX))), combo) then
-        combo.ItemIndex := combo.Items.IndexOf(sValue);
-
+        combo.ItemIndex := max(combo.Items.IndexOf(sValue), 0);
       rSet.Next;
     end;
 

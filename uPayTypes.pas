@@ -331,14 +331,18 @@ Procedure TfrmPayTypes.fillGridFromDataset(sGoto : string);
 var
   s    : string;
   rSet : TRoomerDataSet;
-  active : boolean;
+  activeStr : String;
 begin
-  active := chkActive.Checked;
   zFirstTime := true;
   if zSortStr = '' then zSortStr := 'payType ';
   rSet := CreateNewDataSet;
   try
-    s := format(select_PayTypes_fillGridFromDataset_byActive ,[ord(active),zSortStr]);
+    if chkActive.Checked then
+      activeStr := ' WHERE active '
+    else
+      activeStr := '';
+
+    s := format(select_PayTypes_fillGridFromDataset, [activeStr, zsortStr]);
     if rSet_bySQL(rSet,s) then
     begin
       if m_.active then m_.Close;
