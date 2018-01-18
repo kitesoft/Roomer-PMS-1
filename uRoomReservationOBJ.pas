@@ -429,7 +429,9 @@ begin
         s := s + ', rr.Discount AS Discount ';
         s := s + ', rr.PriceType AS PriceType ';
         s := s + ', rd.Currency AS Currency ';
-        s := s + ', (SELECT id FROM invoicelines WHERE InvoiceNumber=-1 AND roomreservation=rd.roomreservation LIMIT 1) AS ItemsOnInvoice ';
+
+        s := s + ', (SELECT id FROM invoicelines WHERE InvoiceNumber=-1 AND roomreservation=rd.roomreservation '#10;
+        s := s + '   AND not (rd.resflag = ''C'' and isPackage) LIMIT 1) AS ItemsOnInvoice '; // skip invoicelines of packages in cancelled reservations
 
         s := s + '  FROM ';
         s := s + ' roomsdate rd ';
