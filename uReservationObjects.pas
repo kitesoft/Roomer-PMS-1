@@ -550,10 +550,10 @@ begin
               end;
               SingleReservations.FCustomer := Trim(FieldByName('Customer').asString);
               SingleReservations.FName := Trim(FieldByName('Name').asString);
-              SingleReservations.FArrival := FieldByName('Arrival').asDateTime;
+              SingleReservations.FArrival := FieldByName('ArrivalDate').asDateTime;
               SingleReservations.FReservationDate := SQLToDate(Trim(FieldByName('ReservationDate').asString));
               SingleReservations.FStaff := Trim(FieldByName('Staff').asString);
-              SingleReservations.FDeparture := FieldByName('Departure').AsDateTime;
+              SingleReservations.FDeparture := FieldByName('DepartureDate').AsDateTime;
               SingleReservations.FTel1 := Trim(FieldByName('Tel1').asString);
               SingleReservations.FTel2 := Trim(FieldByName('Tel2').asString);
               SingleReservations.FFax := Trim(FieldByName('Fax').asString);
@@ -580,8 +580,8 @@ begin
               RoomObject.FRoomRes := FieldByName('RoomReservation').asInteger;
               RoomObject.FReservation := FieldByName('Reservation').asInteger;
               RoomObject.FGuestCount := FieldByName('NumGuests').asInteger;
-              RoomObject.FArrival := FieldByName('RoomArrival').asDateTime;
-              RoomObject.FDeparture := FieldByName('RoomDeparture').asDateTime;
+              RoomObject.FArrival := FieldByName('RoomArrivalDate').asDateTime;
+              RoomObject.FDeparture := FieldByName('RoomDepartureDate').asDateTime;
               RoomObject.FRoomNumber := Trim(FieldByName('Room').asString);
               RoomObject.FRRNumber := Trim(FieldByName('rrRoom').asString);
               try
