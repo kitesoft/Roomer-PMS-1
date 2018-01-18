@@ -237,7 +237,7 @@ uses
   , uCurrencies
   , uUtils
   , uSQLUtils
-  , UITypes;
+  , UITypes, uRoomerGridForm;
 
 
 
@@ -846,7 +846,7 @@ begin
   isDefault := m_['isDefault'];
   fillholder;
   theData.Currency := zData.Currency;
-  currencies(actlookup,theData);
+  currencies(TRoomerGridFormMode.SelectSingle, theData);
   if theData.Currency <> '' then
   begin
     if isDEfault then

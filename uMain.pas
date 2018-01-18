@@ -12052,11 +12052,9 @@ end;
 procedure TfrmMain._CurrencyList;
 var
   theData: recCurrencyHolder;
-  act: TActTableAction;
 begin
-  act := actNone;
   theData.init;
-  Currencies(act, theData);
+  Currencies(TRoomerGridFormMode.Edit, theData);
 end;
 
 procedure TfrmMain._LostAndFound;
