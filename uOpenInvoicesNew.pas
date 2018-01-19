@@ -469,8 +469,8 @@ begin
         s := s+' , rd.isPercentage '#10;
         s := s+' , sum(rd.roomrate) as TotalRate '#10;
         s := s+' , rd.paid '#10;
-        s := s+' , RR_Arrival(rr.roomreservation) AS Arrival '#10;
-        s := s+' , RR_Departure(rr.roomreservation) AS Departure '#10;
+        s := s+' , RR_Arrival(rr.roomreservation, false) AS Arrival '#10;
+        s := s+' , RR_Departure(rr.roomreservation, false) AS Departure '#10;
         s := s+ ', rr.GroupAccount as isGroupAccount '#10;
         s := s+ ', rr.RoomRentPaymentInvoice '#10;
         s := s+ ', rv.Customer '#10;
@@ -526,8 +526,8 @@ begin
         s := s+' SELECT '#10;
         s := s+'   il.Reservation '#10;
         s := s+' , il.RoomReservation '#10;
-        s := s+' , RR_Arrival(rr.roomreservation) AS Arrival '#10;
-        s := s+' , RR_Departure(rr.roomreservation) AS Departure '#10;
+        s := s+' , RR_Arrival(rr.roomreservation, false) AS Arrival '#10;
+        s := s+' , RR_Departure(rr.roomreservation, false) AS Departure '#10;
         s := s+' , rr.GroupAccount as isGroupAccount '#10;
         s := s+' , rr.RoomRentPaymentInvoice '#10;
         s := s+' , rr.Status '#10;
@@ -578,8 +578,8 @@ begin
         s := s+'   il.Reservation '#10;
         s := s+' , il.RoomReservation '#10;
         s := s+' , il.itemID '#10;
-        s := s+' , RV_Arrival(il.reservation) AS Arrival '#10;
-        s := s+' , RV_Departure(il.reservation) AS Departure '#10;
+        s := s+' , RV_Arrival(il.reservation, false) AS Arrival '#10;
+        s := s+' , RV_Departure(il.reservation, false) AS Departure '#10;
         s := s+' , rv.Customer '#10;
         s := s+' , rv.name AS ReservationName'#10;
         s := s+'  ,sum(il.total) as Amount '#10;

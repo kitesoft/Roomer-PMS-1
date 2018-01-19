@@ -120,11 +120,13 @@ object frmOpenInvoicesNew: TfrmOpenInvoicesNew
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitLeft = -8
-    ExplicitTop = 86
     object sTabSheet2: TsTabSheet
       Caption = 'Rent'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel2: TsPanel
         Left = 0
         Top = 0
