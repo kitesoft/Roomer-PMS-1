@@ -6307,8 +6307,8 @@ end;
 
     s := s+' SELECT '#10;
     s := s+'     roomreservations.RoomReservation '#10;
-    s := s+'   , roomreservations.rrArrival as ArrivalDate '#10;
-    s := s+'   , roomreservations.rrDeparture as DepartureDate '#10;
+    s := s+'   , RR_Arrival(roomreservations.RoomReservation, false) as ArrivalDate '#10;
+    s := s+'   , RR_Departure(roomreservations.RoomReservation, false) as DepartureDate '#10;
     s := s+'   , to_int(DATEDIFF(roomreservations.rrDeparture,roomreservations.rrArrival)) as NumDays '#10;
     s := s+'   , roomreservations.Room '#10;
     s := s+'   , roomreservations.Status '#10;
@@ -6320,6 +6320,7 @@ end;
     s := s+'   , roomreservations.numGuests AS NumGuests '#10;
     s := s+'   , roomreservations.numChildren AS NumChildren '#10;
     s := s+'   , roomreservations.numInfants AS NumInfants '#10;
+    s := s+'   , roomreservations.HiddenInfo AS HiddenInfo '#10;
     s := s+'   , reservations.Name AS ReservationName '#10;
     s := s+'   , reservations.Reservation '#10;
     s := s+'   , reservations.marketSegment '#10;

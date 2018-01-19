@@ -495,7 +495,7 @@ type
     tvAllReservationsReservationName: TcxGridDBColumn;
     tvAllReservationsCustomerName: TcxGridDBColumn;
     tvAllReservationsGroupReservationName: TcxGridDBColumn;
-    tvAllReservationsmem: TcxGridDBColumn;
+    tvAllReservationsRoomNotes: TcxGridDBColumn;
     P1: TMenuItem;
     __N7: TMenuItem;
     dlgAdvGridPrintSettings: TAdvGridPrintSettingsDialog;
@@ -12877,6 +12877,7 @@ begin
             mAllReservations.FieldByName('Adults').asinteger := Adults;
             mAllReservations.FieldByName('Children').asinteger := Children;
             mAllReservations.FieldByName('Infants').asinteger := Infants;
+            mAllReservations.FieldByName('RoomNotes').AsString := rSet.FieldByName('Hiddeninfo').AsString;
 
             mAllReservations.Post;
             rSet.next;

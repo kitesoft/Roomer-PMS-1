@@ -116,7 +116,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 302
-        ActivePage = tabPeriod
+        ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -124,9 +124,6 @@ object frmMain: TfrmMain
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -307,7 +304,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -433,7 +430,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -444,6 +441,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -780,6 +778,7 @@ object frmMain: TfrmMain
               object tvAllReservationsNoRoom: TcxGridDBColumn
                 Caption = 'No-Room'
                 DataBinding.FieldName = 'NoRoom'
+                Width = 52
               end
               object tvAllReservationsBookable: TcxGridDBColumn
                 DataBinding.FieldName = 'Bookable'
@@ -837,8 +836,8 @@ object frmMain: TfrmMain
                 DataBinding.FieldName = 'GroupReservationName'
                 Width = 200
               end
-              object tvAllReservationsmem: TcxGridDBColumn
-                DataBinding.FieldName = 'mem'
+              object tvAllReservationsRoomNotes: TcxGridDBColumn
+                DataBinding.FieldName = 'RoomNotes'
                 Width = 200
               end
             end
@@ -1094,7 +1093,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1453,7 +1452,7 @@ object frmMain: TfrmMain
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -1633,37 +1632,24 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
             Width = 1211
-            Height = 272
+            Height = 274
             Align = alClient
             BorderStyle = bsNone
             TabOrder = 0
-            ExplicitHeight = 274
           end
         end
       end
@@ -1841,8 +1827,6 @@ object frmMain: TfrmMain
           OnMouseEnter = tabsViewMouseEnter
           SkinData.SkinSection = 'PAGECONTROL'
           SkinData.OuterEffects.Visibility = ovAlways
-          ExplicitLeft = 47
-          ExplicitTop = -2
         end
       end
       object __PanGridsHeader: TsPanel
@@ -2498,7 +2482,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.8'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -7651,7 +7635,7 @@ object frmMain: TfrmMain
         Size = 200
       end
       item
-        Name = 'mem'
+        Name = 'RoomNotes'
         DataType = ftWideString
         Size = 255
       end
@@ -24179,8 +24163,8 @@ object frmMain: TfrmMain
     Grid = grOneDayRooms
     Options = [psBorders, psGeneral, psFonts, psDateTime, psTitle, psPages, psMargins, psSpacing, psOrientation, psSaveSettings]
     PrintDimensions = pdmm
-    Left = 32
-    Top = 392
+    Left = 88
+    Top = 424
   end
   object mnuItemStatus: TPopupMenu
     Left = 1032
@@ -24318,7 +24302,7 @@ object frmMain: TfrmMain
     end
   end
   object pupSelectHomePage: TPopupMenu
-    Left = 56
+    Left = 64
     Top = 328
     object H1: TMenuItem
       Caption = 'Home'
