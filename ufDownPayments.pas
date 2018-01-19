@@ -558,8 +558,8 @@ begin
       s := s+'   ,rv.name AS ReservationName '#10;
       s := s+'   ,rv.channel '#10;
       s := s+'   ,rv.invRefrence AS Refrence '#10;
-      s := s+'   ,if(pm.roomreservation=0,date(rv.Arrival),rr.rrArrival) AS Arrival '#10;
-      s := s+'   ,if(pm.roomreservation=0,date(rv.Departure),rr.rrDeparture) AS Departure '#10;
+      s := s+'   ,if(pm.roomreservation=0, RV_Arrival(pm.reservationdate, false), RR_Arrival(pm.Roomreservation, false)) AS Arrival '#10;
+      s := s+'   ,if(pm.roomreservation=0, RV_Departure(pm.reservationdate, false), RR_Departure(pm.Roomreservation, false)) AS Departure'#10;
       s := s+'   ,rr.room '#10;
       s := s+'   ,chnl.Name AS ChannelName '#10;
       s := s+'   ,cust.surname AS CustomerName '#10;

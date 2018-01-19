@@ -409,8 +409,7 @@ inherited frmRptReservations: TfrmRptReservations
               DataBinding.FieldName = 'RoomType'
             end
             object tvRoomReservationsrrArrival: TcxGridDBColumn
-              Caption = 'Arrival'
-              DataBinding.FieldName = 'rrArrival'
+              DataBinding.FieldName = 'Arrival'
             end
             object tvRoomReservationsExpectedTimeOfArrival: TcxGridDBColumn
               Caption = 'Exp. TOA'
@@ -418,8 +417,7 @@ inherited frmRptReservations: TfrmRptReservations
               PropertiesClassName = 'TcxTimeEditProperties'
             end
             object tvRoomReservationsrrDeparture: TcxGridDBColumn
-              Caption = 'Departure'
-              DataBinding.FieldName = 'rrDeparture'
+              DataBinding.FieldName = 'Departure'
             end
             object tvRoomReservationsExpectedCheckoutTime: TcxGridDBColumn
               Caption = 'Exp. COT'
@@ -573,10 +571,6 @@ inherited frmRptReservations: TfrmRptReservations
       end
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44
@@ -1591,11 +1585,11 @@ inherited frmRptReservations: TfrmRptReservations
         Size = 30
       end
       item
-        Name = 'rrArrival'
+        Name = 'Arrival'
         DataType = ftDate
       end
       item
-        Name = 'rrDeparture'
+        Name = '+'
         DataType = ftDate
       end
       item
@@ -1839,11 +1833,11 @@ inherited frmRptReservations: TfrmRptReservations
         Size = 30
       end
       item
-        Name = 'rrArrival'
+        Name = 'Arrival'
         DataType = ftDate
       end
       item
-        Name = 'rrDeparture'
+        Name = 'Departure'
         DataType = ftDate
       end
       item

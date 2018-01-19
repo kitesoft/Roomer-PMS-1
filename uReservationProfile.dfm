@@ -1975,7 +1975,7 @@ object frmReservationProfile: TfrmReservationProfile
     Top = 374
     Width = 1144
     Height = 255
-    ActivePage = RoomsTab
+    ActivePage = GuestsTab
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -3252,11 +3252,11 @@ object frmReservationProfile: TfrmReservationProfile
               DataBinding.FieldName = 'Breakfast'
             end
             object tvGuestRoomsrrArrival: TcxGridDBColumn
-              DataBinding.FieldName = 'rrArrival'
+              DataBinding.FieldName = 'Arrival'
               Width = 80
             end
             object tvGuestRoomsrrDeparture: TcxGridDBColumn
-              DataBinding.FieldName = 'rrDeparture'
+              DataBinding.FieldName = 'Departure'
               Width = 80
             end
             object tvGuestRoomsDefNumberGuests: TcxGridDBColumn
@@ -3453,11 +3453,11 @@ object frmReservationProfile: TfrmReservationProfile
               DataBinding.FieldName = 'Breakfast'
             end
             object tvAllGuestsrrArrival: TcxGridDBColumn
-              DataBinding.FieldName = 'rrArrival'
+              DataBinding.FieldName = 'Arrival'
               Width = 70
             end
             object tvAllGuestsrrDeparture: TcxGridDBColumn
-              DataBinding.FieldName = 'rrDeparture'
+              DataBinding.FieldName = 'Departure'
               Width = 70
             end
             object tvAllGuestsNoRoom: TcxGridDBColumn
@@ -4355,12 +4355,10 @@ object frmReservationProfile: TfrmReservationProfile
       FieldName = 'Breakfast'
     end
     object mGuestRoomsrrArrival: TDateTimeField
-      DisplayLabel = 'Arrival'
-      FieldName = 'rrArrival'
+      FieldName = 'Arrival'
     end
     object mGuestRoomsrrDeparture: TDateTimeField
-      DisplayLabel = 'Departure'
-      FieldName = 'rrDeparture'
+      FieldName = 'Departure'
     end
     object mGuestRoomsRoom: TWideStringField
       FieldName = 'Room'
@@ -4440,12 +4438,10 @@ object frmReservationProfile: TfrmReservationProfile
       FieldName = 'Breakfast'
     end
     object mAllGuestsrrArrival: TDateTimeField
-      DisplayLabel = 'Arrival'
-      FieldName = 'rrArrival'
+      FieldName = 'Arrival'
     end
     object mAllGuestsDeparture: TDateTimeField
-      DisplayLabel = 'Departure'
-      FieldName = 'rrDeparture'
+      FieldName = 'Departure'
     end
     object mAllGuestsRoom: TWideStringField
       FieldName = 'Room'

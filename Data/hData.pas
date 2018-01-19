@@ -3836,8 +3836,8 @@ begin
     b.Append('   ,`Hallres` ' + #10);
     b.Append('   ,`rrTmp` ' + #10);
     b.Append('   ,`rrDescription` ' + #10);
-    b.Append('   ,`rrArrival` ' + #10);
-    b.Append('   ,`rrDeparture` ' + #10);
+//    b.Append('   ,`rrArrival` ' + #10);
+//    b.Append('   ,`rrDeparture` ' + #10);
     b.Append('   ,`rrIsNoRoom` ' + #10);
     b.Append('   ,`rrRoomAlias` ' + #10);
     b.Append('   ,`rrRoomTypeAlias` ' + #10);
@@ -3885,8 +3885,8 @@ begin
     b.Append('  , ' + _db(theData.Hallres) + #10);
     b.Append('  , ' + _db(theData.rrTmp) + #10);
     b.Append('  , ' + _db(theData.rrDescription) + #10);
-    b.Append('  , ' + _db(theData.rrArrival) + #10);
-    b.Append('  , ' + _db(theData.rrDeparture) + #10);
+//    b.Append('  , ' + _db(theData.rrArrival) + #10);
+//    b.Append('  , ' + _db(theData.rrDeparture) + #10);
     b.Append('  , ' + _db(theData.rrIsNoRoom) + #10);
     b.Append('  , ' + _db(theData.rrRoomAlias) + #10);
     b.Append('  , ' + _db(theData.rrRoomTypeAlias) + #10);
@@ -3945,8 +3945,8 @@ begin
     b.Append('   ,Currency = ' + _db(theData.Currency) + #10);
     b.Append('   ,Discount = ' + _db(theData.Discount) + #10);
     b.Append('   ,PriceType = ' + _db(theData.PriceType) + #10);
-    b.Append('   ,Arrival = ' + _db(theData.Arrival) + #10);
-    b.Append('   ,Departure = ' + _db(theData.Departure) + #10);
+//    b.Append('   ,Arrival = ' + _db(theData.Arrival) + #10);
+//    b.Append('   ,Departure = ' + _db(theData.Departure) + #10);
     b.Append('   ,RoomType = ' + _db(theData.RoomType) + #10);
     b.Append('   ,PMInfo = ' + _db(theData.PMInfo) + #10);
     b.Append('   ,HiddenInfo = ' + _db(theData.HiddenInfo) + #10);
@@ -3957,8 +3957,8 @@ begin
     b.Append('   ,Hallres = ' + _db(theData.Hallres) + #10);
     b.Append('   ,rrTmp = ' + _db(theData.rrTmp) + #10);
     b.Append('   ,rrDescription = ' + _db(theData.rrDescription) + #10);
-    b.Append('   ,rrArrival = ' + _db(theData.rrArrival) + #10);
-    b.Append('   ,rrDeparture = ' + _db(theData.rrDeparture) + #10);
+//    b.Append('   ,rrArrival = ' + _db(theData.rrArrival) + #10);
+//    b.Append('   ,rrDeparture = ' + _db(theData.rrDeparture) + #10);
     b.Append('   ,rrIsNoRoom = ' + _db(theData.rrIsNoRoom) + #10);
     b.Append('   ,rrRoomAlias = ' + _db(theData.rrRoomAlias) + #10);
     b.Append('   ,rrRoomTypeAlias = ' + _db(theData.rrRoomTypeAlias) + #10);
@@ -4016,8 +4016,8 @@ begin
   s := s + '  ,Currency ' + #10;
   s := s + '  ,Discount ' + #10;
   s := s + '  ,PriceType ' + #10;
-  s := s + '  ,Arrival ' + #10;
-  s := s + '  ,Departure ' + #10;
+//  s := s + '  ,Arrival ' + #10;
+//  s := s + '  ,Departure ' + #10;
   s := s + '  ,RoomType ' + #10;
   s := s + '  ,PMInfo ' + #10;
   s := s + '  ,HiddenInfo ' + #10;
@@ -4028,8 +4028,8 @@ begin
   s := s + '  ,Hallres ' + #10;
   s := s + '  ,rrTmp ' + #10;
   s := s + '  ,rrDescription ' + #10;
-  s := s + '  ,rrArrival ' + #10;
-  s := s + '  ,rrDeparture ' + #10;
+//  s := s + '  ,rrArrival ' + #10;
+//  s := s + '  ,rrDeparture ' + #10;
   s := s + '  ,rrIsNoRoom ' + #10;
   s := s + '  ,rrRoomAlias ' + #10;
   s := s + '  ,rrRoomTypeAlias ' + #10;
@@ -4063,8 +4063,8 @@ begin
   s := s + '  , ' + _db(theData.Currency) + #10;
   s := s + '  , ' + _db(theData.Discount) + #10;
   s := s + '  , ' + _db(theData.PriceType) + #10;
-  s := s + '  , ' + _db(theData.Arrival) + #10;
-  s := s + '  , ' + _db(theData.Departure) + #10;
+//  s := s + '  , ' + _db(theData.Arrival) + #10;
+//  s := s + '  , ' + _db(theData.Departure) + #10;
   s := s + '  , ' + _db(theData.RoomType) + #10;
   s := s + '  , ' + _db(theData.PMInfo) + #10;
   s := s + '  , ' + _db(theData.HiddenInfo) + #10;
@@ -4075,8 +4075,8 @@ begin
   s := s + '  , ' + _db(theData.Hallres) + #10;
   s := s + '  , ' + _db(theData.rrTmp) + #10;
   s := s + '  , ' + _db(theData.rrDescription) + #10;
-  s := s + '  , ' + _db(theData.rrArrival, true) + #10;
-  s := s + '  , ' + _db(theData.rrDeparture, true) + #10;
+//  s := s + '  , ' + _db(theData.rrArrival, true) + #10;
+//  s := s + '  , ' + _db(theData.rrDeparture, true) + #10;
   s := s + '  , ' + _db(theData.rrIsNoRoom) + #10;
   s := s + '  , ' + _db(theData.rrRoomAlias) + #10;
   s := s + '  , ' + _db(theData.rrRoomTypeAlias) + #10;
@@ -4341,8 +4341,8 @@ begin
       result.Hallres := rSet.fieldbyname('Hallres').asInteger;
       result.rrTmp := rSet.fieldbyname('rrTmp').asString;
       result.rrDescription := rSet.fieldbyname('rrDescription').asString;
-      result.rrArrival := rSet.fieldbyname('rrArrival').AsDateTime;
-      result.rrDeparture := rSet.fieldbyname('rrDeparture').AsDateTime;
+      result.rrArrival := rSet.fieldbyname('Arrival').AsDateTime;
+      result.rrDeparture := rSet.fieldbyname('Departure').AsDateTime;
       result.rrIsNoRoom := rSet['rrIsNoRoom'];
       result.rrRoomAlias := rSet.fieldbyname('rrRoomAlias').asString;
       result.rrRoomTypeAlias := rSet.fieldbyname('rrRoomTypeAlias').asString;
@@ -6217,7 +6217,7 @@ begin
     s := format(select_GetAttivalText, [RoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      Arrival := rSet.fieldbyname('rrArrival').AsDateTime;
+      Arrival := rSet.fieldbyname('Arrival').AsDateTime;
       guestStatus := rSet.fieldbyname('Status').asString;
     end;
 

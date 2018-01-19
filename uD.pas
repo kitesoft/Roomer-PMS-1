@@ -3310,7 +3310,7 @@ begin
     s := format(select_GetRoomReservatiaonArrival, [RoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := rSet.FieldByName('rrArrival').asDateTime;
+      result := rSet.FieldByName('Arrival').asDateTime;
       result := trunc(result);
     end;
   finally
@@ -5276,7 +5276,9 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    s := s + ' SELECT Status,RoomType, rrArrival,rrDeparture' + chr(10);
+    s := s + ' SELECT Status,RoomType, '#10;
+    s := s + ' RR_Arrival(roomreservation, false) as Arrival, '#10;
+    s :+ s + ' RR_Departure(roomreservaiton, false) as Departure' + chr(10);
     s := s + ' FROM roomreservations ' + chr(10);
     s := s + ' WHERE  ' + chr(10);
     s := s + ' (RoomReservation = ' + inttostr(RR) + ' ) ' + chr(10);
@@ -5285,8 +5287,8 @@ begin
     begin
       RoomType := rSet.FieldByName('RoomType').Asstring;
       status := rSet.FieldByName('Status').Asstring;
-      Arrival := rSet.FieldByName('rrArrival').asDateTime;
-      departure := rSet.FieldByName('rrDeparture').asDateTime;
+      Arrival := rSet.FieldByName('Arrival').asDateTime;
+      departure := rSet.FieldByName('Departure').asDateTime;
       result := True;
     end;
   finally
@@ -7789,8 +7791,8 @@ begin
                   RoomTypeDescription := rSet.FieldByName('RoomTypeDescription').Asstring;
                   Location := rSet.FieldByName('Location').Asstring;
                   Floor := rSet.FieldByName('Floor').Asstring;
-                  Arrival := rSet.FieldByName('rrArrival').asDateTime;
-                  departure := rSet.FieldByName('rrDeparture').asDateTime;
+                  Arrival := rSet.FieldByName('Arrival').asDateTime;
+                  departure := rSet.FieldByName('Departure').asDateTime;
                   customer := rSet.FieldByName('Customer').Asstring;
                   CustomerName := rSet.FieldByName('CustomerName').Asstring;
                   CustomerPID := rSet.FieldByName('CustomerPID').Asstring;
@@ -9127,7 +9129,7 @@ begin
     s := format(select_RR_GetArrivalDate, [iRoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := rSet.FieldByName('rrArrival').asDateTime;
+      result := rSet.FieldByName('Arrival').asDateTime;
     end;
   finally
     freeandnil(rSet);
@@ -9167,18 +9169,11 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    // s := s + ' SELECT '+chr(10);
-    // s := s + '   Reservation '+chr(10);
-    // s := s + ' , Status '+chr(10);
-    // s := s + ' , rrArrival '+chr(10);
-    // s := s + ' , rrDeparture '+chr(10);
-    // s := s + ' FROM RoomReservations '+chr(10);
-    // s := s + ' WHERE RoomReservation = ' + inttostr(iRoomReservation) + ' '+chr(10);
     s := format(select_RR_getDates, [iRoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result.Arrival := rSet.FieldByName('rrArrival').asDateTime;
-      result.departure := rSet.FieldByName('rrDeparture').asDateTime;
+      result.Arrival := rSet.FieldByName('Arrival').asDateTime;
+      result.departure := rSet.FieldByName('Departure').asDateTime;
       result.RoomReservation := iRoomReservation;
       result.reservation := rSet.FieldByName('Reservation').AsInteger;
       result.status := rSet.FieldByName('Status').Asstring;
@@ -10623,9 +10618,6 @@ var
 
   Currency: string;
 
-  sNewArrival: string;
-  sNewDeparture: string;
-
   NumDays: Integer;
 
   rSet: TRoomerDataSet;
@@ -10650,8 +10642,6 @@ var
 
 begin
   doIt := False;
-  sNewArrival := _db(newArrival, False);
-  sNewDeparture := _db(newDeparture, False);
   NumDays := trunc(newDeparture) - trunc(newArrival);
 
   if NumDays < 1 then
@@ -10732,10 +10722,7 @@ begin
 
         if doIt then
         begin
-          // d.RemoveRoomsDate(RoomReservation);
           iNumErrors := 0;
-
-          // d.AddRoomsDate(sNewArrival, Room, RoomType, status, RoomReservation, reservation, NumDays, iNumErrors);
 
           hData.AddRoomsDate(newArrival
             , Room
@@ -10763,16 +10750,6 @@ begin
             s := s + inttostr(iNumErrors) + GetTranslatedText('shTx_D_Total') + #10 + #10;
             MessageDlg(s, mtWarning, [mbOK], 0);
           end
-          else
-          begin
-            rSet.edit;
-            rSet.FieldByName('Arrival').Asstring := sNewArrival;
-            rSet.FieldByName('Departure').Asstring := sNewDeparture;
-            rSet.FieldByName('rrDeparture').asDateTime := newDeparture;
-            rSet.FieldByName('rrArrival').asDateTime := newArrival;
-            rSet.post;
-
-          end;
         end;
       end; // rSEt
     finally

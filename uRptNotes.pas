@@ -449,7 +449,7 @@ begin
     ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
     try
       rvList := GetRVinList;
-      s := '';
+      s := ' SELECT * FROM (';
       s := s+'SELECT '#10;
       s := s+'   rv.Reservation '#10;
       s := s+'  ,rv.information  as GeneralNotes '#10;
@@ -463,8 +463,8 @@ begin
       s := s+'  ,(SELECT customers.surName from customers WHERE customers.customer = rv.customer) as CustomerName '#10;
       s := s+'  ,rv.Name as ReservationName '#10;
       s := s+'  ,(Select channels.name from channels where channels.id = rv.channel) as Channel '#10;
-      s := s+'  ,(SELECT Min(roomreservations.rrArrival) from roomreservations WHERE roomreservations.reservation = rv.Reservation) as FirstArrival '#10;
-      s := s+'  ,(SELECT Max(roomreservations.rrdeparture) from roomreservations WHERE roomreservations.reservation = rv.Reservation) as LastDeparture '#10;
+      s := s+'  ,RV_Arrival(rv.Reservation, false) as FirstArrival '#10;
+      s := s+'  ,RV_Departure(rv.Reservation, false) as LastDeparture '#10;
       s := s+'  ,(SELECT count(roomreservations.id) from roomreservations WHERE roomreservations.reservation = rv.Reservation AND (Status in '+inStr+')) as RoomCount '#10;
       s := s+'  ,(SELECT count(persons.id) from persons WHERE persons.RoomReservation IN (SELECT RoomReservation FROM roomreservations WHERE Reservation=rv.Reservation AND (Status in '+inStr+'))) as GuestCount '#10;
       s := s+'FROM '#10;
@@ -472,7 +472,8 @@ begin
       s := s+' WHERE '#10;
       s := s+'  (rv.reservation in '+Rvlist+') '#10;
       s := s+'  and ((rv.information > '+_db('')+') OR (rv.PMInfo > '+_db('')+')) '#10;
-      s := s+'ORDER by (SELECT Min(roomreservations.rrArrival) from roomreservations WHERE roomreservations.reservation = rv.Reservation) '#10;
+      s := s+' ) xxxxx '#10;
+      s := s+'ORDER by FirstArrival '#10;
 
       copyToClipboard(s);
 //       DebugMessage(s);

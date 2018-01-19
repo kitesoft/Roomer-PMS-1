@@ -12807,7 +12807,7 @@ begin
 
             Currency := rSet.FieldByName('Currency').asString;
             AverageRate := rSet.FieldByName('AverageRate').AsFloat;
-            numDays := rSet.FieldByName('NumDays').asinteger;
+            numDays := trunc(DepartureDate - ArrivalDate);
             TotalRate := numDays * AverageRate;
             Adults := rSet.FieldByName('NumGuests').asinteger;
             Children := rSet.FieldByName('NumChildren').asinteger;

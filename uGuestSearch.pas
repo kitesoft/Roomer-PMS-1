@@ -404,14 +404,14 @@ begin
 
     Fields := s;
 
-    s := '';
+    s := 'SELECT xxx.* FROM ('#10;
     s := s+' SELECT DISTINCT '#10;
     s := s+'    `persons`.RoomReservation '#10;
     s := s+' ,  `persons`.Reservation '#10;
     s := s+' ,  `persons`.Country '#10;
     s := s+' ,  `roomreservations`.Room '#10;
-    s := s+' ,  `roomreservations`.rrArrival AS Arrival'#10;
-    s := s+' ,  `roomreservations`.rrDeparture AS Departure'#10;
+    s := s+' ,   RR_Arrival(roomreservations.roomreservation, false) as Arrival '#10;
+    s := s+' ,   RR_Departure(roomreservations.roomreservation, false) as Departure '#10;
     s := s+' ,  `roomreservations`.`Status` '#10;
     s := s+' ,  `reservations`.`invrefrence` AS reference '#10;
     s := s+' ,  `reservations`.Customer '#10;
@@ -428,12 +428,9 @@ begin
 
     if trim(edText.text) <> '' then
       s := s + fields;
-
+    s := s +'  ) xxx '#10;
     if chkUseDates.checked  then
-       s := s+'  AND ((`roomreservations`.rrArrival >= '+_db(zDateFrom,true)+') AND (`roomreservations`.rrDeparture <= '+_db(zDateTo,true)+')) '#10;
-
-  //  s := s+' ORDER BY `roomreservations`.rrArrival ';
-
+       s := s+'  AND ((Arrival >= '+_db(zDateFrom,true)+') AND (Departure <= '+_db(zDateTo,true)+')) '#10;
 
     if zLimitTo <> 0 then
     begin

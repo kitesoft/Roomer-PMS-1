@@ -238,8 +238,8 @@ begin
          qMt_.FieldByName( 'PaymentInvoice'  ).asInteger  := rSet.FieldByName('PaymentInvoice').asInteger  ;
          qMt_.FieldByName( 'GroupAccount'    ).asBoolean  := rSet.FieldByName('GroupAccount').asBoolean  ;
          qMt_.FieldByName( 'resFlag'         ).asString   := rSet.FieldByName('Status').asString  ;
-         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('rrArrival').asDateTime;
-         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('rrDeparture').asDateTime;
+         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('Arrival').asDateTime;
+         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('Departure').asDateTime;
          qMt_.FieldByName( 'Customer'        ).asString   := rSet.FieldByName('Customer').asString;
          qMt_.FieldByName( 'CustomerName'    ).asString   := rSet.FieldByName('CustomerName').asString;
          qMt_.FieldByName( 'GuestName'       ).asString   := rSet.FieldByName('GuestName').asString;
@@ -273,8 +273,8 @@ begin
       '     , roomreservations.Room  '+
       '     , roomreservations.Reservation '+
       '     , roomreservations.Status '+
-      '     , roomreservations.rrArrival '+
-      '     , roomreservations.rrDeparture '+
+      '     , RR_Arrival(Roomreservation, false) as Arrival '+
+      '     , RR_Departure(Roomreservation, false) as Departure '+
       '     , roomreservations.RoomRentPaymentInvoice AS PaymentInvoice '+
       '     , roomreservations.GroupAccount '+
       '     , reservations.Customer '+
@@ -508,8 +508,8 @@ begin
          qMt_.FieldByName( 'PaymentInvoice'  ).asInteger  := rSet.FieldByName('PaymentInvoice').asInteger  ;
          qMt_.FieldByName( 'GroupAccount'    ).asBoolean  := rSet.FieldByName('GroupAccount').asBoolean  ;
          qMt_.FieldByName( 'resFlag'         ).asString   := rSet.FieldByName('Status').asString  ;
-         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('rrArrival').asDateTime;
-         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('rrDeparture').asDateTime;
+         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('Arrival').asDateTime;
+         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('Departure').asDateTime;
          qMt_.FieldByName( 'Customer'        ).asString   := rSet.FieldByName('Customer').asString;
          qMt_.FieldByName( 'CustomerName'    ).asString   := rSet.FieldByName('CustomerName').asString;
          qMt_.FieldByName( 'GuestName'       ).asString   := rSet.FieldByName('GuestName').asString;

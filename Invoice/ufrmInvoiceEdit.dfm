@@ -463,7 +463,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 4
           Top = 6
-          Width = 56
+          Width = 402
           Height = 18
           Margins.Top = 5
           Align = alTop
@@ -475,6 +475,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Height = -15
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ExplicitWidth = 56
         end
         object clabRoomGuest: TsLabel
           Left = 44
@@ -591,6 +592,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           inherited pnlLookup: TsPanel
             Width = 281
             ExplicitWidth = 281
+            inherited lblDescription: TsLabel
+              Width = 188
+              Height = 20
+            end
           end
         end
       end

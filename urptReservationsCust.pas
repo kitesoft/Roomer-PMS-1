@@ -571,8 +571,8 @@ begin
     s := s+' ,chnl.Name AS ChannelName '#10;
     s := s+' ,rr.RoomClass '#10;
     s := s+' ,rr.Room '#10;
-    s := s+' ,rr.rrDeparture '#10;
-    s := s+' ,rr.rrArrival '#10;
+    s := s+' , RR_Arrival(rr.roomreservation, true) as Arrival '#10;
+    s := s+' , RR_Departure(rr.roomreservation, true) as Departure '#10;
     s := s+' , (SELECT name FROM persons WHERE RoomReservation=rr.RoomReservation AND MainName LIMIT 1) AS GuestName '#10;
     s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
     s := s+' ,rr.Status '#10;
@@ -640,7 +640,7 @@ begin
 
         if (rgrDateRangeFor.itemindex = 1) or (rgrDateRangeFor.itemindex = 2) then
         begin
-          kbmRooms.SortFields := 'reservation;rrArrival;room';
+          kbmRooms.SortFields := 'reservation;Arrival;room';
           kbmRooms.SortOptions :=  [mtcoDescending];
           kbmRooms.Sort([]);
           kbmRooms.first;

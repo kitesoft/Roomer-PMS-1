@@ -546,8 +546,8 @@ begin
                 Floor                := rSet.FieldByName('Floor').asstring;
                 GuestName            := rSet.FieldByName('GuestName').asstring;
                 GuestCountry         := rSet.FieldByName('CountryName').asstring;
-                Arrival              := rSet.FieldByName('rrArrival').asDateTime;
-                Departure            := rSet.FieldByName('rrDeparture').asDateTime;
+                Arrival              := rSet.FieldByName('Arrival').asDateTime;
+                Departure            := rSet.FieldByName('Departure').asDateTime;
 
                 Customer             := rSet.FieldByName('Customer').asstring;
                 CustomerName         := rSet.FieldByName('CustomerName').asstring;

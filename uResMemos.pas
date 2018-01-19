@@ -350,8 +350,8 @@ begin
     mRR.Append;
     mRR.FieldByName('Room').asstring := RR_.FieldByName('Room').asstring;
     mRR.FieldByName('RoomType').asstring := RR_.FieldByName('RoomType').asstring;
-    mRR.FieldByName('Arrival').AsDateTime := RR_.FieldByName('rrArrival').AsDateTime;
-    mRR.FieldByName('Departure').AsDateTime := RR_.FieldByName('rrDeparture').AsDateTime;
+    mRR.FieldByName('Arrival').AsDateTime := RR_.FieldByName('Arrival').AsDateTime;
+    mRR.FieldByName('Departure').AsDateTime := RR_.FieldByName('Departure').AsDateTime;
     mRR.FieldByName('RoomReservation').AsInteger := RR_.FieldByName('RoomReservation').AsInteger;
     mRR.FieldByName('mem').asstring := RR_.FieldByName('HiddenInfo').asstring;
     mRR.FieldByName('GuestName').asstring := d.RR_GetFirstGuestName(RR_.FieldByName('RoomReservation').AsInteger);
