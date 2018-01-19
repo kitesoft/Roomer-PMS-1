@@ -94,7 +94,7 @@ begin
             begin
               for l := 0 to rootNode.childNodes.length - 1 do
               begin
-                authNode := rootNode.childNodes.item[i];
+                authNode := rootNode.childNodes.item[l];
                 if authNode.nodeName = 'username' then
                    username := authNode.text
                 else

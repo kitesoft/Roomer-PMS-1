@@ -1,53 +1,64 @@
 inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
   Caption = 'Statistical connections'
-  ClientHeight = 496
+  ClientHeight = 458
   ClientWidth = 781
   ParentFont = False
   OnCreate = FormCreate
   OnShow = FormShow
   ExplicitWidth = 787
-  ExplicitHeight = 525
+  ExplicitHeight = 487
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 476
+    Top = 438
     Width = 781
-    ExplicitTop = 396
-    ExplicitWidth = 635
+    ExplicitTop = 476
+    ExplicitWidth = 781
   end
   inherited pnlButtons: TsPanel
-    Top = 433
+    Top = 395
     Width = 781
-    ExplicitTop = 353
-    ExplicitWidth = 635
+    ParentFont = False
+    ExplicitTop = 433
+    ExplicitWidth = 781
     inherited btnOK: TsButton
       Left = 465
       OnClick = btnOKClick
-      ExplicitLeft = 319
+      ExplicitLeft = 465
     end
     inherited btnCancel: TsButton
       Left = 571
-      ExplicitLeft = 425
+      ExplicitLeft = 571
     end
     inherited btnClose: TsButton
       Left = 677
-      ExplicitLeft = 531
+      ExplicitLeft = 677
     end
   end
   object sPageControl1: TsPageControl [2]
     Left = 0
     Top = 0
     Width = 781
-    Height = 433
+    Height = 395
     ActivePage = sTabSheet1
     Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 2
-    ExplicitWidth = 635
-    ExplicitHeight = 353
     object sTabSheet1: TsTabSheet
       Caption = 'Snapshot'
-      ExplicitWidth = 627
-      ExplicitHeight = 325
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ExplicitTop = 24
+      ExplicitHeight = 405
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -202,8 +213,18 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          PasswordChar = '*'
           TabOrder = 4
+        end
+        object __btnViePassword: TsButton
+          Left = 707
+          Top = 115
+          Width = 27
+          Height = 24
+          ImageIndex = 129
+          Images = DImages.cxSmallImagesFlat
+          TabOrder = 5
+          OnMouseDown = __btnViePasswordMouseDown
+          OnMouseUp = __btnViePasswordMouseUp
         end
       end
       object sGroupBox1: TsGroupBox
@@ -211,7 +232,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         Left = 3
         Top = 208
         Width = 767
-        Height = 140
+        Height = 121
         Align = alTop
         Caption = 'Actions'
         Color = clBtnFace
@@ -224,11 +245,10 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 205
         object btnForceFull: TsButton
-          Left = 200
-          Top = 36
-          Width = 377
+          Left = 22
+          Top = 33
+          Width = 201
           Height = 25
           Caption = 'Force FULL export'
           Enabled = False
@@ -236,9 +256,9 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
           OnClick = btnForceFullClick
         end
         object btnForceIncremental: TsButton
-          Left = 200
-          Top = 67
-          Width = 377
+          Left = 22
+          Top = 64
+          Width = 201
           Height = 25
           Caption = 'Force incremental export'
           Enabled = False

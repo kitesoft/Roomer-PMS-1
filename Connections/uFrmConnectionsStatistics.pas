@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.StdCtrls,
   sButton, Vcl.ExtCtrls, sPanel, Vcl.ComCtrls, sStatusBar, sEdit, sCheckBox, sLabel, sGroupBox, sPageControl,
-  uConnectionsStatisticsService;
+  uConnectionsStatisticsService, uDImages;
 
 type
   TFrmConnectionsStatistics = class(TfrmBaseRoomerDialogForm)
@@ -25,12 +25,15 @@ type
     sGroupBox1: TsGroupBox;
     btnForceFull: TsButton;
     btnForceIncremental: TsButton;
+    __btnViePassword: TsButton;
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure btnForceFullClick(Sender: TObject);
     procedure btnForceIncrementalClick(Sender: TObject);
     procedure cbxActiveClick(Sender: TObject);
+    procedure __btnViePasswordMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure __btnViePasswordMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     ConnectionsStatisticsService : TConnectionsStatisticsService;
@@ -68,13 +71,22 @@ const SYSTEM_CODE = 'SNAPSHOT';
 procedure TFrmConnectionsStatistics.btnForceFullClick(Sender: TObject);
 begin
   inherited;
-  ConnectionsStatisticsService.forceExport(etFull);
+  Screen.Cursor := crHourGlass;
+  try
+    ConnectionsStatisticsService.forceExport(etFull);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TFrmConnectionsStatistics.btnForceIncrementalClick(Sender: TObject);
 begin
   inherited;
-  ConnectionsStatisticsService.forceExport(etIncremental);
+  try
+    ConnectionsStatisticsService.forceExport(etIncremental);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TFrmConnectionsStatistics.btnOKClick(Sender: TObject);
@@ -113,6 +125,20 @@ begin
     active := cbxActive.Checked;
   end;
   ConnectionsStatisticsService.SaveSettings(CreateConnectionSettingsXml(settings));
+end;
+
+procedure TFrmConnectionsStatistics.__btnViePasswordMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+  edPassword.PasswordChar := #0;
+  edPassword.Update;
+end;
+
+procedure TFrmConnectionsStatistics.__btnViePasswordMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+  edPassword.PasswordChar := '*';
+  edPassword.Update;
 end;
 
 procedure TFrmConnectionsStatistics.DisplayData;
