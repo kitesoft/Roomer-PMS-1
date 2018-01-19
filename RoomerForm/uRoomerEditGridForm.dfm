@@ -2,19 +2,6 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
   Caption = 'frmBaseRoomerEditGridForm'
   PixelsPerInch = 96
   TextHeight = 13
-  inherited grData: TcxGrid
-    inherited tvData: TcxGridDBBandedTableView
-      Styles.Content = nil
-      Styles.ContentEven = nil
-      Styles.ContentOdd = nil
-      Styles.Selection = nil
-      Styles.Footer = nil
-      Styles.Group = nil
-      Styles.GroupSummary = nil
-      Styles.Header = nil
-      Styles.Preview = nil
-    end
-  end
   inherited pnlTop: TsPanel
     object pnlGridButons: TsPanel
       Left = 0
@@ -82,7 +69,6 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
         ShowHint = True
         TabOrder = 3
         SkinData.SkinSection = 'BUTTON'
-        ExplicitTop = 2
       end
     end
     object pnlFilter: TsPanel
@@ -121,8 +107,8 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
       object chkActive: TsCheckBox
         Left = 100
         Top = 30
-        Width = 101
-        Height = 20
+        Width = 109
+        Height = 17
         Caption = 'Show active only'
         Checked = True
         State = cbChecked
@@ -147,6 +133,21 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
         TabOrder = 1
         OnChange = edFilterChange
         SkinData.SkinSection = 'EDIT'
+      end
+    end
+  end
+  inherited pnlClient: TsPanel
+    inherited grData: TcxGrid
+      inherited tvData: TcxGridDBBandedTableView
+        Styles.Content = nil
+        Styles.ContentEven = nil
+        Styles.ContentOdd = nil
+        Styles.Selection = nil
+        Styles.Footer = nil
+        Styles.Group = nil
+        Styles.GroupSummary = nil
+        Styles.Header = nil
+        Styles.Preview = nil
       end
     end
   end
@@ -188,6 +189,7 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43112.381352962960000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

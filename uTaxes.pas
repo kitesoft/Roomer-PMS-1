@@ -96,18 +96,13 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
   , uRoomerGridForm, uRoomerDialogForm, cxGridBandedTableView, cxGridDBBandedTableView, cxCalendar, cxCurrencyEdit
-  , uCurrencyHandler, cxCalc, cxCheckBox, System.Actions, Vcl.ActnList
+  , uCurrencyHandler, cxCalc, cxCheckBox, System.Actions, Vcl.ActnList, uRoomerEditGridForm
   ;
 
 type
-  TfrmTaxes = class(TfrmBaseRoomerGridForm)
-    mnuOther: TPopupMenu;
-    mnuiPrint: TMenuItem;
-    mnuiAllowGridEdit: TMenuItem;
-    N2: TMenuItem;
+  TfrmTaxes = class(TfrmBaseRoomerEditGridForm)
     m_: TdxMemData;
     m_ID: TIntegerField;
-    A1: TMenuItem;
     m_Description: TWideStringField;
     m_Amount: TFloatField;
     m_Tax_Type: TWideStringField;
@@ -123,15 +118,6 @@ type
     m_Valid_From: TDateField;
     m_Valid_To: TDateField;
     m_TaxChildren: TWideStringField;
-    cLabFilter: TsLabel;
-    btnClear: TsSpeedButton;
-    btnDelete: TsButton;
-    btnOther: TsButton;
-    edFilter: TsEdit;
-    chkActive: TsCheckBox;
-    btnInsert: TsButton;
-    btnEdit: TsButton;
-    btnRefresh: TsButton;
     tvDataRecId: TcxGridDBBandedColumn;
     tvDataID: TcxGridDBBandedColumn;
     tvDataDescription: TcxGridDBBandedColumn;
@@ -157,15 +143,6 @@ type
     procedure m_BeforePost(DataSet: TDataSet);
     procedure m_NewRecord(DataSet: TDataSet);
     procedure BtnOkClick(Sender: TObject);
-    procedure btnCancelClick(Sender: TObject);
-    procedure btnDeleteClick(Sender: TObject);
-    procedure btnEditClick(Sender: TObject);
-    procedure btnClearClick(Sender: TObject);
-    procedure edFilterChange(Sender: TObject);
-    procedure btnInsertClick(Sender: TObject);
-    procedure btnRefreshClick(Sender: TObject);
-    procedure chkActiveClick(Sender: TObject);
-    procedure A1Click(Sender: TObject);
     procedure tvDataBooking_Item_IdPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvDataBooking_ItemPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure C1Click(Sender: TObject);
@@ -184,16 +161,15 @@ type
     zData: recTaxesHolder;
     FCurrencyhandler: TCurrencyHandler;
     procedure fillHolder;
-    procedure applyFilter;
     function CheckMultipleValidTaxes: boolean;
 
   protected
     procedure DoShow; override;
     procedure DoLoadData; override;
-    procedure DoUpdateControls; override;
 
   public
     constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
   end;
 
 function EditTaxes() : boolean;
@@ -223,7 +199,7 @@ var _frmTaxes: TfrmTaxes;
 begin
   _frmTaxes := TfrmTaxes.Create(nil);
   try
-    Result := (_frmTaxes.ShowModal = mrOk);
+    Result := (_frmTaxes.ShowModal(TRoomerGridFormMode.Edit) = mrOk);
   finally
     _frmTaxes.Free;
   end;
@@ -233,6 +209,12 @@ end;
                     { Private declarations }
 ///////////////////////////////////////////////////////////////////////
 
+
+destructor TfrmTaxes.Destroy;
+begin
+  FCurrencyhandler.Free;
+  inherited;
+end;
 
 Procedure TfrmTaxes.DoLoadData;
 var
@@ -259,7 +241,8 @@ end;
 procedure TfrmTaxes.DoShow;
 begin
   inherited;
-  mnuOther.Items.Add(GridExporter.ExportSubMenu);
+  DialogButtons := [mbClose];
+  m_.ReadOnly := False;
 end;
 
 procedure TfrmTaxes.fillHolder;
@@ -292,42 +275,11 @@ begin
   CanClose := CheckMultipleValidTaxes;
 end;
 
-procedure TfrmTaxes.chkActiveClick(Sender: TObject);
-begin
-  btnRefresh.Click;
-end;
-
 constructor TfrmTaxes.Create(aOwner: TComponent);
 begin
   inherited;
   FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-end;
-
-procedure TfrmTaxes.edFilterChange(Sender: TObject);
-begin
-  if edFilter.Text = '' then
-  begin
-    tvData.DataController.Filter.Root.Clear;
-    tvData.DataController.Filter.Active := false;
-  end else
-  begin
-    applyFilter;
-  end;
-
-end;
-
-procedure TfrmTaxes.A1Click(Sender: TObject);
-begin
-  tvdata.ApplyBestFit;
-end;
-
-procedure TfrmTaxes.applyFilter;
-begin
-  tvData.DataController.Filter.Options := [fcoCaseInsensitive];
-  tvData.DataController.Filter.Root.BoolOperatorKind := fboOr;
-  tvData.DataController.Filter.Root.Clear;
-  tvData.DataController.Filter.Root.AddItem(tvDataDescription,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Active := True;
+  ActiveFieldName := 'active';
 end;
 
 
@@ -452,12 +404,6 @@ begin
   dataset['VALID_FROM'] := rec.VALID_FROM;
   dataset['VALID_TO'] := rec.VALID_TO;
 end;
-
-procedure TfrmTaxes.DoUpdateControls;
-begin
-  DialogButtons := [mbClose];
-  m_.ReadOnly := False;
-end;
 ////////////////////////////////////////////////////////////////////////////
 //  Filter
 /////////////////////////////////////////////////////////////////////////////
@@ -548,53 +494,12 @@ begin
   fillHolder;
 end;
 
-procedure TfrmTaxes.btnRefreshClick(Sender: TObject);
-begin
-  RefreshData;
-  zFirstTime := false;
-end;
 
 procedure TfrmTaxes.C1Click(Sender: TObject);
 begin
   DuplicateCurrentRow(m_);
   tvData.Columns[0].Focused := True;
 end;
-
-procedure TfrmTaxes.btnCancelClick(Sender: TObject);
-begin
-  initTaxesHolder(zData);
-end;
-
-procedure TfrmTaxes.btnClearClick(Sender: TObject);
-begin
-  edFilter.Text := '';
-end;
-
-procedure TfrmTaxes.btnDeleteClick(Sender: TObject);
-begin
-  m_.Delete;
-end;
-
-procedure TfrmTaxes.btnEditClick(Sender: TObject);
-begin
-  grData.SetFocus;
-  tvData.GetColumnByFieldName('Description').Focused := True;
-  m_.Edit;
-  showmessage(GetTranslatedText('shTx_Rates_EditInGrid'));
-end;
-
-procedure TfrmTaxes.btnInsertClick(Sender: TObject);
-begin
-  if m_.Active = false then m_.Open;
-  grData.SetFocus;
-  m_.Insert;
-  tvData.GetColumnByFieldName('Description').Focused := True;
-end;
-
-//---------------------------------------------------------------------------
-// Menu in other actions
-//-----------------------------------------------------------------------------
-
 
 end.
 

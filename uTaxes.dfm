@@ -37,150 +37,35 @@ inherited frmTaxes: TfrmTaxes
   end
   inherited pnlTop: TsPanel
     Width = 1112
-    Height = 78
+    Height = 95
+    AutoSize = False
     TabOrder = 1
     ExplicitWidth = 1112
-    ExplicitHeight = 78
-    object cLabFilter: TsLabel
-      Left = 19
-      Top = 34
-      Width = 31
-      Height = 13
-      Alignment = taRightJustify
-      Caption = 'Filter :'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
+    ExplicitHeight = 95
+    inherited pnlGridButons: TsPanel
+      Width = 1112
+      ExplicitWidth = 1112
     end
-    object btnClear: TsSpeedButton
-      Left = 271
-      Top = 32
-      Width = 66
-      Height = 20
-      Caption = 'Clear'
-      OnClick = btnClearClick
-      SkinData.SkinSection = 'SPEEDBUTTON'
-      Images = DImages.PngImageList1
-      ImageIndex = 10
-    end
-    object btnDelete: TsButton
-      Left = 199
-      Top = 0
-      Width = 90
-      Height = 26
-      Caption = 'Delete'
-      ImageIndex = 24
-      Images = DImages.PngImageList1
-      TabOrder = 0
-      OnClick = btnDeleteClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnOther: TsButton
-      Left = 295
-      Top = 0
-      Width = 134
-      Height = 26
-      Caption = 'Other actions'
-      DropDownMenu = mnuOther
-      ImageIndex = 76
-      Images = DImages.PngImageList1
-      Style = bsSplitButton
-      TabOrder = 1
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object edFilter: TsEdit
-      Left = 56
-      Top = 32
-      Width = 213
-      Height = 21
-      Color = clWhite
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      OnChange = edFilterChange
-      SkinData.SkinSection = 'EDIT'
-    end
-    object chkActive: TsCheckBox
-      Left = 56
-      Top = 58
-      Width = 238
-      Height = 20
-      Caption = 'Active (if checked then just active are visible)'
-      Checked = True
-      State = cbChecked
-      TabOrder = 3
-      Visible = False
-      OnClick = chkActiveClick
-      SkinData.SkinSection = 'CHECKBOX'
-      ImgChecked = 0
-      ImgUnchecked = 0
-    end
-    object btnInsert: TsButton
-      Left = 7
-      Top = 0
-      Width = 90
-      Height = 26
-      Hint = 'Add new record'
-      Caption = 'New'
-      ImageIndex = 23
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 4
-      OnClick = btnInsertClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnEdit: TsButton
-      Left = 103
-      Top = 0
-      Width = 90
-      Height = 26
-      Hint = 'Edit current record'
-      Caption = 'Edit'
-      ImageIndex = 25
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 5
-      OnClick = btnEditClick
-      SkinData.SkinSection = 'BUTTON'
-    end
-    object btnRefresh: TsButton
-      Left = 449
-      Top = 0
-      Width = 79
-      Height = 26
-      Hint = 'Refresh'
-      Anchors = [akTop, akRight]
-      Caption = 'Refresh'
-      ImageIndex = 28
-      Images = DImages.PngImageList1
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 6
-      OnClick = btnRefreshClick
-      SkinData.SkinSection = 'BUTTON'
+    inherited pnlFilter: TsPanel
+      Width = 1112
+      Height = 54
+      ExplicitTop = 43
+      ExplicitWidth = 1112
+      ExplicitHeight = 44
     end
   end
   inherited pnlClient: TsPanel
-    Top = 78
+    Top = 95
     Width = 1112
-    Height = 380
-    ExplicitTop = 78
+    Height = 363
+    ExplicitTop = 85
     ExplicitWidth = 1112
-    ExplicitHeight = 380
+    ExplicitHeight = 373
     inherited grData: TcxGrid
       Width = 1110
-      Height = 378
+      Height = 361
       ExplicitWidth = 1110
-      ExplicitHeight = 378
+      ExplicitHeight = 371
       inherited tvData: TcxGridDBBandedTableView
         OptionsView.ColumnAutoWidth = False
         Styles.Content = nil
@@ -444,26 +329,8 @@ inherited frmTaxes: TfrmTaxes
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43119.436669074070000000
+      AssignedFormatValues = []
       BuiltInReportLink = True
-    end
-  end
-  object mnuOther: TPopupMenu
-    Left = 190
-    Top = 136
-    object mnuiPrint: TMenuItem
-      Caption = 'Print'
-      ImageIndex = 3
-    end
-    object A1: TMenuItem
-      Caption = 'Apply best fit'
-      OnClick = A1Click
-    end
-    object mnuiAllowGridEdit: TMenuItem
-      Caption = 'Allow grid edit'
-      Checked = True
-    end
-    object N2: TMenuItem
-      Caption = '-'
     end
   end
   object m_: TdxMemData
