@@ -4,7 +4,6 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
   ClientWidth = 781
   ParentFont = False
   OnCreate = FormCreate
-  OnShow = FormShow
   ExplicitWidth = 787
   ExplicitHeight = 525
   PixelsPerInch = 96
@@ -12,26 +11,27 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
   inherited sbStatusBar: TsStatusBar
     Top = 476
     Width = 781
-    ExplicitTop = 396
-    ExplicitWidth = 635
+    ExplicitTop = 476
+    ExplicitWidth = 781
   end
   inherited pnlButtons: TsPanel
     Top = 433
     Width = 781
-    ExplicitTop = 353
-    ExplicitWidth = 635
+    ExplicitTop = 433
+    ExplicitWidth = 781
     inherited btnOK: TsButton
       Left = 465
       OnClick = btnOKClick
-      ExplicitLeft = 319
+      ExplicitLeft = 465
+      ExplicitTop = 2
     end
     inherited btnCancel: TsButton
       Left = 571
-      ExplicitLeft = 425
+      ExplicitLeft = 571
     end
     inherited btnClose: TsButton
       Left = 677
-      ExplicitLeft = 531
+      ExplicitLeft = 677
     end
   end
   object sPageControl1: TsPageControl [2]
@@ -39,15 +39,12 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     Top = 0
     Width = 781
     Height = 433
-    ActivePage = sTabSheet1
+    ActivePage = tsSnapshot
     Align = alClient
     TabOrder = 2
-    ExplicitWidth = 635
-    ExplicitHeight = 353
-    object sTabSheet1: TsTabSheet
+    ExplicitTop = -6
+    object tsSnapshot: TsTabSheet
       Caption = 'Snapshot'
-      ExplicitWidth = 627
-      ExplicitHeight = 325
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -206,7 +203,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
           TabOrder = 4
         end
       end
-      object sGroupBox1: TsGroupBox
+      object gbxActions: TsGroupBox
         AlignWithMargins = True
         Left = 3
         Top = 208
@@ -224,7 +221,6 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 205
         object btnForceFull: TsButton
           Left = 200
           Top = 36

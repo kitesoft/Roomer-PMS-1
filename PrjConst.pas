@@ -204,7 +204,7 @@ uses uAppGlobal,
   , ufrmInvoiceEdit
   , uUtils
   , Generics.Collections
-  ;
+  , uFrmConnectionsStatistics;
 
 
 const PRE_KEY_NAME = 'PrjConst.Constants.';
@@ -2025,6 +2025,7 @@ begin
 
   TfrmItemTransactionsReport.Create(nil).Free;
   TfrmInvoiceEdit.Create(nil).Free;
+  TFrmConnectionsStatistics.Create(nil).Free;
 end;
 
 

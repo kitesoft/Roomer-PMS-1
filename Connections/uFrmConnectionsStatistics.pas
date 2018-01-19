@@ -11,7 +11,7 @@ uses
 type
   TFrmConnectionsStatistics = class(TfrmBaseRoomerDialogForm)
     sPageControl1: TsPageControl;
-    sTabSheet1: TsTabSheet;
+    tsSnapshot: TsTabSheet;
     gbxConnectionSettings: TsGroupBox;
     lbServiceUrl: TsLabel;
     lbUsername: TsLabel;
@@ -22,10 +22,9 @@ type
     edPassword: TsEdit;
     lbApiKey: TsLabel;
     edApiKey: TsEdit;
-    sGroupBox1: TsGroupBox;
+    gbxActions: TsGroupBox;
     btnForceFull: TsButton;
     btnForceIncremental: TsButton;
-    procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure btnForceFullClick(Sender: TObject);
@@ -34,14 +33,15 @@ type
   private
     { Private declarations }
     ConnectionsStatisticsService : TConnectionsStatisticsService;
-    procedure DisplayData;
     procedure SaveSnapshotSettings;
+  protected
+    procedure DoLoadData; override;
+    procedure DoUpdateControls; override;
+    procedure DoShow; override;
   public
     { Public declarations }
   end;
 
-var
-  FrmConnectionsStatistics: TFrmConnectionsStatistics;
 
 procedure ShowStatisticsSettings;
 
@@ -86,17 +86,7 @@ end;
 procedure TFrmConnectionsStatistics.cbxActiveClick(Sender: TObject);
 begin
   inherited;
-  lbServiceUrl.Enabled := cbxActive.Checked;
-  lbUsername.Enabled := cbxActive.Checked;
-  lbPassword.Enabled := cbxActive.Checked;
-  edServiceUrl.Enabled := cbxActive.Checked;
-  edUsername.Enabled := cbxActive.Checked;
-  edPassword.Enabled := cbxActive.Checked;
-  lbApiKey.Enabled := cbxActive.Checked;
-  edApiKey.Enabled := cbxActive.Checked;
-  sGroupBox1.Enabled := cbxActive.Checked;
-  btnForceFull.Enabled := cbxActive.Checked;
-  btnForceIncremental.Enabled := cbxActive.Checked;
+  UpdateControls;
 end;
 
 procedure TFrmConnectionsStatistics.SaveSnapshotSettings;
@@ -115,8 +105,9 @@ begin
   ConnectionsStatisticsService.SaveSettings(CreateConnectionSettingsXml(settings));
 end;
 
-procedure TFrmConnectionsStatistics.DisplayData;
+procedure TFrmConnectionsStatistics.DoLoadData;
 begin
+  inherited;
   With ParseConnectionSettingsXml(ConnectionsStatisticsService.GetSettings) do
   begin
     edServiceUrl.Tag := id;
@@ -127,7 +118,6 @@ begin
 
     cbxActive.Checked := active;
   end;
-  cbxActiveClick(cbxActive);
 end;
 
 procedure TFrmConnectionsStatistics.FormCreate(Sender: TObject);
@@ -136,11 +126,28 @@ begin
   ConnectionsStatisticsService := TConnectionsStatisticsService.Create(SYSTEM_CODE);
 end;
 
-procedure TFrmConnectionsStatistics.FormShow(Sender: TObject);
+procedure TFrmConnectionsStatistics.DoShow;
 begin
   inherited;
   edServiceUrl.Tag := 0;
-  DisplayData;
+  RefreshData;
+  DialogButtons := mbOKCancel;
+end;
+
+procedure TFrmConnectionsStatistics.DoUpdateControls;
+begin
+  inherited;
+  lbServiceUrl.Enabled := cbxActive.Checked;
+  lbUsername.Enabled := cbxActive.Checked;
+  lbPassword.Enabled := cbxActive.Checked;
+  edServiceUrl.Enabled := cbxActive.Checked;
+  edUsername.Enabled := cbxActive.Checked;
+  edPassword.Enabled := cbxActive.Checked;
+  lbApiKey.Enabled := cbxActive.Checked;
+  edApiKey.Enabled := cbxActive.Checked;
+  gbxActions.Enabled := cbxActive.Checked;
+  btnForceFull.Enabled := cbxActive.Checked;
+  btnForceIncremental.Enabled := cbxActive.Checked;
 end;
 
 end.
