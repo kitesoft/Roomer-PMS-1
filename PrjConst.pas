@@ -808,7 +808,11 @@ begin
                                              'to room %s? ');
   constants.Add('shTx_Invoice_FailedGroupInvoice', 'Moving to group invoice failed - Cancel ' + #10 +
                                              'Error : %s');
-											 
+  constants.Add('shTx_Payment_FailedGroupInvoice', 'Moving payment to group invoice failed' + #10 +
+                                             'Error : %s');
+  constants.Add('shTx_Payment_FailedRoomInvoice', 'Moving payment to Room %s failed' + #10 +
+                                             'Error : %s');
+
   constants.Add('shTx_Invoice_EmptyInvoice', 'Empty invoiceline');
   constants.Add('shTx_Invoice_CompressionNotReversibleMessage',
                                              'Compressing the room rental lines is not reversible.' + #13#13 +
@@ -905,6 +909,9 @@ begin
   constants.Add('shTx_OpenInvoiceNew_CashInvoice', 'This is a cash invoice');
   constants.Add('shTx_OpenInvoiceNew_CashInvoice2', 'This is cash invoice - not related to any reservation');
   constants.Add('shTx_Invoice_WarningCloseCashInvoice', 'Cash invoice will not be saved. Are you sure you want to close?');
+  constants.Add('shTx_InvoiceIndexHintText', 'SalesItems: %s'#13 +
+                                             'RoomRent:   %s'#13 +
+                                             'Payments:   %s');
   constants.Add('shTx_OpenInvoiceNew_Guest', 'Guest');
   constants.Add('shTx_OpenInvoiceNew_NotArrived', 'Not Arrived');
   constants.Add('shTx_OpenInvoiceNew_Departed', 'Departed');

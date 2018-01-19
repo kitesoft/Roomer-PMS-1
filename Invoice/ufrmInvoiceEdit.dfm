@@ -6,7 +6,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
   BorderIcons = [biMinimize, biMaximize]
   Caption = 'Invoice'
   ClientHeight = 697
-  ClientWidth = 1099
+  ClientWidth = 1163
   Constraints.MinWidth = 1112
   DoubleBuffered = True
   Font.Height = -11
@@ -17,20 +17,20 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  ExplicitWidth = 1115
+  ExplicitWidth = 1179
   ExplicitHeight = 756
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 677
-    Width = 1099
+    Width = 1163
     ExplicitTop = 677
-    ExplicitWidth = 1099
+    ExplicitWidth = 1163
   end
   object pnlMain: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 1099
+    Width = 1163
     Height = 677
     Align = alClient
     BevelOuter = bvNone
@@ -40,7 +40,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     object pnlHead: TsPanel
       Left = 0
       Top = 0
-      Width = 1099
+      Width = 1163
       Height = 189
       Align = alTop
       BevelOuter = bvNone
@@ -345,7 +345,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
       object pnlInvoiceButtons: TsPanel
         AlignWithMargins = True
-        Left = 928
+        Left = 992
         Top = 3
         Width = 168
         Height = 183
@@ -424,7 +424,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         AlignWithMargins = True
         Left = 576
         Top = 9
-        Width = 346
+        Width = 410
         Height = 177
         Margins.Top = 9
         Align = alClient
@@ -510,7 +510,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 30
-          Width = 217
+          Width = 281
           Height = 17
           Margins.Left = 124
           Align = alTop
@@ -525,12 +525,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = []
           ExplicitTop = 20
+          ExplicitWidth = 217
         end
         object edResNr: TsLabel
           AlignWithMargins = True
           Left = 125
           Top = 53
-          Width = 217
+          Width = 281
           Height = 17
           Margins.Left = 124
           Align = alTop
@@ -550,7 +551,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 76
-          Width = 215
+          Width = 279
           Height = 21
           Margins.Left = 124
           Margins.Right = 5
@@ -571,7 +572,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 103
-          Width = 217
+          Width = 281
           Height = 20
           Margins.Left = 124
           Align = alTop
@@ -585,11 +586,11 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           TabOrder = 1
           ExplicitLeft = 125
           ExplicitTop = 103
-          ExplicitWidth = 217
+          ExplicitWidth = 281
           ExplicitHeight = 20
           inherited pnlLookup: TsPanel
-            Width = 217
-            ExplicitWidth = 217
+            Width = 281
+            ExplicitWidth = 281
           end
         end
       end
@@ -597,7 +598,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     object pnlLnes: TsPanel
       Left = 0
       Top = 189
-      Width = 1099
+      Width = 1163
       Height = 488
       Align = alClient
       BevelOuter = bvNone
@@ -605,7 +606,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object pnlTotalsAndPayments: TsPanel
         Left = 0
         Top = 279
-        Width = 1099
+        Width = 1163
         Height = 209
         Align = alBottom
         BevelOuter = bvLowered
@@ -991,7 +992,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         object pnlPayments: TsPanel
           Left = 532
           Top = 1
-          Width = 566
+          Width = 630
           Height = 207
           Align = alClient
           Caption = 'pnlPayments'
@@ -1000,7 +1001,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           object sPanel3: TsPanel
             Left = 1
             Top = 1
-            Width = 564
+            Width = 628
             Height = 20
             Align = alTop
             TabOrder = 0
@@ -1022,13 +1023,14 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           object grPayments: TcxGrid
             Left = 1
             Top = 21
-            Width = 564
+            Width = 628
             Height = 146
             Align = alClient
             DragMode = dmAutomatic
             TabOrder = 1
             LookAndFeel.NativeStyle = False
             object tvPayments: TcxGridDBTableView
+              PopupMenu = mnuMovePayment
               OnMouseDown = tvPaymentsMouseDown
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = PaymentsDS
@@ -1116,13 +1118,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           object pnlPaymentButtons: TsPanel
             Left = 1
             Top = 167
-            Width = 564
+            Width = 628
             Height = 39
             Align = alBottom
             TabOrder = 2
             object btnAddDownPayment: TsButton
               AlignWithMargins = True
-              Left = 66
+              Left = 5
               Top = 3
               Width = 119
               Height = 33
@@ -1135,7 +1137,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             end
             object btnRevertDownpayment: TsButton
               AlignWithMargins = True
-              Left = 441
+              Left = 380
               Top = 3
               Width = 119
               Height = 33
@@ -1148,7 +1150,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             end
             object btnEditDownpayment: TsButton
               AlignWithMargins = True
-              Left = 191
+              Left = 130
               Top = 3
               Width = 119
               Height = 33
@@ -1161,7 +1163,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             end
             object btnDeleteDownpayment: TsButton
               AlignWithMargins = True
-              Left = 316
+              Left = 255
               Top = 3
               Width = 119
               Height = 33
@@ -1172,13 +1174,29 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               TabOrder = 2
               SkinData.SkinSection = 'BUTTON'
             end
+            object btnMovePayment: TsButton
+              AlignWithMargins = True
+              Left = 505
+              Top = 3
+              Width = 119
+              Height = 33
+              Margins.Top = 2
+              Margins.Bottom = 2
+              Align = alRight
+              Caption = 'Move'
+              DropDownMenu = mnuMovePayment
+              Style = bsSplitButton
+              TabOrder = 4
+              OnClick = btnClickDropDown
+              SkinData.SkinSection = 'BUTTON'
+            end
           end
         end
       end
       object pnlLineButtons: TsPanel
         Left = 0
         Top = 0
-        Width = 1099
+        Width = 1163
         Height = 49
         Align = alTop
         BevelOuter = bvNone
@@ -1259,7 +1277,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         end
         object btnReservationNotes: TsButton
           AlignWithMargins = True
-          Left = 963
+          Left = 1027
           Top = 3
           Width = 130
           Height = 43
@@ -1288,7 +1306,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       object pnlLinesGrid: TsPanel
         Left = 0
         Top = 49
-        Width = 1024
+        Width = 1088
         Height = 230
         Align = alClient
         BevelOuter = bvNone
@@ -1302,7 +1320,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         object agrLines: TAdvStringGrid
           Left = 10
           Top = 5
-          Width = 1004
+          Width = 1068
           Height = 220
           Cursor = crDefault
           Align = alClient
@@ -1454,7 +1472,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
       object pnlInvoiceIndices: TsScrollBox
         AlignWithMargins = True
-        Left = 1027
+        Left = 1091
         Top = 52
         Width = 69
         Height = 224
@@ -1511,9 +1529,8 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             OnDragDrop = shpInvoiceIndex0DragDrop
             OnDragOver = shpInvoiceIndex0DragOver
             OnMouseUp = shpInvoiceIndex0MouseUp
-            ExplicitLeft = 24
-            ExplicitTop = 1
-            ExplicitHeight = 29
+            ExplicitLeft = 16
+            ExplicitTop = 4
           end
         end
         object pnlInvoiceIndex1: TsPanel
@@ -2308,6 +2325,15 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = 'Aggregate Citytax'
       OnExecute = acAggregateCityTaxExecute
     end
+    object actMovePaymentToGroup: TAction
+      Category = 'Downpayment'
+      Caption = 'Move payment to Groupinvoice'
+      OnExecute = actMovePaymentToGroupExecute
+    end
+    object actMovePaymentToRoom: TAction
+      Category = 'Downpayment'
+      Caption = 'Move payment to Roominvoice'
+    end
   end
   object timCloseInvoice: TTimer [6]
     Enabled = False
@@ -2327,6 +2353,12 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     OnCalcFields = mPaymentsCalcFields
     Left = 616
     Top = 520
+    object mPaymentsReservation: TIntegerField
+      FieldName = 'Reservation'
+    end
+    object mPaymentsRoomreservation: TIntegerField
+      FieldName = 'Roomreservation'
+    end
     object mPaymentsPayDate: TDateField
       FieldName = 'PayDate'
     end
@@ -2655,6 +2687,24 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
     end
     inherited cxssRoomerGridTableView: TcxGridTableViewStyleSheet
       BuiltIn = True
+    end
+  end
+  object mnuMovePayment: TPopupMenu
+    OnPopup = mnuMovePaymentPopup
+    Left = 616
+    Top = 576
+    object mnuMovePaymentToGroupinvoice: TMenuItem
+      Action = actMovePaymentToGroup
+      Caption = 'Move to Groupinvoice'
+    end
+    object mnuMovePaymentToRoom: TMenuItem
+      Caption = 'Move to Roominvoice'
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object mnuTransferPaymentToInvoicedindex: TMenuItem
+      Caption = 'Transfer'
     end
   end
 end

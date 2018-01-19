@@ -96,7 +96,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
   , uRoomerGridForm, uRoomerDialogForm, cxGridBandedTableView, cxGridDBBandedTableView, cxCalendar, cxCurrencyEdit
-  , uCurrencyHandler, cxCalc, cxCheckBox
+  , uCurrencyHandler, cxCalc, cxCheckBox, System.Actions, Vcl.ActnList
   ;
 
 type
@@ -105,13 +105,6 @@ type
     mnuiPrint: TMenuItem;
     mnuiAllowGridEdit: TMenuItem;
     N2: TMenuItem;
-    Export1: TMenuItem;
-    mnuiGridToExcel: TMenuItem;
-    mnuiGridToHtml: TMenuItem;
-    mnuiGridToText: TMenuItem;
-    mnuiGridToXml: TMenuItem;
-    grPrinter: TdxComponentPrinter;
-    prLink_grData: TdxGridReportLink;
     m_: TdxMemData;
     m_ID: TIntegerField;
     A1: TMenuItem;
@@ -166,11 +159,6 @@ type
     procedure BtnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
-    procedure mnuiPrintClick(Sender: TObject);
-    procedure mnuiGridToExcelClick(Sender: TObject);
-    procedure mnuiGridToHtmlClick(Sender: TObject);
-    procedure mnuiGridToTextClick(Sender: TObject);
-    procedure mnuiGridToXmlClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
@@ -200,6 +188,7 @@ type
     function CheckMultipleValidTaxes: boolean;
 
   protected
+    procedure DoShow; override;
     procedure DoLoadData; override;
     procedure DoUpdateControls; override;
 
@@ -265,6 +254,12 @@ begin
     m_.EnableControls;
   end;
   tvdata.ApplyBestFit;
+end;
+
+procedure TfrmTaxes.DoShow;
+begin
+  inherited;
+  mnuOther.Items.Add(GridExporter.ExportSubMenu);
 end;
 
 procedure TfrmTaxes.fillHolder;
@@ -600,52 +595,6 @@ end;
 // Menu in other actions
 //-----------------------------------------------------------------------------
 
-
-procedure TfrmTaxes.mnuiPrintClick(Sender: TObject);
-begin
-  grPrinter.PrintTitle := caption;
-  prLink_grData.ReportTitle.Text := caption;
-  grPrinter.Preview(true, prLink_grData);
-end;
-
-procedure TfrmTaxes.mnuiGridToExcelClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToExcel(sFilename, grData, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
-  //  To export ot xlsx form then use this
-  //  ExportGridToXLSX(sFilename, grData, true, true, true);
-  //  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xlsx'), nil, nil, sw_shownormal);
-end;
-
-procedure TfrmTaxes.mnuiGridToHtmlClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToHtml(sFilename, grData, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.html'), nil, nil, sw_shownormal);
-end;
-
-procedure TfrmTaxes.mnuiGridToTextClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToText(sFilename, grData, true, true,';','','','txt');
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.txt'), nil, nil, sw_shownormal);
-end;
-
-procedure TfrmTaxes.mnuiGridToXmlClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToXml(sFilename, grData, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xml'), nil, nil, sw_shownormal);
-end;
 
 end.
 

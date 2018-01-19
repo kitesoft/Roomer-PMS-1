@@ -81,7 +81,7 @@ uses
   , Generics.Collections
   , cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
-  , uAmount, uCurrencyConstants, uFraLookupPanel
+  , uAmount, uCurrencyConstants, uFraLookupPanel, htmlhint
   ;
 
 type
@@ -363,6 +363,16 @@ type
     acAggregateCityTax: TAction;
     mnuAggregateCitytax: TMenuItem;
     mPaymentscurrencyRate: TFloatField;
+    actMovePaymentToGroup: TAction;
+    actMovePaymentToRoom: TAction;
+    btnMovePayment: TsButton;
+    mnuMovePayment: TPopupMenu;
+    mnuMovePaymentToGroupinvoice: TMenuItem;
+    mnuMovePaymentToRoom: TMenuItem;
+    mPaymentsReservation: TIntegerField;
+    mPaymentsRoomreservation: TIntegerField;
+    N1: TMenuItem;
+    mnuTransferPaymentToInvoicedindex: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure edtCustomerDblClick(Sender: TObject);
@@ -439,6 +449,9 @@ type
     procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
     procedure acAggregateCityTaxExecute(Sender: TObject);
     procedure agrLinesSelectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+    procedure actMovePaymentToGroupExecute(Sender: TObject);
+    procedure mnuMovePaymentPopup(Sender: TObject);
+    procedure mnuMovePaymentToInvoiceIndexClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -650,6 +663,8 @@ type
     procedure UpdateCaptions;
     procedure SetAggregateCityTax(const Value: boolean);
     procedure RedrawGridThroughWinMessage;
+    procedure FillAllOtherRoomsFromReservationInMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
+    procedure mnuMovePaymentToRoomClick(Sender: TObject);
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -716,7 +731,7 @@ uses
   , uPMSSettings
   , uRoomerCurrencymanager
   , uAddAccommodation
-  ;
+  , uCurrencyDefinition;
 
 {$R *.DFM}
 
@@ -2108,41 +2123,56 @@ var
   i: integer;
   pnl: TPanel;
   lInvLinesIndicator, lRoomRentIndicator: TShape;
+  CurrencyDef: TCurrencyDefinition;
+  HasAny: boolean;
+  lIdxTotal: TInvoiceIndexTotal;
 begin
 
   FInvoiceIndexTotals.UpdateIndexTotals(FReservation, FRoomReservation);
+  CurrencyDef := RoomerCurrencyManager[InvoiceCurrencyCode];
 
   for i := 0 to 9 do
   begin
+    HasAny := false;
     pnl := GetInvoiceIndexPanel(i);
     lInvLinesIndicator := GetInvoiceIndexItems(i);
     lRoomRentIndicator := GetInvoiceIndexItemsRR(i);
 
-    lInvLinesIndicator.Hint := '';
-    lInvLinesIndicator.Brush.Color := clWhite;
-
-    if FInvoiceIndexTotals.HasInvoiceLines[i] then
-    begin
-      lInvLinesIndicator.Hint := RoomerCurrencyManager[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
-      lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
-    end;
-    lInvLinesIndicator.Visible := FInvoiceIndexTotals.HasInvoiceLines[i];
-
-    lRoomRentIndicator.Hint := '';
-    lRoomRentIndicator.Brush.Color := clWhite;
-    if FInvoiceIndexTotals.HasRoomRentItems[i] then
-    begin
-      lRoomRentIndicator.Hint := RoomerCurrencyManager[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
-      lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
-    end;
-    lRoomRentIndicator.Visible := FInvoiceIndexTotals.HasRoomRentItems[i];
-
+    lInvLinesIndicator.Visible := false;
+    lRoomRentIndicator.Visible := False;
+    pnl.Hint := '';
     if pnl.Tag = InvoiceIndex then
       pnl.Color := $00FFCFA8
     else
       pnl.Color := clWhite;
 
-    pnl.Font.Color := clBlack;
+    if not FInvoiceIndexTotals.TryGetValue(i, lIdxTotal) then
+      Continue;
+
+    lInvLinesIndicator.Brush.Color := clWhite;
+
+    if lIdxTotal.HasInvoiceLines or lIdxTotal.HasPayments then
+    begin
+      HasAny := True;
+      lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
+      lInvLinesIndicator.Visible := True;
+    end;
+
+    lRoomRentIndicator.Brush.Color := clWhite;
+    if lIdxTotal.HasRoomRentItems then
+    begin
+      HasAny := True;
+      lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
+      lRoomRentIndicator.Visible := True;
+    end;
+
+    if HasAny then
+    begin
+      pnl.Hint := Format(GetTranslatedText('shTx_InvoiceIndexHintText'),
+                          [CurrencyDef.FormattedValueWithCode(lIdxTotal.InvoiceIndexTotal),
+                           CurrencyDef.FormattedValueWithCode(lIdxTotal.RoomRentIndexTotal),
+                           CurrencyDef.FormattedValueWithCode(lIdxTotal.PaymentsIndexTotal)])
+    end;
 
   end;
 end;
@@ -2546,6 +2576,8 @@ begin
     while not eSet.eof do
     begin
       mPayments.insert;
+      mPaymentsReservation.AsInteger := eSet.FieldByName('Reservation').AsInteger;
+      mPaymentsRoomReservation.AsInteger := eSet.FieldByName('RoomReservation').AsInteger;
       mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
       mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
       mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
@@ -2724,6 +2756,8 @@ begin
 
   pnlTotalsInCurrency.Visible := InvoiceCurrencyCode <> g.qNativeCurrency;
   actPrintInvoice.Enabled := FInvoiceLinesList.Count > 0;
+
+  btnMovePayment.Enabled := (not IsDirectInvoice) and not mPayments.IsEmpty;
 
   chkChanged;
 end;
@@ -6119,8 +6153,10 @@ procedure TfrmInvoiceEdit.actInvoiceActionsUpdate(Action: TBasicAction; var Hand
 begin
   Handled := true;
   actRevertDownpayment.Enabled := not mPayments.IsEmpty;
-  actDeleteDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
-  actEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  actDeleteDownPayment.Enabled := not mPayments.IsEmpty and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  actEditDownPayment.Enabled := not mPayments.IsEmpty and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  actMovePaymentToGroup.Enabled := not mPayments.IsEmpty and (mPaymentsRoomreservation.AsInteger > 0);
+  actMovePaymentToRoom.Enabled := not mPayments.IsEmpty;
 end;
 
 procedure TfrmInvoiceEdit.actAddLineExecute(Sender: TObject);
@@ -6825,12 +6861,49 @@ begin
   mnuItem.Clear;
   for i := 0 to SelectableExternalRooms.Count - 1 do
   begin
-    Item := TMenuItem.Create(nil);
+    Item := TMenuItem.Create(self);
     Item.Caption := SelectableExternalRooms[i].Room;
     Item.Tag := i;
     mnuItem.Add(Item);
     Item.OnClick := aEventHandler;
   end;
+end;
+
+procedure TfrmInvoiceEdit.FillAllOtherRoomsFromReservationInMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
+var
+  Item: TMenuItem;
+  sql: string;
+  rSet: TRoomerDataSet;
+begin
+  mnuItem.Clear;
+  sql := format('SELECT DISTINCT rd.Room, rd.RoomReservation '#10 +
+                ' FROM roomsdate rd '#10 +
+                ' WHERE rd.reservation=%d '#10 +
+                 ' AND RoomReservation != %d AND ResFlag not IN (''X'',''C'')'#10 +
+                 ' ORDER BY rd.room ',
+                 [FReservation, FRoomReservation]);
+  rSet := CreateNewDataSet;
+  try
+    if hData.rSet_bySQL(rSet, sql, false) then
+    begin
+      rSet.first;
+      while NOT rSet.eof do
+      begin
+        if (rSet['RoomReservation'] <> FRoomReservation) then
+        begin
+          Item := TMenuItem.Create(Self);
+          Item.Caption := rSet['Room'];
+          Item.OnClick := aEventHandler;
+          Item.Tag := rSet['RoomReservation'];
+          mnuItem.Add(Item);
+          rSet.Next;
+        end;
+      end;
+    end;
+  finally
+    rSet.Free;
+  end;
+
 end;
 
 procedure TfrmInvoiceEdit.memExtraTextChange(Sender: TObject);
@@ -6844,6 +6917,88 @@ begin
   AddInvoiceIndicesToMenu(mnuMoveItemToInvoiceIndex, mnuMoveItemOrRoomToInvoiceIndexClick);
 
   actMoveItemToGroupInvoice.Visible:= (FRoomReservation > 0);
+end;
+
+procedure TfrmInvoiceEdit.mnuMovePaymentPopup(Sender: TObject);
+begin
+  inherited;
+  FillAllOtherRoomsFromReservationInMenu(mnuMovePaymentToRoom, mnuMovePaymentToRoomClick);
+  AddInvoiceIndicesToMenu(mnuTransferPaymentToInvoicedindex, mnuMovePaymentToInvoiceIndexClick);
+end;
+
+procedure TfrmInvoiceEdit.actMovePaymentToGroupExecute(Sender: TObject);
+var
+  s: string;
+begin
+  inherited;
+  if mPayments.RecordCount = 0 then
+    exit;
+
+  s := 'UPDATE payments SET '#10;
+  s := s + ' roomreservation = 0 '#10;
+  s := s + ' , invoiceindex = 0 '#10;
+  s := s + ' WHERE id=%d';
+
+  try
+    cmd_bySQL(Format(s, [mPaymentsID.AsInteger]));
+
+    AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FInvoiceIndex
+        , CHANGE_PAYMENT, mPaymentsPayType.AsString, mPaymentsNativeAmount.AsFloat, zInvoiceNumber,
+        'Moved payment to groupinvoice')
+  except
+    on E: Exception do
+      ShowMessage(format(GetTranslatedText('shTx_Payment_FailedGroupInvoice'), [e.Message]));
+  end;
+
+  LoadPayments;
+  DisplayTotals;
+end;
+
+procedure TfrmInvoiceEdit.mnuMovePaymentToRoomClick(Sender: TObject);
+var
+  s: string;
+  mnu: TMenuItem;
+begin
+  inherited;
+  mnu := TMenuItem(Sender);
+  if (mnu.Tag <> FRoomReservation) then
+  begin
+    if mPayments.RecordCount = 0 then
+      exit;
+
+    s := 'UPDATE payments SET '#10;
+    s := s + ' roomreservation = %d '#10;
+    s := s + ' , invoiceindex = 0 '#10;
+    s := s + ' WHERE id=%d';
+
+    try
+      cmd_bySQL(Format(s, [mnu.Tag, mPaymentsID.AsInteger]));
+
+      AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FInvoiceIndex
+          , CHANGE_PAYMENT, mPaymentsPayType.AsString, mPaymentsNativeAmount.AsFloat, zInvoiceNumber,
+          'Moved payment to roominvoice' + mnu.Caption)
+    except
+      on E: Exception do
+        ShowMessage(format(GetTranslatedText('shTx_Payment_FailedRoomInvoice'), [mnu.Caption, e.Message]));
+    end;
+
+    LoadPayments;
+    DisplayTotals;
+  end;
+end;
+
+procedure TfrmInvoiceEdit.mnuMovePaymentToInvoiceIndexClick(Sender: TObject);
+var
+  mnu: TMenuItem;
+begin
+  inherited;
+  mnu := TMenuItem(Sender);
+  if (mnu.Tag <> FInvoiceIndex) then
+  begin
+    MoveDownpaymentToInvoiceIndex(mnu.Tag);
+    LoadPayments;
+    DisplayTotals;
+  end;
 end;
 
 procedure TfrmInvoiceEdit.mnuMoveRoomPopup(Sender: TObject);
@@ -6868,7 +7023,7 @@ begin
     subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
     subItem.OnClick := aEventHandler;
     mnuItem.Add(subItem);
-    subItem.Enabled := subItem.Tag >= 0;
+    subItem.Enabled := (subItem.Tag >= 0) and (subItem.Tag <> FInvoiceIndex);
   end;
 end;
 
