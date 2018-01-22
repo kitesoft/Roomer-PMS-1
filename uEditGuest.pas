@@ -217,6 +217,8 @@ begin
  edCompZipcode.text    :=   zPersondata.CompZip        ;
  edCompCity.text       :=   zPersondata.CompCity       ;
  fraCompanyCountry.CountryCode :=   zPersondata.CompCountry    ;
+
+ pageMain.ActivePageIndex := 0;
 end;
 
 end.

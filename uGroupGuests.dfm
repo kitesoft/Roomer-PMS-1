@@ -63,8 +63,8 @@ inherited frmGroupGuests: TfrmGroupGuests
       object chkCompactView: TsCheckBox
         Left = 14
         Top = 80
-        Width = 95
-        Height = 17
+        Width = 87
+        Height = 20
         Caption = 'Compact view'
         Checked = True
         State = cbChecked
@@ -323,11 +323,13 @@ inherited frmGroupGuests: TfrmGroupGuests
         end
       end
       object tvGuests: TcxGridDBBandedTableView [1]
+        OnDblClick = tvGuestsDblClick
         Navigator.Buttons.CustomButtons = <>
         Navigator.InfoPanel.Visible = True
         FilterBox.Visible = fvNever
         DataController.DataSource = dsGuests
         DataController.DetailKeyFieldNames = 'RoomReservation'
+        DataController.KeyFieldNames = 'Id'
         DataController.MasterKeyFieldNames = 'RoomReservation'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -377,7 +379,8 @@ inherited frmGroupGuests: TfrmGroupGuests
         end
         object tvGuestsname: TcxGridDBBandedColumn
           DataBinding.FieldName = 'name'
-          MinWidth = 150
+          MinWidth = 226
+          Options.HorzSizing = False
           Width = 226
           Position.BandIndex = 0
           Position.ColIndex = 1
@@ -556,6 +559,13 @@ inherited frmGroupGuests: TfrmGroupGuests
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
+        object tvGuestsRecId: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RecId'
+          Visible = False
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
       end
       inherited lvData: TcxGridLevel
         object lvGuests: TcxGridLevel
@@ -688,7 +698,6 @@ inherited frmGroupGuests: TfrmGroupGuests
     Top = 208
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43112.424664120370000000
-      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end
@@ -848,171 +857,137 @@ inherited frmGroupGuests: TfrmGroupGuests
   object mCompare: TdxMemData
     Indexes = <>
     SortOptions = []
+    SortedField = 'RoomReservation'
     Left = 192
     Top = 424
-    object IntegerField1: TIntegerField
+    object mCompareId: TIntegerField
       FieldName = 'Id'
     end
-    object IntegerField2: TIntegerField
+    object mComparePerson: TIntegerField
       FieldName = 'Person'
     end
-    object IntegerField3: TIntegerField
+    object mCompareReservation: TIntegerField
       FieldName = 'Reservation'
     end
-    object IntegerField4: TIntegerField
+    object mCompareRoomReservation: TIntegerField
       FieldName = 'RoomReservation'
     end
-    object IntegerField5: TIntegerField
+    object mComparePersonsProfilesId: TIntegerField
       FieldName = 'PersonsProfilesId'
     end
-    object WideStringField1: TWideStringField
+    object mComparetitle: TWideStringField
       FieldName = 'title'
       Size = 10
     end
-    object WideStringField2: TWideStringField
+    object mCompareName: TWideStringField
       FieldName = 'Name'
       Size = 100
     end
-    object WideStringField3: TWideStringField
+    object mCompareAddress1: TWideStringField
       FieldName = 'Address1'
       Size = 100
     end
-    object WideStringField4: TWideStringField
+    object mCompareAddress2: TWideStringField
       FieldName = 'Address2'
     end
-    object WideStringField5: TWideStringField
+    object mCompareAddress3: TWideStringField
       FieldName = 'Address3'
       Size = 100
     end
-    object WideStringField6: TWideStringField
+    object mCompareAddress4: TWideStringField
       FieldName = 'Address4'
       Size = 100
     end
-    object WideStringField7: TWideStringField
+    object mCompareCountry: TWideStringField
       FieldName = 'Country'
       Size = 2
     end
-    object WideStringField8: TWideStringField
+    object mComparetel1: TWideStringField
       FieldName = 'tel1'
       Size = 40
     end
-    object WideStringField9: TWideStringField
+    object mComparetel2: TWideStringField
       FieldName = 'tel2'
       Size = 40
     end
-    object WideStringField10: TWideStringField
+    object mCompareFax: TWideStringField
       DisplayWidth = 40
       FieldName = 'Fax'
       Size = 31
     end
-    object WideStringField11: TWideStringField
+    object mCompareEmail: TWideStringField
       FieldName = 'Email'
       Size = 100
     end
-    object WideStringField12: TWideStringField
+    object mCompareNationality: TWideStringField
       FieldName = 'Nationality'
       Size = 2
     end
-    object WideStringField13: TWideStringField
+    object mComparePID: TWideStringField
       FieldName = 'PID'
       Size = 30
     end
-    object BooleanField1: TBooleanField
+    object mCompareMainName: TBooleanField
       FieldName = 'MainName'
     end
-    object WideStringField14: TWideStringField
+    object mCompareCustomer: TWideStringField
       FieldName = 'Customer'
       Size = 15
     end
-    object WideStringField15: TWideStringField
+    object mCompareState: TWideStringField
       FieldName = 'State'
       Size = 10
     end
-    object WideStringField16: TWideStringField
+    object mComparePersonalIdentificationId: TWideStringField
       FieldName = 'PersonalIdentificationId'
       Size = 50
     end
-    object DateTimeField1: TDateTimeField
+    object mCompareDateOfBirth: TDateTimeField
       FieldName = 'DateOfBirth'
     end
-    object WideStringField17: TWideStringField
+    object mCompareSocialSecurityNumber: TWideStringField
       FieldName = 'SocialSecurityNumber'
       Size = 45
     end
-    object WideStringField18: TWideStringField
-      FieldName = 'Room'
-      Size = 8
-    end
-    object BooleanField2: TBooleanField
-      FieldName = 'Breakfast'
-    end
-    object DateTimeField2: TDateTimeField
-      FieldName = 'rrArrival'
-    end
-    object DateTimeField3: TDateTimeField
-      FieldName = 'rrDeparture'
-    end
-    object IntegerField6: TIntegerField
-      FieldName = 'numGuests'
-    end
-    object WideStringField19: TWideStringField
-      FieldName = 'RoomDescription'
-    end
-    object WideStringField20: TWideStringField
-      FieldName = 'StatusText'
-      Size = 45
-    end
-    object WideStringField21: TWideStringField
-      FieldName = 'roomDetails'
-      Size = 200
-    end
-    object StringField1: TStringField
+    object mCompareCompanyName: TStringField
       FieldName = 'CompanyName'
       Size = 100
     end
-    object WideStringField22: TWideStringField
+    object mCompareCompVATNumber: TWideStringField
       FieldName = 'CompVATNumber'
       Size = 45
     end
-    object StringField2: TStringField
+    object mCompareCompAddress1: TStringField
       FieldName = 'CompAddress1'
       Size = 100
     end
-    object WideStringField23: TWideStringField
+    object mCompareCompAddress2: TWideStringField
       FieldName = 'CompAddress2'
       Size = 100
     end
-    object WideStringField24: TWideStringField
+    object mCompareCompZip: TWideStringField
       FieldName = 'CompZip'
       Size = 100
     end
-    object WideStringField25: TWideStringField
+    object mCompareCompCity: TWideStringField
       FieldName = 'CompCity'
       Size = 100
     end
-    object WideStringField26: TWideStringField
+    object mCompareCompCountry: TWideStringField
       FieldName = 'CompCountry'
       Size = 2
     end
-    object WideStringField27: TWideStringField
+    object mCompareCompTel: TWideStringField
       FieldName = 'CompTel'
       Size = 40
     end
-    object WideStringField28: TWideStringField
+    object mCompareCompFax: TWideStringField
       FieldName = 'CompFax'
       Size = 40
     end
-    object WideStringField29: TWideStringField
+    object mCompareCompEmail: TWideStringField
       FieldName = 'CompEmail'
       Size = 255
-    end
-    object WideStringField30: TWideStringField
-      FieldName = 'RoomType'
-      Size = 10
-    end
-    object mCompareRoomNotes: TWideMemoField
-      FieldName = 'RoomNotes'
-      BlobType = ftWideMemo
     end
   end
   object mRooms: TdxMemData
