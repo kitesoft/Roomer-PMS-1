@@ -705,8 +705,8 @@ begin
     s := s+' SELECT '#10;
     s := s+'     rr.roomreservation '#10;
     s := s+'   , rr.reservation '#10;
-    s := s+'  , RR_Arrival(rr.roomreservation, false) as Arrival '+
-    s := s+'  , RR_Departure(rr.roomreservation, false) as Departure '+
+    s := s+'  , RR_Arrival(rr.roomreservation, false) as Arrival '#10;
+    s := s+'  , RR_Departure(rr.roomreservation, false) as Departure '#10;
     s := s+'   , rr.Status '#10;
     s := s+'   , rr.room '#10;
     s := s+'   , rr.groupaccount AS isGroup '#10;

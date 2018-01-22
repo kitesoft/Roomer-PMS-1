@@ -341,7 +341,8 @@ uses
   uRoomerEditGridForm in 'RoomerForm\uRoomerEditGridForm.pas' {frmBaseRoomerEditGridForm},
   uFrmConnectionsStatistics in 'Connections\uFrmConnectionsStatistics.pas' {FrmConnectionsStatistics},
   uConnectionsStatisticsService in 'Connections\uConnectionsStatisticsService.pas',
-  uSnapshotService in 'Connections\uSnapshotService.pas';
+  uSnapshotService in 'Connections\uSnapshotService.pas',
+  uResGuestList in 'uResGuestList.pas' {frmResGuestlist};
 
 {$R *.RES}
 
@@ -372,7 +373,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');

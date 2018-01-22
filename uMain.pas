@@ -1656,7 +1656,12 @@ uses
 	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics;
+    , uReleaseNotes
+    , ufrmVatCodesGrid
+    , uRoomerGridForm
+    , ufrmPriceCodesGrid
+    , uFrmConnectionsStatistics
+    ;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -4851,6 +4856,7 @@ end;
 // ------------------------------------------------------------------------------
 procedure TfrmMain.OneDay_ShowTheNameList;
 var
+  frm: TfrmResGuestList;
   idxReservation, Reservation, iRoom: integer;
 begin
   if ViewMode = vmOneDay then
@@ -4860,14 +4866,12 @@ begin
     OneDay_GetResAndRoom_IDX(idxReservation, iRoom);
     Reservation := FReservationsModel.Reservations[idxReservation].Reservation;
 
-    frmResGuestList := TfrmResGuestList.Create(self);
+    frm := TfrmResGuestList.Create(nil);
     try
-      frmResGuestList.zReservation := Reservation;
-      frmResGuestList.ShowModal;
-      if frmResGuestList.ModalResult = mrOK then;
+      frm.zReservation := Reservation;
+      frm.ShowModal;
     finally
-      frmResGuestList.Free;
-      frmResGuestList := nil;
+      frm.Free;
     end;
   end
   else if ViewMode = vmGuestList then

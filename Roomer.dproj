@@ -1016,6 +1016,9 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </DCCReference>
         <DCCReference Include="Connections\uConnectionsStatisticsService.pas"/>
         <DCCReference Include="Connections\uSnapshotService.pas"/>
+        <DCCReference Include="uResGuestList.pas">
+            <Form>frmResGuestlist</Form>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

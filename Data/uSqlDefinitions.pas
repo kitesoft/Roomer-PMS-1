@@ -1158,8 +1158,8 @@ select_ReservationProfile_guestRoomsSQL : string =
 '   , roomreservations.RoomReservation '+
 '   , roomreservations.GroupAccount AS isGroup '+
 '   , roomreservations.invBreakfast AS Breakfast '+
-'   , RR_Arrival(roomreservation, true) as Arrival '+
-'   , RR_Departure(roomreservation, true) as Departure '+
+'   , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
+'   , RR_Departure(roomreservations.roomreservation, true) as Departure '+
 '   , roomreservations.Room '+
 '   , roomreservations.InvoiceIndex '+
 '   , roomreservations.status '+
@@ -1217,8 +1217,8 @@ select_ReservationProfile_allGuestsSQL : string =
 ' SELECT '+
 '     roomreservations.GroupAccount AS isGroup '+
 '   , roomreservations.invBreakfast AS Breakfast '+
-'   , RR_Arrival(roomreservation, true) as Arrival '+
-'   , RR_Departure(roomreservation, true) as Departure '+
+'   , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
+'   , RR_Departure(roomreservations.roomreservation, true) as Departure '+
 '   , roomreservations.status '+
 '   , roomreservations.Room '+
 '   , rooms.Description AS RoomDescription '+
@@ -1260,12 +1260,6 @@ select_ReservationProfile_allGuestsSQL : string =
 ' ORDER BY '+
 '   rooms.Room, persons.Person ';
 
-//TESTED NOT
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-
 
 //NOT TESTED
 select_ResGuestList_getRes : string =
@@ -1277,7 +1271,10 @@ select_ResGuestList_getRes : string =
 
 //NOT TESTED
 select_ResMemos_FormShow : string =
-' SELECT reservation, Name, customer, Information, PMInfo, arrival, departure From reservations '+
+' SELECT reservation, Name, customer, Information, PMInfo, '#10 +
+'  RV_Arrival(reservation, false) as Arrival, '#10 +
+'  RV_Departure(reservation, false) as Departure '#10 +
+' From reservations '+
 ' WHERE '+
 ' Reservation = %d ';
 
@@ -1317,8 +1314,8 @@ select_ResProblem_GridFill : string =
 '     , roomreservations.Room  '+
 '     , roomreservations.Reservation '+
 '     , roomreservations.Status '+
-'     , RR_Arrival(roomreservation, true) as Arrival '+
-'     , RR_Departure(roomreservation, true) as Departure '+
+'     , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
+'     , RR_Departure(roomreservations.roomreservation, true) as Departure '+
 '     , reservations.Customer '+
 '     , reservations.Name As CustomerName '+
 ' FROM '+
@@ -1334,8 +1331,8 @@ select_RoomDateProblem_GridFill : string =
 '     , roomreservations.Room  '+
 '     , roomreservations.Reservation '+
 '     , roomreservations.Status '+
-'     , RR_Arrival(roomreservation, true) as Arrival '+
-'     , RR_Departure(roomreservation, true) as Departure'+
+'     , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
+'     , RR_Departure(roomreservations.roomreservation, true) as Departure'+
 '     , reservations.Customer '+
 '     , reservations.Name As CustomerName '+
 ' FROM '+
@@ -1376,108 +1373,6 @@ select_RoomPrices_FillSeasonsBOX : string =
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-//NOT TESTED
-select_RoomProfile_DisplayGuests : string =
-' SELECT Person, Name, Surname, Country from persons '+
-' where Reservation = %d '+
-'  and RoomReservation = %d '+
-' order by person';
-
-//NOT TESTED
-select_RoomProfile_Display : string =
-'SELECT  '+
-'  rr.RoomReservation        as RR_RoomReservation '+
-', rr.Room                   as RR_Room '+
-', rr.Reservation            as RR_Reservation '+
-', rr.Status                 as RR_Status '+
-', rr.GroupAccount           as RR_GroupAccount '+
-', rr.invBreakfast           as RR_invBreakfast '+
-', rr.RoomPrice1             as RR_RoomPrice1 '+
-', rr.Price1From             as RR_Price1From '+
-', rr.Price1To               as RR_Price1To '+
-', rr.RoomPrice2             as RR_RoomPrice2 '+
-', rr.Price2From             as RR_Price2From '+
-', rr.Price2To               as RR_Price2To '+
-', rr.RoomPrice3             as RR_RoomPrice3 '+
-', rr.Price3From             as RR_Price3From '+
-', rr.Price3To               as RR_Price3To '+
-', rr.Currency               as RR_Currency '+
-', rr.Discount               as RR_Discount '+
-', rr.PriceType              as RR_PriceType '+
-', rr.Arrival                as RR_Arrival '+
-', rr.Departure              as RR_Departure '+
-', rr.ExpectedTimeOfArrival  as RR_ExpectedTimeOfArrival'+
-', rr.ExpectedCheckoutTimes as RR_ExpectedCheckoutTime '+
-', rr.RoomType               as RR_RoomType '+
-', rr.PMInfo                 as RR_PMInfo '+
-', rr.HiddenInfo             as RR_HiddenInfo '+
-', rr.RoomRentPaid1          as RR_RoomRentPaid1 '+
-', rr.RoomRentPaid2          as RR_RoomRentPaid2 '+
-', rr.RoomRentPaid3          as RR_RoomRentPaid3 '+
-', rr.RoomRentPaymentInvoice as RR_RoomRentPaymentInvoice '+
-', rr.rrDescription          as RR_rrDescription '+
-', rr.HallRes                as RR_HallRes'+
-', rr.useInNationalReport    as RR_UseInNationalReport'+
-', r.Reservation             as R_Reservation '+
-', r.Arrival                 as R_Arrival '+
-', r.Departure               as R_Departure '+
-', r.Customer                as R_Customer '+
-', r.Name                    as R_Name '+
-', r.Address1                as R_Address1 '+
-', r.Address2                as R_Address2 '+
-', r.Address3                as R_Address3 '+
-', r.Address4                as R_Address4 '+
-', r.Country                 as R_Country '+
-', r.Tel1                    as R_Tel1 '+
-', r.Tel2                    as R_Tel2 '+
-', r.Fax                     as R_Fax '+
-', r.Status                  as R_Status '+
-', r.ReservationDate         as R_ReservationDate '+
-', r.Staff                   as R_Staff '+
-', r.Information             as R_Information '+
-', r.PMInfo                  as R_PMInfo '+
-', r.HiddenInfo              as R_HiddenInfo '+
-', r.RoomRentPaid1           as R_RoomRentPaid1 '+
-', r.RoomRentPaid2           as R_RoomRentPaid2 '+
-', r.RoomRentPaid3           as R_RoomRentPaid3 '+
-', r.RoomRentPaymentInvoice  as R_RoomRentPaymentInvoice '+
-', r.ContactName             as R_ContactName '+
-', r.ContactPhone            as R_ContactPhone '+
-', r.ContactPhone2           as R_ContactPhone2 '+
-', r.ContactFax              as R_ContactFax '+
-', r.ContactEmail            as R_ContactEmail '+
-', r.ContactAddress1         as R_ContactAddress1 '+
-', r.ContactAddress2         as R_ContactAddress2 '+
-', r.ContactAddress3         as R_ContactAddress3 '+
-', r.ContactAddress4         as R_ContactAddress4 '+
-', r.ContactCountry          as R_ContactCountry '+
-', r.InputSource             as R_InputSource '+
-', r.WebConfirmed            as R_WebConfirmed '+
-', r.SrcRequest              as R_SrcRequest '+
-'  FROM roomreservations rr, '+
-'       reservations r '+
-'WHERE rr.Reservation = %d '+
-'  AND rr.RoomReservation = %d '+
-'  AND r.Reservation = rr.Reservation';
-
-//NOT TESTED
-select_RoomProfile_UpdateProfile : string =
-'SELECT count(*) as ResCount from reservations '+
-'where Reservation = %d ';
-
-//NOT TESTED
-select_RoomProfile_UpdateProfile2 : string =
-' SELECT Room FROM roomreservations '+
-' WHERE Reservation = %d ';  //FReservation
-
-//NOT TESTED
-select_RoomProfile_GetInvoiceInfo : string =
-'SELECT InvBreakfast, GroupAccount from roomreservations '+
-'where Reservation = %d '+
-'  and RoomReservation = %d ';
-///  'where Reservation = ' + inttostr(FReservation)+
-///  '  and RoomReservation = ' + inttostr(FRoomReservation);
-
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1488,8 +1383,8 @@ select_RoomReservationOBJ_RoomReservation_getListFromDB : string =
 '     , roomreservations.Room  '+
 '     , roomreservations.Reservation '+
 '     , roomreservations.Status '+
-'     , RR_Arrival(roomreservation, true) as Arrival '+
-'     , RR_Departure(roomreservation, true) as Departure '+
+'     , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
+'     , RR_Departure(roomreservations.roomreservation, true) as Departure '+
 '     , reservations.Customer '+
 '     , reservations.Channel '+
 '     , reservations.Name As CustomerName '+
@@ -2978,7 +2873,10 @@ select_getRoomTypeFromRR : string =
     select_RR_GetArrivalDate : string =
     'SELECT RR_Arrival(roomreservation, true) as Arrival FROM roomreservations'+
     ' WHERE RoomReservation = %d ';
-//    ' WHERE RoomReservation = ' + inttostr(iRoomReservation);
+
+    select_RR_GetDepartureDate : string =
+    'SELECT RR_Departure(roomreservation, true) as Departure FROM roomreservations'+
+    ' WHERE RoomReservation = %d ';
 
     select_RR_getDates : string =
     ' SELECT '+
@@ -2993,8 +2891,8 @@ select_getRoomTypeFromRR : string =
     select_RV_getDates : string =
     ' SELECT '+
     '   Reservation '+
-    ' ,  Arrival '+
-    ' ,  Departure '+
+    ' ,  RV_Arrival(reservation, false) as Arrival '+
+    ' ,  RV_Departure(reservation, false) as Departure '+
     ' FROM reservations '+
     ' WHERE Reservation = %d ';
     ///s := s + ' WHERE Reservation = ' + _db(iReservation) + ' '+#10;
@@ -5740,6 +5638,7 @@ function Select_Invoice_LoadInvoice3_WithInvoiceIndex(iRoomReservation, iReserva
 function Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(iRoomReservation, iReservation, InvoiceIndex : integer; Customer : String) : string;
 function select_InvoiceList_BitBtn2Click(Medhod : integer) : string;
 function select_Main_refreshGuestList : string;
+function select_ResGuestList_Refresh(ShowAllGuests : boolean) : string;
 function select_NationalReport3_getRoomInfo(location : string) : string;
 function select_ProvideARoom2_Display(orStr, Roomtype : string) : string;
 function select_ReservationProfile_RegulateRoomDates(bAll : boolean) : string;
@@ -6071,8 +5970,8 @@ begin
   s := s+' rr.PriceType, '+#10;
   s := s+' rr.RoomType, '+#10;
   s := s+' rr.rrDescription, '+#10;
-  s := s+' RR_Arrival(rr.roomreservation, false) as Arrival,
-  s := s+' RR_Departure(rr.roomreservation, false) as Departure,
+  s := s+' RR_Arrival(rr.roomreservation, false) as Arrival, '#10;
+  s := s+' RR_Departure(rr.roomreservation, false) as Departure, '#10;
   s := s+' (SELECT COUNT(id) FROM persons WHERE RoomReservation=rr.RoomReservation) AS numGuests, '+#10;
   s := s+' rr.numChildren, '+#10;
   s := s+' rr.numInfants, '+#10;
@@ -6231,6 +6130,44 @@ end;
     result := s;
   end;
 
+function select_ResGuestList_Refresh(ShowAllGuests : boolean) : string;
+    var
+      s : string;
+    begin
+      s := ' SELECT  '#10;
+      s := s+'    persons.Person  '#10;
+      s := s+'  , persons.Reservation  '#10;
+      s := s+'  , persons.Name  As GuestName '#10;
+      s := s+'  , persons.Address1  '#10;
+      s := s+'  , persons.Address2  '#10;
+      s := s+'  , persons.Address3  '#10;
+      s := s+'  , persons.Country  '#10;
+      s := s+'  , persons.GuestType  '#10;
+      s := s+'  , persons.Information  '#10;
+      s := s+'  , persons.PID  '#10;
+      s := s+'  , persons.MainName As isMainName '#10;
+      s := s+'  , persons.RoomReservation  '#10;
+      s := s+'  , roomreservations.Room  '#10;
+      s := s+'  , roomreservations.RoomType  '#10;
+      s := s+'  , roomreservations.Status As  roomstatus '#10;
+      s := s+'  , RR_Arrival(persons.roomreservation, false)  as Arrival '#10;
+      s := s+'  , RR_Departure(persons.roomreservation, false)  as Departure  '#10;
+      s := s+'  , roomreservations.rrIsNoRoom  '#10;
+      s := s+' FROM  '#10;
+      s := s+'   persons  '#10;
+      s := s+'     LEFT OUTER JOIN  '#10;
+      s := s+'        roomreservations ON persons.RoomReservation = roomreservations.RoomReservation  '#10;
+      s := s+' WHERE  '#10;
+      s := s+'   (persons.Reservation = %d)  '#10;// inttostr(zReservation#10;
+      if not ShowAllGuests then
+      begin
+        s := s + '  AND (name <> ''RoomGuest'') '#10;
+      end;
+      s := s + ' ORDER BY  '#10;
+      s := s + '   roomreservations.Room, persons.Person  '#10;
+
+      result := s;
+    end;
 
   //TESTED OK
   function select_NationalReport3_getRoomInfo(location : string) : string;

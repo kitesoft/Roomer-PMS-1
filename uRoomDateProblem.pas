@@ -144,22 +144,6 @@ begin
     if length(rrList) = 0 then exit;
     delete(rrList,length(rrList),1);
 
-//    s := '';
-//    s := s+ ' SELECT ';
-//    s := s+ '       RoomReservations.RoomReservation ';
-//    s := s+ '     , RoomReservations.Room  ';
-//    s := s+ '     , RoomReservations.Reservation ';
-//    s := s+ '     , RoomReservations.Status ';
-//    s := s+ '     , RoomReservations.rrArrival ';
-//    s := s+ '     , RoomReservations.rrDeparture ';
-//    s := s+ '     , Reservations.Customer ';
-//    s := s+ '     , Reservations.Name As CustomerName ';
-//    s := s+ ' FROM ';
-//    s := s+ '   RoomReservations ';
-//    s := s+ '   RIGHT OUTER JOIN ';
-//    s := s+ '         Reservations ON RoomReservations.Reservation = Reservations.Reservation ';
-//    s := s+ ' WHERE (RoomReservation in ('+rrList+') ) ';
-
     s := format(select_RoomDateProblem_GridFill , [rrList]);
     // CopyToClipboard(s);
     // DebugMessage(''#10#10+s);

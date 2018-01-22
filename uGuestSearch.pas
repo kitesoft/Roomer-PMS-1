@@ -430,15 +430,12 @@ begin
       s := s + fields;
     s := s +'  ) xxx '#10;
     if chkUseDates.checked  then
-       s := s+'  AND ((Arrival >= '+_db(zDateFrom,true)+') AND (Departure <= '+_db(zDateTo,true)+')) '#10;
+       s := s+'  WHERE ((xxx.Arrival >= '+_db(zDateFrom,true)+') AND (xxx.Departure <= '+_db(zDateTo,true)+')) '#10;
 
     if zLimitTo <> 0 then
-    begin
       s := s+' LIMIT '+_db(zLimitFrom)+', '+_db(zLimitTo)+'; '#10;
-    end;
 
-//  uStringUtils.CopyToClipboard(s);
-//  showmessage(s);
+    CopyToClipboard(s);
 
     rSet := CreateNewDataSet;
     try

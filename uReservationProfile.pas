@@ -1243,18 +1243,16 @@ begin
 end;
 
 procedure TfrmReservationProfile.sButton4Click(Sender: TObject);
+var
+  frm: TfrmResGuestList;
 begin
   // guestlist
-  frmResGuestList := TfrmResGuestList.Create(self);
+  frm := TfrmResGuestList.Create(nil);
   try
-    frmResGuestList.zReservation := zReservation;
-    frmResGuestList.ShowModal;
-    if frmResGuestList.ModalResult = mrOK then
-    begin
-    end;
+    frm.zReservation := zReservation;
+    frm.ShowModal;
   finally
-    frmResGuestList.free;
-    frmResGuestList := nil;
+    frm.free;
   end;
 end;
 

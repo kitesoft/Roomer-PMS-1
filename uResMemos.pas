@@ -321,8 +321,8 @@ begin
     zTnformationText := res_.FieldByName('Information').asstring; ;
     zPMinfoText := res_.FieldByName('PMInfo').asstring; ;
 
-    dtArrival := SQLToDate(res_.FieldByName('arrival').asstring);
-    dtDeparture := SQLToDate(res_.FieldByName('departure').asstring);
+    dtArrival := res_.FieldByName('arrival').AsDateTime;
+    dtDeparture := res_.FieldByName('departure').asDateTime;
 
     dateTimeToString(sArrival, 'dd.mm.yyyy - ddd', dtArrival);
     dateTimeToString(sDeparture, 'dd.mm.yyyy - ddd', dtDeparture);

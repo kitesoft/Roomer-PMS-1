@@ -3303,10 +3303,6 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    // s := '';
-    // s := s + ' SELECT rrArrival '+chr(10);
-    // s := s + ' FROM RoomReservations  '+chr(10);
-    // s := s + ' WHERE Roomreservation =' + inttostr(RoomReservation) + ' '+chr(10);
     s := format(select_GetRoomReservatiaonArrival, [RoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -5278,7 +5274,7 @@ begin
   try
     s := s + ' SELECT Status,RoomType, '#10;
     s := s + ' RR_Arrival(roomreservation, false) as Arrival, '#10;
-    s :+ s + ' RR_Departure(roomreservaiton, false) as Departure' + chr(10);
+    s := s + ' RR_Departure(roomreservaiton, false) as Departure'#10;
     s := s + ' FROM roomreservations ' + chr(10);
     s := s + ' WHERE  ' + chr(10);
     s := s + ' (RoomReservation = ' + inttostr(RR) + ' ) ' + chr(10);
@@ -9098,18 +9094,16 @@ begin
     // s := s + 'SELECT Room FROM RoomReservations'+chr(10);
     // s := s + ' WHERE RoomReservation = ' + inttostr(iRoomReservation)+chr(10);
     s := 'SELECT roomres.Room, ' +
-      '(SELECT min(ADate) FROM roomsdate WHERE RoomReservation=rr.RoomReservation) AS Arrival, ' +
-      'DATE_ADD((SELECT max(ADate) FROM roomsdate WHERE RoomReservation=rr.RoomReservation), INTERVAL 1 DAY) AS Departure '
-      +
-      'FROM roomreservations roomres, ' +
-      '(SELECT ' + inttostr(iRoomReservation) + ' AS RoomReservation) rr ' +
-      'WHERE roomres.RoomReservation = rr.RoomReservation';
+      '          RR_Arrival(roomreservation, false) as Arrival, ' +
+      '          RR_Departure(roomreservation, false) as Departure, ' +
+      'FROM roomreservations roomres ' +
+      'WHERE roomres.RoomReservation = ' + inttostr(iRoomReservation);
     if hData.rSet_bySQL(rSet, s) then
     begin
       result := True;
       Room := rSet.FieldByName('room').Asstring;
-      Arrival := uDateUtils.SqlStringToDate(rSet.FieldByName('Arrival').Asstring);
-      departure := uDateUtils.SqlStringToDate(rSet.FieldByName('Departure').Asstring);
+      Arrival := rSet.FieldByName('Arrival').AsDateTime;
+      departure := rSet.FieldByName('Departure').AsDateTime;
     end;
   finally
     freeandnil(rSet);
@@ -9124,8 +9118,6 @@ begin
   result := date;
   rSet := CreateNewDataSet;
   try
-    // s := s + 'SELECT rrArrival FROM RoomReservations'+chr(10);
-    // s := s + ' WHERE RoomReservation = ' + inttostr(iRoomReservation)+chr(10);
     s := format(select_RR_GetArrivalDate, [iRoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
@@ -9144,12 +9136,10 @@ begin
   result := 1;
   rSet := CreateNewDataSet;
   try
-    // s := s + 'SELECT rrDeparture FROM RoomReservations'+chr(10);
-    // s := s + ' WHERE RoomReservation = ' + inttostr(iRoomReservation)+chr(10);
     s := format(select_RR_GetDepartureDate, [iRoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      result := rSet.FieldByName('rrDeparture').asDateTime;
+      result := rSet.FieldByName('Departure').asDateTime;
     end;
   finally
     freeandnil(rSet);
@@ -9186,7 +9176,6 @@ end;
 function Td.RV_getDates(iReservation: Integer): recResDateHolder;
 var
   rSet: TRoomerDataSet;
-
   s: string;
 begin
   result.reservation := 0;
@@ -9197,19 +9186,11 @@ begin
 
   rSet := CreateNewDataSet;
   try
-    // s := s + ' SELECT '+chr(10);
-    // s := s + '   Reservation '+chr(10);
-    // s := s + ' ,  Arrival '+chr(10);
-    // s := s + ' ,  Departure '+chr(10);
-    // s := s + ' FROM Reservations '+chr(10);
-    // s := s + ' WHERE Reservation = ' + _db(iReservation) + ' '+chr(10);
     s := format(select_RV_getDates, [iReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      s := rSet.FieldByName('Arrival').Asstring;
-      result.Arrival := SQLToDate(s);
-      s := rSet.FieldByName('Departure').Asstring;
-      result.departure := SQLToDate(s);
+      result.Arrival := rSet.FieldByName('Arrival').AsDateTime;
+      result.departure := rSet.FieldByName('Departure').AsDateTime;
       result.RoomReservation := -1;
       result.reservation := iReservation;
       result.status := '';

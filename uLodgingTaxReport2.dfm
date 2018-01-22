@@ -31,10 +31,6 @@ object frmLodgingTaxReport2: TfrmLodgingTaxReport2
     object sheetMain: TsTabSheet
       Caption = 'Main'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0

@@ -3,7 +3,7 @@ object frmResGuestList: TfrmResGuestList
   Top = 215
   Caption = 'Bookings Guestlist'
   ClientHeight = 756
-  ClientWidth = 1074
+  ClientWidth = 1100
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,6 @@ object frmResGuestList: TfrmResGuestList
   KeyPreview = True
   OldCreateOrder = False
   Position = poOwnerFormCenter
-  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
@@ -22,25 +21,27 @@ object frmResGuestList: TfrmResGuestList
   object LMDStatusBar1: TStatusBar
     Left = 0
     Top = 737
-    Width = 1074
+    Width = 1100
     Height = 19
     Panels = <>
+    ExplicitWidth = 1074
   end
   object LMDSimplePanel1: TsPanel
     Left = 0
     Top = 0
-    Width = 1074
+    Width = 1100
     Height = 31
     Align = alTop
     Padding.Left = 5
     Padding.Top = 5
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1074
     object Label1: TsLabel
       Left = 6
       Top = 6
       Width = 106
-      Height = 16
+      Height = 24
       Align = alLeft
       Alignment = taRightJustify
       Caption = 'Booking Number : '
@@ -50,6 +51,7 @@ object frmResGuestList: TfrmResGuestList
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitHeight = 16
     end
     object Label16: TsLabel
       Left = 217
@@ -74,7 +76,7 @@ object frmResGuestList: TfrmResGuestList
       Left = 353
       Top = 6
       Width = 50
-      Height = 16
+      Height = 24
       Align = alLeft
       Alignment = taRightJustify
       Caption = 'depart : '
@@ -84,12 +86,13 @@ object frmResGuestList: TfrmResGuestList
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitHeight = 16
     end
     object Label19: TsLabel
       Left = 496
       Top = 6
       Width = 101
-      Height = 16
+      Height = 24
       Align = alLeft
       Alignment = taRightJustify
       Caption = 'date of booking : '
@@ -99,12 +102,13 @@ object frmResGuestList: TfrmResGuestList
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitHeight = 16
     end
     object Label20: TsLabel
       Left = 690
       Top = 6
       Width = 92
-      Height = 16
+      Height = 24
       Align = alLeft
       Alignment = taRightJustify
       Caption = 'Staff member : '
@@ -114,6 +118,7 @@ object frmResGuestList: TfrmResGuestList
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
+      ExplicitHeight = 16
     end
     object edArrival: TsLabel
       Left = 260
@@ -219,29 +224,28 @@ object frmResGuestList: TfrmResGuestList
   object PageControl1: TsPageControl
     Left = 0
     Top = 312
-    Width = 1074
+    Width = 1100
     Height = 425
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitWidth = 1074
     object TabSheet1: TsTabSheet
       Caption = 'Room Reservations'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1066
       object LMDSimplePanel2: TsPanel
         Left = 0
         Top = 0
-        Width = 1066
+        Width = 1092
         Height = 33
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1066
         DesignSize = (
-          1066
+          1092
           33)
         object btnRefresh: TsButton
           Left = 310
@@ -308,25 +312,27 @@ object frmResGuestList: TfrmResGuestList
       object cxPageControl1: TcxPageControl
         Left = 0
         Top = 33
-        Width = 1066
+        Width = 1092
         Height = 382
         Align = alClient
         TabOrder = 1
         Properties.CustomButtons.Buttons = <>
         LookAndFeel.NativeStyle = False
+        ExplicitWidth = 1066
         ClientRectBottom = 380
         ClientRectLeft = 2
-        ClientRectRight = 1064
+        ClientRectRight = 1090
         ClientRectTop = 2
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 33
-        Width = 1066
+        Width = 1092
         Height = 382
         Align = alClient
         TabOrder = 2
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 31
         object cxGrid1DBTableView1: TcxGridDBTableView
           OnDblClick = cxGrid1DBTableView1DblClick
           Navigator.Buttons.CustomButtons = <>
@@ -461,13 +467,14 @@ object frmResGuestList: TfrmResGuestList
   object Panel1: TsPanel
     Left = 0
     Top = 31
-    Width = 1074
+    Width = 1100
     Height = 281
     Align = alTop
     TabOrder = 3
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1074
     DesignSize = (
-      1074
+      1100
       281)
     object GroupBox1: TsGroupBox
       Left = 8
@@ -946,17 +953,18 @@ object frmResGuestList: TfrmResGuestList
     object GroupBox3: TsGroupBox
       Left = 388
       Top = 2
-      Width = 686
+      Width = 712
       Height = 138
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Booking comments'
       TabOrder = 2
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitWidth = 686
       object memResInfo: TsMemo
         AlignWithMargins = True
         Left = 10
         Top = 18
-        Width = 666
+        Width = 692
         Height = 115
         Margins.Left = 8
         Margins.Right = 8
@@ -980,22 +988,24 @@ object frmResGuestList: TfrmResGuestList
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'EDIT'
+        ExplicitWidth = 666
       end
     end
     object GroupBox4: TsGroupBox
       Left = 391
       Top = 148
-      Width = 686
+      Width = 712
       Height = 124
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Payment details'
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitWidth = 686
       object memPaymentInfo: TsMemo
         AlignWithMargins = True
         Left = 10
         Top = 18
-        Width = 666
+        Width = 692
         Height = 101
         Margins.Left = 8
         Margins.Right = 8
@@ -1019,6 +1029,7 @@ object frmResGuestList: TfrmResGuestList
         BoundLabel.Font.Name = 'Tahoma'
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'EDIT'
+        ExplicitWidth = 666
       end
     end
   end
@@ -1032,6 +1043,7 @@ object frmResGuestList: TfrmResGuestList
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 600
     Top = 60
   end

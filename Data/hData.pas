@@ -6000,38 +6000,6 @@ begin
   end;
 end;
 
-function RR_GetDayCount(iRoomReservation: integer): integer;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-  Arrival, Departure: Tdate;
-begin
-  result := 0;
-
-  rSet := CreateNewDataSet;
-  try
-    s := '';
-    s := s + 'SELECT '#10;
-    s := s + '  rrArrival '#10;
-    s := s + '  ,rrDeparture '#10;
-    s := s + 'FROM '#10;
-    s := s + '  `roomreservations` '#10;
-    s := s + 'WHERE '#10;
-    s := s + ' `RoomReservation` = %d ';
-
-    s := format(s, [iRoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      rSet.First;
-      Arrival := rSet.fieldbyname('rrArrival').AsDateTime;
-      Departure := rSet.fieldbyname('rrDeparture').AsDateTime;
-      result := trunc(Departure) - trunc(Arrival);
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
 function Room_GetRec(Room: string): recRoomInfo;
 var
   s: string;
