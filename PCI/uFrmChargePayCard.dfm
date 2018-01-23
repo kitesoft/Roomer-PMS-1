@@ -147,10 +147,11 @@ inherited FrmChargePayCard: TFrmChargePayCard
       ExplicitLeft = 192
       ExplicitTop = 120
       ExplicitWidth = 208
+      ExplicitHeight = 20
       inherited pnlLookup: TsPanel
         Width = 208
         ExplicitWidth = 208
-        inherited lblDescription: TLabel
+        inherited lblDescription: TsLabel
           Width = 115
           Height = 20
         end
