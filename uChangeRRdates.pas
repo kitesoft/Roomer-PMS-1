@@ -979,10 +979,8 @@ begin
 
         newRrId := RR_SetNewID();
         firstHolder.RoomReservation := newRrId;
-        firstHolder.Arrival := _db(Arrival1, false);
-        firstHolder.Departure := _db(Departure1, false);;
-        firstHolder.rrArrival := Arrival1;
-        firstHolder.rrDeparture := Departure1;
+        firstHolder.Arrival := Arrival1;
+        firstHolder.Departure := Departure1;
 
         Rset := CreateNewDataSet;
         try
@@ -1012,10 +1010,8 @@ begin
         // DebugMessage('invoicelines '#10#10+s);
         ExecutionPlan.AddExec(s);
 
-        roomHolder.Arrival := _db(Arrival2, false);
-        roomHolder.Departure := _db(Departure2, false);;
-        roomHolder.rrArrival := Arrival2;
-        roomHolder.rrDeparture := Departure2;
+        roomHolder.Arrival := Arrival2;
+        roomHolder.Departure := Departure2;
 
         Rset := CreateNewDataSet;
         try

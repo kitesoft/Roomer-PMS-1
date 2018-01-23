@@ -476,8 +476,8 @@ type
     Currency: string;
     Discount: double;
     PriceType: string;
-    Arrival: string;
-    Departure: string;
+    Arrival: TDate;
+    Departure: TDate;
     RoomType: string;
     PMInfo: string;
     HiddenInfo: string;
@@ -489,8 +489,6 @@ type
 
     rrTmp: string;
     rrDescription: string;
-    rrArrival: Tdate;
-    rrDeparture: Tdate;
     rrIsNoRoom: boolean;
     rrRoomAlias: string;
     rrRoomTypeAlias: string;
@@ -2880,16 +2878,14 @@ begin
     // ctrlGetString('NativeCurrency', Connection,loglevel,logPath);
     Discount := 0.00;
     PriceType := '';
-    Arrival := _db(TDate(date), false);
-    Departure := _db(TDate(IncDay(date, 1)), false);;
+    Arrival := TDate(date);
+    Departure := TDate(IncDay(date, 1));
     RoomType := '';
     PMInfo := '';
     HiddenInfo := '';
     RoomRentPaymentInvoice := -1;
     rrTmp := '';
     rrDescription := '';
-    rrArrival := date;
-    rrDeparture := date + 1;
     rrIsNoRoom := false;
     rrRoomAlias := '';
     rrRoomTypeAlias := '';
@@ -4329,8 +4325,8 @@ begin
       result.Currency := rSet.fieldbyname('Currency').asString;
       result.Discount := rSet.fieldbyname('Discount').AsFloat;
       result.PriceType := rSet.fieldbyname('PriceType').asString;
-      result.Arrival := rSet.fieldbyname('Arrival').asString;
-      result.Departure := rSet.fieldbyname('Departure').asString;
+      result.Arrival := rSet.fieldbyname('Arrival').AsDateTime;
+      result.Departure := rSet.fieldbyname('Departure').AsDateTime;
       result.RoomType := rSet.fieldbyname('RoomType').asString;
       result.PMInfo := rSet.fieldbyname('PMInfo').asString;
       result.HiddenInfo := rSet.fieldbyname('HiddenInfo').asString;
@@ -4341,8 +4337,6 @@ begin
       result.Hallres := rSet.fieldbyname('Hallres').asInteger;
       result.rrTmp := rSet.fieldbyname('rrTmp').asString;
       result.rrDescription := rSet.fieldbyname('rrDescription').asString;
-      result.rrArrival := rSet.fieldbyname('Arrival').AsDateTime;
-      result.rrDeparture := rSet.fieldbyname('Departure').AsDateTime;
       result.rrIsNoRoom := rSet['rrIsNoRoom'];
       result.rrRoomAlias := rSet.fieldbyname('rrRoomAlias').asString;
       result.rrRoomTypeAlias := rSet.fieldbyname('rrRoomTypeAlias').asString;

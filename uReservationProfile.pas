@@ -2049,13 +2049,11 @@ begin
       roomReservationData.invBreakfast := isBreckfastIncluted;
       roomReservationData.Currency := Currency;
       roomReservationData.PriceType := PriceCode;
-      roomReservationData.arrival := _db(arrival, false);
-      roomReservationData.departure := _db(departure, false);
+      roomReservationData.arrival := arrival;
+      roomReservationData.departure := departure;
       roomReservationData.RoomType := RoomType;
       roomReservationData.PMInfo := RoomPMInfo;
       roomReservationData.HiddenInfo := RoomHiddenInfo;
-      roomReservationData.rrArrival := arrival;
-      roomReservationData.rrDeparture := departure;
       roomReservationData.rrIsNoRoom := true;
       roomReservationData.rrRoomAlias := '';
       roomReservationData.rrRoomTypeAlias := RoomType;

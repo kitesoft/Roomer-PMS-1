@@ -1303,8 +1303,8 @@ begin
           roomReservationData.Currency        := Currency;
           roomReservationData.Discount        := Discount;
           roomReservationData.PriceType       := PriceCode;
-          roomReservationData.Arrival         := _db(Arrival, false);
-          roomReservationData.Departure       := _db(Departure, false);
+          roomReservationData.Arrival         := Arrival;
+          roomReservationData.Departure       := Departure;
           roomReservationData.RoomType        := RoomType;
           roomReservationData.Package         := package;
           roomReservationData.PMInfo          := RoomPMInfo;
@@ -1312,8 +1312,6 @@ begin
           roomReservationData.RoomRentPaymentInvoice := -1;
           roomReservationData.rrTmp               := '';;
           roomReservationData.rrDescription       := '';;
-          roomReservationData.rrArrival           := Arrival;
-          roomReservationData.rrDeparture         := Departure;
           roomReservationData.rrIsNoRoom          := isNoRoom;
           roomReservationData.rrRoomAlias         := RoomNumber;
           roomReservationData.rrRoomTypeAlias     := RoomType;
