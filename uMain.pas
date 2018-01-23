@@ -1656,7 +1656,8 @@ uses
 	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics;
+    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
+  uRoomReservationOBJ;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -6688,6 +6689,8 @@ var
   Grid: TAdvStringGrid;
 
   penStyle: TPenStyle;
+  lReservation: TSingleReservations;
+  lRoom: TRoomObject;
 
 begin
 
@@ -6726,7 +6729,6 @@ begin
           LoadImageFromImageList(DImages.ilGuests, 5, Grid.Canvas, Point(Rect.Left + (Rect.Right - Rect.Left) div 2 - 8,
             Rect.Top + (Rect.Bottom - Rect.Top) div 2 - 8), Brush.Color,
             [Point(clRed, sSkinManager1.GetGlobalFontColor)]);
-          exit;
         end;
         exit;
       end;
@@ -6751,14 +6753,6 @@ begin
       // [2, 3, 4, 5, 9, 10, 11, 12]
       if (ACol in c_GuestInfo) then
       begin
-
-        iRes := -1;
-        iRoom := 0;
-
-        iRes := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 1];
-        iRoom := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 2];
-        // Ef samskonar herbergistegund er utan �� er �a� s�nt me� �v� a� lita brottfarardagsetningu
-        // me�h�ndla vinsta megin
         if ((OneDay_GetIsLeftOrRight(ACol) = cLefthalf) and (Grid.cells[Left_Departure, ARow] = '')) OR
           ((OneDay_GetIsLeftOrRight(ACol) = cRightHalf) and (Grid.cells[Right_Departure, ARow] = '')) then
         begin
@@ -6780,15 +6774,18 @@ begin
           exit;
         end;
 
-        // Ef gestur er a� fara og annar a� koma er GestCellan Tv�skipt
-        // annar hlutinn Gr�r (s� sem er a� fara) en hinn Aqua (s� sem er a� koma)
+        iRes := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 1];
+        iRoom := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 2];
+
+        lReservation := FReservationsModel.Reservations[iRes];
+        lRoom := FReservationsModel.Reservations[iRes].Rooms[iRoom];
+
         if Grid.cells[ACol, ARow].StartsWith(cGoingStr) then
         begin
           // Who is leaving
           LeavingName := Grid.cells[ACol, ARow];
           // Who is comming
-          ArrivingName := OneDay_RoomReservedName(FReservationsModel.Reservations[iRes].Rooms[iRoom].RoomNumber,
-            iRes, iRoom);
+          ArrivingName := OneDay_RoomReservedName(lRoom.RoomNumber, iRes, iRoom);
           GetArrivingGuestIndexes(iRoom, iRes, ACol, ARow);
 
           if ArrivingName <> '' then
@@ -6799,16 +6796,11 @@ begin
             Brush.Color := tmpBackColor;
             Font.Color := tmpFontColor;
 
-            // Fyrri helmingurinn fyrir �ann sem er a� koma
             iWidth := (Rect.Right - Rect.Left) div 2;
             myRect := Rect;
             myRect.Right := myRect.Left + iWidth;
 
-            // if ReservationsModel.Reservations[iRes].OutOfOrderBlocking then
-            // Brush.Style := bsDiagCross;
-
             MyRoundedRect(Grid.Canvas, myRect.Left, myRect.Top, myRect.Right, myRect.Bottom);
-            // FillRect(myRect);
             iTemp := Grid.Canvas.TextHeight(ArrivingName);
 
             ExtTextOut(handle, myRect.Left + 2, (myRect.Bottom + myRect.Top) div 2 - iTemp div 2, ETO_CLIPPED, @myRect,
@@ -6816,7 +6808,7 @@ begin
               // ETO_CLIPPED or ETO_OPAQUE, @myRect, PChar(ArrivingName),
               length(ArrivingName), nil);
 
-            if NOT FReservationsModel.Reservations[iRes].OutOfOrderBlocking then
+            if NOT lReservation.OutOfOrderBlocking then
             begin
               if iRectangleSpaceForUnpaidItems > 0 then
               begin
@@ -6825,8 +6817,7 @@ begin
                 chRect.Top := myRect.Top + 3;
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForUnpaidItems;
-                iTempColor := getUnpaidItemsColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].TotalNoRent > 0,
-                  Brush.Color);
+                iTempColor := getUnpaidItemsColor(lRoom.TotalNoRent > 0, Brush.Color);
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
               end;
 
@@ -6836,7 +6827,7 @@ begin
                 chRect.Top := myRect.Top + 3;
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForChannelColor;
-                iTempColor := getChannelColor(FReservationsModel.Reservations[iRes]);
+                iTempColor := getChannelColor(lReservation);
                 if iTempColor = -1 then
                   iTempColor := 15793151;
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6848,7 +6839,7 @@ begin
                 chRect.Top := myRect.Top + 3;
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-                iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+                iTempColor := getInvoiceMadeColor(lRoom);
                 if iTempColor = -1 then
                   iTempColor := Brush.Color;
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6862,7 +6853,7 @@ begin
             myRect := Rect;
             myRect.Left := myRect.Left + iWidth;
 
-            if FReservationsModel.Reservations[iRes].OutOfOrderBlocking AND (ACol in c_custs) then
+            if lReservation.OutOfOrderBlocking AND (ACol in c_custs) then
             begin
               Brush.Color := clSilver;
               Font.Color := clBlack;
@@ -6872,7 +6863,7 @@ begin
             // FillRect(myRect);
             iTemp := Grid.Canvas.TextHeight(ArrivingName);
 
-            if FReservationsModel.Reservations[iRes].OutOfOrderBlocking then
+            if lReservation.OutOfOrderBlocking then
             begin
               tempString := GetTranslatedText('shTx_FrmMain_OutOfOrder') + StringOfChar(' ', 255) + #0;
               ExtTextOut(handle, myRect.Left + 2, (myRect.Bottom + myRect.Top) div 2 - iTemp div 2, ETO_CLIPPED,
@@ -6899,7 +6890,7 @@ begin
               chRect.Top := myRect.Top + 3;
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForUnpaidItems;
-              iTempColor := getUnpaidItemsColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].TotalNoRent > 0,
+              iTempColor := getUnpaidItemsColor(lRoom.TotalNoRent > 0,
                 Brush.Color);
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
             end;
@@ -6910,7 +6901,7 @@ begin
               chRect.Top := myRect.Top + 3;
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForChannelColor;
-              iTempColor := getChannelColor(FReservationsModel.Reservations[iRes]);
+              iTempColor := getChannelColor(lReservation);
               if iTempColor = -1 then
                 iTempColor := 15793151;
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6922,7 +6913,7 @@ begin
               chRect.Top := myRect.Top + 3;
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-              iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+              iTempColor := getInvoiceMadeColor(lRoom);
               if iTempColor = -1 then
                 iTempColor := Brush.Color;
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6931,31 +6922,31 @@ begin
             exit;
           end;
         end
-        else if (ACol in c_departure) AND (FReservationsModel.Reservations[iRes].Rooms[iRoom].CodedColor <> -1) then
+        else if (ACol in c_departure) AND (lRoom.CodedColor <> -1) then
         begin
           FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestStaying);
           // override with reservation specific colloring
-          Brush.Color := FReservationsModel.Reservations[iRes].Rooms[iRoom].CodedColor;
-          Font.Color := InverseColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].CodedColor);
+          Brush.Color := lRoom.CodedColor;
+          Font.Color := InverseColor(lRoom.CodedColor);
         end
-        else if FReservationsModel.Reservations[iRes].Rooms[iRoom].IsDepartingOn(zOneDay_dtDate) then
+        else if lROom.IsDepartingOn(zOneDay_dtDate) then
           FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Departing)
         else
-          case FReservationsModel.Reservations[iRes].Rooms[iRoom].ResStatus of
-            rsReservation: FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Order);
-            rsDeparted:     FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Departed);
-            rsOptionalBooking:   FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Option);
-            rsWaitingList:   FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_WaitingList);
-            rsAllotment:     FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Allotment);
-            rsNoShow:       FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_NoShow);
-            rsBlocked:      FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Blocked);
-            rsCancelled:     FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Canceled);
-            rsTmp1:         FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp1);
-            rsAwaitingPayment:         FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp2);
-            rsGuests:       if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure = zOneDay_dtDate + 1) then
-                              FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestLeavingNextDay)
-                            else if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure > zOneDay_dtDate + 1) then
-                              FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestStaying);
+          case lRoom.ResStatus of
+            rsReservation:      FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Order);
+            rsDeparted:         FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Departed);
+            rsOptionalBooking:  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Option);
+            rsWaitingList:      FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_WaitingList);
+            rsAllotment:        FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Allotment);
+            rsNoShow:           FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_NoShow);
+            rsBlocked:          FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Blocked);
+            rsCancelled:        FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Canceled);
+            rsTmp1:             FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp1);
+            rsAwaitingPayment:  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp2);
+            rsGuests:           if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure = zOneDay_dtDate + 1) then
+                                  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestLeavingNextDay)
+                                else if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure > zOneDay_dtDate + 1) then
+                                  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestStaying);
 
           end;
 
@@ -6966,7 +6957,7 @@ begin
           Font.Style := Font.Style + [fsBold];
         end;
 
-        if FReservationsModel.Reservations[iRes].OutOfOrderBlocking then
+        if lReservation.OutOfOrderBlocking then
         begin
           Brush.Color := clSilver;
           Font.Color := clWhite;
@@ -6977,7 +6968,7 @@ begin
         MyRoundedRect(Grid.Canvas, Rect.Left, Rect.Top, Rect.Right, Rect.Bottom);
         iTemp := Grid.Canvas.TextHeight(tempString);
 
-        if FReservationsModel.Reservations[iRes].OutOfOrderBlocking AND (ACol in c_custs) then
+        if lReservation.OutOfOrderBlocking AND (ACol in c_custs) then
         begin
           tempString := GetTranslatedText('shTx_FrmMain_OutOfOrder') + StringOfChar(' ', 255) + #0;
           ExtTextOut(handle, Rect.Left + 2, (Rect.Bottom + Rect.Top) div 2 - iTemp div 2, ETO_CLIPPED, @Rect,
@@ -7001,7 +6992,7 @@ begin
           chRect.Top := Rect.Top + 3;
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForUnpaidItems;
-          iTempColor := getUnpaidItemsColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].TotalNoRent > 0,
+          iTempColor := getUnpaidItemsColor(lRoom.TotalNoRent > 0,
             Brush.Color);
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
         end;
@@ -7012,7 +7003,7 @@ begin
           chRect.Top := Rect.Top + 3;
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForChannelColor;
-          iTempColor := getChannelColor(FReservationsModel.Reservations[iRes]);
+          iTempColor := getChannelColor(lReservation);
           if iTempColor = -1 then
             iTempColor := 15793151;
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -7024,7 +7015,7 @@ begin
           chRect.Top := Rect.Top + 3;
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-          iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+          iTempColor := getInvoiceMadeColor(lRoom);
           if iTempColor = -1 then
             iTempColor := Brush.Color;
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);

@@ -1120,8 +1120,8 @@ select_RoomReservation : string =
 '    ,Currency '#10+
 '    ,Discount '#10+
 '    ,PriceType '#10+
-'    ,Arrival '#10+
-'    ,Departure '#10+
+'    ,RR_Arrival(roomreservation, false) as Arrival '#10+
+'    ,RR_Departure(roomreservation, false) as Departure '#10+
 '    ,RoomType '#10+
 '    ,PMInfo '#10+
 '    ,HiddenInfo '#10+
@@ -1130,7 +1130,6 @@ select_RoomReservation : string =
 '    ,RoomRentPaid3 '#10+
 '    ,RoomRentPaymentInvoice '#10+
 '    ,Hallres '#10+
-'    ,rrTmp '#10+
 '    ,rrDescription '#10+
 '    ,rrArrival '#10+
 '    ,rrDeparture '#10+
@@ -4578,8 +4577,8 @@ select_get_prepaid : string =
 select_Reservation : string =
 '  SELECT '#10+
 ' Reservation '#10+
-',Arrival '#10+
-',Departure '#10+
+', RV_Arrival(reservation, false) as Arrival '#10+
+', RV_Departure(reservation, false) as Departure '#10+
 ',Customer '#10+
 ',Name '#10+
 ',Address1 '#10+
@@ -6022,7 +6021,6 @@ begin
   s := s+' rr.RoomRentPaid3, '+#10;
   s := s+' rr.RoomRentPaymentInvoice, '+#10;
   s := s+' rr.Hallres, '+#10;
-  s := s+' rr.rrTmp, '+#10;
   s := s+' rr.RoomReservation AS ID, '+#10;
   s := s+' rr.rrDescription, '+#10;
   s := s+' rr.rrIsNoRoom, '+#10;

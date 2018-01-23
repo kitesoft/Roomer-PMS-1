@@ -387,7 +387,7 @@ begin
 
   edResAmount.Text := trim(_floattostr(charge.amount, 20, 2));
   edResCurrency.Text := charge.currency;
-  lblResRate.Caption := format('(Rate: %s)', [FloatToStr(charge.currencyRate)]);
+  lblResRate.Caption := format('(' + GetTranslatedText('shCurrencyRate') + ': %s)', [FloatToStr(charge.currencyRate)]);
   edResOperationType.Text := charge.operationType;
 
   edResOperationResult.Text := charge.operationResultCode;

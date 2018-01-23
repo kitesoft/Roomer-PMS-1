@@ -2051,13 +2051,11 @@ begin
       roomReservationData.invBreakfast := isBreckfastIncluted;
       roomReservationData.Currency := Currency;
       roomReservationData.PriceType := PriceCode;
-      roomReservationData.arrival := _db(arrival, false);
-      roomReservationData.departure := _db(departure, false);
+      roomReservationData.arrival := arrival;
+      roomReservationData.departure := departure;
       roomReservationData.RoomType := RoomType;
       roomReservationData.PMInfo := RoomPMInfo;
       roomReservationData.HiddenInfo := RoomHiddenInfo;
-      roomReservationData.rrArrival := arrival;
-      roomReservationData.rrDeparture := departure;
       roomReservationData.rrIsNoRoom := true;
       roomReservationData.rrRoomAlias := '';
       roomReservationData.rrRoomTypeAlias := RoomType;
@@ -2606,8 +2604,8 @@ begin
     s := s + '    , rr.Room '#10;
     s := s + '    , rr.RoomType '#10;
     s := s + '    , rr.package '#10;
-    s := s + '    , cast((SELECT min(rd.aDate) from roomsdate rd where rd.Roomreservation=rr.roomreservation) as DateTIME) as Arrival'#10;
-    s := s + '    , cast((SELECT DATE_ADD(max(rd.aDate), INTERVAL 1 DAY) from roomsdate rd where rd.Roomreservation=rr.roomreservation) as DateTIME) as Departure'#10;
+    s := s + '    , RR_Arrival(rr.roomreservation, true) as Arrival'#10;
+    s := s + '    , RR_Departure(rr.roomreservation, true) as Departure'#10;
     s := s + '    , ExpectedTimeOfArrival'#10;
     s := s + '    , ExpectedCheckoutTime'#10;
     s := s + '    , rr.Status '#10;

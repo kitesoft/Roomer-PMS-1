@@ -171,7 +171,6 @@ type
     property GuestCount : integer read FGuestCount write FGuestCount;
     property GuestNameCount : integer read GetGuestCount;
 
-    property Meeting : integer read FMeeting write FMeeting;
     property TotalNoRent : double read FTotalNorent write FTotalNoRent;
     property TotalTaxes : double read FTotalTaxes write FTotalTaxes;
     property TotalPayments : double read FTotalPayments write FTotalPayments;
