@@ -435,8 +435,8 @@ begin
     s := s+'  ,rr.room '#10;
     s := s+'  ,rr.roomType '#10;
     s := s+'  ,rr.invBreakfast AS Breakfast'#10;
-    s := s+'  ,CAST((SELECT Min(aDate) from roomsdate rd where rd.roomreservation = rr.roomreservation and rd.resflag not in (''X'', ''C'')) as DateTime) as Arrival '#10;
-    s := s+'  ,CAST((SELECT DATE_ADD(Max(aDate), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation = rr.roomreservation and rd.resflag not in (''X'', ''C'')) as DateTime) as Departure '#10;
+    s := s+'  ,RR_Arrival(rd.roomreservations, false) as Arrival '#10;
+    s := s+'  ,RR_Departure(rd.roomreservations, false) as Departure '#10;
     s := s+'  ,(SELECT count(*) from persons p where p.roomreservation = rr.roomreservation) as numGuests '#10;
     s := s+'  ,rr.status '#10;
     s := s+'  ,rooms.description as RoomDescription '#10;

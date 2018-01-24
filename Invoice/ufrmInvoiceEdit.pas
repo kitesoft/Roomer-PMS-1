@@ -4482,8 +4482,8 @@ begin
         NumberGuests := zRoomRSet.FieldByName('numGuests').asinteger;
         RoomDescription := zRoomRSet.FieldByName('RoomDescription').asString;
         RoomTypeDescription := zRoomRSet.FieldByName('RoomTypeDescription').asString;
-        Arrival := zRoomRSet.FieldByName('rrArrival').asdateTime;
-        Departure := zRoomRSet.FieldByName('rrDeparture').asdateTime;
+        Arrival := zRoomRSet.FieldByName('Arrival').asdateTime;
+        Departure := zRoomRSet.FieldByName('Departure').asdateTime;
         ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
         infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
         PriceCode := zRoomRSet.FieldByName('PriceType').asString;
@@ -4742,8 +4742,8 @@ begin
       NumberGuests := lRoomsDateSet.FieldByName('numGuests').asinteger;
       RoomDescription := lRoomsDateSet.FieldByName('RoomDescription').asString;
       RoomTypeDescription := lRoomsDateSet.FieldByName('RoomTypeDescription').asString;
-      Arrival := lRoomsDateSet.FieldByName('rrArrival').asdateTime;
-      Departure := lRoomsDateSet.FieldByName('rrDeparture').asdateTime;
+      Arrival := lRoomsDateSet.FieldByName('Arrival').asdateTime;
+      Departure := lRoomsDateSet.FieldByName('Departure').asdateTime;
       ChildrenCount := lRoomsDateSet.FieldByName('numChildren').asinteger;
       infantCount := lRoomsDateSet.FieldByName('numInfants').asinteger;
       PriceCode := lRoomsDateSet.FieldByName('PriceType').asString;

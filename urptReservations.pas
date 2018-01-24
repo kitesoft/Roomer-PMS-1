@@ -733,12 +733,12 @@ begin
       exit;
     end;
     zRoom := kbmRoomreservations_.fieldbyname('room').Asstring;
-    zArrival := kbmRoomreservations_.fieldbyname('rrArrival').AsDateTime;
+    zArrival := kbmRoomreservations_.fieldbyname('Arrival').AsDateTime;
 
   end else
   begin
     zRoom := kbmRooms.fieldbyname('room').Asstring;
-    zArrival := kbmRooms.fieldbyname('rrArrival').AsDateTime;
+    zArrival := kbmRooms.fieldbyname('Arrival').AsDateTime;
 
   end;
 
@@ -813,8 +813,8 @@ begin
     s := s+' ,chnl.Name AS ChannelName '#10;
     s := s+' ,rr.RoomClass '#10;
     s := s+' ,rr.Room '#10;
-    s := s+' ,rr.rrDeparture '#10;
-    s := s+' ,rr.rrArrival '#10;
+    s := s+'  , RR_Arrival(roomreservation, false) as Arrival '#10;
+    s := s+'  , RR_Departure(roomreservation, false) as Departure '#10;
     s := s+' , (SELECT name FROM persons WHERE RoomReservation=rr.RoomReservation AND MainName LIMIT 1) AS GuestName '#10;
     s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
     s := s+' ,rr.Status '#10;
@@ -882,7 +882,7 @@ begin
 
         if (rgrDateRangeFor.itemindex = 1) or (rgrDateRangeFor.itemindex = 2) then
         begin
-          kbmRooms.SortFields := 'reservation;rrArrival;room';
+          kbmRooms.SortFields := 'reservation;Arrival;room';
           kbmRooms.SortOptions :=  [mtcoDescending];
           kbmRooms.Sort([]);
           kbmRooms.first;
@@ -922,8 +922,8 @@ begin
     s := s+' SELECT '#10;
     s := s+'     rv.Reservation '#10;
     s := s+'   , rv.ReservationDate '#10;
-    s := s+'   , date(rv.Arrival) AS dtArrival '#10;
-    s := s+'   , date(rv.Departure) AS dtDeparture '#10;
+    s := s+'  , RV_Arrival(rv.reservation, false) as dtArrival '#10;
+    s := s+'  , RV_Departure(rv.reservation, false) as dtDeparture '#10;
     s := s+'   , (SELECT name FROM persons WHERE reservation=rv.Reservation AND MainName LIMIT 1) AS GuestName '#10;
     s := s+'   , rv.Customer '#10;
     s := s+'   , rv.`Name`  As ReservationName '#10;
@@ -1013,8 +1013,8 @@ begin
     s := s+'  rr.Roomreservation '#10;
     s := s+' ,rr.Reservation '#10;
     s := s+' ,rr.Room '#10;
-    s := s+' ,rr.rrDeparture '#10;
-    s := s+' ,rr.rrArrival '#10;
+    s := s+'  , RR_Arrival(roomreservation, false) as Arrival '#10;
+    s := s+'  , RR_Departure(roomreservation, false) as Departure '#10;
     s := s+' , (SELECT name FROM persons WHERE RoomReservation=rr.RoomReservation AND MainName LIMIT 1) AS GuestName '#10;
     s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
     s := s+' ,rr.Status '#10;

@@ -3932,8 +3932,8 @@ begin
     b.Append('   ,Currency = ' + _db(theData.Currency) + #10);
     b.Append('   ,Discount = ' + _db(theData.Discount) + #10);
     b.Append('   ,PriceType = ' + _db(theData.PriceType) + #10);
-    b.Append('   ,Arrival = ' + _db(theData.Arrival) + #10);
-    b.Append('   ,Departure = ' + _db(theData.Departure) + #10);
+//    b.Append('   ,Arrival = ' + _db(theData.Arrival) + #10);
+//    b.Append('   ,Departure = ' + _db(theData.Departure) + #10);
     b.Append('   ,RoomType = ' + _db(theData.RoomType) + #10);
     b.Append('   ,PMInfo = ' + _db(theData.PMInfo) + #10);
     b.Append('   ,HiddenInfo = ' + _db(theData.HiddenInfo) + #10);
@@ -4000,8 +4000,8 @@ begin
   s := s + '  ,Currency ' + #10;
   s := s + '  ,Discount ' + #10;
   s := s + '  ,PriceType ' + #10;
-  s := s + '  ,Arrival ' + #10;
-  s := s + '  ,Departure ' + #10;
+//  s := s + '  ,Arrival ' + #10;
+//  s := s + '  ,Departure ' + #10;
   s := s + '  ,RoomType ' + #10;
   s := s + '  ,PMInfo ' + #10;
   s := s + '  ,HiddenInfo ' + #10;
@@ -4044,8 +4044,8 @@ begin
   s := s + '  , ' + _db(theData.Currency) + #10;
   s := s + '  , ' + _db(theData.Discount) + #10;
   s := s + '  , ' + _db(theData.PriceType) + #10;
-  s := s + '  , ' + _db(theData.Arrival) + #10;
-  s := s + '  , ' + _db(theData.Departure) + #10;
+//  s := s + '  , ' + _db(theData.Arrival) + #10;
+//  s := s + '  , ' + _db(theData.Departure) + #10;
   s := s + '  , ' + _db(theData.RoomType) + #10;
   s := s + '  , ' + _db(theData.PMInfo) + #10;
   s := s + '  , ' + _db(theData.HiddenInfo) + #10;
@@ -6160,7 +6160,7 @@ begin
     s := format(select_GetAttivalText, [RoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      Arrival := rSet.fieldbyname('rrArrival').AsDateTime;
+      Arrival := rSet.fieldbyname('Arrival').AsDateTime;
       guestStatus := rSet.fieldbyname('Status').asString;
     end;
 

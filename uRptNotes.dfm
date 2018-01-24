@@ -106,7 +106,6 @@ object frmRptNotes: TfrmRptNotes
       Caption = 'Select Dates'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object LMDSimpleLabel1: TsLabel
         Left = 67
         Top = 15
@@ -152,7 +151,6 @@ object frmRptNotes: TfrmRptNotes
         ParentFont = False
         TabOrder = 0
         Text = '25-12-2012'
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -175,7 +173,6 @@ object frmRptNotes: TfrmRptNotes
         ParentFont = False
         TabOrder = 1
         Text = '25-12-2012'
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -221,7 +218,6 @@ object frmRptNotes: TfrmRptNotes
       Caption = 'Use Room with status of : '
       TabOrder = 4
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object chkExcluteWaitingList: TsCheckBox
         Left = 14
         Top = 17

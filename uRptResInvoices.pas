@@ -566,12 +566,9 @@ begin
     s := '';
     s := s+'SELECT '#10;
     s := s+'   count(rr.roomreservation) AS roomCount '#10;
-  //  s := s+'  ,(SELECT count(adate) from roomsdate WHERE roomsdate.reservation = rv.reservation) AS totalDays '#10;
-  //  s := s+'  ,(SELECT count(adate) from roomsdate WHERE (roomsdate.reservation = rv.reservation) and (paid=1)) AS DaysPaid '#10;
-  //  s := s+'  ,(SELECT count(adate) from roomsdate WHERE (roomsdate.reservation = rv.reservation) and (paid=0)) AS DaysUnPaid '#10;
     s := s+'  ,rv.reservation '#10;
-    s := s+'  ,min(rr.rrarrival) AS firstArrival '#10;
-    s := s+'  ,min(rr.rrdeparture) AS lastDeparture '#10;
+    s := s+'  ,RR_Arrival(rr.roomreservation, false) AS firstArrival '#10;
+    s := s+'  ,RR_Departure(rr.roomreservation, false)  AS lastDeparture '#10;
     s := s+'  ,rv.customer AS Customer'#10;
     s := s+'  ,cu.surName AS CustomerName '#10;
     s := s+'  ,rv.name AS reservationName '#10;
@@ -708,8 +705,8 @@ begin
     s := s+' SELECT '#10;
     s := s+'     rr.roomreservation '#10;
     s := s+'   , rr.reservation '#10;
-    s := s+'   , rr.rrarrival AS Arrival '#10;
-    s := s+'   , rr.rrdeparture AS Departure '#10;
+    s := s+'  , RR_Arrival(rr.roomreservation, false) as Arrival '#10;
+    s := s+'  , RR_Departure(rr.roomreservation, false) as Departure '#10;
     s := s+'   , rr.Status '#10;
     s := s+'   , rr.room '#10;
     s := s+'   , rr.groupaccount AS isGroup '#10;

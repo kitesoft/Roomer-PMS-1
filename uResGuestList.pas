@@ -192,7 +192,6 @@ type
     FormStore: TcxPropertiesStore;
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
-    procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure btnRefreshClick(Sender : TObject);
     procedure LMDSpeedButton3Click(Sender : TObject);
     procedure LMDSpeedButton4Click(Sender : TObject);
@@ -219,9 +218,6 @@ type
     zCustomer : string;
     zShowAllGuests : boolean;
   end;
-
-var
-  frmResGuestList : TfrmResGuestList;
 
 implementation
 
@@ -280,11 +276,6 @@ begin
   mHead_.Post;
 
   Refresh;
-end;
-
-procedure TfrmResGuestList.FormClose(Sender : TObject; var Action : TCloseAction);
-begin
-  // **
 end;
 
 function TfrmResGuestList.getRes(reservation : Integer) : boolean;
@@ -460,8 +451,8 @@ begin
       RoomReservation := R_.FieldByName('RoomReservation').Asinteger;
       reservation := R_.FieldByName('Reservation').Asinteger;
       RoomStatus := R_.FieldByName('RoomStatus').AsString;
-      Arrival := R_.FieldByName('rrArrival').AsDateTime;
-      Departure := R_.FieldByName('rrDeparture').AsDateTime;
+      Arrival := R_.FieldByName('Arrival').AsDateTime;
+      Departure := R_.FieldByName('Departure').AsDateTime;
       GuestType := R_.FieldByName('GuestType').AsString;
       Country := R_.FieldByName('Country').AsString;
       Person := R_.FieldByName('Person').Asinteger;

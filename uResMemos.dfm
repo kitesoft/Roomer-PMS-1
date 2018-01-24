@@ -161,6 +161,10 @@ object frmResMemos: TfrmResMemos
     SkinData.SkinSection = 'PAGECONTROL'
     object tabReservation: TsTabSheet
       Caption = 'Resevation'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel4: TsPanel
         Left = 345
         Top = 0
@@ -328,6 +332,10 @@ object frmResMemos: TfrmResMemos
     object tabRooms: TsTabSheet
       Caption = 'Rooms'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel7: TsPanel
         Left = 0
         Top = 0
@@ -546,6 +554,7 @@ object frmResMemos: TfrmResMemos
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 592
     Top = 144
   end
@@ -565,6 +574,7 @@ object frmResMemos: TfrmResMemos
     RoomerEntitiesUri = 'http://localhost:8080/services/entities/'
     RoomerDatasetsUri = 'http://localhost:8080/services/datasets/'
     SessionLengthSeconds = 0
+    PrimaryKeyField = 'ID'
     Left = 552
     Top = 256
   end

@@ -440,7 +440,6 @@ sql := sql +    '   ih.InvoiceNumber ';
     try
       s :=  format(sql,[_db(zDateFrom),_db(zDateTo),inLocation]);
       copytoclipboard(s);
-      debugmessage(s);
 
       hData.rSet_bySQL(rSet,s);
 

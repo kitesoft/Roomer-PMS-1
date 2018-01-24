@@ -502,16 +502,6 @@ begin
             s := ' DELETE FROM roomsdate where ResFlag =' + _db(STATUS_DELETED) + ' AND RoomReservation = ' + _db(RoomReservation) + #10;
             ExePlan.AddExec(s);
 
-            s := format('UPDATE roomreservations SET Arrival=%s, departure=%s, rrArrival=%s, rrDeparture=%s WHERE RoomReservation = %d',
-                [
-                  _db(newArrival, true),
-                  _db(newDeparture, true),
-                  _db(newArrival, true),
-                  _db(newDeparture, true),
-                  RoomReservation
-                ]);
-            ExePlan.AddExec(s);
-
             ExePlan.Execute(ptExec, false, false);
             if TReservationState.FromResStatus(status).InfluencesAvailability then
               d.roomerMainDataSet.SystemChangeAvailabilityForRoom(RoomReservation, true); //decrease availability
@@ -534,18 +524,7 @@ begin
           s := s + GetTranslatedText('shTx_ChangeRRdates_SomeErrors') + #10;
           s := s + inttostr(iNumErrors) + GetTranslatedText('shTx_ChangeRRdates_Total') + #10 + #10;
           MessageDlg(s, mtWarning, [mbOK], 0);
-        end
-        else
-        begin
-          Rset.edit;
-          Rset.FieldByName('Room').asString := Room;
-          Rset.FieldByName('Arrival').asString := sNewArrival;
-          Rset.FieldByName('Departure').asString := sNewDeparture;
-          Rset.FieldByName('rrDeparture').asDateTime := newDeparture;
-          Rset.FieldByName('rrArrival').asDateTime := newArrival;
-          Rset.Post;
         end;
-
         d.roomerMainDataSet.SystemCorrectDoorCodeSettings(RoomReservation);
       end;
     end;
@@ -1057,18 +1036,20 @@ begin
           FreeAndNil(Rset);
         end;
 
-        s := '';
-        s := s + ' UPDATE roomreservations ';
-        s := s + ' SET ';
-        s := s + '  Arrival = ' + _db(Arrival2) + ' ';
-        s := s + ' ,Departure = ' + _db(Departure2) + ' ';
-        s := s + ' ,rateCount = ' + _db(roomHolder.rateCount) + ' ';
-
-        s := s + ' WHERE ';
-        s := s + '   (roomreservation=' + _db(roomHolder.RoomReservation) + ') ';
-        // copyToClipboard(s);
-        // DebugMessage('invoicelines '#10#10+s);
-        ExecutionPlan.AddExec(s);
+//        s := '';
+//        s := s + ' UPDATE roomreservations ';
+//        s := s + ' SET ';
+//        s := s + '  Arrival = ' + _db(Arrival2) + ' ';
+//        s := s + ' ,Departure = ' + _db(Departure2) + ' ';
+//        s := s + ' ,rrArrival = ' + _db(Arrival2) + ' ';
+//        s := s + ' ,rrDeparture = ' + _db(Departure2) + ' ';
+//        s := s + ' ,rateCount = ' + _db(roomHolder.rateCount) + ' ';
+//
+//        s := s + ' WHERE ';
+//        s := s + '   (roomreservation=' + _db(roomHolder.RoomReservation) + ') ';
+//        // copyToClipboard(s);
+//        // DebugMessage('invoicelines '#10#10+s);
+//        ExecutionPlan.AddExec(s);
 
         iDayCount := trunc(Departure1) - trunc(Arrival1);
         for ii := trunc(Arrival1) to trunc(Arrival1) + iDayCount - 1 do

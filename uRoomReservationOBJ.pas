@@ -201,23 +201,6 @@ begin
     if length(rrList) = 0 then exit;
     delete(rrList,length(rrList),1);
 
-
-//    s := '';
-//    s := s+ ' xSELECT '+#10;
-//    s := s+ '       RoomReservations.RoomReservation ';
-//    s := s+ '     , RoomReservations.Room  ';
-//    s := s+ '     , RoomReservations.Reservation ';
-//    s := s+ '     , RoomReservations.Status ';
-//    s := s+ '     , RoomReservations.rrArrival ';
-//    s := s+ '     , RoomReservations.rrDeparture ';
-//    s := s+ '     , Reservations.Customer ';
-//    s := s+ '     , Reservations.Name As CustomerName ';
-//    s := s+ ' FROM ';
-//    s := s+ '   RoomReservations ';
-//    s := s+ '   RIGHT OUTER JOIN ';
-//    s := s+ '         Reservations ON RoomReservations.Reservation = Reservations.Reservation ';
-//    s := s+ ' WHERE (RoomReservation in ('+rrList+') ) ';
-
       s := format(select_RoomReservationOBJ_RoomReservation_getListFromDB , [rrList]);
       // CopyToClipboard(s);
       // DebugMessage(''#10#10+s);
@@ -238,8 +221,8 @@ begin
          qMt_.FieldByName( 'PaymentInvoice'  ).asInteger  := rSet.FieldByName('PaymentInvoice').asInteger  ;
          qMt_.FieldByName( 'GroupAccount'    ).asBoolean  := rSet.FieldByName('GroupAccount').asBoolean  ;
          qMt_.FieldByName( 'resFlag'         ).asString   := rSet.FieldByName('Status').asString  ;
-         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('rrArrival').asDateTime;
-         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('rrDeparture').asDateTime;
+         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('Arrival').asDateTime;
+         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('Departure').asDateTime;
          qMt_.FieldByName( 'Customer'        ).asString   := rSet.FieldByName('Customer').asString;
          qMt_.FieldByName( 'CustomerName'    ).asString   := rSet.FieldByName('CustomerName').asString;
          qMt_.FieldByName( 'GuestName'       ).asString   := rSet.FieldByName('GuestName').asString;
@@ -268,41 +251,36 @@ begin
   try
 
       sql :=
-      ' SELECT '+
-      '       roomreservations.RoomReservation '+
-      '     , roomreservations.Room  '+
-      '     , roomreservations.Reservation '+
-      '     , roomreservations.Status '+
-      '     , roomreservations.rrArrival '+
-      '     , roomreservations.rrDeparture '+
-      '     , roomreservations.RoomRentPaymentInvoice AS PaymentInvoice '+
-      '     , roomreservations.GroupAccount '+
-      '     , reservations.Customer '+
-      '     , reservations.Channel '+
-      '     , reservations.Name As CustomerName '+
-      '     , persons.name As GuestName '+
-      '     , (SELECT COUNT(id) FROM persons p WHERE p.RoomReservation=roomreservations.RoomReservation) AS NumGuests '+
-      ' FROM '+
-      '   roomreservations '+
-      '   RIGHT OUTER JOIN '+
-      '         reservations ON roomreservations.Reservation = reservations.Reservation '+
-      '   LEFT OUTER JOIN persons ON roomreservations.roomreservation = persons.roomreservation AND persons.MainName=1'+
-      ' WHERE (roomreservations.RoomReservation in ( SELECT DISTINCT '+
-      '    RoomReservation '+
-      '  FROM  roomsdate '+
-      '  WHERE (( ADate >= ''%s'' ) '+
-      '   AND (ADate < ''%s'' )) '+
-      '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '; //**zxhj line added
-
-      if skipCancelledBookings then
-        sql := sql +
-               '   AND (ResFlag <> '+_db(STATUS_CANCELLED)+' ) '; //**zxhj line added
-
-
-      sql := sql +
-             '  ORDER BY RoomReservation '+
-             ' ) ) '+
-             'GROUP BY roomreservations.RoomReservation'; // rrList
+      ' SELECT '#10 +
+      '       roomreservations.RoomReservation '#10 +
+      '     , roomreservations.Room  '#10 +
+      '     , roomreservations.Reservation '#10 +
+      '     , roomreservations.Status '#10 +
+      '     , RR_Arrival(roomreservations.Roomreservation, not params.skipCancelledBookings) as Arrival '#10 +
+      '     , RR_Departure(roomreservations.Roomreservation, not params.skipCancelledBookings) as Departure '#10 +
+      '     , roomreservations.RoomRentPaymentInvoice AS PaymentInvoice '#10 +
+      '     , roomreservations.GroupAccount '#10 +
+      '     , reservations.Customer '#10 +
+      '     , reservations.Channel '#10 +
+      '     , reservations.Name As CustomerName '#10 +
+      '     , persons.name As GuestName '#10 +
+      '     , (SELECT COUNT(id) FROM persons p WHERE p.RoomReservation=roomreservations.RoomReservation) AS NumGuests '#10 +
+      ' FROM '#10 +
+      '   (select ' + _db(skipCancelledBookings) + ' as skipCancelledBookings) params, '#10 +
+      '   roomreservations '#10 +
+      '   RIGHT OUTER JOIN '#10 +
+      '         reservations ON roomreservations.Reservation = reservations.Reservation '#10 +
+      '   LEFT OUTER JOIN persons ON roomreservations.roomreservation = persons.roomreservation AND persons.MainName=1'#10 +
+      ' WHERE (roomreservations.RoomReservation in ( SELECT DISTINCT '#10 +
+      '    RoomReservation '#10 +
+      '  FROM  roomsdate '#10 +
+      '  WHERE (( ADate >= ''%s'' ) '#10 +
+      '   AND (ADate < ''%s'' )) '#10 +
+      '   AND (ResFlag <> ' +_db(STATUS_DELETED)+' ) '#10 +
+      '   AND (not params.skipCancelledBookings OR (ResFlag <> ' +_db(STATUS_CANCELLED)+' )) '#10 +
+      '  ORDER BY RoomReservation '#10 +
+      ' ) ) '#10 +
+      ' GROUP BY roomreservations.RoomReservation'; // rrList
 
       s := format(sql,[uDateUtils.dateToSqlString(fromDate), uDateUtils.dateToSqlString(toDate)]);
 
@@ -508,8 +486,8 @@ begin
          qMt_.FieldByName( 'PaymentInvoice'  ).asInteger  := rSet.FieldByName('PaymentInvoice').asInteger  ;
          qMt_.FieldByName( 'GroupAccount'    ).asBoolean  := rSet.FieldByName('GroupAccount').asBoolean  ;
          qMt_.FieldByName( 'resFlag'         ).asString   := rSet.FieldByName('Status').asString  ;
-         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('rrArrival').asDateTime;
-         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('rrDeparture').asDateTime;
+         qMt_.FieldByName( 'Arrival'         ).asDateTime := rSet.FieldByName('Arrival').asDateTime;
+         qMt_.FieldByName( 'Departure'       ).asDateTime := rSet.FieldByName('Departure').asDateTime;
          qMt_.FieldByName( 'Customer'        ).asString   := rSet.FieldByName('Customer').asString;
          qMt_.FieldByName( 'CustomerName'    ).asString   := rSet.FieldByName('CustomerName').asString;
          qMt_.FieldByName( 'GuestName'       ).asString   := rSet.FieldByName('GuestName').asString;

@@ -1495,8 +1495,8 @@ begin
   ItemId       := dataset.FieldByName('ItemId').AsString;
   Currency     := dataset.FieldByName('Currency').AsString;
 
-  dtArrival   := SQLToDate(dataset.FieldByName('sArrival').AsString);
-  dtDeparture := SQLToDate(dataset.FieldByName('sDeparture').AsString);
+  dtArrival   := dataset.FieldByName('sArrival').AsDateTime;
+  dtDeparture := dataset.FieldByName('sDeparture').AsDateTime;
 
   dataset.FieldByName('DayCount').asInteger := trunc(dtDeparture)-trunc(dtArrival);
 
@@ -2120,8 +2120,8 @@ begin
     s := s+', rd.paid '#10;
     s := s+', rv.Country '#10;
     s := s+', rv.Customer '#10;
-    s := s+', rr.Arrival AS sArrival '#10;
-    s := s+', rr.Departure  AS sDeparture '#10;
+    s := s+', RR_Arrival(rd.roomreservation, false) AS sArrival '#10;
+    s := s+', RR_Departure(rd.roomreservation, false)  AS sDeparture '#10;
     s := s+', cust.surName AS CustomerName '#10;
     s := s+', rv.MarketSegment AS CustomerType '#10;
     s := s+', ro.Location '#10;
