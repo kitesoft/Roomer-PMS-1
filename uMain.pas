@@ -6489,14 +6489,22 @@ procedure TfrmMain.grOneDayRoomsStartDrag(Sender: TObject; var DragObject: TDrag
 var
   Arrival, Departure: Tdate;
   iReservation, iRoomReservation: integer;
+  lROom: TRoomObject;
 begin
   GetDragGuestIndexes(iDragCell, iReservation, iRoomReservation);
-  if FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].BlockMove AND
-    (Copy(FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber, 1, 1) <> '<') then
+  lRoom := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation];
+  if (lRoom.BlockMove AND not lRoom.IsUnAssigned) then
   begin
     MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveTheRoomReservation'), mtError, [mbOk], 0);
     exit;
   end;
+
+  if (lRoom.ResStatus = TReservationState.rsCancelled) then
+  begin
+    MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveCancelledRoomReservation'), mtError, [mbOk], 0);
+    exit;
+  end;
+
   if IsShiftKeyPressed then
   begin
     OneDayGridArrivalAndDepartureOfCell(iDragCell, Arrival, Departure);
@@ -8770,10 +8778,20 @@ begin
   rri := Period_GetResInfo(PeriodViewSelectedCol, PeriodViewSelectedRow, _grid.Tag);
   // _grid.col, _grid.row, _grid.Tag);
   if rri.Reservation > -1 then
+  begin
     if rri.BlockMove AND (Copy(rri.Room, 1, 1) <> '<') then
     begin
       MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveTheRoomReservation'), mtError, [mbOk], 0);
+      Exit;
     end;
+
+    if (rri.resFlag = TReservationState.rsCancelled.AsStatusChar) then
+    begin
+      MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveCancelledRoomReservation'), mtError, [mbOk], 0);
+      exit;
+    end;
+
+  end;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////

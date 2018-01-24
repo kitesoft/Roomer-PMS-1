@@ -1547,6 +1547,7 @@ begin
   constants.Add('shTx_FrmMain_UserCannotMoveTheRoomReservation', 'This room reservation has been blocked from moving - You are unable to move the guest to a different room.'#13#13 +
                'If it is absolutely necessary to move this room reservation for a different room, then you will need to open'#13'the reservation profile and change the "Block Move" status to false.');
 
+  constants.Add('shTx_FrmMain_UserCannotMoveCancelledRoomReservation', 'This room reservation has been cancelled and cannot be moved.');
 
   constants.Add('shTx_FrmChannelTogglingRules_ConfirmRemove', 'Do you really want to remove the selected rule: ');
   constants.Add('shTx_FrmChannelTogglingRules_NewRule', '<New Rule>');
