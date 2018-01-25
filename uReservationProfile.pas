@@ -685,14 +685,6 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure tvInvoiceHeadsAmountTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesPriceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesAmountTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
     procedure sButton4Click(Sender: TObject);
     procedure tvRoomsPackagePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsblockMovePropertiesChange(Sender: TObject);
@@ -885,7 +877,7 @@ uses
   , uResourceTypeDefinitions
   , uFrmPayCardView
   , uFrmTokenChargeHistory
-  , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions, uRoomerCurrencymanager;
 
 {$R *.DFM}
 
@@ -3367,15 +3359,8 @@ end;
 
 procedure TfrmReservationProfile.tvGetCurrencyProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
-var
-  lCurrencyHandler: TCurrencyHandler;
 begin
-  lCurrencyHandler := TCurrencyHandler.Create(mRoomsCurrency.AsString);
-  try
-    aProperties := lCurrencyHandler.GetcxEditProperties
-  finally
-    lCurrencyHandler.Free;
-  end;
+  RoomerCurrencyManager[mRoomsCurrency.AsString].SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmReservationProfile.tvRoomsunpaidRentPricePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -3938,36 +3923,9 @@ procedure TfrmReservationProfile.tvGetNativeCurrentProperties(Sender: TcxCustomG
   ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(aProperties);
 end;
 
-procedure TfrmReservationProfile.tvInvoiceLinesAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
-
-procedure TfrmReservationProfile.tvInvoiceLinesAmountTaxGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
-
-procedure TfrmReservationProfile.tvInvoiceLinesAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
-
-procedure TfrmReservationProfile.tvInvoiceLinesPriceGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
 
 { TsCombobox }
 

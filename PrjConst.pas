@@ -993,6 +993,7 @@ begin
   constants.Add('shTx_RoomPricesEdit_Prices', 'Prices are ready');
   constants.Add('shTx_RoomPricesEdit_Error', 'Error');
   constants.Add('shTx_RoomPricesEdit_PriceGroup', 'Price Group must be specified');
+
   constants.Add('shRoomPrices_NotAllRoomsUpdated', 'There are differences in staydates between the rooms.'#10 +
                                                   'Therefore not all roomprices can be adjusted because of differences in stay dates.'#10+
                                                   'Continue with adjusting roomrates for rooms with the same staydates?');
@@ -1365,6 +1366,8 @@ begin
   constants.Add('shUI_BestAverageRate', 'BAR');
   constants.Add('shUI_OOO', 'Out-of-order');
   constants.Add('shUI_AverageDailyRate', 'ADR');
+  constants.Add('shUI_Average', 'Avg');
+  constants.Add('shUI_Sum', 'Sum');
 
   constants.Add('shUI_RoomRentInvoice', 'Room-rent Invoice : ');
   constants.Add('shUI_RoomInvoices', 'Room Invoice : ');

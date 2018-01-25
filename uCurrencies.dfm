@@ -53,9 +53,6 @@ inherited frmCurrencies: TfrmCurrencies
       inherited btnInsert: TsButton
         TabOrder = 4
       end
-      inherited btnEdit: TsButton
-        ExplicitTop = 4
-      end
       object btnHistory: TsButton
         AlignWithMargins = True
         Left = 423
@@ -304,6 +301,7 @@ inherited frmCurrencies: TfrmCurrencies
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43108.585563333330000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

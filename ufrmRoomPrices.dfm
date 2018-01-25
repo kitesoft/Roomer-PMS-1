@@ -199,12 +199,14 @@ inherited frmRoomPrices: TfrmRoomPrices
         item
           Format = '###0.00;###0.00'
           Kind = skSum
+          OnGetText = tvRoomResTcxGridDBDataControllerTcxDataSummaryFooterSummaryItems3GetText
           FieldName = 'AveragePrice'
           Column = tvRoomResAveragePriceDisplay
         end
         item
           Format = '###0.00;###0.00'
           Kind = skAverage
+          OnGetText = tvRoomResTcxGridDBDataControllerTcxDataSummaryFooterSummaryItems4GetText
           FieldName = 'AveragePrice'
           Column = tvRoomResAveragePriceDisplay
         end>

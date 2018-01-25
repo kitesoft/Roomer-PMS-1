@@ -6785,6 +6785,7 @@ end;
 
 procedure recCurrencyHolder.ReadFromDataset(aRset: TDataset);
 begin
+  Init;
   id := aRSet.fieldbyname('ID').asInteger;
   Currency := aRSet.fieldbyname('currency').asString;
   Description := aRSet.fieldbyname('description').asString;
@@ -6807,6 +6808,7 @@ begin
   DisplayFormat := '';
   CurrencySign := '';
   active := true;
+  CurrencyFormat := 2;
 end;
 
 function GET_CurrencyHolderByCurrency(var theData: recCurrencyHolder; justActive: boolean = true): boolean;

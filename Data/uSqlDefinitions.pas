@@ -1108,11 +1108,6 @@ select_RoomReservation : string =
 '    ,Currency '#10+
 '    ,Discount '#10+
 '    ,PriceType '#10+
-<<<<<<< HEAD
-'    ,RR_Arrival(roomreservation, false) as Arrival '#10+
-'    ,RR_Departure(roomreservation, false) as Departure '#10+
-=======
->>>>>>> RPMS1109rrArrival
 '    ,RoomType '#10+
 '    ,PMInfo '#10+
 '    ,HiddenInfo '#10+

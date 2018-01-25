@@ -460,15 +460,6 @@ end;
 procedure TfrmCurrencies.DoShow;
 begin
   inherited;
-  if ZAct = actLookup then
-  begin
-    mnuiAllowGridEdit.Checked := false;
-    DialogButtons := mbOKCancel;
-  end else
-  begin
-    mnuiAllowGridEdit.Checked := true;
-    DialogButtons := [mbClose];
-  end;
   //-C
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowGridEdit;

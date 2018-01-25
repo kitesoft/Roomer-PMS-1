@@ -58,8 +58,9 @@ uses
   dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
-  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset, cxCheckBox, cxCurrencyEdit, uCurrencyHandler
+  dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset, cxCheckBox, cxCurrencyEdit
   , uRoomerForm, dxPScxCommon, dxPScxGridLnk, cxPropertiesStore, Vcl.ComCtrls, sStatusBar
+  , uRoomerCurrencyDefinition
 
   ;
 
@@ -142,7 +143,6 @@ type
     mRoomRatesDiscountAmount: TFloatField;
     mRoomRatesRentAmount: TFloatField;
     mRoomRatesNativeAmount: TFloatField;
-    procedure FormDestroy(Sender: TObject);
     procedure edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure btnApplyRateClick(Sender: TObject);
     procedure ApplyDiscountClick(Sender: TObject);
@@ -159,9 +159,17 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure tvRoomRatesRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure tvRoomRatesFooterSummaryCurrencyGetText(Sender: TcxDataSummaryItem;
+      const AValue: Variant; AIsFooter: Boolean; var AText: string);
+    procedure tvRoomRatesFooterSummaryNativeGetText(Sender: TcxDataSummaryItem; const AValue: Variant;
+      AIsFooter: Boolean; var AText: string);
+    procedure tvRoomRatesFoooterSummaryCurrencyGetTextAvg(Sender: TcxDataSummaryItem;
+      const AValue: Variant; AIsFooter: Boolean; var AText: string);
+    procedure tvRoomRatesFoooterSummaryCurrencyGetTextSum(Sender: TcxDataSummaryItem;
+      const AValue: Variant; AIsFooter: Boolean; var AText: string);
   private
     { Private declarations }
-    FCurrencyHandler: TCurrencyHandler;
+    FCurrencyDefinition: TRoomerCurrencyDefinition;
     FData: recEditRoomPriceHolder;
     procedure SetData(const Value: recEditRoomPriceHolder);
   protected
@@ -185,7 +193,7 @@ uses
   , ufrmPriceCodesGrid
   , uAppGlobal
   , uMain, uDImages
-  , uUtils, uRoomerGridForm;
+  , uUtils, uRoomerGridForm, uRoomerCurrencymanager, PrjConst;
 
 
 {$R *.dfm}
@@ -485,11 +493,6 @@ begin
   end;
 end;
 
-procedure TfrmEditRoomPrice.FormDestroy(Sender: TObject);
-begin
-  FCurrencyHandler.Free;
-end;
-
 procedure TfrmEditRoomPrice._kbmRoomRatesBeforePost(DataSet: TDataSet);
 var
   Rate             : Double   ;
@@ -549,8 +552,7 @@ begin
     FData.currencyRate := 1.0;
   end;
 
-  FCurrencyHandler.Free;
-  FCurrencyHandler := TCurrencyHandler.Create(FData.currency);
+  FCurrencyDefinition := RoomerCurrencyManager[FData.currency];
 
   with cbxIsRoomResDiscountPrec do
   begin
@@ -566,21 +568,51 @@ end;
 procedure TfrmEditRoomPrice.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  aProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmEditRoomPrice.tvRoomRatesRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
+  FCurrencyDefinition.SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmEditRoomPrice.tvRoomRatesRentDiscountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   if not aRecord.Values[tvRoomRatesisPercentage.Index] then
-    aProperties := FCurrencyHandler.GetcxEditPropertiesKeepEvents(aProperties);
+    FCurrencyDefinition.SetcxEditProperties(aProperties);
+end;
+
+procedure TfrmEditRoomPrice.tvRoomRatesFoooterSummaryCurrencyGetTextSum(
+  Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean; var AText: string);
+begin
+  inherited;
+  tvRoomRatesFooterSummaryCurrencyGetText(Sender, AValue, AIsFooter, AText);
+  aText := GetTranslatedText('shUI_Sum') + ' ' + aText;
+end;
+
+procedure TfrmEditRoomPrice.tvRoomRatesFoooterSummaryCurrencyGetTextAvg(
+  Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean; var AText: string);
+begin
+  inherited;
+  tvRoomRatesFooterSummaryCurrencyGetText(Sender, AValue, AIsFooter, AText);
+  aText := GetTranslatedText('shUI_Average') + ' ' + aText;
+end;
+
+procedure TfrmEditRoomPrice.tvRoomRatesFooterSummaryCurrencyGetText(
+  Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean; var AText: string);
+begin
+  inherited;
+  aText := FCurrencyDefinition.FormattedValue(aValue, true);
+end;
+
+procedure TfrmEditRoomPrice.tvRoomRatesFooterSummaryNativeGetText(Sender: TcxDataSummaryItem; const AValue: Variant;
+  AIsFooter: Boolean; var AText: string);
+begin
+  inherited;
+  aText := RoomerCurrencyManager.DefaultCurrencyDefinition.FormattedValue(aValue, true);
 end;
 
 end.
