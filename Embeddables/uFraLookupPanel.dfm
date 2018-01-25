@@ -1,8 +1,8 @@
-object fraLookupPanel: TfraLookupPanel
+object fraCustomLookupPanel: TfraCustomLookupPanel
   Left = 0
   Top = 0
   Width = 250
-  Height = 19
+  Height = 20
   TabOrder = 0
   object pnlLookup: TsPanel
     Left = 0

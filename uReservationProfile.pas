@@ -76,7 +76,8 @@ uses
   , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
-  , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable
+  , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable,
+  uFraLookupPanel
   ;
 
 type
@@ -1027,9 +1028,9 @@ begin
   vStartName := frmReservationProfile.edtName.text;
 
   fraGuestNationality.AllowEdit := True;
-  fraGuestNationality.OnCountryChangeAndValid := btnChangeNationalitiesAllGuestsClick;
+  fraGuestNationality.OnChangedAndValid := btnChangeNationalitiesAllGuestsClick;
   fraGuestCountry.AllowEdit := True;
-  fraGuestCountry.OnCountryChangeAndValid := btnChangeCountryAllGuestsClick;
+  fraGuestCountry.OnChangedAndValid := btnChangeCountryAllGuestsClick;
   fraContactCountry.AllowEdit := False;
 
   pnlAllGuestsNationality.Visible := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
@@ -1151,7 +1152,7 @@ begin
 
         fraContactCountry.DisableEvents;
         try
-          fraContactCountry.CountryCode := trim(fieldbyname('ContactCountry').asstring);
+          fraContactCountry.Code := trim(fieldbyname('ContactCountry').asstring);
         finally
           fraContactCountry.EnableEvents;
         end;
@@ -1369,7 +1370,7 @@ begin
       rSet.fieldbyname('Address3').asstring := edtAddress3.text;
       rSet.fieldbyname('CustomerWebSite').asstring := edtCustomerWebSite.text;
       rSet.fieldbyname('CustomerEmail').asstring := edtCustomerEmail.text;
-      rSet.fieldbyname('Country').asstring := fraContactCountry.CountryCode;
+      rSet.fieldbyname('Country').asstring := fraContactCountry.Code;
       rSet.fieldbyname('MarketSegment').asstring := edtType.text;
       rSet.fieldbyname('Tel1').asstring := edtTel1.text;
       rSet.fieldbyname('Fax').asstring := edtFax.text;
@@ -1386,7 +1387,7 @@ begin
       rSet.fieldbyname('ContactAddress2').asstring := edtContactAddress2.text;
       rSet.fieldbyname('ContactAddress3').asstring := edtContactAddress3.text;
       rSet.fieldbyname('ContactAddress4').asstring := edtContactAddress4.text;
-      rSet.fieldbyname('ContactCountry').asstring := fraContactCountry.CountryCode;
+      rSet.fieldbyname('ContactCountry').asstring := fraContactCountry.Code;
       rSet.fieldbyname('invRefrence').asstring := edtInvRefrence.text;
       rSet.Post;
 
@@ -1427,7 +1428,7 @@ var
 begin
   fra := fraGuestNationality;
 
-  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirm'), [fra.CountryName]);
+  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirm'), [fra.Description]);
   lAnswer := MessageDlg(s, mtConfirmation, [mbYes, mbNo, mbAll], 0, mbYes);
 
   lPerson := 0;
@@ -1449,7 +1450,7 @@ begin
       Exit;
   end;
 
-  if not d.ChangeNationality(fra.CountryCode, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
+  if not d.ChangeNationality(fra.Code, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
     showmessage(GetTranslatedText('shTx_ReservationProfile_NationalityChangeFailed'))
   else
     getGuestData(mRoomsRoomReservation.Asinteger, True);
@@ -1465,7 +1466,7 @@ var
 begin
   fra := fraGuestCountry;
 
-  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirm'), [fra.CountryName]);
+  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirm'), [fra.Description]);
   lAnswer := MessageDlg(s, mtConfirmation, [mbYes, mbNo, mbAll], 0, mbYes);
 
   lPerson := 0;
@@ -1487,7 +1488,7 @@ begin
       Exit;
   end;
 
-  if not d.ChangeCountry(fra.CountryCode, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
+  if not d.ChangeCountry(fra.Code, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
     showmessage(GetTranslatedText('shTx_ReservationProfile_CountryChangeFailed'))
   else
     getGuestData(mRoomsRoomReservation.Asinteger, True);
@@ -1996,7 +1997,7 @@ begin
       Address2 := edtAddress1.text;
       Address3 := edtAddress1.text;
       Address4 := edtAddress1.text;
-      Country := fraContactCountry.CountryCode;
+      Country := fraContactCountry.Code;
 
       Currency := mRoomsCurrency.asstring;
       isGroupInvoice := mRoomsisGroupAccount.AsBoolean;
@@ -2725,14 +2726,14 @@ begin
 
     fraGuestCountry.DisableEvents;
     try
-      fraGuestCountry.CountryCode := mAllGuestsCountry.AsString;
+      fraGuestCountry.Code := mAllGuestsCountry.AsString;
     finally
       fraGuestCountry.EnableEvents;
     end;
 
     fraGuestNationality.DisableEvents;
     try
-      fraGuestNationality.CountryCode := mAllGuestsNationality.AsString;
+      fraGuestNationality.Code := mAllGuestsNationality.AsString;
     finally
       fraGuestNationality.EnableEvents;
     end;
@@ -2745,8 +2746,8 @@ begin
     edtGuestAddress2.Text := '';
     edtGuestAddress3.Text := '';
     edtGuestAddress4.Text := '';
-    fraGuestCountry.CountryCode := '';
-    fraGuestNationality.CountryCode := '';
+    fraGuestCountry.Code := '';
+    fraGuestNationality.Code := '';
   end
 end;
 

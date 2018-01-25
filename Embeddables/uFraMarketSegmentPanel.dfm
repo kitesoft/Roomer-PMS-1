@@ -1,0 +1,2 @@
+inherited fraLookupMarketSegment: TfraLookupMarketSegment
+end

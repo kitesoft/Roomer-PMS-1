@@ -33,7 +33,7 @@ uses
   , sCurrEdit
   , sSkinProvider
   , sSpinEdit
-  , sComboBox, Vcl.ComCtrls, sPageControl, sBevel, sMemo, uFraCountryPanel
+  , sComboBox, Vcl.ComCtrls, sPageControl, sBevel, sMemo, uFraCountryPanel, uFraLookupPanel
 
   ;
 
@@ -253,7 +253,7 @@ begin
   edAddress2.Text      := zData.Address2        ;
   edAddress3.Text      := zData.Address3        ;
   edAddress4.Text      := zData.Address4        ;
-  fraCountry.CountryCode := zData.Country         ;
+  fraCountry.Code := zData.Country         ;
   edTel1.Text          := zData.Tel1            ;
   edTel2.Text          := zData.Tel2            ;
   edMobile.Text        := zData.Mobile             ;
@@ -444,7 +444,7 @@ begin
     zData.Address2       :=  edAddress2.Text       ;
     zData.Address3       :=  edAddress3.Text       ;
     zData.Address4       :=  edAddress4.Text       ;
-    zData.Country        :=  fraCountry.CountryCode;
+    zData.Country        :=  fraCountry.Code;
     zData.Tel1           :=  edTel1.Text           ;
     zData.Tel2           :=  edTel2.Text           ;
     zData.Mobile            :=  edMobile.Text            ;

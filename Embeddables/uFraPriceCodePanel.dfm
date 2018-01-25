@@ -1,0 +1,2 @@
+inherited fraPriceCodePanel: TfraPriceCodePanel
+end

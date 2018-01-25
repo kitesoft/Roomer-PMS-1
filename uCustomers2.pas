@@ -234,6 +234,7 @@ type
     tvDatanotes: TcxGridDBColumn;
     m_RatePlanId: TIntegerField;
     tvDataRatePlanId: TcxGridDBColumn;
+    tmrFilterChanged: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -277,6 +278,7 @@ type
     procedure tvDataCustomerPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DSStateChange(Sender: TObject);
+    procedure tmrFilterChangedTimer(Sender: TObject);
   private
     { Private declarations }
     financeLookupList : TKeyPairList;
@@ -572,7 +574,8 @@ begin
     tvData.DataController.Filter.Active := false;
   end else
   begin
-    applyFilter;
+    tmrFilterChanged.Enabled := false;
+    tmrFilterChanged.Enabled := true;
   end;
 end;
 
@@ -1026,6 +1029,12 @@ end;
 ////////////////////////////////////////////////////////////////////////////
 //  Filter
 /////////////////////////////////////////////////////////////////////////////
+
+procedure TfrmCustomers2.tmrFilterChangedTimer(Sender: TObject);
+begin
+  tmrFilterChanged.Enabled := false;
+  applyFilter;
+end;
 
 procedure TfrmCustomers2.tvDataColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin

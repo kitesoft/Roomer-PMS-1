@@ -457,6 +457,12 @@ object frmControlData: TfrmControlData
               Top = 128
               Width = 218
               Height = 20
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
               TabOrder = 4
               ExplicitLeft = 213
               ExplicitTop = 128
@@ -464,10 +470,6 @@ object frmControlData: TfrmControlData
               inherited pnlCountry: TsPanel
                 Width = 218
                 ExplicitWidth = 218
-                inherited lblCountryName: TLabel
-                  Width = 19
-                  Height = 13
-                end
               end
             end
           end
@@ -3814,7 +3816,6 @@ object frmControlData: TfrmControlData
               TabOrder = 3
               ExplicitLeft = 327
               ExplicitTop = 14
-              ExplicitHeight = 20
             end
           end
           object LMDGroupBox26: TsGroupBox

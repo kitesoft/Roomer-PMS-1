@@ -200,7 +200,7 @@
         <PostBuildEvent><![CDATA[$(OUTPUTDIR)DeployOnDev.bat
 $(PostBuildEvent)]]></PostBuildEvent>
         <VerInfo_Release>19</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.19.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.19.0;Comments=;ExtraBuild=180123Acc;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.19.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.19.0;Comments=;ExtraBuild=180125Acc;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>
@@ -986,7 +986,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="VersionManagement\uReleaseNotes.pas"/>
         <DCCReference Include="RoomerVCLs\Source\RoomerCurrencyEdit.pas"/>
         <DCCReference Include="Embeddables\uFraLookupPanel.pas">
-            <Form>fraLookupPanel</Form>
+            <Form>fraCustomLookupPanel</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Definitions\uMarketDefinitions.pas"/>
@@ -1017,6 +1017,19 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="Connections\uSnapshotService.pas"/>
         <DCCReference Include="uResGuestList.pas">
             <Form>frmResGuestlist</Form>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraMarketSegmentPanel.pas">
+            <Form>fraLookupMarketSegment</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraPriceCodePanel.pas">
+            <Form>fraPriceCodePanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraChannelPanel.pas">
+            <Form>fraChannelPanel</Form>
+            <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>

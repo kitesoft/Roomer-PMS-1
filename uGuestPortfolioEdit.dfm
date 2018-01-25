@@ -43,6 +43,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       SkinData.SkinSection = 'PAGECONTROL'
       object sTabSheet1: TsTabSheet
         Caption = 'Person'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox1: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -365,6 +369,12 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Top = 197
             Width = 325
             Height = 20
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 6
             ExplicitLeft = 199
             ExplicitTop = 197
@@ -372,9 +382,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlCountry: TsPanel
               Width = 325
               ExplicitWidth = 325
-              inherited lblCountryName: TLabel
-                Width = 259
-              end
             end
           end
         end
@@ -1167,6 +1174,12 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Top = 170
             Width = 323
             Height = 20
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 5
             ExplicitLeft = 201
             ExplicitTop = 170
@@ -1174,10 +1187,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlCountry: TsPanel
               Width = 323
               ExplicitWidth = 323
-              inherited lblCountryName: TLabel
-                Width = 19
-                Height = 13
-              end
             end
           end
         end
@@ -1769,6 +1778,12 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Top = 254
             Width = 323
             Height = 20
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 8
             ExplicitLeft = 201
             ExplicitTop = 254
@@ -1776,10 +1791,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlCountry: TsPanel
               Width = 323
               ExplicitWidth = 323
-              inherited lblCountryName: TLabel
-                Width = 19
-                Height = 13
-              end
             end
           end
         end
@@ -2862,7 +2873,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
     Top = 168
     object prLink_grData: TdxGridReportLink
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -2876,7 +2886,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

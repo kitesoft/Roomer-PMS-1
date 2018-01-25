@@ -1,13 +1,16 @@
-object fraCountryPanel: TfraCountryPanel
-  Left = 0
-  Top = 0
-  Width = 206
-  Height = 20
-  TabOrder = 0
+inherited fraCountryPanel: TfraCountryPanel
+  ParentFont = False
+  inherited pnlLookup: TsPanel
+    TabOrder = 1
+    inherited lblDescription: TsLabel
+      Width = 157
+      Height = 20
+    end
+  end
   object pnlCountry: TsPanel
     Left = 0
-    Top = 0
-    Width = 206
+    Top = 20
+    Width = 250
     Height = 20
     Margins.Left = 0
     Margins.Top = 1
@@ -22,7 +25,7 @@ object fraCountryPanel: TfraCountryPanel
       AlignWithMargins = True
       Left = 63
       Top = 3
-      Width = 140
+      Width = 184
       Height = 14
       Align = alClient
       Alignment = taCenter
@@ -51,16 +54,16 @@ object fraCountryPanel: TfraCountryPanel
       Margins.Bottom = 0
       Align = alLeft
       CharCase = ecUpperCase
+      Color = clWhite
       Constraints.MaxWidth = 140
       Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Arial'
       Font.Style = []
       MaxLength = 2
       ParentFont = False
       TabOrder = 0
-      OnChange = edCountryCodeChange
       SkinData.SkinSection = 'EDIT'
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
@@ -80,7 +83,6 @@ object fraCountryPanel: TfraCountryPanel
       Align = alLeft
       Caption = '...'
       TabOrder = 1
-      OnClick = btnGetCountryClick
       SkinData.SkinSection = 'BUTTON'
     end
   end

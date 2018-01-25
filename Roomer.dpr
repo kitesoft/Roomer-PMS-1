@@ -12,6 +12,10 @@
 
 
 
+
+
+
+
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -330,7 +334,7 @@ uses
   uCachedDataHandler in 'TableCache\uCachedDataHandler.pas',
   uReleaseNotes in 'VersionManagement\uReleaseNotes.pas',
   RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas',
-  uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraLookupPanel: TFrame},
+  uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraCustomLookupPanel: TFrame},
   uMarketDefinitions in 'Definitions\uMarketDefinitions.pas',
   uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory: {$R *.RES},
   ufrmVatCodesGrid in 'GridForms\ufrmVatCodesGrid.pas' {frmVatCodesGrid},
@@ -342,7 +346,10 @@ uses
   uFrmConnectionsStatistics in 'Connections\uFrmConnectionsStatistics.pas' {FrmConnectionsStatistics},
   uConnectionsStatisticsService in 'Connections\uConnectionsStatisticsService.pas',
   uSnapshotService in 'Connections\uSnapshotService.pas',
-  uResGuestList in 'uResGuestList.pas' {frmResGuestlist};
+  uResGuestList in 'uResGuestList.pas' {frmResGuestlist},
+  uFraMarketSegmentPanel in 'Embeddables\uFraMarketSegmentPanel.pas' {fraLookupMarketSegment: TFrame},
+  uFraPriceCodePanel in 'Embeddables\uFraPriceCodePanel.pas' {fraPriceCodePanel: TFrame},
+  uFraChannelPanel in 'Embeddables\uFraChannelPanel.pas' {fraChannelPanel: TFrame};
 
 {$R *.RES}
 

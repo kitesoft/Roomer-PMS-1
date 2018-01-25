@@ -634,6 +634,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 19
+                  Height = 13
+                end
               end
             end
             inline fraCountry: TfraCountryPanel
@@ -648,6 +652,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 19
+                  Height = 13
+                end
               end
             end
             object chkNationalityForAllGuests: TsCheckBox
@@ -936,6 +944,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlCountry: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblCountryName: TLabel
+                  Width = 19
+                  Height = 13
+                end
               end
             end
           end

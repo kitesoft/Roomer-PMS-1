@@ -16,7 +16,7 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust, dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxPScxPivotGridLnk,
-  uFraCountryPanel;
+  uFraCountryPanel, uFraLookupPanel;
 
 type
   TfrmGuestPortfolio = class(TForm)
@@ -523,7 +523,7 @@ begin
 
     fraPersonCountry.DisableEvents;
     try
-      fraPersonCountry.CountryCode := dataset['Nationality'];
+      fraPersonCountry.Code := dataset['Nationality'];
     finally
       fraPersonCountry.EnableEvents;
     end;
@@ -551,7 +551,7 @@ begin
 
     fraContactCountry.DisableEvents;
     try
-      fraContactCountry.CountryCode := dataset['Country'];
+      fraContactCountry.Code := dataset['Country'];
     finally
       fraContactCountry.EnableEvents;
     end;
@@ -582,7 +582,7 @@ begin
     edtCompState.Text := dataset['CompState'];
     fraCompanyCountry.DisableEvents;
     try
-      fraCompanyCountry.CountryCode := dataset['CompCountry'];
+      fraCompanyCountry.Code := dataset['CompCountry'];
     finally
       fraCompanyCountry.EnableEvents;
     end;
@@ -678,7 +678,7 @@ begin
   dataset['SocialSecurityNumber'] := edtSSN.Text;
   dataset['LastName'] := edtLastname.Text;
   dataset['Profession'] := edtProfession.Text;
-  dataset['Nationality'] := fraPersonCountry.CountryCode;
+  dataset['Nationality'] := fraPersonCountry.Code;
   dataset['DateOfBirth'] := edtBirthday.Date;
   dataset['PassportNumber'] := edtPassport.Text;
   dataset['PassportExpiry'] := edtPassportExpiry.Date;
@@ -699,7 +699,7 @@ begin
   dataset['Zip'] := edtZip.Text;
   dataset['City'] := edtCity.Text;
   dataset['State'] := edtState.Text;
-  dataset['Country'] := fraContactCountry.CountryCode;
+  dataset['Country'] := fraContactCountry.Code;
 
   // Telephones
   dataset['TelLandline'] := edtLandline.Text;
@@ -725,7 +725,7 @@ begin
   dataset['CompZip'] := edtCompZip.Text;
   dataset['CompCity'] := edtCompCity.Text;
   dataset['CompState'] := edtCompState.Text;
-  dataset['CompCountry'] := fraCompanyCountry.CountryCode;
+  dataset['CompCountry'] := fraCompanyCountry.Code;
 
   // Telephones
   dataset['CompTel'] := edtCompTel.Text;
@@ -908,7 +908,7 @@ begin
     edtCompAddress2.text := theData.Address2;
     edtCompZip.text := theData.Address3;
     edtCompCity.text := theData.Address4;
-    fraCompanyCountry.CountryCode := theData.Country;
+    fraCompanyCountry.Code := theData.Country;
 
     edtCompTel.text := theData.Tel1;
     edtCompEmail.text := theData.EmailAddress;
@@ -982,9 +982,9 @@ begin
   btnTabBack.Enabled := False;
   btnTabForward.Enabled := True;
 
-  fraPersonCountry.OnCountryChange := evtDataChange;
-  fraContactCountry.OnCountryChange := evtDataChange;
-  fraCompanyCountry.OnCountryChange := evtDataChange;
+  fraPersonCountry.OnChange := evtDataChange;
+  fraContactCountry.OnChange := evtDataChange;
+  fraCompanyCountry.OnChange := evtDataChange;
 
   DisplayCurrent;
 end;

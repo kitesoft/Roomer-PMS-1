@@ -1,4 +1,4 @@
-inherited fraCurrencyPanel: TfraCurrencyPanel
+inherited fraChannelPanel: TfraChannelPanel
   inherited pnlLookup: TsPanel
     inherited lblDescription: TsLabel
       Width = 157

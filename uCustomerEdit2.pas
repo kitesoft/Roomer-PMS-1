@@ -40,7 +40,8 @@ uses
   , sCurrEdit
   , sSkinProvider, sMemo, Vcl.ComCtrls, sPageControl, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkSide, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, cxContainer, cxEdit, cxTreeView, Vcl.Menus, sListView, sSplitter, DragDrop, DropTarget,
-  DropComboTarget
+  DropComboTarget, uFraLookupPanel, ufraCurrencyPanel, uFraCountryPanel, uFraMarketSegmentPanel, ufraChannelPanel,
+  uFraPriceCodePanel
 
   ;
 
@@ -85,30 +86,15 @@ type
     edHomepage: TsEdit;
     gbxGuest: TsGroupBox;
     clabMarkedSegment: TsLabel;
-    labCustomerType: TsLabel;
     LMDSimpleLabel7: TsLabel;
-    labCountry: TsLabel;
     LMDSimpleLabel8: TsLabel;
     LMDSimpleLabel5: TsLabel;
     LMDSimpleLabel12: TsLabel;
-    labCurrency: TsLabel;
-    labPcCode: TsLabel;
-    btnGetCustomerType: TsSpeedButton;
-    btnGetCountry: TsSpeedButton;
-    btnCetCurrency: TsSpeedButton;
-    btnGetPCCode: TsSpeedButton;
-    edCustomerType: TsEdit;
-    edCountry: TsEdit;
-    edCurrency: TsEdit;
-    edPcCode: TsEdit;
     edDiscountPercent: TsCalcEdit;
     chkStayTaxIncluted: TsCheckBox;
     sGroupBox1: TsGroupBox;
     memNotes: TsMemo;
     lblRatePlan: TsLabel;
-    edtRatePlan: TsEdit;
-    btnRatePlan: TsSpeedButton;
-    lblSelRatePlan: TsLabel;
     tabDepartments: TsTabSheet;
     PopupMenu1: TPopupMenu;
     D1: TMenuItem;
@@ -133,20 +119,19 @@ type
     DropComboTarget1: TDropComboTarget;
     timBlink: TTimer;
     btnPasteFile: TsButton;
+    fraLookupMarketSegment: TfraLookupMarketSegment;
+    fraCountryPanel: TfraCountryPanel;
+    fraCurrencyPanel: TfraCurrencyPanel;
+    fraChannelPanel: TfraChannelPanel;
+    fraPriceCodePanel: TfraPriceCodePanel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnOkClick(Sender: TObject);
-    procedure btnCetCurrencyClick(Sender: TObject);
-    procedure btnGetCountryClick(Sender: TObject);
-    procedure btnGetPCCodeClick(Sender: TObject);
-    procedure btnGetCustomerTypeClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure btnCancelClick(Sender: TObject);
     procedure sSpeedButton1Click(Sender: TObject);
     procedure sSpeedButton2Click(Sender: TObject);
     procedure edPIDDblClick(Sender: TObject);
-    procedure btnRatePlanClick(Sender: TObject);
-    procedure D1Click(Sender: TObject);
     procedure pgMainChange(Sender: TObject);
     procedure tvDepartmentsChange(Sender: TObject; Node: TTreeNode);
     procedure lvDepartmentsSelectItem(Sender: TObject; Item: TListItem; Selected: Boolean);
@@ -177,7 +162,6 @@ type
 //    function SelectedCustomerDepartmentId: Integer;
     procedure ListContacts;
     procedure ActivateButtons;
-
 
   public
     { Public declarations }
@@ -261,14 +245,6 @@ begin
   edEmailAddress.MaxLength  := 100;
   edContactPerson.MaxLength := 100;
 
-  edCustomerType.MaxLength := 5;
-  edCustomerType.Charcase  := ecUpperCase;
-
-  edCountry.MaxLength      := 2;
-  edCountry.CharCase       := ecUpperCase;
-
-  edCurrency.MaxLength      := 3;
-  edCurrency.CharCase       := ecUpperCase;
 end;
 
 
@@ -480,7 +456,6 @@ begin
 end;
 
 procedure TfrmCustomerEdit2.FormShow(Sender: TObject);
-var ChannelCode : String;
 begin
   //**
 
@@ -502,12 +477,12 @@ begin
   edCustomer.Text         := zData.Customer;
   edSurname.Text          := zData.Surname;
   edPID.Text              := zData.PID;
-  edCustomerType.Text     := zData.CustomerType;
+  fraLookupMarketSegment.Code := zData.CustomerType;
   edAddress1.Text         := zData.Address1;
   edAddress2.Text         := zData.Address2;
   edAddress3.Text         := zData.Address3;
   edAddress4.Text         := zData.Address4;
-  edCountry.Text          := zData.Country;
+  fraCountryPanel.Code   := zData.Country;
   edTel1.Text             := zData.Tel1;
   edTel2.Text             := zData.Tel2;
   edFax.Text              := zData.Fax;
@@ -515,17 +490,13 @@ begin
   edEmailAddress.Text     := zData.EmailAddress;
   edContactPerson.Text    := zData.ContactPerson;
   chkTravelAgency.checked := zData.TravelAgency;
-  edCurrency.Text         := zData.Currency;
+  fraCurrencyPanel.Code   := zData.Currency;
   edHomepage.Text            := zData.Homepage;
   memNotes.lines.Text              := zData.notes;
-  edPcCode.text              := zData.pcCode;
+  fraPriceCodePanel.Code  := zData.pcCode;
   chkStayTaxIncluted.Checked := zData.stayTaxIncluted;
-  labCountry.Caption         := zData.CountryName;
-  labCustomerType.Caption    := zData.CustomerTypeDescription;
-  edtRatePlan.Tag         := zData.RatePlanId;
 
-  if glb.LocateSpecificRecordAndGetValue('channels', 'id', zData.RatePlanId, 'channelManagerId', channelCode) then
-    edtRatePlan.Text := ChannelCode;
+  fraChannelPanel.ChannelId := zData.RatePlanId;
 
   pgMain.ActivePageIndex := 0;
 
@@ -583,19 +554,6 @@ end;
 procedure TfrmCustomerEdit2.btnCancelClick(Sender: TObject);
 begin
   zCanClose := true;
-end;
-
-procedure TfrmCustomerEdit2.btnCetCurrencyClick(Sender: TObject);
-var
-  theData : recCurrencyHolder;
-begin
-  theData.Currency := edCurrency.text;
-  Currencies(TRoomerGridFormMode.SelectSingle, theData);
-  if theData.Currency <> '' then
-  begin
-    edCurrency.text := theData.Currency;
-    labCurrency.caption  := theData.Description;
-  end;
 end;
 
 procedure TfrmCustomerEdit2.btnDeleteContactClick(Sender: TObject);
@@ -659,45 +617,6 @@ begin
 
 end;
 
-procedure TfrmCustomerEdit2.btnGetCountryClick(Sender: TObject);
-var
-  theData : recCountryHolder;
-begin
-  theData.Country := edCountry.text;
-  Countries(actlookup,theData);
-  if theData.country <> '' then
-  begin
-    edCountry.text := theData.Country;
-    labCountry.caption  := theData.IslCountryName;
-  end;
-end;
-
-procedure TfrmCustomerEdit2.btnGetCustomerTypeClick(Sender: TObject);
-var
-  theData : recCustomerTypeHolder;
-begin
-  theData.customerType := edCustomerType.text;
-  openCustomerTypes(actlookup,theData);
-  if theData.customerType <> '' then
-  begin
-    edCustomerType.text := theData.customerType;
-    labCustomerType.caption  := theData.description;
-  end;
-end;
-
-procedure TfrmCustomerEdit2.btnGetPCCodeClick(Sender: TObject);
-var
-  theData : recPriceCodeHolder;
-begin
-  theData.pcCode := edPcCode.text;
-  priceCodes(TRoomerGridFormMode.SelectSingle,theData);
-  if theData.pcCode <> '' then
-  begin
-    edPcCode.text := theData.pcCode;
-    labPcCode.caption  := theData.pcDescription;
-  end;
-end;
-
 procedure TfrmCustomerEdit2.BtnOkClick(Sender: TObject);
 begin
    zCanClose := false;
@@ -730,36 +649,36 @@ begin
   end;
 
 
-  if trim(edCustomerType.Text) = '' then
+  if not fraLookupMarketSegment.IsValid then
   begin
     //showmessage('Customer is required');
 	  showmessage(GetTranslatedText('shTx_CustomerEdit2_CustomerTypeRequired'));
-    edCustomerType.SetFocus;
+    fraLookupMarketSegment.SetFocus;
     Exit;
   end;
 
 
-  if trim(edCountry.Text) = '' then
+  if not fraCountryPanel.IsValid then
   begin
     //showmessage('Customer is required');
 	  showmessage(GetTranslatedText('shTx_CustomerEdit2_CustomerCountryRequired'));
-    edCountry.SetFocus;
+    fraCountryPanel.SetFocus;
     Exit;
   end;
 
-  if trim(edCurrency.Text) = '' then
+  if not fraCurrencyPanel.IsValid then
   begin
     //showmessage('Customer is required');
 	  showmessage(GetTranslatedText('shTx_CustomerEdit2_CustomerCurrencyRequired'));
-    edCurrency.SetFocus;
+    fraCurrencyPanel.SetFocus;
     Exit;
   end;
 
-  if trim(edPcCode.Text) = '' then
+  if not fraPriceCodePanel.IsValid then
   begin
     //showmessage('Customer is required');
 	  showmessage(GetTranslatedText('shTx_CustomerEdit2_CustomerPriceCoceRequired'));
-    edPcCode.SetFocus;
+    fraPriceCodePanel.SetFocus;
     Exit;
   end;
 
@@ -769,28 +688,28 @@ begin
   zData.Customer         :=  TRIM(edCustomer.Text)    ;
   zData.Surname          :=  edSurname.Text           ;
   zData.PID              :=  edPID.Text               ;
-  zData.CustomerType     :=  TRIM(edCustomerType.Text);
+  zData.CustomerType     :=  fraLookupMarketSegment.Code;
   zData.Address1         :=  edAddress1.Text          ;
   zData.Address2         :=  edAddress2.Text          ;
   zData.Address3         :=  edAddress3.Text          ;
   zData.Address4         :=  edAddress4.Text          ;
-  zData.Country          :=  edCountry.Text           ;
+  zData.Country          :=  fraCountryPanel.Code    ;
   zData.Tel1             :=  edTel1.Text              ;
   zData.Tel2             :=  edTel2.Text              ;
   zData.Fax              :=  edFax.Text               ;
   zData.DiscountPercent  :=  edDiscountPercent.Value  ;
   zData.EmailAddress     :=  edEmailAddress.Text      ;
   zData.ContactPerson    :=  edContactPerson.Text     ;
-  zData.pcID             :=  PriceCode_ID(edPcCode.text);
+  zData.pcID             :=  PriceCode_ID(fraPriceCodePanel.Code);
   zData.TravelAgency     :=  chkTravelAgency.checked  ;
-  zData.Currency         :=  edCurrency.Text          ;
+  zData.Currency         :=  fraCurrencyPanel.Code    ;
   zData.Homepage         :=  edHomepage.Text          ;
   zData.notes            :=  memNotes.lines.Text          ;
-  zData.CountryName              := labCountry.Caption       ;
-  zData.CustomerTypeDescription  := labCustomerType.Caption  ;
-  zData.PcCode                   := edPcCode.text  ;
+  zData.CountryName              := fraCountryPanel.Description;
+  zData.CustomerTypeDescription  := fraLookupMarketSegment.Description;
+  zData.PcCode                   := fraPriceCodePanel.Code;
   zData.stayTaxIncluted          := chkStayTaxIncluted.Checked  ;
-  zData.RatePlanId       := edtRatePlan.Tag;
+  zData.RatePlanId       := fraChannelPanel.ChannelId;
 
 end;
 
@@ -801,28 +720,5 @@ begin
   if DropComboTarget1.CanPasteFromClipboard then
     DropComboTarget1.PasteFromClipboard;
 end;
-
-procedure TfrmCustomerEdit2.btnRatePlanClick(Sender: TObject);
-var
-  theData : recChannelHolder;
-begin
-  theData.channelManagerId := edtRatePlan.text;
-  openChannels(actLookup, theData);
-  if theData.channelManagerId <> '' then
-  begin
-    edtRatePlan.text := theData.channelManagerId;
-    lblSelRatePlan.caption  := theData.Name;
-    edtRatePlan.Tag := theData.id;
-  end;
-end;
-
-procedure TfrmCustomerEdit2.D1Click(Sender: TObject);
-begin
-end;
-
-///////////////////////////////////////////////////////////////////////////////////
-///
-///
-///////////////////////////////////////////////////////////////////////////////////
 
 end.

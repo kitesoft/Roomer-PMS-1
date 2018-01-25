@@ -140,11 +140,13 @@ uses
   sListView,
   sCurrencyEdit
   , RoomerCurrencyEdit
-  , cxTimeEdit, AdvSplitter, uFraCountryPanel
+  , cxTimeEdit, AdvSplitter
   , cxDBLabel, Datasnap.DBClient
+  , uFraCountryPanel
   , ufraCurrencyPanel
+  , uFraMarketSegmentPanel
   , uRoomerCurrencyDefinition
-  , uFraLookupPanel, sCurrEdit, cxCurrencyEdit
+  , uFraLookupPanel, sCurrEdit, cxCurrencyEdit, uFraPriceCodePanel
     ;
 
 TYPE
@@ -593,13 +595,10 @@ type
     lvRoomRates: TcxGridLevel;
     edContactPerson1: TcxComboBox;
     fraCurrencyPanel: TfraCurrencyPanel;
-    fraLookupPriceCode: TfraLookupPanel;
     pnlDiscount: TPanel;
     edRoomResDiscount: TsCurrencyEdit;
     cbxIsRoomResDiscountPrec: TsComboBox;
     clabDiscountPerc: TsLabel;
-    fraLookupCountry: TfraLookupPanel;
-    fraLookupMarketSegment: TfraLookupPanel;
     pnlReservationStatus: TsPanel;
     cbxRoomStatus: TsComboBox;
     clabGroupInvoice: TsLabel;
@@ -627,6 +626,9 @@ type
     pnlEmail: TsPanel;
     edContactEmail: TsEdit;
     chkSendConfirmation: TsCheckBox;
+    fraLookupCountry: TfraCountryPanel;
+    fraLookupMarketSegment: TfraLookupMarketSegment;
+    fraPriceCodePanel: TfraPriceCodePanel;
     procedure FormShow(Sender: TObject);
     procedure edCustomerDblClick(Sender: TObject);
     procedure edCustomerExit(Sender: TObject);
@@ -1218,33 +1220,15 @@ begin
 
   fraCurrencyPanel.OnChangedAndValid := evtCurrencyChangedAndValid;
 
-  with fraLookupPriceCode do
-  begin
-    Dataset := glb.TblpricecodesSet;
-    CodeField := 'pccode';
-    DescriptionField := 'pcdescription';
-    OnChange := evtLookupOnChange;
-    OnSelect := evtSelectPriceCode;
-  end;
+  fraPriceCodePanel.OnChange := evtLookupOnChange;
 
   with fraLookupCountry do
   begin
     RejectedCodes := '00';
-    Dataset := glb.Countries;
-    CodeField := 'country';
-    DescriptionField := 'countryname';
     OnChange := evtLookupOnChange;
-    OnSelect := evtSelectCountry;
   end;
 
-  with fraLookupMarketSegment do
-  begin
-    Dataset := glb.CustomertypesSet;
-    CodeField := 'customertype';
-    DescriptionField := 'description';
-    OnChange := evtLookupOnChange;
-    OnSelect := evtSelectMarketSegments;
-  end;
+  fraLookupMarketSegment.OnChange := evtLookupOnChange;
 
   pgcExtraAndAlert.ActivePageIndex := 0;
 
@@ -1946,7 +1930,7 @@ begin
     chkisGroupInvoice.Checked := false;
 
   fraCurrencyPanel.Code := FNewReservation.HomeCustomer.Currency;
-  fraLookupPriceCode.Code := FNewReservation.HomeCustomer.PcCode;
+  fraPriceCodePanel.Code := FNewReservation.HomeCustomer.PcCode;
   edRoomResDiscount.Value := trunc(FNewReservation.HomeCustomer.DiscountPerc);
   edPID.Text := FNewReservation.HomeCustomer.PID;
   edCustomerName.Text := FNewReservation.HomeCustomer.CustomerName;
@@ -2402,7 +2386,7 @@ begin
       exit;
     if not fraCurrencyPanel.IsValid then
       exit;
-    if not fraLookupPriceCode.IsValid then
+    if not fraPriceCodePanel.IsValid then
       exit;
   end;
   if pgcMain.ActivePageIndex = 3 then
@@ -3270,7 +3254,7 @@ begin
 
   Arrival := dtArrival.date;
   Departure := dtDeparture.date;
-  PriceCode := fraLookupPriceCode.Code;
+  PriceCode := fraPriceCodePanel.Code;
 
   if not((zTotalSelected = 0) and (zTotalNoRooms > 0)) and (zTotal <> 0) then
   begin
@@ -3452,7 +3436,7 @@ var
 begin
   Result := true;
   RoomReservation := 0;
-  PriceCode := fraLookupPriceCode.Code;
+  PriceCode := fraPriceCodePanel.Code;
 
   if mRoomRes.active then
     mRoomRes.Close;
@@ -3840,7 +3824,7 @@ begin
     ShowDiscount := true;
     isPercentage := cbxIsRoomResDiscountPrec.ItemIndex = 0;
 
-    PriceCode := fraLookupPriceCode.Code;
+    PriceCode := fraPriceCodePanel.Code;
     priceID := hData.PriceCode_ID(PriceCode);
 
     andRoomTypes := '';
@@ -4054,7 +4038,7 @@ begin
       infantCount := mRoomResinfantCount.AsInteger;
       Discount := mRoomResavrageDiscount.AsFloat;
 
-      PriceCode := fraLookupPriceCode.Code;
+      PriceCode := fraPriceCodePanel.Code;
       priceID := hData.PriceCode_ID(PriceCode);
 
       dayCount := trunc(Departure) - trunc(Arrival);
@@ -4223,7 +4207,7 @@ begin
   FNewReservation.HomeCustomer.MarketSegmentCode := fraLookupMarketSegment.Code;
   FNewReservation.HomeCustomer.IsGroupInvoice := chkisGroupInvoice.Checked;
   FNewReservation.HomeCustomer.Currency := FCurrentCurrency.CurrencyCode;
-  FNewReservation.HomeCustomer.PcCode := fraLookupPriceCode.Code;
+  FNewReservation.HomeCustomer.PcCode := fraPriceCodePanel.Code;
   FNewReservation.HomeCustomer.PID := edPID.Text;
   FNewReservation.HomeCustomer.CustomerName := edCustomerName.Text;
   FNewReservation.HomeCustomer.Address1 := edAddress1.Text;
@@ -4530,7 +4514,7 @@ begin
     if (s <> '') and (s <> Trim(edCustomer.Text)) then
     begin
       edCustomer.Text := s;
-      fraLookupPriceCode.Code := theData.pcCode;
+      fraPriceCodePanel.Code := theData.pcCode;
       fraCurrencyPanel.Code := theData.Currency;
       fraLookupCountry.Code := theData.Country;
     end;

@@ -74,10 +74,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object SheetMain: TsTabSheet
       Caption = 'Customer'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbxAddress: TsGroupBox
         Left = 0
         Top = 291
@@ -538,7 +534,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         SkinData.SkinSection = 'GROUPBOX'
         object clabMarkedSegment: TsLabel
           Left = 73
-          Top = 22
+          Top = 21
           Width = 84
           Height = 13
           Alignment = taRightJustify
@@ -550,22 +546,9 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object labCustomerType: TsLabel
-          Left = 307
-          Top = 22
-          Width = 4
-          Height = 13
-          Caption = '-'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
         object LMDSimpleLabel7: TsLabel
           Left = 111
-          Top = 49
+          Top = 47
           Width = 46
           Height = 13
           Alignment = taRightJustify
@@ -577,22 +560,9 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object labCountry: TsLabel
-          Left = 307
-          Top = 49
-          Width = 4
-          Height = 13
-          Caption = '-'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
         object LMDSimpleLabel8: TsLabel
           Left = 63
-          Top = 76
+          Top = 73
           Width = 94
           Height = 13
           Alignment = taRightJustify
@@ -606,7 +576,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         end
         object LMDSimpleLabel5: TsLabel
           Left = 101
-          Top = 130
+          Top = 125
           Width = 56
           Height = 13
           Alignment = taRightJustify
@@ -632,71 +602,9 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object labCurrency: TsLabel
-          Left = 307
-          Top = 76
-          Width = 4
-          Height = 13
-          Caption = '-'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object labPcCode: TsLabel
-          Left = 307
-          Top = 130
-          Width = 4
-          Height = 13
-          Caption = '-'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object btnGetCustomerType: TsSpeedButton
-          Left = 282
-          Top = 19
-          Width = 20
-          Height = 21
-          Caption = '..'
-          OnClick = btnGetCustomerTypeClick
-          SkinData.SkinSection = 'SPEEDBUTTON'
-        end
-        object btnGetCountry: TsSpeedButton
-          Left = 282
-          Top = 46
-          Width = 20
-          Height = 21
-          Caption = '..'
-          OnClick = btnGetCountryClick
-          SkinData.SkinSection = 'SPEEDBUTTON'
-        end
-        object btnCetCurrency: TsSpeedButton
-          Left = 282
-          Top = 73
-          Width = 20
-          Height = 21
-          Caption = '..'
-          OnClick = btnCetCurrencyClick
-          SkinData.SkinSection = 'SPEEDBUTTON'
-        end
-        object btnGetPCCode: TsSpeedButton
-          Left = 282
-          Top = 127
-          Width = 20
-          Height = 21
-          Caption = '..'
-          OnClick = btnGetPCCodeClick
-          SkinData.SkinSection = 'SPEEDBUTTON'
-        end
         object lblRatePlan: TsLabel
           Left = 104
-          Top = 103
+          Top = 99
           Width = 53
           Height = 13
           Alignment = taRightJustify
@@ -708,103 +616,15 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object btnRatePlan: TsSpeedButton
-          Left = 283
-          Top = 100
-          Width = 20
-          Height = 21
-          Caption = '..'
-          OnClick = btnRatePlanClick
-          SkinData.SkinSection = 'SPEEDBUTTON'
-        end
-        object lblSelRatePlan: TsLabel
-          Left = 307
-          Top = 103
-          Width = 4
-          Height = 13
-          Caption = '-'
-          ParentFont = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-        end
-        object edCustomerType: TsEdit
-          Left = 163
-          Top = 19
-          Width = 115
-          Height = 21
-          CharCase = ecUpperCase
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          MaxLength = 10
-          ParentFont = False
-          ReadOnly = True
-          TabOrder = 0
-          SkinData.SkinSection = 'EDIT'
-        end
-        object edCountry: TsEdit
-          Left = 163
-          Top = 46
-          Width = 115
-          Height = 21
-          CharCase = ecUpperCase
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          ReadOnly = True
-          TabOrder = 1
-          SkinData.SkinSection = 'EDIT'
-        end
-        object edCurrency: TsEdit
-          Left = 163
-          Top = 73
-          Width = 115
-          Height = 21
-          CharCase = ecUpperCase
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          ReadOnly = True
-          TabOrder = 2
-          SkinData.SkinSection = 'EDIT'
-        end
-        object edPcCode: TsEdit
-          Left = 163
-          Top = 127
-          Width = 115
-          Height = 21
-          CharCase = ecUpperCase
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          MaxLength = 10
-          ParentFont = False
-          ReadOnly = True
-          TabOrder = 3
-          SkinData.SkinSection = 'EDIT'
-        end
         object edDiscountPercent: TsCalcEdit
-          Left = 163
-          Top = 154
-          Width = 141
+          AlignWithMargins = True
+          Left = 166
+          Top = 148
+          Width = 138
           Height = 21
+          Margins.Left = 164
+          Margins.Right = 158
+          Align = alTop
           AutoSize = False
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
@@ -813,39 +633,201 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 5
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
+          ExplicitLeft = 163
+          ExplicitTop = 154
+          ExplicitWidth = 141
         end
         object chkStayTaxIncluted: TsCheckBox
-          Left = 161
-          Top = 180
-          Width = 98
+          AlignWithMargins = True
+          Left = 166
+          Top = 175
+          Width = 293
           Height = 20
+          Margins.Left = 164
           Caption = 'Staytax incluted'
-          TabOrder = 5
+          Align = alTop
+          TabOrder = 6
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
+          ExplicitLeft = 163
+          ExplicitTop = 179
+          ExplicitWidth = 98
         end
-        object edtRatePlan: TsEdit
-          Left = 163
-          Top = 100
-          Width = 115
-          Height = 21
-          CharCase = ecUpperCase
-          Color = clWhite
+        inline fraLookupMarketSegment: TfraLookupMarketSegment
+          AlignWithMargins = True
+          Left = 166
+          Top = 18
+          Width = 282
+          Height = 20
+          Margins.Left = 164
+          Margins.Right = 14
+          Align = alTop
+          TabOrder = 0
+          ExplicitLeft = 165
+          ExplicitTop = 18
+          ExplicitWidth = 294
+          inherited pnlLookup: TsPanel
+            Width = 282
+            ExplicitWidth = 294
+            inherited lblDescription: TsLabel
+              Left = 148
+              Width = 134
+              Height = 20
+              ExplicitLeft = 148
+              ExplicitTop = 3
+              ExplicitWidth = 146
+              ExplicitHeight = 20
+            end
+            inherited edCode: TsEdit
+              Width = 115
+              ExplicitWidth = 115
+            end
+            inherited btnSelect: TsButton
+              Left = 118
+              ExplicitLeft = 118
+            end
+          end
+        end
+        inline fraCountryPanel: TfraCountryPanel
+          AlignWithMargins = True
+          Left = 166
+          Top = 44
+          Width = 282
+          Height = 20
+          Margins.Left = 164
+          Margins.Right = 14
+          Align = alTop
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
+          Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          MaxLength = 10
           ParentFont = False
-          ReadOnly = True
-          TabOrder = 6
-          SkinData.SkinSection = 'EDIT'
+          TabOrder = 1
+          ExplicitLeft = 165
+          ExplicitTop = 44
+          ExplicitWidth = 294
+          inherited pnlLookup: TsPanel
+            Width = 282
+            ExplicitWidth = 294
+            inherited lblDescription: TsLabel
+              Left = 148
+              Width = 134
+              Height = 20
+              ExplicitLeft = 148
+            end
+            inherited edCode: TsEdit
+              Width = 115
+              ExplicitWidth = 115
+            end
+            inherited btnSelect: TsButton
+              Left = 118
+              ExplicitLeft = 118
+            end
+          end
+          inherited pnlCountry: TsPanel
+            Width = 282
+            ExplicitWidth = 294
+            inherited lblCountryName: TLabel
+              Width = 216
+              Height = 14
+            end
+          end
+        end
+        inline fraCurrencyPanel: TfraCurrencyPanel
+          AlignWithMargins = True
+          Left = 166
+          Top = 70
+          Width = 282
+          Height = 20
+          Margins.Left = 164
+          Margins.Right = 14
+          Align = alTop
+          TabOrder = 2
+          ExplicitLeft = 165
+          ExplicitTop = 70
+          ExplicitWidth = 294
+          inherited pnlLookup: TsPanel
+            Width = 282
+            ExplicitWidth = 294
+            inherited lblDescription: TsLabel
+              Left = 148
+              Width = 134
+              Height = 20
+              ExplicitLeft = 148
+            end
+            inherited edCode: TsEdit
+              Width = 115
+              ExplicitWidth = 115
+            end
+            inherited btnSelect: TsButton
+              Left = 118
+              ExplicitLeft = 118
+            end
+          end
+        end
+        inline fraChannelPanel: TfraChannelPanel
+          AlignWithMargins = True
+          Left = 166
+          Top = 96
+          Width = 282
+          Height = 20
+          Margins.Left = 164
+          Margins.Right = 14
+          Align = alTop
+          TabOrder = 3
+          ExplicitLeft = 392
+          ExplicitTop = 128
+          ExplicitWidth = 9
+          inherited pnlLookup: TsPanel
+            Width = 282
+            inherited lblDescription: TsLabel
+              Left = 148
+              Width = 134
+            end
+            inherited edCode: TsEdit
+              Width = 115
+              ExplicitWidth = 115
+              ExplicitHeight = 20
+            end
+            inherited btnSelect: TsButton
+              Left = 118
+            end
+          end
+        end
+        inline fraPriceCodePanel: TfraPriceCodePanel
+          AlignWithMargins = True
+          Left = 166
+          Top = 122
+          Width = 282
+          Height = 20
+          Margins.Left = 164
+          Margins.Right = 14
+          Align = alTop
+          TabOrder = 4
+          ExplicitLeft = 208
+          ExplicitTop = 136
+          inherited pnlLookup: TsPanel
+            Width = 282
+            inherited lblDescription: TsLabel
+              Left = 148
+              Width = 134
+              Height = 20
+            end
+            inherited edCode: TsEdit
+              Width = 115
+              ExplicitWidth = 115
+              ExplicitHeight = 20
+            end
+            inherited btnSelect: TsButton
+              Left = 118
+            end
+          end
         end
       end
       object pnlDocs: TsPanel
@@ -883,10 +865,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object SheetExtra: TsTabSheet
       Caption = 'More'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
@@ -919,10 +897,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object tabDepartments: TsTabSheet
       Caption = 'Departments'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sSplitter1: TsSplitter
         Left = 185
         Top = 0
@@ -981,7 +955,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel6: TsLabel
             Left = 0
             Top = 35
-            Width = 75
+            Width = 185
             Height = 13
             Align = alBottom
             Caption = 'Departments'
@@ -991,6 +965,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
+            ExplicitWidth = 75
           end
           object btnAddDepartment: TsButton
             AlignWithMargins = True
@@ -1098,7 +1073,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel7: TsLabel
             Left = 0
             Top = 35
-            Width = 50
+            Width = 273
             Height = 13
             Align = alBottom
             Caption = 'Contacts'
@@ -1108,6 +1083,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
+            ExplicitWidth = 50
           end
           object btnAddContact: TsButton
             AlignWithMargins = True
@@ -1168,7 +1144,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     object D1: TMenuItem
       Caption = 'Department'
       Default = True
-      OnClick = D1Click
     end
     object C1: TMenuItem
       Caption = 'Contact'
@@ -1179,14 +1154,14 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     OnDragOver = DropComboTarget1DragOver
     OnDrop = DropComboTarget1Drop
     Target = Owner
-    Left = 388
-    Top = 488
+    Left = 396
+    Top = 360
   end
   object timBlink: TTimer
     Enabled = False
     Interval = 500
     OnTimer = timBlinkTimer
-    Left = 348
-    Top = 472
+    Left = 332
+    Top = 416
   end
 end

@@ -157,8 +157,8 @@ object frmCustomers2: TfrmCustomers2
     object chkActive: TsCheckBox
       Left = 52
       Top = 64
-      Width = 234
-      Height = 20
+      Width = 242
+      Height = 17
       Caption = 'Active (if checked then just active are visible'
       Checked = True
       State = cbChecked
@@ -624,7 +624,6 @@ object frmCustomers2: TfrmCustomers2
     Left = 248
     Top = 280
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -638,7 +637,6 @@ object frmCustomers2: TfrmCustomers2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
@@ -822,5 +820,12 @@ object frmCustomers2: TfrmCustomers2
     StorageType = stRegistry
     Left = 710
     Top = 152
+  end
+  object tmrFilterChanged: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmrFilterChangedTimer
+    Left = 32
+    Top = 120
   end
 end

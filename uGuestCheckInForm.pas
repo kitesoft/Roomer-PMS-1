@@ -533,7 +533,7 @@ begin
         edAddress2.Text := glb.PreviousGuestsSet['Address2'];
         edZipcode.Text := glb.PreviousGuestsSet['Address3'];
         edCity.Text := glb.PreviousGuestsSet['Address4'];
-        fraCountry.CountryCode := glb.PreviousGuestsSet['Country'];
+        fraCountry.Code := glb.PreviousGuestsSet['Country'];
         edTel1.Text := glb.PreviousGuestsSet['Tel1'];
         edMobile.Text := glb.PreviousGuestsSet['Tel2'];
         edEmail.Text := glb.PreviousGuestsSet['Email'];
@@ -560,7 +560,7 @@ begin
       edAddress2.Text := glb.PersonProfiles['Address2'];
       edZipcode.Text := glb.PersonProfiles['Zip'];
       edCity.Text := glb.PersonProfiles['City'];
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+      fraCountry.Code := glb.PersonProfiles['Country'];
       edTel1.Text := glb.PersonProfiles['TelLandLine'];
       edMobile.Text := glb.PersonProfiles['TelMobile'];
       edEmail.Text := glb.PersonProfiles['Email'];
@@ -569,8 +569,8 @@ begin
         try edCity.Text := glb.PreviousGuestsSet['Address4']; except end;
     end;
 
-    if fraCountry.CountryCode = '' then
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+    if fraCountry.Code = '' then
+      fraCountry.Code := glb.PersonProfiles['Country'];
 
   end;
 end;
@@ -631,11 +631,11 @@ begin
 
   FCurrencyhandler := nil; // Created when and if needed
 
-  fraNationality.OnCountryChange := Changed;
-  fraNationality.RejectCountryCodes := '00';
+  fraNationality.OnChange := Changed;
+  fraNationality.RejectedCodes := '00';
 
-  fraCountry.OnCountryChange := Changed;
-  fraCountry.RejectCountryCodes := '00';
+  fraCountry.OnChange := Changed;
+  fraCountry.RejectedCodes := '00';
 
   tokens := TObjectList<TToken>.Create;
   Prepare;
@@ -752,13 +752,13 @@ begin
       edAddress2.Text := ResSetGuest['Address2'];
       edZipcode.Text := ResSetGuest['ZIPCode'];
       edCity.Text := ResSetGuest['City'];
-      fraCountry.CountryCode := ResSetGuest['Country'];
+      fraCountry.Code := ResSetGuest['Country'];
 
       edTel1.Text := ResSetGuest['Telephone'];
       edMobile.Text := ResSetGuest['MobileNumber'];
       edEmail.Text := ResSetGuest['GuestEmail'];
 
-      fraNationality.CountryCode := ResSetGuest['Nationality'];
+      fraNationality.Code := ResSetGuest['Nationality'];
 
       cbxMarket.ItemIndex := TReservationMarketType.FromDBString(ResSetGuest['market'], TReservationMarketType.mtUnknown).ToItemIndex;
 
@@ -767,7 +767,7 @@ begin
       edCompAddress2.Text := ResSetGuest['CompAddress2'];
       edCompZipcode.Text := ResSetGuest['CompZip'];
       edCompCity.Text := ResSetGuest['CompCity'];
-      fraCompCountry.CountryCode := ResSetGuest['CompCountry'];
+      fraCompCountry.Code := ResSetGuest['CompCountry'];
       edCompTelNumber.Text := ResSetGuest['CompTel'];
       edCompEmail.Text := ResSetGuest['CompEmail'];
 
@@ -806,13 +806,13 @@ begin
   try
 
     s := format(PUT_GUEST_CHECKIN_CHECKOUT, [_DB(edTitle.Text), _DB(Trim(edFirstname.Text + ' ' + edLastName.Text)), _DB(edAddress1.Text), _DB(edAddress2.Text),
-      _DB(edZipcode.Text), _DB(edCity.Text), _DB(fraCountry.CountryCode),
+      _DB(edZipcode.Text), _DB(edCity.Text), _DB(fraCountry.Code),
 
       _DB(edTel1.Text), _DB(edMobile.Text), _DB(edEmail.Text),
 
-      _DB(fraNationality.CountryCode),
+      _DB(fraNationality.Code),
 
-      _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(fraCompCountry.CountryCode),
+      _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(fraCompCountry.Code),
       _DB(edCompTelNumber.Text), _DB(edCompEmail.Text), _DB(inttostr(btnPortfolio.Tag)),
 
       _DB(edFax.Text), _DB(edVAT.Text), _DB(edSSN.Text),
@@ -832,14 +832,14 @@ begin
 
     if chkCountryForAllGuests.Checked then
     begin
-      s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(fraCountry.CountryCode), RoomReservation]);
+      s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(fraCountry.Code), RoomReservation]);
       CopyToClipboard(s);
       lExecPlan.AddExec(s);
     end;
 
     if chkNationalityForAllGuests.Checked then
     begin
-      s := format(PUT_GUESTsNATIONALITY_CHECKIN_CHECKOUT, [_db(fraNationality.CountryCode), RoomReservation]);
+      s := format(PUT_GUESTsNATIONALITY_CHECKIN_CHECKOUT, [_db(fraNationality.Code), RoomReservation]);
       CopyToClipboard(s);
       lExecPlan.AddExec(s);
     end;
@@ -988,9 +988,7 @@ begin
   edFirstname.Text := '';
   edLastName.Text := '';
 
-  fraNationality.CountryCode := '';
-//  edNationality.Text := '';
-//  lbNationality.Caption := '';
+  fraNationality.Code := '';
 
   edDateOfBirth.Date := 0;
   edTel1.Text := '';
@@ -1001,7 +999,7 @@ begin
   edAddress2.Text := '';
   edZipcode.Text := '';
   edCity.Text := '';
-  fraCountry.CountryCode := '';
+  fraCountry.Code := '';
 
   edCompany.Text := '';
   edCompTelNumber.Text := '';
@@ -1011,7 +1009,7 @@ begin
   edCompAddress2.Text := '';
   edCompZipcode.Text := '';
   edCompCity.Text := '';
-  fraCompCountry.CountryCode := '';
+  fraCompCountry.Code := '';
 
   LoadGuestInfo;
 
@@ -1035,7 +1033,7 @@ begin
       edFirstname.Text := glb.PersonProfiles['Firstname'];
       edLastName.Text := glb.PersonProfiles['LastName'];
 
-      fraNationality.CountryCode := glb.PersonProfiles['Nationality'];
+      fraNationality.Code := glb.PersonProfiles['Nationality'];
 
       edDateOfBirth.Date := glb.PersonProfiles['DateOfBirth'];
       edTel1.Text := glb.PersonProfiles['TelLandLine'];
@@ -1046,7 +1044,7 @@ begin
       edAddress2.Text := glb.PersonProfiles['Address2'];
       edZipcode.Text := glb.PersonProfiles['Zip'];
       edCity.Text := glb.PersonProfiles['City'];
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+      fraCountry.Code := glb.PersonProfiles['Country'];
 
       edCompany.Text := glb.PersonProfiles['CompanyName'];
       edVAT.Text := glb.PersonProfiles['CompVATNumber'];
@@ -1058,7 +1056,7 @@ begin
       edCompAddress2.Text := glb.PersonProfiles['CompAddress2'];
       edCompZipcode.Text := glb.PersonProfiles['CompZip'];
       edCompCity.Text := glb.PersonProfiles['CompCity'];
-      fraCompCountry.CountryCode  := glb.PersonProfiles['CompCountry'];
+      fraCompCountry.Code  := glb.PersonProfiles['CompCountry'];
 
     end;
   end;

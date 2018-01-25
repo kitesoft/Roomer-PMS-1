@@ -81,6 +81,10 @@ object frmStaffEdit2: TfrmStaffEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxLoginInfo: TsGroupBox
         Left = 0
         Top = 0
@@ -521,13 +525,26 @@ object frmStaffEdit2: TfrmStaffEdit2
           Top = 16
           Width = 206
           Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 1
           ExplicitLeft = 165
           ExplicitTop = 16
+          ExplicitWidth = 206
+          inherited pnlLookup: TsPanel
+            inherited lblDescription: TsLabel
+              Width = 4
+              Height = 13
+            end
+          end
           inherited pnlCountry: TsPanel
             inherited lblCountryName: TLabel
-              Width = 140
-              Height = 14
+              Width = 19
+              Height = 13
             end
           end
         end

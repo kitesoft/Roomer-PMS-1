@@ -189,7 +189,7 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43112.381352962960000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end
@@ -199,5 +199,12 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
     object Print1: TMenuItem
       Action = acPrint
     end
+  end
+  object tmrFilterChanged: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmrFilterChangedTimer
+    Left = 360
+    Top = 48
   end
 end

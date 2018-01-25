@@ -1065,7 +1065,7 @@ g.ReadWriteSettingsToRegistry(0);
     editAddress2.Text := rControlData.fieldbyname('Address2').AsString;
     editAddress3.Text := rControlData.fieldbyname('Address3').AsString;
     editAddress4.Text := rControlData.fieldbyname('Address4').AsString;
-    fraCountry.CountryCode := rControlData.fieldbyname('Country').AsString;
+    fraCountry.Code := rControlData.fieldbyname('Country').AsString;
 
     editTelephone1.Text := rControlData.fieldbyname('Telephone1').AsString;
     editTelephone2.Text := rControlData.fieldbyname('Telephone2').AsString;
@@ -1715,7 +1715,7 @@ begin
       rControlData.fieldbyname('Address2').AsString := editAddress2.Text;
       rControlData.fieldbyname('Address3').AsString := editAddress3.Text;
       rControlData.fieldbyname('Address4').AsString := editAddress4.Text;
-      rControlData.fieldbyname('Country').AsString := fraCountry.CountryCode;
+      rControlData.fieldbyname('Country').AsString := fraCountry.Code;
 
       rControlData.fieldbyname('Telephone1').AsString := editTelephone1.Text;
       rControlData.fieldbyname('Telephone2').AsString := editTelephone2.Text;
