@@ -9095,7 +9095,7 @@ begin
     // s := s + ' WHERE RoomReservation = ' + inttostr(iRoomReservation)+chr(10);
     s := 'SELECT roomres.Room, ' +
       '          RR_Arrival(roomreservation, false) as Arrival, ' +
-      '          RR_Departure(roomreservation, false) as Departure, ' +
+      '          RR_Departure(roomreservation, false) as Departure ' +
       'FROM roomreservations roomres ' +
       'WHERE roomres.RoomReservation = ' + inttostr(iRoomReservation);
     if hData.rSet_bySQL(rSet, s) then
