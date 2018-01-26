@@ -1,0 +1,2 @@
+inherited fraStaffMemberPanel: TfraStaffMemberPanel
+end

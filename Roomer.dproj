@@ -1036,6 +1036,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>fraCustomerPanel</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="Embeddables\uFraStaffMemberPanel.pas">
+            <Form>fraStaffMemberPanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

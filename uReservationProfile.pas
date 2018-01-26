@@ -77,7 +77,7 @@ uses
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
   , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable,
-  uFraLookupPanel, uFraMarketSegmentPanel
+  uFraLookupPanel, uFraMarketSegmentPanel, uFraCustomerPanel
   ;
 
 type
@@ -498,8 +498,6 @@ type
     tvRoomsinfantcount: TcxGridDBBandedColumn;
     pnlCustomer: TsPanel;
     Label9: TsLabel;
-    edtCustomer: TsEdit;
-    edGetCustomer: TsButton;
     pnlTopButtons : TsPanel;
     btnCheckIn: TsButton;
     btnExcel: TsButton;
@@ -619,6 +617,7 @@ type
     tvRoomsGuestlist: TcxGridDBBandedColumn;
     fraLookupMarketSegment: TfraLookupMarketSegment;
     Label8: TsLabel;
+    fraCustomerPanel: TfraCustomerPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -635,7 +634,6 @@ type
       var AText: string);
     procedure mRoomsAfterScroll(DataSet: TDataSet);
     procedure btnClipboardToHinndenMemoClick(Sender: TObject);
-    procedure btnShowHiddenMemoClick(Sender: TObject);
     procedure tvRoomsbreakfastTextPropertiesChange(Sender: TObject);
     procedure tvRoomsaccountTypeTextPropertiesChange(Sender: TObject);
     procedure tvRoomsStatusTextPropertiesChange(Sender: TObject);
@@ -664,7 +662,7 @@ type
     procedure tvRoomsInitEdit(Sender: TcxCustomGridTableView;
       AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
     procedure mainPageChange(Sender: TObject);
-    procedure edGetCustomerClick(Sender: TObject);
+    procedure evtCustomerChangedAndValid(Sender: TObject);
     procedure tvRoomsDeparturePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsArrivalPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsdayCountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -1032,6 +1030,9 @@ begin
 
   tvRoomsExpectedTimeOfArrival.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
   tvRoomsExpectedCheckoutTime.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
+
+  fraCustomerPanel.OnChangedAndValid := evtCustomerChangedAndValid;
+  fraCustomerPanel.btnLast.Visible := False;
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);
@@ -1132,9 +1133,9 @@ begin
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
           fieldbyname('channel').asInteger);
 
-        edtCustomer.text := trim(fieldbyname('Customer').asstring);
+        fraCustomerPanel.Code := trim(fieldbyname('Customer').asstring);
         // OPT?
-        ciCustomerInfo := hData.Customer_GetHolder(edtCustomer.text);
+        ciCustomerInfo := hData.Customer_GetHolder(fraCustomerPanel.Code);
 
         edtContactName.text := trim(fieldbyname('ContactName').asstring);
         edtContactEmail.text := trim(fieldbyname('ContactEmail').asstring);
@@ -1356,7 +1357,7 @@ begin
       hData.rSet_bySQL(rSet, s);
 
       rSet.Edit;
-      rSet.fieldbyname('Customer').asstring := edtCustomer.text;
+      rSet.fieldbyname('Customer').asstring := fraCustomerPanel.Code;
       rSet.fieldbyname('Name').asstring := edtName.text;
       rSet.fieldbyname('CustPID').asstring := edtKennitala.text;
       rSet.fieldbyname('Address1').asstring := edtAddress1.text;
@@ -1507,42 +1508,30 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.btnShowHiddenMemoClick(Sender: TObject);
-begin
-
-end;
-
-
 // ********************************************************************************************
 //
 // Edits Dbl-click to select
 //
 // ********************************************************************************************
 
-procedure TfrmReservationProfile.edGetCustomerClick(Sender: TObject);
+procedure TfrmReservationProfile.evtCustomerChangedAndValid(Sender: TObject);
 var
-  CustomerHolder: recCustomerHolder;
   CustomerHolderEX: recCustomerHolderEX;
 begin
-  CustomerHolder.Customer := edtCustomer.text;
-  if openCustomers(actLookup, true, CustomerHolder) then
-  begin
-    edtCustomer.text := CustomerHolder.Customer;
-    CustomerHolderEX := hData.Customer_GetHolder(CustomerHolder.Customer);
-    edtName.text := InvoiceName(0, CustomerHolderEX.DisplayName, CustomerHolderEX.CustomerName);
-    edtKennitala.text := CustomerHolderEX.PID;
-    edtAddress1.text := CustomerHolderEX.Address1;
-    edtAddress2.text := CustomerHolderEX.Address2;
-    edtAddress3.text := CustomerHolderEX.Address3;
-    edtTel1.text := CustomerHolderEX.Tel1;
-    edtTel2.text := CustomerHolderEX.Tel2;
-    edtFax.text := CustomerHolderEX.Fax;
-    edtCustomerEmail.text := CustomerHolderEX.EmailAddress;
-    edtCustomerWebSite.text := CustomerHolderEX.HomePage;
-    edtContactName.text := CustomerHolderEX.ContactPerson;
-    edtContactEmail.text := CustomerHolderEX.ContactEmail;
-    edtContactPhone.text := CustomerHolderEX.ContactPhone;
-  end;
+  CustomerHolderEX := hData.Customer_GetHolder(fraCustomerPanel.Code);
+  edtName.text := InvoiceName(0, CustomerHolderEX.DisplayName, CustomerHolderEX.CustomerName);
+  edtKennitala.text := CustomerHolderEX.PID;
+  edtAddress1.text := CustomerHolderEX.Address1;
+  edtAddress2.text := CustomerHolderEX.Address2;
+  edtAddress3.text := CustomerHolderEX.Address3;
+  edtTel1.text := CustomerHolderEX.Tel1;
+  edtTel2.text := CustomerHolderEX.Tel2;
+  edtFax.text := CustomerHolderEX.Fax;
+  edtCustomerEmail.text := CustomerHolderEX.EmailAddress;
+  edtCustomerWebSite.text := CustomerHolderEX.HomePage;
+  edtContactName.text := CustomerHolderEX.ContactPerson;
+  edtContactEmail.text := CustomerHolderEX.ContactEmail;
+  edtContactPhone.text := CustomerHolderEX.ContactPhone;
 end;
 
 // **************************************************************************************
@@ -1970,7 +1959,7 @@ begin
       oldRoomreservation := zRoomReservation;
       iRoomreservation := RR_SetNewID();
 
-      Customer := trim(edtCustomer.text);
+      Customer := trim(fraCustomerPanel.Code );
       ReservationName := edtName.text;
       Address1 := edtAddress1.text;
       Address2 := edtAddress1.text;

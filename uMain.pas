@@ -3323,14 +3323,6 @@ begin
   except
   end;
   try
-    RoomerLanguage.TranslateThisForm(frmGoToRoomandDate);
-  except
-  end;
-  try
-    RoomerLanguage.TranslateThisForm(frmHomedate);
-  except
-  end;
-  try
     RoomerLanguage.TranslateThisForm(frmDaysStatistics);
   except
   end;

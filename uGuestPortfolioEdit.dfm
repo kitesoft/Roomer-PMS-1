@@ -36,17 +36,13 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       Top = 4
       Width = 559
       Height = 635
-      ActivePage = sTabSheet1
+      ActivePage = sTabSheet2
       Align = alClient
       TabOrder = 0
       OnChange = pgPagesChange
       SkinData.SkinSection = 'PAGECONTROL'
       object sTabSheet1: TsTabSheet
         Caption = 'Person'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object sGroupBox1: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -219,7 +215,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             ParentFont = False
             TabOrder = 0
             Text = 'MALE'
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             Items.Strings = (
               'MALE'
               'FEMALE')
@@ -237,7 +233,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtFirstname: TsEdit
@@ -253,7 +249,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 2
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtLastname: TsEdit
@@ -269,7 +265,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 3
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtProfession: TsEdit
@@ -285,7 +281,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 5
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtBirthday: TsDateEdit
@@ -323,7 +319,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 8
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtPassportExpiry: TsDateEdit
@@ -361,7 +357,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 4
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           inline fraPersonCountry: TfraCountryPanel
@@ -379,9 +375,12 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             ExplicitLeft = 199
             ExplicitTop = 197
             ExplicitWidth = 325
-            inherited pnlCountry: TsPanel
+            inherited pnlLookup: TsPanel
               Width = 325
               ExplicitWidth = 325
+              inherited lblDescription: TsLabel
+                Width = 232
+              end
             end
           end
         end
@@ -439,7 +438,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtSpouseBirthdate: TsDateEdit
@@ -519,7 +518,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtLicensePlate: TsEdit
@@ -535,7 +534,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
         end
@@ -705,10 +704,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet7: TsTabSheet
         Caption = 'Contact'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object sGroupBox4: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -834,7 +829,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtWebsite: TsEdit
@@ -851,7 +846,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtSkype: TsEdit
@@ -868,7 +863,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 2
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtTwitter: TsEdit
@@ -885,7 +880,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 3
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtLinkedIn: TsEdit
@@ -902,7 +897,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 4
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object btnEmail: TsButton
@@ -984,7 +979,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 5
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtTripadvisor: TsEdit
@@ -1001,7 +996,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 6
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
         end
@@ -1102,7 +1097,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtAddress2: TsEdit
@@ -1118,7 +1113,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtZip: TsEdit
@@ -1134,7 +1129,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 2
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtCity: TsEdit
@@ -1150,7 +1145,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 3
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtState: TsEdit
@@ -1166,7 +1161,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 4
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           inline fraContactCountry: TfraCountryPanel
@@ -1184,9 +1179,12 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             ExplicitLeft = 201
             ExplicitTop = 170
             ExplicitWidth = 323
-            inherited pnlCountry: TsPanel
+            inherited pnlLookup: TsPanel
               Width = 323
               ExplicitWidth = 323
+              inherited lblDescription: TsLabel
+                Width = 230
+              end
             end
           end
         end
@@ -1258,7 +1256,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtMobile: TsEdit
@@ -1274,7 +1272,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtFax: TsEdit
@@ -1290,7 +1288,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 2
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
         end
@@ -1306,7 +1304,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 27
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 0
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1317,7 +1315,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 54
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 1
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1328,7 +1326,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 108
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 2
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1339,7 +1337,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 81
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 3
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1350,7 +1348,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 272
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 4
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1361,7 +1359,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 245
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 5
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1372,7 +1370,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 162
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 6
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1383,7 +1381,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 135
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 7
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1394,7 +1392,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 383
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 8
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1405,7 +1403,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 299
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 9
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1416,7 +1414,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 410
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 10
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1427,7 +1425,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 437
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 11
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1438,7 +1436,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 518
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 12
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1449,7 +1447,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 545
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 13
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1460,7 +1458,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 491
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 14
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1471,7 +1469,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 464
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 15
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1482,10 +1480,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet2: TsTabSheet
         Caption = 'Company'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object sGroupBox7: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -1541,38 +1535,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
-          end
-          object sSpeedButton4: TsSpeedButton
-            Left = 325
-            Top = 38
-            Width = 22
-            Height = 21
-            Caption = '...'
-            Flat = True
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-            ParentFont = False
-            OnClick = sSpeedButton4Click
-            SkinData.SkinSection = 'SPEEDBUTTON'
-          end
-          object sSpeedButton5: TsSpeedButton
-            Left = 353
-            Top = 38
-            Width = 22
-            Height = 21
-            Caption = 'X'
-            Flat = True
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = [fsBold]
-            ParentFont = False
-            OnClick = sSpeedButton5Click
-            SkinData.SkinSection = 'SPEEDBUTTON'
           end
           object sLabel13: TsLabel
             Left = 137
@@ -1644,23 +1606,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
           end
-          object edtCustomer: TsEdit
-            Left = 201
-            Top = 38
-            Width = 118
-            Height = 21
-            Color = clWhite
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            ReadOnly = True
-            TabOrder = 0
-            OnChange = evtDataChange
-            SkinData.SkinSection = 'EDIT'
-          end
           object edtCompName: TsEdit
             Left = 201
             Top = 92
@@ -1673,8 +1618,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 2
-            OnChange = evtDataChange
+            TabOrder = 1
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtCompAddress1: TsEdit
@@ -1689,8 +1634,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 3
-            OnChange = evtDataChange
+            TabOrder = 2
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtCompAddress2: TsEdit
@@ -1705,8 +1650,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 4
-            OnChange = evtDataChange
+            TabOrder = 3
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtCompZip: TsEdit
@@ -1721,8 +1666,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 5
-            OnChange = evtDataChange
+            TabOrder = 4
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtCompCity: TsEdit
@@ -1737,8 +1682,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 6
-            OnChange = evtDataChange
+            TabOrder = 5
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtCompState: TsEdit
@@ -1753,8 +1698,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 7
-            OnChange = evtDataChange
+            TabOrder = 6
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtVAT: TsEdit
@@ -1769,8 +1714,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 1
-            OnChange = evtDataChange
+            TabOrder = 0
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           inline fraCompanyCountry: TfraCountryPanel
@@ -1784,13 +1729,30 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 8
+            TabOrder = 7
             ExplicitLeft = 201
             ExplicitTop = 254
             ExplicitWidth = 323
-            inherited pnlCountry: TsPanel
+            inherited pnlLookup: TsPanel
               Width = 323
               ExplicitWidth = 323
+              inherited lblDescription: TsLabel
+                Width = 230
+              end
+            end
+          end
+          inline fraCustomer: TfraCustomerPanel
+            Left = 201
+            Top = 39
+            Width = 250
+            Height = 20
+            TabOrder = 8
+            ExplicitLeft = 201
+            ExplicitTop = 39
+            inherited pnlLookup: TsPanel
+              inherited lblDescription: TsLabel
+                Width = 124
+              end
             end
           end
         end
@@ -1862,7 +1824,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtCompEmail: TsEdit
@@ -1878,7 +1840,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 2
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object btnEmailComp: TsButton
@@ -1905,7 +1867,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
         end
@@ -1919,9 +1881,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           SkinData.SkinSection = 'TRANSPARENT'
           object xedtCustomer: TsCheckBox
             Left = 4
-            Top = 30
+            Top = 29
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 0
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1930,9 +1892,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtVAT: TsCheckBox
             Left = 4
-            Top = 57
+            Top = 55
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 1
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1941,9 +1903,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompAddress1: TsCheckBox
             Left = 4
-            Top = 111
+            Top = 109
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 2
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1952,9 +1914,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompName: TsCheckBox
             Left = 4
-            Top = 84
+            Top = 82
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 3
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1963,9 +1925,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompState: TsCheckBox
             Left = 4
-            Top = 219
+            Top = 217
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 4
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1974,9 +1936,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompCity: TsCheckBox
             Left = 4
-            Top = 192
+            Top = 190
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 5
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1985,9 +1947,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompZip: TsCheckBox
             Left = 4
-            Top = 165
+            Top = 163
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 6
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -1996,9 +1958,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompAddress2: TsCheckBox
             Left = 4
-            Top = 138
+            Top = 136
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 7
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2007,9 +1969,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompCountry: TsCheckBox
             Left = 4
-            Top = 246
+            Top = 244
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 8
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2018,9 +1980,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompTel: TsCheckBox
             Left = 4
-            Top = 321
+            Top = 319
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 9
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2029,9 +1991,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompFax: TsCheckBox
             Left = 4
-            Top = 348
+            Top = 346
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 10
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2040,9 +2002,9 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           end
           object xedtCompEmail: TsCheckBox
             Left = 4
-            Top = 375
+            Top = 373
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 11
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2053,10 +2015,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet4: TsTabSheet
         Caption = 'Preferences'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object sGroupBox11: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -2218,7 +2176,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtRoomType: TsEdit
@@ -2234,7 +2192,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtInvoiceAddress: TsComboBox
@@ -2255,7 +2213,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             ParentFont = False
             TabOrder = 2
             Text = 'HOME ADDRESS'
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             Items.Strings = (
               'HOME ADDRESS'
               'WORK ADDRESS')
@@ -2263,8 +2221,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           object cbxEmailSpecials: TsCheckBox
             Left = 201
             Top = 121
-            Width = 119
-            Height = 19
+            Width = 111
+            Height = 20
             Caption = 'Email special offers'
             TabOrder = 3
             OnClick = cbxEmailSpecialsClick
@@ -2275,8 +2233,8 @@ object frmGuestPortfolio: TfrmGuestPortfolio
           object cbxEmailNews: TsCheckBox
             Left = 201
             Top = 146
-            Width = 107
-            Height = 19
+            Width = 99
+            Height = 20
             Caption = 'Email hotel news'
             TabOrder = 4
             OnClick = cbxEmailSpecialsClick
@@ -2297,7 +2255,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 5
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
           object edtGuestNotes: TsMemo
@@ -2313,7 +2271,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Font.Style = []
             ParentFont = False
             TabOrder = 6
-            OnChange = evtDataChange
+            OnChange = evtDataChanged
             SkinData.SkinSection = 'EDIT'
           end
         end
@@ -2329,7 +2287,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 30
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 0
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2340,7 +2298,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 57
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 1
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2351,7 +2309,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 110
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 2
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2362,7 +2320,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 84
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 3
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2373,7 +2331,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 159
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 4
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2384,7 +2342,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 135
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 5
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2395,7 +2353,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             Left = 4
             Top = 374
             Width = 20
-            Height = 18
+            Height = 20
             TabOrder = 6
             OnClick = xcmbGenderClick
             SkinData.SkinSection = 'CHECKBOX'
@@ -2406,10 +2364,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object tabHistory: TsTabSheet
         Caption = 'History'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grData: TcxGrid
           Left = 0
           Top = 41
@@ -2592,10 +2546,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object tabInvoices: TsTabSheet
         Caption = 'Invoices'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grInvoices: TcxGrid
           Left = 0
           Top = 41
@@ -2873,6 +2823,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
     Top = 168
     object prLink_grData: TdxGridReportLink
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -2886,6 +2837,7 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

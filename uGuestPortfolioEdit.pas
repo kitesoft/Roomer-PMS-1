@@ -16,7 +16,7 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust, dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxPScxPivotGridLnk,
-  uFraCountryPanel, uFraLookupPanel;
+  uFraCountryPanel, uFraLookupPanel, uFraCustomerPanel;
 
 type
   TfrmGuestPortfolio = class(TForm)
@@ -93,12 +93,9 @@ type
     sLabel14: TsLabel;
     sLabel15: TsLabel;
     sLabel16: TsLabel;
-    edtCustomer: TsEdit;
     edtCompName: TsEdit;
     edtCompAddress1: TsEdit;
     edtCompAddress2: TsEdit;
-    sSpeedButton4: TsSpeedButton;
-    sSpeedButton5: TsSpeedButton;
     edtCompZip: TsEdit;
     edtCompCity: TsEdit;
     edtCompState: TsEdit;
@@ -253,8 +250,9 @@ type
     fraPersonCountry: TfraCountryPanel;
     fraContactCountry: TfraCountryPanel;
     fraCompanyCountry: TfraCountryPanel;
+    fraCustomer: TfraCustomerPanel;
     procedure FormCreate(Sender: TObject);
-    procedure evtDataChange(Sender: TObject);
+    procedure evtDataChanged(Sender: TObject);
     procedure edtBirthdayChange(Sender: TObject);
     procedure cbxEmailSpecialsClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -265,8 +263,7 @@ type
     procedure sSpeedButton11Click(Sender: TObject);
     procedure sSpeedButton7Click(Sender: TObject);
     procedure sSpeedButton12Click(Sender: TObject);
-    procedure sSpeedButton4Click(Sender: TObject);
-    procedure sSpeedButton5Click(Sender: TObject);
+    procedure evtCustomerChangedAndValid(Sender: TObject);
     procedure pgPagesChange(Sender: TObject);
     procedure LMDSpeedButton6Click(Sender: TObject);
     procedure btnEmailClick(Sender: TObject);
@@ -491,7 +488,7 @@ begin
   FreeAndNil(PortfolioEdit);
 end;
 
-procedure TfrmGuestPortfolio.evtDataChange(Sender: TObject);
+procedure TfrmGuestPortfolio.evtDataChanged(Sender: TObject);
 begin
   DataChanged := True;
   if Sender IS TsEdit then
@@ -572,7 +569,12 @@ begin
 
   // Company
     // Company info
-    edtCustomer.Text := dataset['CustomerCode'];
+    fraCustomer.DisableEvents;
+    try
+      fraCustomer.Code := dataset['CustomerCode'];
+    finally
+      fraCustomer.EnableEvents;
+    end;
     edtCompName.Text := dataset['CompanyName'];
     edtVAT.Text := dataset['CompVATNumber'];
     edtCompAddress1.Text := dataset['CompAddress1'];
@@ -580,12 +582,15 @@ begin
     edtCompZip.Text := dataset['CompZip'];
     edtCompCity.Text := dataset['CompCity'];
     edtCompState.Text := dataset['CompState'];
+
     fraCompanyCountry.DisableEvents;
     try
       fraCompanyCountry.Code := dataset['CompCountry'];
     finally
       fraCompanyCountry.EnableEvents;
     end;
+
+
 
     // Telephones
     edtCompTel.Text := dataset['CompTel'];
@@ -717,7 +722,7 @@ begin
 
 // Company
   // Company info
-  dataset['CustomerCode'] := edtCustomer.Text;
+  dataset['CustomerCode'] := fraCustomer.Code;
   dataset['CompanyName'] := edtCompName.Text;
   dataset['CompVATNumber'] := edtVAT.Text;;
   dataset['CompAddress1'] := edtCompAddress1.Text;
@@ -895,29 +900,20 @@ begin
   edtRoomType.text := '';
 end;
 
-procedure TfrmGuestPortfolio.sSpeedButton4Click(Sender: TObject);
+procedure TfrmGuestPortfolio.evtCustomerChangedAndValid(Sender: TObject);
 var
-  theData : recCustomerHolder;
+  theData: recCustomerHolderEX;
 begin
-  theData.Customer := edtCustomer.Text;
-  if openCustomers(actLookup,true, theData) then
-  begin
-    edtCustomer.text := theData.Customer;
-    edtCompName.text := theData.Surname;
-    edtCompAddress1.text := theData.Address1;
-    edtCompAddress2.text := theData.Address2;
-    edtCompZip.text := theData.Address3;
-    edtCompCity.text := theData.Address4;
-    fraCompanyCountry.Code := theData.Country;
+  theData := hData.Customer_GetHolder(fraCustomer.Code);
+  edtCompName.text := theData.CustomerName;
+  edtCompAddress1.text := theData.Address1;
+  edtCompAddress2.text := theData.Address2;
+  edtCompZip.text := theData.Address3;
+  edtCompCity.text := theData.Address4;
+  fraCompanyCountry.Code := theData.Country;
 
-    edtCompTel.text := theData.Tel1;
-    edtCompEmail.text := theData.EmailAddress;
-  end;
-end;
-
-procedure TfrmGuestPortfolio.sSpeedButton5Click(Sender: TObject);
-begin
-  edtCustomer.text := ctrlGetString('RackCustomer');
+  edtCompTel.text := theData.Tel1;
+  edtCompEmail.text := theData.EmailAddress;
 end;
 
 procedure TfrmGuestPortfolio.sSpeedButton6Click(Sender: TObject);
@@ -982,9 +978,10 @@ begin
   btnTabBack.Enabled := False;
   btnTabForward.Enabled := True;
 
-  fraPersonCountry.OnChange := evtDataChange;
-  fraContactCountry.OnChange := evtDataChange;
-  fraCompanyCountry.OnChange := evtDataChange;
+  fraPersonCountry.OnChange := evtDataChanged;
+  fraContactCountry.OnChange := evtDataChanged;
+  fraCompanyCountry.OnChange := evtDataChanged;
+  fraCustomer.OnChange := evtDataChanged;
 
   DisplayCurrent;
 end;

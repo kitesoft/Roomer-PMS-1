@@ -342,7 +342,8 @@ uses
   uFraMarketSegmentPanel in 'Embeddables\uFraMarketSegmentPanel.pas' {fraLookupMarketSegment: TFrame},
   uFraPriceCodePanel in 'Embeddables\uFraPriceCodePanel.pas' {fraPriceCodePanel: TFrame},
   uFraChannelPanel in 'Embeddables\uFraChannelPanel.pas' {fraChannelPanel: TFrame},
-  uFraCustomerPanel in 'Embeddables\uFraCustomerPanel.pas' {fraCustomerPanel: TFrame};
+  uFraCustomerPanel in 'Embeddables\uFraCustomerPanel.pas' {fraCustomerPanel: TFrame},
+  uFraStaffMemberPanel in 'Embeddables\uFraStaffMemberPanel.pas' {fraStaffMemberPanel: TFrame};
 
 {$R *.RES}
 

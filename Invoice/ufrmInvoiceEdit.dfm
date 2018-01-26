@@ -163,30 +163,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             'Free Text'
             'Cash')
         end
-        object edtCustomer: TsEdit
-          Left = 111
-          Top = 14
-          Width = 93
-          Height = 21
-          AutoSize = False
-          Color = clWhite
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          MaxLength = 15
-          ParentFont = False
-          TabOrder = 1
-          OnChange = edtCustomerChange
-          OnDblClick = edtCustomerDblClick
-          SkinData.SkinSection = 'EDIT'
-          BoundLabel.Font.Charset = DEFAULT_CHARSET
-          BoundLabel.Font.Color = clWindowText
-          BoundLabel.Font.Height = -13
-          BoundLabel.Font.Name = 'Tahoma'
-          BoundLabel.Font.Style = []
-        end
         object edtPersonalId: TsEdit
           Left = 111
           Top = 37
@@ -202,9 +178,9 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           MaxLength = 15
           ParentFont = False
           ReadOnly = True
-          TabOrder = 2
+          TabOrder = 1
           OnChange = evtHeaderChanged
-          OnDblClick = edtCustomerDblClick
+          OnDblClick = evtCustomerChangedAndValid
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
@@ -225,7 +201,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 3
+          TabOrder = 2
           OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -247,7 +223,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 3
           OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -269,7 +245,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 4
           OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -291,7 +267,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 5
           OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -313,7 +289,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 7
+          TabOrder = 6
           OnChange = evtHeaderChanged
           SkinData.SkinSection = 'EDIT'
           BoundLabel.Font.Charset = DEFAULT_CHARSET
@@ -322,25 +298,33 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           BoundLabel.Font.Name = 'Tahoma'
           BoundLabel.Font.Style = []
         end
-        object btnClearAddresses: TsButton
-          Left = 237
-          Top = 14
-          Width = 126
+        inline fraCustomer: TfraCustomerPanel
+          Left = 111
+          Top = 13
+          Width = 250
           Height = 21
-          Caption = 'Clear addresses'
-          TabOrder = 8
-          OnClick = btnClearAddressesClick
-          SkinData.SkinSection = 'BUTTON'
-        end
-        object btnGetCustomer: TsButton
-          Left = 206
-          Top = 14
-          Width = 27
-          Height = 21
-          Caption = '...'
-          TabOrder = 9
-          OnClick = edtCustomerDblClick
-          SkinData.SkinSection = 'BUTTON'
+          TabOrder = 7
+          ExplicitLeft = 111
+          ExplicitTop = 13
+          ExplicitHeight = 21
+          inherited pnlLookup: TsPanel
+            inherited lblDescription: TsLabel
+              Left = 206
+              Width = 44
+              Height = 20
+            end
+            inherited edCode: TsEdit
+              Width = 140
+              ExplicitWidth = 140
+              ExplicitHeight = 20
+            end
+            inherited btnSelect: TsButton
+              Left = 143
+            end
+            inherited btnLast: TsButton
+              Left = 167
+            end
+          end
         end
       end
       object pnlInvoiceButtons: TsPanel
@@ -588,7 +572,6 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           ExplicitLeft = 125
           ExplicitTop = 103
           ExplicitWidth = 281
-          ExplicitHeight = 20
           inherited pnlLookup: TsPanel
             Width = 281
             ExplicitWidth = 281
