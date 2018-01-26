@@ -636,7 +636,10 @@ begin
   begin
     tableEntity.RefreshEnabled := enable;
     if enable then
-      tableEntity.RefreshFromServer;
+    begin
+      tableList.RefreshTimeStampsFromServer;
+      tableEntity.RefreshIfNeeded;
+    end;
   end;
 end;
 

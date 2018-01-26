@@ -8,14 +8,6 @@
 //  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
 //  {$endif}
 
-
-
-
-
-
-
-
-
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -349,7 +341,8 @@ uses
   uResGuestList in 'uResGuestList.pas' {frmResGuestlist},
   uFraMarketSegmentPanel in 'Embeddables\uFraMarketSegmentPanel.pas' {fraLookupMarketSegment: TFrame},
   uFraPriceCodePanel in 'Embeddables\uFraPriceCodePanel.pas' {fraPriceCodePanel: TFrame},
-  uFraChannelPanel in 'Embeddables\uFraChannelPanel.pas' {fraChannelPanel: TFrame};
+  uFraChannelPanel in 'Embeddables\uFraChannelPanel.pas' {fraChannelPanel: TFrame},
+  uFraCustomerPanel in 'Embeddables\uFraCustomerPanel.pas' {fraCustomerPanel: TFrame};
 
 {$R *.RES}
 

@@ -69,6 +69,8 @@ type
     procedure EnableEvents;
     function EventsEnabled: boolean;
     property IsValid: boolean read GetIsValid;
+    procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
+
   protected
     { Public declarations }
     property OnSelect: TLookupPanelSelectEvent read FOnSelect write SetOnSelect;
@@ -217,11 +219,13 @@ begin
 
   if NOT FIsValidCode then
   begin
+    lblDescription.UseSkinColor := false;
     lblDescription.Font.Color := clRed;
     lblDescription.caption := GetTranslatedText('shNotF_star');
   end
   else
   begin
+    lblDescription.UseSkinColor := true;
     lblDescription.Font.Color := clWindowText;
     lblDescription.Caption := ReadDescription(edCode.Text);
   end;
@@ -256,6 +260,12 @@ end;
 function TfraCustomLookupPanel.EventsEnabled: boolean;
 begin
   Result := (FDisableEventCount <= 0);
+end;
+
+procedure TfraCustomLookupPanel.GetChildren(Proc: TGetChildProc; Root: TComponent);
+begin
+//  inherited;
+
 end;
 
 function TfraCustomLookupPanel.GetCode: string;

@@ -77,7 +77,7 @@ uses
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
   , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable,
-  uFraLookupPanel
+  uFraLookupPanel, uFraMarketSegmentPanel
   ;
 
 type
@@ -506,7 +506,6 @@ type
     btnCheckOut: TsButton;
     btnDocuments: TsButton;
     lblMarket: TsLabel;
-    pnlMarketSegment: TsPanel;
     tsContact: TsTabSheet;
     edtContactAddress1: TsEdit;
     edtContactAddress2: TsEdit;
@@ -532,10 +531,6 @@ type
     edtGuestAddress2: TsEdit;
     edtGuestAddress1: TsEdit;
     mAllGuestsMainName: TBooleanField;
-    Label8: TsLabel;
-    lblCustomerType: TsLabel;
-    edtType: TsEdit;
-    btnGetCustomerType: TsButton;
     ppmCheckin: TPopupMenu;
     alReservation: TActionList;
     acCheckinReservation: TAction;
@@ -590,7 +585,6 @@ type
     fraGuestNationality: TfraCountryPanel;
     fraGuestCountry: TfraCountryPanel;
     fraContactCountry: TfraCountryPanel;
-    sPanel3: TsPanel;
     mAllGuestsemail: TWideStringField;
     lblGuestCountry: TsLabel;
     lblGuestNationality: TsLabel;
@@ -623,6 +617,8 @@ type
     mGuestsMainName: TBooleanField;
     mGuestsID: TIntegerField;
     tvRoomsGuestlist: TcxGridDBBandedColumn;
+    fraLookupMarketSegment: TfraLookupMarketSegment;
+    Label8: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -667,7 +663,6 @@ type
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
     procedure tvRoomsInitEdit(Sender: TcxCustomGridTableView;
       AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
-    procedure edtTypeDblClick(Sender: TObject);
     procedure mainPageChange(Sender: TObject);
     procedure edGetCustomerClick(Sender: TObject);
     procedure tvRoomsDeparturePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -1175,8 +1170,7 @@ begin
         memInformation.Lines.text := trim(fieldbyname('Information').asstring);
         memPMInfo.Lines.text := trim(fieldbyname('PMInfo').asstring);
 
-        edtType.text := trim(fieldbyname('MarketSegment').asstring);
-        lblCustomerType.caption := d.GET_CustomerTypesDescription_byCustomerType(edtType.text);
+        fraLookupMarketSegment.Code := trim(fieldbyname('MarketSegment').asstring);
 
         edtInvRefrence.text := trim(fieldbyname('invRefrence').asstring);
         edtBookingId.Text := edtInvRefrence.text;
@@ -1371,7 +1365,7 @@ begin
       rSet.fieldbyname('CustomerWebSite').asstring := edtCustomerWebSite.text;
       rSet.fieldbyname('CustomerEmail').asstring := edtCustomerEmail.text;
       rSet.fieldbyname('Country').asstring := fraContactCountry.Code;
-      rSet.fieldbyname('MarketSegment').asstring := edtType.text;
+      rSet.fieldbyname('MarketSegment').asstring := fraLookupMarketSegment.Code;
       rSet.fieldbyname('Tel1').asstring := edtTel1.text;
       rSet.fieldbyname('Fax').asstring := edtFax.text;
       rSet.fieldbyname('Tel2').asstring := edtTel2.text;
@@ -1548,21 +1542,6 @@ begin
     edtContactName.text := CustomerHolderEX.ContactPerson;
     edtContactEmail.text := CustomerHolderEX.ContactEmail;
     edtContactPhone.text := CustomerHolderEX.ContactPhone;
-  end;
-end;
-
-procedure TfrmReservationProfile.edtTypeDblClick(Sender: TObject);
-var
-  theData: recCustomerTypeHolder;
-  id: Integer;
-begin
-  theData.customerType := edtType.text;
-  glb.LocateSpecificRecordAndGetValue('customertypes', 'CustomerType', edtType.text, 'ID', id);
-  theData.id := id;
-  if openCustomerTypes(actLookup, theData) then
-  begin
-    edtType.text := theData.customerType;
-    lblCustomerType.caption := theData.description;
   end;
 end;
 

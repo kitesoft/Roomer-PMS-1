@@ -146,7 +146,9 @@ uses
   , ufraCurrencyPanel
   , uFraMarketSegmentPanel
   , uRoomerCurrencyDefinition
-  , uFraLookupPanel, sCurrEdit, cxCurrencyEdit, uFraPriceCodePanel
+  , uFraLookupPanel, sCurrEdit, cxCurrencyEdit
+  , uFraPriceCodePanel
+  , uFraCustomerPanel
     ;
 
 TYPE
@@ -607,11 +609,6 @@ type
     edtPortfolio: TsEdit;
     btnPortfolioLookup: TsSpeedButton;
     btnPortfolio: TsSpeedButton;
-    pnlCompany: TsPanel;
-    labCustomerName: TsLabel;
-    btnGetCustomer: TsSpeedButton;
-    btnGetLastCustomer: TsSpeedButton;
-    edCustomer: TsEdit;
     pnlArrival: TsPanel;
     dtArrival: TsDateEdit;
     __lblArrivalWeekday: TsLabel;
@@ -629,9 +626,8 @@ type
     fraLookupCountry: TfraCountryPanel;
     fraLookupMarketSegment: TfraLookupMarketSegment;
     fraPriceCodePanel: TfraPriceCodePanel;
+    fraCustomerPanel: TfraCustomerPanel;
     procedure FormShow(Sender: TObject);
-    procedure edCustomerDblClick(Sender: TObject);
-    procedure edCustomerExit(Sender: TObject);
     procedure btnFinishClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnPreviusClick(Sender: TObject);
@@ -672,12 +668,9 @@ type
     procedure dtDepartureCloseUp(Sender: TObject);
     procedure dtArrivalChange(Sender: TObject);
     procedure dtDepartureChange(Sender: TObject);
-    procedure edCustomerChange(Sender: TObject);
-    procedure btnGetLastCustomerClick(Sender: TObject);
     procedure evtCurrencyChangedAndValid(Sender: TObject);
     procedure cbxIsRoomResDiscountPrecChange(Sender: TObject);
     procedure mnuFinishAndShowClick(Sender: TObject);
-    procedure edCustomerKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tvRoomResPackagePropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
     procedure cbxRoomStatusChange(Sender: TObject);
     procedure edContactEmailChange(Sender: TObject);
@@ -745,8 +738,6 @@ type
     procedure addAvailableRoomTypes;
     procedure SetAllAsNoRoom(doNextPage: boolean = true);
 
-    function customerValidate: boolean;
-
     procedure ApplyRateToOther(RoomReservation: integer; RoomType: string);
     procedure ApplyNettoRateToNullPrice(NewRate: double; RoomReservation: integer; RoomType: string);
 
@@ -774,9 +765,7 @@ type
     procedure ActivateNextButton;
     function OkToActivateNextButton: Boolean;
     procedure evtLookupOnChange(Sender: TObject);
-    function evtSelectPriceCode(var aCode: string): boolean;
-    function evtSelectCountry(var aCode: string): boolean;
-    function evtSelectMarketSegments(var aCode: string): boolean;
+    procedure evtCustomerChangedAndValid(Sender: TObject);
 
   protected
     const
@@ -1180,7 +1169,7 @@ begin
             else
               Rate := TAmount.Create(mRoomResAvragePrice.AsFloat, FCurrentCurrency.CurrencyCode);
 
-            _FrmViewDailyRates.Add(CreateDateRate(trunc(Arrival) + ii, Rate, edCustomer.Text, dayCount, Guests));
+            _FrmViewDailyRates.Add(CreateDateRate(trunc(Arrival) + ii, Rate, fraCustomerPanel.Code, dayCount, Guests));
           end;
         end;
 
@@ -1218,8 +1207,10 @@ begin
     screen.Cursor := crDefault;
   end;
 
+  fraCustomerPanel.OnChange := evtLookupOnChange;
+  fraCustomerPanel.OnChangedAndValid := evtCustomerChangedAndValid;
   fraCurrencyPanel.OnChangedAndValid := evtCurrencyChangedAndValid;
-
+  fraCurrencyPanel.OnChange := evtLookupOnChange;
   fraPriceCodePanel.OnChange := evtLookupOnChange;
 
   with fraLookupCountry do
@@ -1232,37 +1223,6 @@ begin
 
   pgcExtraAndAlert.ActivePageIndex := 0;
 
-end;
-
-function TfrmMakeReservationQuick.evtSelectMarketSegments(var aCode: string): boolean;
-var
-  theData: recCustomerTypeHolder;
-begin
-  theData.customerType := aCode;
-  Result := openCustomerTypes(actLookup, theData);
-  if Result then
-    aCode := theData.customerType;
-end;
-
-function TfrmMakeReservationQuick.evtSelectCountry(var aCode: string): boolean;
-var
-  theData : recCountryHolder;
-begin
-  initCountryHolder(theData);
-  theData.country := aCode;
-  Result := countries(actLookup,theData);
-  if Result then
-    aCode := theData.Country;
-end;
-
-function TfrmMakeReservationQuick.evtSelectPriceCode(var aCode: string): boolean;
-var
-  theData: recPriceCodeHolder;
-begin
-  theData.PcCode := aCode;
-  Result := priceCodes(TRoomerGridFormMode.SelectSingle, theData);
-  if Result then
-    aCode := theData.PcCode;
 end;
 
 procedure TfrmMakeReservationQuick.evtLookupOnChange(Sender: TObject);
@@ -1412,7 +1372,7 @@ begin
     chkExcluteNoShow.Checked := g.qExcluteNoshow;
 
     ShowRatePlans;
-    edCustomer.Text := FNewReservation.HomeCustomer.Customer;
+    fraCustomerPanel.Code := FNewReservation.HomeCustomer.Customer;
 
     if FNewReservation.IsQuick then
     begin
@@ -1420,7 +1380,7 @@ begin
       dtArrival.date := FNewReservation.newRoomReservations.ReservationArrival;
       dtDeparture.date := FNewReservation.newRoomReservations.ReservationDeparture;
       gbxDates.Enabled := false;
-      edCustomer.SetFocus;
+      fraCustomerPanel.SetFocus;
     end
     else
     begin
@@ -1913,10 +1873,9 @@ var
   ChannelCode: String;
   i: integer;
 begin
-  Customer := edCustomer.Text;
+  Customer := fraCustomerPanel.Code;
   oldCustomer := FNewReservation.HomeCustomer.Customer;
   FNewReservation.HomeCustomer.Customer_update(Customer);
-  labCustomerName.Caption := FNewReservation.HomeCustomer.CustomerName;
 
   fraLookupCountry.Code := FNewReservation.HomeCustomer.Country;
   edReservationName.Text := FNewReservation.HomeCustomer.CustomerName;
@@ -1931,6 +1890,7 @@ begin
 
   fraCurrencyPanel.Code := FNewReservation.HomeCustomer.Currency;
   fraPriceCodePanel.Code := FNewReservation.HomeCustomer.PcCode;
+
   edRoomResDiscount.Value := trunc(FNewReservation.HomeCustomer.DiscountPerc);
   edPID.Text := FNewReservation.HomeCustomer.PID;
   edCustomerName.Text := FNewReservation.HomeCustomer.CustomerName;
@@ -1951,8 +1911,6 @@ begin
 
   memCustomerAlert.lines.Clear;
   memCustomerAlert.Text := d.GetCustomerPreferences(Customer);
-
-  customerValidate;
 
   if glb.LocateSpecificRecordAndGetValue('channels', 'id', FNewReservation.HomeCustomer.CustomerRatePlanId,
     'channelManagerId', ChannelCode) then
@@ -2350,35 +2308,12 @@ begin
   Apply;
 end;
 
-procedure TfrmMakeReservationQuick.btnGetLastCustomerClick(Sender: TObject);
-var
-  s: string;
-  rSet: TRoomerDataSet;
-begin
-  rSet := createNewDataSet;
-  try
-    s := 'Select customer, country FROM reservations Order by reservation desc Limit 1';
-    if rSet_bySQL(rSet, s) then
-    begin
-      edCustomer.Text := rSet.FieldByName('customer').AsString;
-      if customerValidate then
-      begin
-        zCustomerChanged := true;
-        initCustomer;
-      end;
-      fraLookupCountry.Code := rSet.FieldByName('country').AsString;
-    end;
-  finally
-    FreeAndNil(rSet);
-  end;
-end;
-
 function TfrmMakeReservationQuick.OkToActivateNextButton : Boolean;
 begin
   result := False;
   if not OutOfOrderBlocking then
   begin
-    if not customerValidate then
+    if not fraCustomerPanel.IsValid then
       exit;
     if not fraLookupCountry.IsValid then
       exit;
@@ -4150,7 +4085,6 @@ end;
 
 function TfrmMakeReservationQuick.Apply: boolean;
 var
-  Customer: string;
   oSelectedRoomItem: TnewRoomReservationItem;
   room: string;
   RoomType: string;
@@ -4180,9 +4114,8 @@ var
   lReservationExtra: TReservationExtra;
 begin
   Result := true;
-  Customer := edCustomer.Text;
   FNewReservation.SendConfirmationEmail := chkSendConfirmation.Enabled AND chkSendConfirmation.Checked;
-  FNewReservation.HomeCustomer.Customer := Customer;
+  FNewReservation.HomeCustomer.Customer := fraCustomerPanel.Code;
 
   if chkContactIsGuest.Checked then
   begin
@@ -4209,7 +4142,7 @@ begin
   FNewReservation.HomeCustomer.Currency := FCurrentCurrency.CurrencyCode;
   FNewReservation.HomeCustomer.PcCode := fraPriceCodePanel.Code;
   FNewReservation.HomeCustomer.PID := edPID.Text;
-  FNewReservation.HomeCustomer.CustomerName := edCustomerName.Text;
+  FNewReservation.HomeCustomer.CustomerName := fraCustomerPanel.Description;
   FNewReservation.HomeCustomer.Address1 := edAddress1.Text;
   FNewReservation.HomeCustomer.Address2 := edAddress2.Text;
   FNewReservation.HomeCustomer.Address3 := edAddress3.Text;
@@ -4463,75 +4396,10 @@ begin
   dtDeparture.date := dtArrival.date + zNights;
 end;
 
-/// ///////////////////////////////////
-// edCustomerKey
-
-function TfrmMakeReservationQuick.customerValidate: boolean;
-var
-  sCustomer: string;
-begin
-  sCustomer := Trim(edCustomer.Text);
-  Result := glb.CustomersSet.Locate('customer', sCustomer, []);
-
-  if not Result then
-  begin
-    edCustomer.SetFocus;
-    labCustomerName.Font.Color := clRed;
-    labCustomerName.Caption := GetTranslatedText('shNotF_star');
-  end
-  else
-  begin
-    labCustomerName.Caption := '';
-    labCustomerName.Font.Color := clBlack;
-  end;
-end;
-
 destructor TfrmMakeReservationQuick.Destroy;
 begin
   FPreviousGuestsList.Free;
   inherited;
-end;
-
-procedure TfrmMakeReservationQuick.edCustomerChange(Sender: TObject);
-begin
-  if customerValidate then
-  begin
-    zCustomerChanged := true;
-    initCustomer;
-  end;
-  ActivateNextButton;
-end;
-
-procedure TfrmMakeReservationQuick.edCustomerDblClick(Sender: TObject);
-var
-  s: string;
-  theData: recCustomerHolder;
-begin
-  theData.Customer := Trim(edCustomer.Text);
-  if OpenCustomers(actLookup, true, theData) then
-  begin
-    s := theData.Customer;
-    if (s <> '') and (s <> Trim(edCustomer.Text)) then
-    begin
-      edCustomer.Text := s;
-      fraPriceCodePanel.Code := theData.pcCode;
-      fraCurrencyPanel.Code := theData.Currency;
-      fraLookupCountry.Code := theData.Country;
-    end;
-  end;
-end;
-
-procedure TfrmMakeReservationQuick.edCustomerExit(Sender: TObject);
-begin
-  customerValidate;
-end;
-
-procedure TfrmMakeReservationQuick.edCustomerKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = vk_f2 then
-  begin
-    edCustomerDblClick(self);
-  end;
 end;
 
 procedure TfrmMakeReservationQuick.edContactEmailChange(Sender: TObject);
@@ -4594,8 +4462,10 @@ begin
   end;
 end;
 
-/// ///////////////////////////////
-// edCurrency
+procedure TfrmMakeReservationQuick.evtCustomerChangedAndValid(Sender: TObject);
+begin
+  initCustomer;
+end;
 
 procedure TfrmMakeReservationQuick.evtCurrencyChangedAndValid(Sender: TObject);
 var

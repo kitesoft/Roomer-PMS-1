@@ -589,27 +589,6 @@ end;
 /////////////////////////////////////////////////////////////////////////////
 
 
-//procedure TfrmRoomTypes2.tvDataCurrencyPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-//var
-//  theData : recCurrencyHolder;
-//begin
-////  fillholder;
-////  theData.Currency := zData.Currency;
-////  theData.ID := zData.CurrencyID;
-////
-////
-////  currencies(actlookup,theData);
-////
-////  if theData.Currency <> '' then
-////  begin
-////    m_.Edit;
-////    m_['currency']   := theData.Currency;
-////    m_['currencyID'] := theData.ID;
-////    m_.Post;
-////  end;
-//
-//end;
-
 procedure TfrmSeasons2.tvDataDataControllerFilterChanged(Sender: TObject);
 begin
   chkFilter;

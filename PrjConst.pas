@@ -1913,7 +1913,7 @@ begin
   TfrmItems2.Create(nil).Free;
   frmItemTypes2 := TfrmItemTypes2.Create(nil); frmItemTypes2.Free; frmItemTypes2 := nil;
   frmLocations := TfrmLocations.Create(nil); frmLocations.Free; frmLocations := nil;
-  frmCurrencies := TfrmCurrencies.Create(nil); frmCurrencies.Free; frmCurrencies := nil;
+  TfrmCurrencies.Create(nil).Free;
   frmChannelManager := TfrmChannelManager.Create(nil); frmChannelManager.Free; frmChannelManager := nil;
   frmCommunicationTest := TfrmCommunicationTest.Create(nil); frmCommunicationTest.Free; frmCommunicationTest := nil;
   frmHouseKeeping := TfrmHouseKeeping.Create(nil); frmHouseKeeping.Free; frmHouseKeeping := nil;
