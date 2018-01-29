@@ -57,7 +57,7 @@ uses
   sStatusBar,
   sLabel,
   cxCurrencyEdit,
-  uCurrencyHandler, cxCheckBox, uDImages, kbmMemTable, uRoomerCurrencyDefinition;
+  cxCheckBox, uDImages, kbmMemTable, uRoomerCurrencyDefinition;
 
 type
   ERoomPricesException = class(Exception);

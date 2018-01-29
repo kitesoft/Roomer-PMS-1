@@ -96,7 +96,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
   , uRoomerGridForm, uRoomerDialogForm, cxGridBandedTableView, cxGridDBBandedTableView, cxCalendar, cxCurrencyEdit
-  , uCurrencyHandler, cxCalc, cxCheckBox, System.Actions, Vcl.ActnList, uRoomerEditGridForm
+  , cxCalc, cxCheckBox, System.Actions, Vcl.ActnList, uRoomerEditGridForm
   ;
 
 type
@@ -159,7 +159,6 @@ type
     { Private declarations }
     zFirstTime       : boolean;
     zData: recTaxesHolder;
-    FCurrencyhandler: TCurrencyHandler;
     procedure fillHolder;
     function CheckMultipleValidTaxes: boolean;
 
@@ -169,7 +168,6 @@ type
 
   public
     constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
   end;
 
 function EditTaxes() : boolean;
@@ -186,7 +184,7 @@ uses
   , UITypes
   , uItems2
   , DateUtils
-  , uTaxCalcDefinitions;
+  , uTaxCalcDefinitions, uRoomerCurrencymanager;
 
 
 
@@ -209,12 +207,6 @@ end;
                     { Private declarations }
 ///////////////////////////////////////////////////////////////////////
 
-
-destructor TfrmTaxes.Destroy;
-begin
-  FCurrencyhandler.Free;
-  inherited;
-end;
 
 Procedure TfrmTaxes.DoLoadData;
 var
@@ -278,7 +270,6 @@ end;
 constructor TfrmTaxes.Create(aOwner: TComponent);
 begin
   inherited;
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
   ActiveFieldName := 'active';
 end;
 
@@ -414,7 +405,7 @@ procedure TfrmTaxes.tvDataAmountGetProperties(Sender: TcxCustomGridTableItem; AR
 begin
   inherited;
   if m_Tax_Type.AsString = 'FIXED_AMOUNT' then
-    aProperties := FCurrencyhandler.GetcxEditProperties
+    RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(aProperties)
   else
     TcxCalcEditProperties(aProperties).DisplayFormat := '0.0 %';
 end;

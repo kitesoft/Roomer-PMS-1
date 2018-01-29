@@ -154,12 +154,11 @@ inherited frmRoomPrices: TfrmRoomPrices
         AlignWithMargins = True
         Left = 5
         Top = 18
-        Width = 175
+        Width = 60
         Height = 13
         Align = alTop
         Alignment = taCenter
         Caption = '<autofilled>'
-        ExplicitWidth = 60
       end
     end
   end

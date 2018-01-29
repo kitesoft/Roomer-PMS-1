@@ -237,6 +237,7 @@ type
 
     function GetHotelCode: string;
     procedure SetPCIContract(const Value: String);
+    function GetNativeCurrency: string;
   public
     PCIContractWildcards : TStrings;
     qConnected : boolean;
@@ -287,7 +288,6 @@ type
     qWarnMoveRoomToNewRoomtype : Boolean;
 
 
-    qNativeCurrency : string;
     qCountry : string;
     qBreakFastItem : string;
 
@@ -442,6 +442,7 @@ type
     property qHotelName : string read FqHotelName write FqHotelName;
     property qRoomCount : integer read FqRoomCount write FqRoomCount;
     property qMeetingsRoomCount : integer read FqMeetingsRoomCount write FqMeetingsRoomCount;
+    property qNativeCurrency: string read GetNativeCurrency; // deprecated, use ROomerCurrencymanager.DefaultCurrencyDefinition
 
     property qExpDate : TDate read FqExpDate write FqExpDate;
     property qDiskSerial : string read FqDiskSerial write FqDiskSerial;
@@ -571,7 +572,7 @@ uses
   System.UITypes,
   uSQLUtils,
   uRoomerConfirmationDialogs
-  , ActiveX;
+  , ActiveX, uRoomerCurrencymanager;
 
 function GetNameCombination(order : Integer; Customer, Guest : String) : String;
 begin
@@ -807,7 +808,6 @@ begin
     qUserPID := '';
     qUserType := '';
     qUserLanguage := 0;
-    qNativeCurrency := '';
     qCountry := '';
     qBreakFastItem := '';
 
@@ -902,6 +902,11 @@ end;
 function TGlobalApplication.GetHotelCode: string;
 begin
   Result := d.roomerMainDataSet.hotelId;
+end;
+
+function TGlobalApplication.GetNativeCurrency: string;
+begin
+  Result := RoomerCurrencyManager.DefaultCurrency;
 end;
 
 function TGlobalApplication.TestConnection(var Connstr, strResult : string) : boolean;

@@ -865,7 +865,6 @@ uses
   uFrmNotepad,
   ufrmReservationExtras
   , uInvoiceContainer
-  , uCurrencyHandler
   , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices
   , uDateTimeHelper
   , uResourceTypeDefinitions
@@ -3299,7 +3298,6 @@ var
   price: double;
   Nights: Integer;
   r: double;
-  lCurrencyHandler: TCurrencyHandler;
 begin
   Nights := 0;
   price := 0.00;
@@ -3318,12 +3316,7 @@ begin
     r := price / Nights;
   end;
 
-  lCurrencyHandler := TCurrencyHandler.Create(g.qNativeCurrency);
-  try
-    AText := lCurrencyhandler.FormattedValue(r) + ' ' + GetTranslatedText('shTx_FrmReservationprofile_PerNight');
-  finally
-    lCurrencyHandler.Free;
-  end;
+  AText := RoomerCurrencyManager.DefaultCurrencyDefinition.FormattedValue(r) + ' ' + GetTranslatedText('shTx_FrmReservationprofile_PerNight');
 end;
 
 procedure TfrmReservationProfile.tvGetCurrencyProperties(Sender: TcxCustomGridTableItem;

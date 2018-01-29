@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton  ;
+  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton  ;
 
 type
   TfrmArrivalsReport = class(TfrmBaseRoomerForm)
@@ -117,7 +117,6 @@ type
     procedure btnAllocateRoomClick(Sender: TObject);
   private
     FRefreshingdata: boolean;
-    FCurrencyhandler: TCurrencyHandler;
     { Private declarations }
     procedure SetManualDates(aFrom, aTo: TDate);
     function ConstructSQL: string;
@@ -126,8 +125,6 @@ type
     procedure DoUpdateControls; override;
     procedure DoShow; override;
   public
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
     { Public declarations }
   end;
 
@@ -160,7 +157,7 @@ uses
   , uReservationStateChangeHandler
   , uReservationStateDefinitions
   , uDataSetFilterUtils
-  , ufrmInvoiceEdit, uInvoiceDefinitions;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager;
 
 const
   cSQL = 'SELECT '#10 +
@@ -291,18 +288,6 @@ begin
   CopyToClipboard(Result);
 end;
 
-constructor TfrmArrivalsReport.Create(aOwner: TComponent);
-begin
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-  inherited;
-end;
-
-destructor TfrmArrivalsReport.Destroy;
-begin
-  inherited;
-  FCurrencyhandler.Free;
-end;
-
 procedure TfrmArrivalsReport.DoShow;
 begin
   inherited;
@@ -340,7 +325,7 @@ end;
 procedure TfrmArrivalsReport.grArrivalsListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := FCurrencyhandler.GetcxEditProperties;
+  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(AProperties);
 end;
 
 procedure TfrmArrivalsReport.grArrivalsListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;

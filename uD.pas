@@ -749,7 +749,7 @@ uses
     , uFrmCheckOut
     , UITypes
     , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit,
-    Math, uInvoiceDefinitions, uProvideARoom2;
+    Math, uInvoiceDefinitions, uProvideARoom2, uRoomerCurrencymanager;
 
 {$R *.dfm}
 
@@ -8205,7 +8205,6 @@ begin
   g.qPhoneUseItem := '';
   g.qPaymentItem := '';
   g.qRoomRentItem := '';
-  g.qNativeCurrency := '';
   g.qStayTaxItem := '';
   g.qDiscountItem := '';
   g.qCountry := '';
@@ -8245,7 +8244,8 @@ begin
   g.qBreakfastInclDefault := rSet['BreakfastInclDefault'];
   g.qPhoneUseItem := rSet.FieldByName('PhoneUseItem').Asstring;
   g.qPaymentItem := rSet.FieldByName('PaymentItem').Asstring;
-  g.qNativeCurrency := rSet.FieldByName('NativeCurrency').Asstring;
+  RoomerCurrencyManager.DefaultCurrency := rSet.FieldByName('NativeCurrency').Asstring;
+//  g.qNativeCurrency := rSet.FieldByName('NativeCurrency').Asstring;
   g.qRoomRentItem := rSet.FieldByName('RoomRentItem').Asstring;
   g.qCountry := rSet.FieldByName('Country').Asstring;
   g.qBreakFastItem := rSet.FieldByName('BreakFastItem').Asstring;

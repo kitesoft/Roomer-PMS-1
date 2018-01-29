@@ -65,7 +65,7 @@ object frmEditGuest: TfrmEditGuest
     Top = 3
     Width = 498
     Height = 559
-    ActivePage = tabGuest
+    ActivePage = tabCompany
     Align = alClient
     Style = tsButtons
     TabHeight = 32
@@ -604,10 +604,6 @@ object frmEditGuest: TfrmEditGuest
     end
     object tabCompany: TsTabSheet
       Caption = 'Company'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox4: TsGroupBox
         Left = 3
         Top = 10
@@ -937,6 +933,14 @@ object frmEditGuest: TfrmEditGuest
           ExplicitLeft = 173
           ExplicitTop = 122
           ExplicitWidth = 240
+          inherited pnlLookup: TsPanel
+            Width = 240
+            ExplicitWidth = 240
+            inherited lblDescription: TsLabel
+              Width = 147
+              Height = 20
+            end
+          end
         end
       end
     end

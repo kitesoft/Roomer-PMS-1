@@ -329,7 +329,6 @@ inherited frmTaxes: TfrmTaxes
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43119.436669074070000000
-      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end

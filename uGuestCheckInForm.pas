@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sEdit,
   sLabel, Vcl.ComCtrls, sPageControl, sButton, Vcl.ExtCtrls, sPanel, sComboBox, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sCheckBox, cmpRoomerDataSet,
   hData, uG, frxDesgn, frxClass, frxDBSet, System.Generics.Collections, uRoomerFilterComboBox
-  , uCurrencyHandler, uFraCountryPanel, uTokenHelpers, udImages, sCurrEdit, uFraLookupPanel
+  , uFraCountryPanel, uTokenHelpers, udImages, sCurrEdit, uFraLookupPanel
+  , uCurrencyDefinition
     ;
 
 type
@@ -152,11 +153,11 @@ type
     procedure cbxGuaranteeTypesChange(Sender: TObject);
   private
     FisCheckIn: Boolean;
-    FCurrencyhandler: TCurrencyHandler;
     FCurrentRealBalance: Double;
     ResSetGuest: TRoomerDataSet;
     rec: recDownPayment;
     theDownPaymentData: recPaymentHolder;
+    FInvoiceCurrency: TCurrencyDefinition;
 
     procedure Prepare;
     procedure UpdateControls;
@@ -176,7 +177,7 @@ type
     { Public declarations }
     Reservation, RoomReservation: Integer;
     PersonId: Integer;
-    NativeCurrency, Customer: String;
+    Customer: String;
     tokens : TObjectList<TToken>;
     procedure WndProc(var message: TMessage); override;
     procedure SaveGuestInfo;
@@ -343,7 +344,7 @@ uses uRoomerLanguage,
   , uRoomerBookingDataModel_ModelObjects
   , uRoomerCanonicalDataModel_SimpleTypes
   , uFrmTokenChargeHistory
-  , uMarketDefinitions;
+  , uMarketDefinitions, uRoomerCurrencymanager, uAmount, uCurrencyConstants;
 
 const
   WM_SET_COMBO_TEXT = WM_User + 101;
@@ -629,8 +630,6 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
 
-  FCurrencyhandler := nil; // Created when and if needed
-
   fraNationality.OnChange := Changed;
   fraNationality.RejectedCodes := '00';
 
@@ -649,7 +648,6 @@ end;
 
 procedure TFrmGuestCheckInForm.FormDestroy(Sender: TObject);
 begin
-  FCurrencyhandler.Free;
   tokens.Free;
   Release;
 end;
@@ -679,6 +677,7 @@ function TFrmGuestCheckInForm.GetTotalTaxesForRoomreservation(aReservation: inte
 var
   lResponse: TxsdRoomRentTaxReceiptList;
   lCaller: TBookingsTaxesTabAPICaller;
+  lCityTaxAmount: TAmount;
 begin
   Result := 0.00;
   lResponse := nil;
@@ -686,7 +685,10 @@ begin
   try
     lResponse := TxsdRoomRentTaxReceiptList.Create;
     if lCaller.GetRoomReservationTaxes(aReservation, aRoomReservation, lResponse) then
-      Result := FCurrencyhandler.ConvertFrom(lResponse.TotalCityTax.Amount, lResponse.TotalCityTax.Currency.asString);
+    begin
+      lCityTaxAmount := TAmount.Create(lResponse.TotalCityTax.Amount, lResponse.TotalCityTax.Currency.AsString);
+      Result := RoomerCurrencyManager.ConvertAmount(lCityTaxAmount, FInvoiceCurrency.CurrencyCode);
+    end;
   finally
     lResponse.Free;
     lCaller.Free;
@@ -703,7 +705,6 @@ end;
 procedure TFrmGuestCheckInForm.LoadGuestInfo;
 var
   lRoomInvoice: TInvoice;
-
 begin
   if GetGuestInfoRSet(ResSetGuest, RoomReservation) then
   begin
@@ -714,29 +715,24 @@ begin
       LoadPayCardInfo(ResSetGuest['PAYCARD_TOKEN_ID']);
       PersonId := ResSetGuest['ID'];
       Customer := ResSetGuest['Customer'];
-      NativeCurrency := ResSetGuest['NativeCurrency'];
 
-      if not assigned(FCurrencyhandler) or (not FCurrencyhandler.CurrencyCode.Equals(ResSetGuest['Currency'])) then
-      begin
-        FCurrencyhandler.Free;
-        FCurrencyhandler := TCurrencyHandler.Create(ResSetGuest.FieldByName('Currency').AsString);
-      end;
+      FInvoiceCurrency := RoomerCurrencymanager[lRoomInvoice.Currency]; // RoomerCurrencymanager[ResSetGuest['Currency']];
 
       sTabSheet1.Caption := GetTranslatedText('shTx_RoomEdit_Room') + ResSetGuest['RoomNumber'];
 
-      lbRoomRent.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalRoomRent); //Trim(_floatToStr(ResSetGuest['TotalPrice'], 12, 2));
-      lbSales.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalSales); //Trim(_floatToStr(ResSetGuest['CurrentSales'], 12, 2));
-      lbSubTotal.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalRoomRent
+      lbRoomRent.Caption :=  FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalRoomRent); //Trim(_floatToStr(ResSetGuest['TotalPrice'], 12, 2));
+      lbSales.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalSales); //Trim(_floatToStr(ResSetGuest['CurrentSales'], 12, 2));
+      lbSubTotal.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalRoomRent
                                                              + lRoomInvoice.TotalSales
                                                              + lRoomInvoice.TotalTaxes); // Trim(_floatToStr(ResSetGuest['TotalPrice'] + ResSetGuest['CurrentSales'], 12, 2));
-      lbPAyments.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
+      lbPAyments.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
 
       if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
-        lbTaxes.Caption := FCurrencyHandler.FormattedValue(GetTotalTaxesForRoomreservation(Reservation, RoomReservation))
+        lbTaxes.Caption := FInvoiceCurrency.FormattedValue(GetTotalTaxesForRoomreservation(Reservation, RoomReservation))
       else
-        lbTaxes.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
+        lbTaxes.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
 
-      lbBalance.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
+      lbBalance.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
       FCurrentRealBalance := lRoomInvoice.balance;
 
       edFax.Text := ResSetGuest['CompFax'];
@@ -936,7 +932,7 @@ begin
     theDownPaymentData.NativeAmount := rec.AmountInCurrency * Rate;
     theDownPaymentData.Description := rec.Description;
     theDownPaymentData.CurrencyRate := 1.00; // ATH
-    theDownPaymentData.Currency := NativeCurrency;
+    theDownPaymentData.Currency := RoomerCurrencyManager.DefaultCurrency;
     theDownPaymentData.confirmDate := 2; // _db('1900-01-01 00:00:00');
     theDownPaymentData.Notes := rec.Notes;
     theDownPaymentData.PayType := rec.PaymentType;

@@ -23,7 +23,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1000
     DesignSize = (
       1040
       113)
@@ -149,7 +148,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 1000
     object splGrids: TsSplitter
       AlignWithMargins = True
       Left = 446
@@ -176,7 +174,7 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 437
+        Width = 107
         Height = 13
         Align = alTop
         Caption = 'Available paycards'
@@ -186,7 +184,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
-        ExplicitWidth = 107
       end
       object lvTokens: TsListView
         Tag = 2
@@ -358,9 +355,6 @@ inherited FrmTokenChargeHistory: TFrmTokenChargeHistory
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitLeft = 3
-        ExplicitTop = 190
-        ExplicitWidth = 576
         DesignSize = (
           585
           67)

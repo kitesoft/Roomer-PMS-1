@@ -799,7 +799,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uRptDepartures.pas">
             <Form>frmDeparturesReport</Form>
         </DCCReference>
-        <DCCReference Include="uCurrencyHandler.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uFloatUtils.pas"/>
         <DCCReference Include="uRptStockItems.pas">
             <Form>frmRptStockItems</Form>
@@ -863,7 +862,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>FrmTopClassAvailabilityOrder</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uCurrencyHandlersMap.pas"/>
         <DCCReference Include="OpenAPI\uHotelServicesAPICaller.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas"/>
         <DCCReference Include="ActivityLogs\uRptUserActivity.pas">

@@ -378,7 +378,6 @@ var
   s    : string;
   rSet : TRoomerDataSet;
   active : boolean;
-  cust : string;
 begin
   m_.DisableControls;
   active := chkActive.Checked;

@@ -4,11 +4,11 @@ inherited frmAddAccommodation: TfrmAddAccommodation
   BorderIcons = []
   Caption = 'Add accommodation'
   ClientHeight = 194
-  ClientWidth = 273
+  ClientWidth = 335
   ParentFont = False
   Position = poDefault
   OnShow = FormShow
-  ExplicitWidth = 279
+  ExplicitWidth = 341
   ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
@@ -74,26 +74,26 @@ inherited frmAddAccommodation: TfrmAddAccommodation
   end
   inherited sbStatusBar: TsStatusBar
     Top = 174
-    Width = 273
+    Width = 335
     ExplicitTop = 174
     ExplicitWidth = 273
   end
   inherited pnlButtons: TsPanel
     Top = 131
-    Width = 273
+    Width = 335
     TabOrder = 6
     ExplicitTop = 131
     ExplicitWidth = 273
     inherited btnOK: TsButton
-      Left = -43
+      Left = 19
       ExplicitLeft = -43
     end
     inherited btnCancel: TsButton
-      Left = 63
+      Left = 125
       ExplicitLeft = 63
     end
     inherited btnClose: TsButton
-      Left = 169
+      Left = 231
       ExplicitLeft = 169
     end
   end
@@ -211,7 +211,7 @@ inherited frmAddAccommodation: TfrmAddAccommodation
     inherited pnlLookup: TsPanel
       Width = 135
       ExplicitWidth = 135
-      inherited lblDescription: TLabel
+      inherited lblDescription: TsLabel
         Width = 42
         Height = 20
       end
