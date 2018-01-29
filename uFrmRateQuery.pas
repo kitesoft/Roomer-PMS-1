@@ -51,14 +51,16 @@ type
     Description: String;
     Rate: Double;
     FAvailability: Integer;
+    FCurrency: string;
   private
     procedure SetAvailability(const Value: Integer);
   public
-    constructor Create(_RateCode, _Description: String; _Rate: Double; _Availability: Integer);
+    constructor Create(_RateCode, _Description: String; _Rate: Double; _Availability: Integer; _Currency: string);
     destructor Destroy; override;
 
     procedure AddRateAndAvailability(_Rate: Double; _Availability: Integer);
     property Availability: Integer read FAvailability write SetAvailability;
+    property Currency: string read FCurrency;
   end;
 
   TRateEntityList = TObjectList<TRateEntity>;
@@ -130,7 +132,7 @@ type
   private
     { Private declarations }
     _FrmViewDailyRates: TFrmViewDailyRates;
-    FRates: TDictionary<String, TDateRate>;
+    FRates: TObjectDictionary<String, TDateRate>;
     RatesSet: TRoomerDataSet;
     RoomTypes: TRoomTypeEntityList;
     FBeingViewed: Boolean;
@@ -180,7 +182,7 @@ uses
   , uAppGlobal
   , uCustomers2
   , PrjConst
-  ;
+  , uRoomerCurrencymanager, uAmount;
 
 const
   WM_REFRESH_ARRIVAL_DATE = WM_User + 32;
@@ -222,12 +224,13 @@ begin
   Availability := _Availability;
 end;
 
-constructor TRateEntity.Create(_RateCode, _Description: String; _Rate: Double; _Availability: Integer);
+constructor TRateEntity.Create(_RateCode, _Description: String; _Rate: Double; _Availability: Integer; _Currency: string);
 begin
   RateCode := _RateCode;
   Description := _Description;
   Rate := _Rate;
   FAvailability := _Availability;
+  FCurrency := _Currency;
 end;
 
 destructor TRateEntity.Destroy;
@@ -244,7 +247,7 @@ end;
 procedure TFrmRateQuery.FormCreate(Sender: TObject);
 begin
   _FrmViewDailyRates := TFrmViewDailyRates.Create(nil);
-  FRates := TDictionary<String, TDateRate>.Create;
+  FRates := TObjectDictionary<String, TDateRate>.Create([doOwnsValues]);
   RatesSet := CreateNewDataSet;
   FBeingViewed := False;
   RoomTypes := TRoomTypeEntityList.Create(True);
@@ -405,6 +408,7 @@ end;
 procedure TFrmRateQuery.grdRatesDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
 var
   theRate: TRateEntity;
+  lRate: TAmount;
   sValue, sAvail: String;
   SavedAlign: word;
 begin
@@ -413,11 +417,11 @@ begin
   then
   begin
     theRate := grdRates.Objects[ACol, ARow] AS TRateEntity;
-    if rbTotal.Checked then
-      sValue := Trim(FloatToStrF(theRate.Rate, ffNumber, 12, 2))
-    else
-      sValue := Trim(FloatToStrF(theRate.Rate / edNights.Value, ffNumber, 12, 2));
+    lRate := theRate.Rate;
+    if not rbTotal.Checked then
+      lRate := lRate / edNights.Value;
 
+    sValue := RoomerCurrencyManager[theRate.Currency].FormattedValue(lrate, true);
     sAvail := inttostr(theRate.Availability);
 
     with grdRates.Canvas do
@@ -438,7 +442,7 @@ begin
       Font.size := 7;
       Rect.Width := 35;
       Font.Style := [];
-      TextRect(Rect, Rect.Right - 4, Rect.Top + 2, sAvail + ' X');
+      TextRect(Rect, Rect.Right - 4, Rect.Top + 2, sAvail + 'x');
 
       SetTextAlign(Handle, SavedAlign);
       exit;
@@ -546,17 +550,17 @@ begin
         RateIndex := RateIndexByRoomType(index, RatesSet['rtgCode']);
         if RateIndex = -1 then
           RoomTypes[index].Rates.Add(TRateEntity.Create(RatesSet['rtgCode'], RatesSet['rtgDescription'],
-            RatesSet['Rate'], RatesSet['availability']))
+            RatesSet['Rate'], RatesSet['availability'], _FrmViewDailyRates.Currency))
         else
           RoomTypes[index].Rates[RateIndex].AddRateAndAvailability(RatesSet['Rate'], RatesSet['availability']);
 
         crDate := RatesSet['crDate'];
         Rate := RatesSet['Rate'];
         NumGuests := RatesSet['rtgNumGuests'];
-        key := format('%s_%s_%s', [RatesSet['rtRoomType'], RatesSet['rtgCode'],
-          uDateUtils.dateToSqlString(RatesSet['crDate'])]);
-        FRates.Add(key, CreateDateRate(crDate, Rate, edCustomer.Text, Trunc(FShowDateTo - FShowDateFrom) + 1, NumGuests,
-          _FrmViewDailyRates.Currency));
+        key := format('%s_%s_%s', [RatesSet['rtRoomType'], RatesSet['rtgCode'], uDateUtils.dateToSqlString(RatesSet['crDate'])]);
+        if not FRates.ContainsKey(Key) then
+          FRates.Add(key, CreateDateRate(crDate, Rate, edCustomer.Text, Trunc(FShowDateTo - FShowDateFrom) + 1, NumGuests,
+            _FrmViewDailyRates.Currency));
       end;
     end;
     RatesSet.Next;
