@@ -195,7 +195,7 @@ uses
   , uDImages
   , uUtils
   , uResourceTypeDefinitions
-  , UITypes, uRoomerGridForm;
+  , UITypes, uRoomerGridForm, uRoomerCurrencymanager;
 
 
 function openCustomerEdit(var theData : recCustomerHolder; isInsert : boolean; _financeCustomerList : TKeyPairList = nil) : boolean;
@@ -490,7 +490,7 @@ begin
   edEmailAddress.Text     := zData.EmailAddress;
   edContactPerson.Text    := zData.ContactPerson;
   chkTravelAgency.checked := zData.TravelAgency;
-  fraCurrencyPanel.Code   := zData.Currency;
+  fraCurrencyPanel.Code   := iif(zData.Currency.IsEmpty, RoomerCurrencyManager.DefaultCurrencyDefinition.CurrencyCode, zData.Currency);
   edHomepage.Text            := zData.Homepage;
   memNotes.lines.Text              := zData.notes;
   fraPriceCodePanel.Code  := zData.pcCode;

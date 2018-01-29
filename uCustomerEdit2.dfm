@@ -74,10 +74,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object SheetMain: TsTabSheet
       Caption = 'Customer'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbxAddress: TsGroupBox
         Left = 0
         Top = 291
@@ -296,8 +292,8 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         object chkActive: TsCheckBox
           Left = 329
           Top = 16
-          Width = 50
-          Height = 20
+          Width = 58
+          Height = 17
           Caption = 'Active'
           TabOrder = 1
           SkinData.SkinSection = 'CHECKBOX'
@@ -323,8 +319,8 @@ object frmCustomerEdit2: TfrmCustomerEdit2
         object chkTravelAgency: TsCheckBox
           Left = 329
           Top = 42
-          Width = 89
-          Height = 20
+          Width = 97
+          Height = 17
           Caption = 'Travel Agency'
           TabOrder = 3
           SkinData.SkinSection = 'CHECKBOX'
@@ -641,16 +637,13 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           SkinData.SkinSection = 'EDIT'
           GlyphMode.Blend = 0
           GlyphMode.Grayed = False
-          ExplicitLeft = 163
-          ExplicitTop = 154
-          ExplicitWidth = 141
         end
         object chkStayTaxIncluted: TsCheckBox
           AlignWithMargins = True
           Left = 166
           Top = 175
           Width = 293
-          Height = 20
+          Height = 17
           Margins.Left = 164
           Caption = 'Staytax incluted'
           Align = alTop
@@ -658,9 +651,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           SkinData.SkinSection = 'CHECKBOX'
           ImgChecked = 0
           ImgUnchecked = 0
-          ExplicitLeft = 163
-          ExplicitTop = 179
-          ExplicitWidth = 98
         end
         inline fraLookupMarketSegment: TfraLookupMarketSegment
           AlignWithMargins = True
@@ -672,14 +662,16 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Margins.Right = 14
           Align = alTop
           TabOrder = 0
-          ExplicitLeft = 165
+          ExplicitLeft = 166
           ExplicitTop = 18
-          ExplicitWidth = 294
+          ExplicitWidth = 282
           inherited pnlLookup: TsPanel
             Width = 282
-            ExplicitWidth = 294
+            ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
+              Width = 134
+              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -708,14 +700,16 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Font.Style = []
           ParentFont = False
           TabOrder = 1
-          ExplicitLeft = 165
+          ExplicitLeft = 166
           ExplicitTop = 44
-          ExplicitWidth = 294
+          ExplicitWidth = 282
           inherited pnlLookup: TsPanel
             Width = 282
-            ExplicitWidth = 294
+            ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
+              Width = 134
+              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -738,14 +732,16 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Margins.Right = 14
           Align = alTop
           TabOrder = 2
-          ExplicitLeft = 165
+          ExplicitLeft = 166
           ExplicitTop = 70
-          ExplicitWidth = 294
+          ExplicitWidth = 282
           inherited pnlLookup: TsPanel
             Width = 282
-            ExplicitWidth = 294
+            ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
+              Width = 134
+              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -768,20 +764,21 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Margins.Right = 14
           Align = alTop
           TabOrder = 3
-          ExplicitLeft = 392
-          ExplicitTop = 128
-          ExplicitWidth = 9
+          ExplicitLeft = 166
+          ExplicitTop = 96
+          ExplicitWidth = 282
           inherited pnlLookup: TsPanel
             Width = 282
             ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
+              Width = 134
+              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
               Width = 115
               ExplicitWidth = 115
-              ExplicitHeight = 20
             end
             inherited btnSelect: TsButton
               Left = 118
@@ -799,20 +796,21 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           Margins.Right = 14
           Align = alTop
           TabOrder = 4
-          ExplicitLeft = 208
-          ExplicitTop = 136
+          ExplicitLeft = 166
+          ExplicitTop = 122
           ExplicitWidth = 282
           inherited pnlLookup: TsPanel
             Width = 282
             ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
+              Width = 134
+              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
               Width = 115
               ExplicitWidth = 115
-              ExplicitHeight = 20
             end
             inherited btnSelect: TsButton
               Left = 118
