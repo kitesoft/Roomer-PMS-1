@@ -35,7 +35,7 @@ uses
   , sPageControl
   , sButton
   , sPanel
-  , PrjConst, cxClasses, cxPropertiesStore, uFraCountryPanel
+  , PrjConst, cxClasses, cxPropertiesStore, uFraCountryPanel, uFraLookupPanel
 
 
 

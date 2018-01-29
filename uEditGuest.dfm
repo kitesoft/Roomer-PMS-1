@@ -317,16 +317,22 @@ object frmEditGuest: TfrmEditGuest
           Top = 144
           Width = 241
           Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 7
           ExplicitLeft = 174
           ExplicitTop = 144
           ExplicitWidth = 241
-          inherited pnlCountry: TsPanel
+          inherited pnlLookup: TsPanel
             Width = 241
             ExplicitWidth = 241
-            inherited lblCountryName: TLabel
-              Width = 175
-              Height = 14
+            inherited lblDescription: TsLabel
+              Width = 148
+              Height = 20
             end
           end
         end
@@ -575,16 +581,22 @@ object frmEditGuest: TfrmEditGuest
           Top = 126
           Width = 242
           Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 4
           ExplicitLeft = 173
           ExplicitTop = 126
           ExplicitWidth = 242
-          inherited pnlCountry: TsPanel
+          inherited pnlLookup: TsPanel
             Width = 242
             ExplicitWidth = 242
-            inherited lblCountryName: TLabel
-              Width = 176
-              Height = 14
+            inherited lblDescription: TsLabel
+              Width = 149
+              Height = 20
             end
           end
         end
@@ -592,6 +604,10 @@ object frmEditGuest: TfrmEditGuest
     end
     object tabCompany: TsTabSheet
       Caption = 'Company'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox4: TsGroupBox
         Left = 3
         Top = 10
@@ -911,18 +927,16 @@ object frmEditGuest: TfrmEditGuest
           Top = 122
           Width = 240
           Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 4
           ExplicitLeft = 173
           ExplicitTop = 122
           ExplicitWidth = 240
-          inherited pnlCountry: TsPanel
-            Width = 240
-            ExplicitWidth = 240
-            inherited lblCountryName: TLabel
-              Width = 174
-              Height = 14
-            end
-          end
         end
       end
     end

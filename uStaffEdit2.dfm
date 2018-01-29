@@ -81,10 +81,6 @@ object frmStaffEdit2: TfrmStaffEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbxLoginInfo: TsGroupBox
         Left = 0
         Top = 0
@@ -224,7 +220,7 @@ object frmStaffEdit2: TfrmStaffEdit2
             Left = 3
             Top = 3
             Width = 155
-            Height = 20
+            Height = 17
             Margins.Bottom = 0
             Caption = 'Active'
             Align = alTop
@@ -236,9 +232,9 @@ object frmStaffEdit2: TfrmStaffEdit2
           object chkWindowsAuth: TsCheckBox
             AlignWithMargins = True
             Left = 3
-            Top = 49
+            Top = 43
             Width = 155
-            Height = 20
+            Height = 17
             Margins.Bottom = 0
             Caption = 'Windows authentication'
             Align = alTop
@@ -246,13 +242,14 @@ object frmStaffEdit2: TfrmStaffEdit2
             SkinData.SkinSection = 'CHECKBOX'
             ImgChecked = 0
             ImgUnchecked = 0
+            ExplicitTop = 46
           end
           object chkPmsOnly: TsCheckBox
             AlignWithMargins = True
             Left = 3
-            Top = 26
+            Top = 23
             Width = 155
-            Height = 20
+            Height = 17
             Margins.Bottom = 0
             Caption = 'PMS only'
             Align = alTop
@@ -536,15 +533,11 @@ object frmStaffEdit2: TfrmStaffEdit2
           ExplicitTop = 16
           ExplicitWidth = 206
           inherited pnlLookup: TsPanel
+            Width = 206
+            ExplicitWidth = 206
             inherited lblDescription: TsLabel
-              Width = 4
-              Height = 13
-            end
-          end
-          inherited pnlCountry: TsPanel
-            inherited lblCountryName: TLabel
-              Width = 19
-              Height = 13
+              Width = 113
+              Height = 20
             end
           end
         end
@@ -735,9 +728,8 @@ object frmStaffEdit2: TfrmStaffEdit2
           Width = 441
           Height = 59
           Align = alClient
-          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
+          Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
