@@ -105,6 +105,9 @@ type
   public
     property OnSelect;
     property OnValidate;
+    property Dataset;
+    property CodeField;
+    property DescriptionField;
   end;
 
 implementation
