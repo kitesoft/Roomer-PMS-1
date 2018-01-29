@@ -4,7 +4,7 @@ object FrmCheckOut: TFrmCheckOut
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Check Out'
-  ClientHeight = 296
+  ClientHeight = 352
   ClientWidth = 626
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -35,15 +35,69 @@ object FrmCheckOut: TFrmCheckOut
     Font.Name = 'Tahoma'
     Font.Style = []
   end
+  object panTop: TsPanel
+    Left = 0
+    Top = 0
+    Width = 626
+    Height = 77
+    Align = alTop
+    TabOrder = 3
+    object lbReservation: TsLabel
+      Left = 71
+      Top = 15
+      Width = 62
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Reservation:'
+    end
+    object lbRoomReservation: TsLabel
+      Left = 44
+      Top = 34
+      Width = 89
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'RoomReservation:'
+    end
+    object lbRoom: TsLabel
+      Left = 102
+      Top = 53
+      Width = 31
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Room:'
+    end
+    object txtReservation: TsLabel
+      Left = 150
+      Top = 15
+      Width = 4
+      Height = 13
+      Caption = '-'
+    end
+    object txtRoomReservation: TsLabel
+      Left = 150
+      Top = 34
+      Width = 4
+      Height = 13
+      Caption = '-'
+    end
+    object txtRoom: TsLabel
+      Left = 150
+      Top = 53
+      Width = 4
+      Height = 13
+      Caption = '-'
+    end
+  end
   object panBtn: TsPanel
     Left = 0
-    Top = 234
+    Top = 290
     Width = 626
     Height = 62
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'TRANSPARENT'
+    ExplicitTop = 269
     DesignSize = (
       626
       62)
@@ -84,7 +138,7 @@ object FrmCheckOut: TFrmCheckOut
       Left = 345
       Top = 5
       Width = 243
-      Height = 19
+      Height = 17
       Caption = 'Allow checkout in spite of open group invoice'
       TabOrder = 2
       Visible = False
@@ -96,15 +150,15 @@ object FrmCheckOut: TFrmCheckOut
   end
   object pnlRoomBalance: TsPanel
     Left = 0
-    Top = 0
+    Top = 77
     Width = 313
-    Height = 234
+    Height = 213
     Align = alLeft
     BevelEdges = [beRight, beBottom]
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitLeft = -6
-    ExplicitTop = -3
+    ExplicitTop = 59
+    ExplicitHeight = 210
     object __lblRoomBalance: TsLabel
       Left = 16
       Top = 24
@@ -271,13 +325,15 @@ object FrmCheckOut: TFrmCheckOut
   end
   object pnlGroupBalance: TsPanel
     Left = 313
-    Top = 0
+    Top = 77
     Width = 313
-    Height = 234
+    Height = 213
     Align = alClient
     BevelEdges = [beBottom]
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 59
+    ExplicitHeight = 210
     object __lblGroupBalance: TsLabel
       Left = 16
       Top = 24

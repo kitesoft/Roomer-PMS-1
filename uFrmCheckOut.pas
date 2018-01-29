@@ -51,6 +51,12 @@ type
     panBtn: TsPanel;
     btnCancel: TsButton;
     BtnCheckOut: TsButton;
+    lbReservation: TsLabel;
+    lbRoomReservation: TsLabel;
+    lbRoom: TsLabel;
+    txtReservation: TsLabel;
+    txtRoomReservation: TsLabel;
+    txtRoom: TsLabel;
     procedure cbxForceClick(Sender: TObject);
     procedure btnRoomInvoiceClick(Sender: TObject);
     procedure btnGroupInvoiceClick(Sender: TObject);
@@ -67,12 +73,16 @@ type
     procedure prepareInvoice;
     procedure DisplayInvoice;
     procedure ReloadInvoiceStatuses;
+    procedure UpdateControls;
+    procedure SetFRoomNumber(const Value: String);
+    procedure SetReservation(const Value: Integer);
+    procedure SetRoomReservation(const Value: Integer);
     { Private declarations }
   public
     { Public declarations }
-    property Reservation: Integer read FReservation write FReservation;
-    property RoomReservation: Integer read FRoomReservation write FRoomReservation;
-    property RoomNumber: String read FRoomNumber write FRoomNumber;
+    property Reservation: Integer read FReservation write SetReservation;
+    property RoomReservation: Integer read FRoomReservation write SetRoomReservation;
+    property RoomNumber: String read FRoomNumber write SetFRoomNumber;
 
     property RoomInvoice: TInvoice read FRoomInvoice write FRoomInvoice;
     property GroupInvoice: TInvoice read FGroupInvoice write FGroupInvoice;
@@ -232,6 +242,31 @@ begin
   prepareInvoice;
 end;
 
+
+procedure TFrmCheckOut.SetFRoomNumber(const Value: String);
+begin
+  FRoomNumber := Value;
+  UpdateControls;
+end;
+
+procedure TFrmCheckOut.SetReservation(const Value: Integer);
+begin
+  FReservation := Value;
+  UpdateControls;
+end;
+
+procedure TFrmCheckOut.SetRoomReservation(const Value: Integer);
+begin
+  FRoomReservation := Value;
+  UpdateControls;
+end;
+
+procedure TFrmCheckOut.UpdateControls;
+begin
+  txtReservation.Caption := IntToStr(Reservation);
+  txtRoomReservation.Caption := iif(Roomreservation <> 0, IntToStr(RoomReservation), '-');
+  txtRoom.Caption := iif(RoomNumber.IsEmpty, '-', RoomNumber);
+end;
 
 procedure TFrmCheckOut.BtnCheckOutClick(Sender: TObject);
 begin
