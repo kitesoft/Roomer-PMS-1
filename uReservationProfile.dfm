@@ -327,6 +327,7 @@ object frmReservationProfile: TfrmReservationProfile
           ExplicitWidth = 209
           inherited lblDescription: TsLabel
             Width = 116
+            Height = 20
           end
         end
       end
@@ -839,8 +840,9 @@ object frmReservationProfile: TfrmReservationProfile
                   Top = 0
                   Width = 97
                   Height = 19
+                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clWindowText
+                  Font.Color = clBlack
                   Font.Height = -9
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -859,8 +861,9 @@ object frmReservationProfile: TfrmReservationProfile
                   Top = 0
                   Width = 94
                   Height = 19
+                  Color = clWhite
                   Font.Charset = DEFAULT_CHARSET
-                  Font.Color = clWindowText
+                  Font.Color = clBlack
                   Font.Height = -9
                   Font.Name = 'Tahoma'
                   Font.Style = []
@@ -901,6 +904,7 @@ object frmReservationProfile: TfrmReservationProfile
                   ExplicitWidth = 175
                   inherited lblDescription: TsLabel
                     Width = 82
+                    Height = 20
                   end
                 end
               end
@@ -992,7 +996,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitTop = 24
               end
               object edtName: TsEdit
                 AlignWithMargins = True
@@ -1019,7 +1022,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitTop = 46
               end
               object edtAddress1: TsEdit
                 AlignWithMargins = True
@@ -1046,7 +1048,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitTop = 68
               end
               object edtAddress2: TsEdit
                 AlignWithMargins = True
@@ -1073,7 +1074,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitTop = 112
               end
               object edtAddress3: TsEdit
                 AlignWithMargins = True
@@ -1100,7 +1100,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitTop = 90
               end
               object edtInvRefrence: TsEdit
                 AlignWithMargins = True
@@ -1127,7 +1126,6 @@ object frmReservationProfile: TfrmReservationProfile
                 BoundLabel.Font.Height = -13
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
-                ExplicitTop = 134
               end
               object pnlCustomer: TsPanel
                 AlignWithMargins = True
@@ -1167,12 +1165,16 @@ object frmReservationProfile: TfrmReservationProfile
                   Margins.Left = 65
                   Align = alClient
                   TabOrder = 0
-                  ExplicitLeft = -10
-                  ExplicitTop = 8
+                  ExplicitLeft = 65
+                  ExplicitTop = 3
+                  ExplicitWidth = 172
+                  ExplicitHeight = 22
                   inherited pnlLookup: TsPanel
                     Width = 172
+                    ExplicitWidth = 172
                     inherited lblDescription: TsLabel
                       Width = 46
+                      Height = 20
                     end
                   end
                 end
@@ -1664,14 +1666,16 @@ object frmReservationProfile: TfrmReservationProfile
                 inherited lblDescription: TsLabel
                   Left = 78
                   Width = 81
+                  Height = 20
+                  ExplicitLeft = 78
                 end
                 inherited edCode: TsEdit
                   Width = 45
                   ExplicitWidth = 45
-                  ExplicitHeight = 20
                 end
                 inherited btnSelect: TsButton
                   Left = 48
+                  ExplicitLeft = 48
                 end
               end
             end
@@ -1702,14 +1706,16 @@ object frmReservationProfile: TfrmReservationProfile
                 inherited lblDescription: TsLabel
                   Left = 78
                   Width = 81
+                  Height = 20
+                  ExplicitLeft = 78
                 end
                 inherited edCode: TsEdit
                   Width = 45
                   ExplicitWidth = 45
-                  ExplicitHeight = 20
                 end
                 inherited btnSelect: TsButton
                   Left = 48
+                  ExplicitLeft = 48
                 end
               end
             end
@@ -2882,6 +2888,7 @@ object frmReservationProfile: TfrmReservationProfile
           Images = DImages.PngImageList1
           TabOrder = 2
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
         object btnRemoveRoom: TsButton
           AlignWithMargins = True
@@ -3061,8 +3068,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 94
-          Height = 20
+          Width = 102
+          Height = 17
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4

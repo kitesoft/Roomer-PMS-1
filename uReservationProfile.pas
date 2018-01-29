@@ -1982,7 +1982,7 @@ begin
 
       RoomType := newRoomType;
 
-      numGuests := mRoomsGuestCount.asInteger;
+      numGuests := theData.NumberGuests; // mRoomsGuestCount.asInteger;
       numChildren := 0;
       numInfants := 0;
 
