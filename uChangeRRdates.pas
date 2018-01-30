@@ -617,7 +617,7 @@ begin
   else
     btnOk.Enabled := False;
 
-  btnSplit.Enabled := dtSplitAt.CheckValidDate(false) and (zArrival < dtSplitAt.date) and (dtSplitAt.Date <= zDeparture);
+  btnSplit.Enabled := (zRoomReservation > 0) and  dtSplitAt.CheckValidDate(false) and (zArrival < dtSplitAt.date) and (dtSplitAt.Date <= zDeparture);
 end;
 
 procedure TfrmChangeRRdates.FormCreate(Sender: TObject);

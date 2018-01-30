@@ -534,8 +534,8 @@ type
     btnRefresh: TsButton;
     sButton1: TsButton;
     sPanel5: TsPanel;
-    lblRatePlan: TsLabel;
-    edtRatePlans: TsComboBox;
+    lblChannels: TsLabel;
+    cbxChannels: TsComboBox;
     chkAutoUpdateNullPrice: TsCheckBox;
     pgcExtraAndAlert: TsPageControl;
     sTabSheet1: TsTabSheet;
@@ -682,7 +682,7 @@ type
     procedure edContactPersonEnter(Sender: TObject);
     procedure edContactPersonExit(Sender: TObject);
     procedure cbxBreakfastClick(Sender: TObject);
-    procedure edtRatePlansCloseUp(Sender: TObject);
+    procedure cbxChannelsCloseUp(Sender: TObject);
     procedure tvRoomResRatePlanCodePropertiesCloseUp(Sender: TObject);
     procedure tvRoomResRatePlanCodePropertiesEditValueChanged(Sender: TObject);
     procedure tvSelectTypeNoRoomsPropertiesChange(Sender: TObject);
@@ -756,7 +756,7 @@ type
     procedure SetOutOfOrderBlocking(const Value: boolean);
     procedure FillQuickFind;
     procedure ShowhideExtraInputs;
-    procedure ShowRatePlans;
+    procedure ShowChannels;
     procedure PopulateRatePlanCombo(clearAll : Boolean = True);
     function SetOnePrice(RoomReservation: Integer; rateId: String): boolean;
     procedure SetProfileAlertVisibility;
@@ -1334,20 +1334,20 @@ begin
   lblOnGroupInvoice.Visible := edtBreakfast.Visible AND chkisGroupInvoice.Checked;
 end;
 
-procedure TfrmMakeReservationQuick.ShowRatePlans;
+procedure TfrmMakeReservationQuick.ShowChannels;
 var
   res: TRoomerDataSet;
 begin
-  edtRatePlans.Items.Clear;
-  edtRatePlans.Items.AddObject('<none>', nil);
+  cbxChannels.Items.Clear;
+  cbxChannels.Items.AddObject('<none>', nil);
   res := glb.ChannelsSet;
   res.First;
   while NOT res.eof do
   begin
-    edtRatePlans.Items.AddObject(res['name'], TObject(res.FieldByName('id').AsInteger));
+    cbxChannels.Items.AddObject(res['name'], TObject(res.FieldByName('id').AsInteger));
     res.next;
   end;
-  edtRatePlans.ItemIndex := 0;
+  cbxChannels.ItemIndex := 0;
 end;
 
 procedure TfrmMakeReservationQuick.FormShow(Sender: TObject);
@@ -1371,7 +1371,7 @@ begin
     chkExcluteBlocked.Checked := g.qExcluteBlocked;
     chkExcluteNoShow.Checked := g.qExcluteNoshow;
 
-    ShowRatePlans;
+    ShowChannels;
     fraCustomerPanel.Code := FNewReservation.HomeCustomer.Customer;
 
     if FNewReservation.IsQuick then
@@ -1634,8 +1634,8 @@ begin
     if mRoomRes.Locate('roomreservation', RoomReservation, []) then
     begin
       channelId := 0;
-      if edtRatePlans.ItemIndex > 0 then
-        channelId := integer(edtRatePlans.Items.Objects[edtRatePlans.ItemIndex]);
+      if cbxChannels.ItemIndex > 0 then
+        channelId := integer(cbxChannels.Items.Objects[cbxChannels.ItemIndex]);
 
       Arrival := mRoomResarrival.AsDateTime;
       Departure := mRoomResdeparture.AsDateTime;
@@ -1914,11 +1914,11 @@ begin
 
   if glb.LocateSpecificRecordAndGetValue('channels', 'id', FNewReservation.HomeCustomer.CustomerRatePlanId,
     'channelManagerId', ChannelCode) then
-    for i := 1 to edtRatePlans.Items.Count - 1 do
-      if integer(edtRatePlans.Items.Objects[i]) = FNewReservation.HomeCustomer.CustomerRatePlanId then
+    for i := 1 to cbxChannels.Items.Count - 1 do
+      if integer(cbxChannels.Items.Objects[i]) = FNewReservation.HomeCustomer.CustomerRatePlanId then
       begin
-        edtRatePlans.ItemIndex := i; // edtRatePlans.Items.IndexOf(ChannelCode);
-        edtRatePlansCloseUp(nil);
+        cbxChannels.ItemIndex := i; // cbxChannels.Items.IndexOf(ChannelCode);
+        cbxChannelsCloseUp(nil);
         Break;
       end;
 end;
@@ -3685,8 +3685,8 @@ var
   lRateCurrency: string;
 begin
   channelId := 0;
-  if edtRatePlans.ItemIndex > 0 then
-    channelId := integer(edtRatePlans.Items.Objects[edtRatePlans.ItemIndex]);
+  if cbxChannels.ItemIndex > 0 then
+    channelId := integer(cbxChannels.Items.Objects[cbxChannels.ItemIndex]);
   isPaid := false;
   mRoomRes.DisableControls;
   lstPrices := TstringList.Create;
@@ -3937,8 +3937,8 @@ var
   lRateCurrency: string;
 begin
   channelId := 0;
-  if edtRatePlans.ItemIndex > 0 then
-    channelId := integer(edtRatePlans.Items.Objects[edtRatePlans.ItemIndex]);
+  if cbxChannels.ItemIndex > 0 then
+    channelId := integer(cbxChannels.Items.Objects[cbxChannels.ItemIndex]);
   isPaid := false;
   lstPrices := TstringList.Create;
   try
@@ -4324,16 +4324,16 @@ begin
   frmdayNotes.memLog.Perform(EM_LINESCROLL, 0, -10)
 end;
 
-procedure TfrmMakeReservationQuick.edtRatePlansCloseUp(Sender: TObject);
+procedure TfrmMakeReservationQuick.cbxChannelsCloseUp(Sender: TObject);
 var
   ChannelCode,
     chManCode: String;
   channelId: integer;
   FirstRound: boolean;
 begin
-  if edtRatePlans.ItemIndex > 0 then
+  if cbxChannels.ItemIndex > 0 then
   begin
-    channelId := integer(edtRatePlans.Items.Objects[edtRatePlans.ItemIndex]);
+    channelId := integer(cbxChannels.Items.Objects[cbxChannels.ItemIndex]);
     chManCode := channelManager_GetDefaultCode;
     FirstRound := true;
     if glb.LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', ChannelCode) then
