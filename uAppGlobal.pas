@@ -185,7 +185,6 @@ Type
     function GetMaintenanceCodes: TRoomerDataSet;
     function GetMaintenanceRoomNotes: TRoomerDataSet;
     function GetStaffMembers: TRoomerDataset;
-
    public
       constructor Create;
       destructor Destroy; override;
@@ -195,6 +194,7 @@ Type
       procedure FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                     Location : TSet_Of_Integer;
                                     Floor : TSet_Of_Integer;
+                                    RoomTypes: TSet_Of_Integer;
                                     oFreeRooms : TFreeRooms = nil;
                                     zOneDay_dtDate : TDateTime = 0);
 
@@ -219,7 +219,7 @@ Type
       procedure LoadStaticTables(startingUp : Boolean = False);
       procedure RefreshTablesWhenNeeded;
       procedure FillRoomAndTypeGridNew(agrRooms : TStringGrid );
-      procedure FillLocationsMenu(mnu : TPopupMenu; event : TNotifyEvent);
+      procedure FillLocationsMenu(mnu : TMenuItem; event : TNotifyEvent);
 
       function GetRoomLocation(Room: String): String;
       function LocateRoom(Room : String) : Boolean;
@@ -228,6 +228,7 @@ Type
       function GetRoomStatistics(Room : String) : Boolean;
       function GetRoomFloor(Room: String): Integer;
       function GetRoomTypeFromRoom(Room: String): String;
+      function GetRoomTypeIdFromRoom(Room: String): Integer;
       function GetLocationId(Location: String): integer;
       function GetNumberOfItems( aType : string ) : integer;
       function GetRoomTypeNumberGuests( aType : string ) : integer;
@@ -699,11 +700,12 @@ begin
 end;
 
 
-procedure TGlobalSettings.FillLocationsMenu(mnu: TPopupMenu; event : TNotifyEvent);
+procedure TGlobalSettings.FillLocationsMenu(mnu: TMenuItem; event : TNotifyEvent);
 var item : TMenuItem;
     i : integer;
 begin
-  mnu.Items.Clear;
+  mnu.Clear;
+  mnu.Checked := false;
   locations.First;
   while NOT locations.Eof do
   begin
@@ -711,13 +713,13 @@ begin
     item.Caption := format('%s [%s]', [locations['Description'], locations['Location']]);
     item.Tag := locations['Id'] + 1000;
     item.OnClick := event;
-    mnu.Items.Add(item);
+    mnu.Add(item);
     locations.Next;
   end;
 
   item := TMenuItem.Create(nil);
   item.Caption := '-';
-  mnu.Items.Add(item);
+  mnu.Add(item);
 
   for i := 0 to FRoomFloors.Count - 1 do
   begin
@@ -725,21 +727,17 @@ begin
     item.Caption := format('%s %d', [GetTranslatedText('shTx_Floor'), FRoomFloors[i]]);
     item.Tag := FRoomFloors[i];
     item.OnClick := event;
-    mnu.Items.Add(item);
+    mnu.Add(item);
   end;
 end;
 
 procedure TGlobalSettings.FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                               Location : TSet_Of_Integer;
                                               Floor : TSet_Of_Integer;
+                                              RoomTypes: TSet_Of_Integer;
                                               oFreeRooms : TFreeRooms = nil;
                                               zOneDay_dtDate : TDateTime = 0);
 var l : integer;
-
-    FloorFilterActive,
-    LocationFilterActive,
-    FloorFilterPassed,
-    LocationFilterPassed,
     FilterPassed : Boolean;
 begin
   // --
@@ -754,15 +752,8 @@ begin
     begin
       if not RoomsSet['Hidden'] then
       begin
-        FloorFilterActive := Floor.Count > 0;
-        LocationFilterActive := Location.Count > 0;
-        FloorFilterPassed := IsValidInList(Floor, RoomsSet['Floor']);
-        LocationFilterPassed := IsValidInList(Location, GetLocationId(RoomsSet['Location']));
-        FilterPassed := (NOT FloorFilterActive) OR (FloorFilterPassed AND FloorFilterActive);
-        FilterPassed := FilterPassed AND
-                        ((NOT LocationFilterActive) OR (LocationFilterPassed AND LocationFilterActive));
-
-
+        filterPassed := IsValidInList(Floor, RoomsSet['Floor']) and IsValidInList(Location, GetLocationId(RoomsSet['Location']))
+                        and (LocateRoomType(RoomsSet['Roomtype']) and IsValidInList(RoomTypes, RoomTypesSet['id']));
         if FilterPassed then
         begin
           inc(l);
@@ -1381,6 +1372,13 @@ begin
   result := 0;
   if LocateSpecificRecord('rooms', 'Room', Room) then
     result := RoomsSet['Floor'];
+end;
+
+function TGlobalSettings.GetRoomTypeIdFromRoom(Room : String) : Integer;
+begin
+  result := 0;
+  if LocateSpecificRecord('rooms', 'Room', Room) and LocateRoomType(RoomsSet['roomtype']) then
+    result := RoomTypesSet['id'];
 end;
 
 function TGlobalSettings.LocateCountryGroup(CountryGroup : String) : Boolean;

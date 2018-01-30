@@ -72,51 +72,31 @@ object frmMain: TfrmMain
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    object lblSearchFilterActive: TsLabel
+    object pnlBottom: TsPanel
       Left = 0
       Top = 170
       Width = 1532
-      Height = 3
-      Hint = 'Search Filter Active'
-      Align = alTop
-      AutoSize = False
-      Color = clRed
-      ParentColor = False
-      ParentFont = False
-      Visible = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = 15789037
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitTop = 27
-      ExplicitWidth = 1153
-    end
-    object pnlBottom: TsPanel
-      Left = 0
-      Top = 173
-      Width = 1532
-      Height = 304
+      Height = 307
       Align = alClient
       TabOrder = 0
       object splStatistics: TsSplitter
         Left = 1220
         Top = 1
         Width = 7
-        Height = 302
+        Height = 305
         Align = alRight
         Color = clGradientActiveCaption
         ParentColor = False
         SkinData.SkinSection = 'SPLITTER'
         ExplicitLeft = 977
+        ExplicitHeight = 302
       end
       object pageMainGrids: TsPageControl
         Left = 1
         Top = 1
         Width = 1219
-        Height = 302
-        ActivePage = tabOneDayView
+        Height = 305
+        ActivePage = tabFrontDesk
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -128,7 +108,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 0
             Width = 1211
-            Height = 274
+            Height = 277
             Cursor = crDefault
             Align = alClient
             BevelEdges = []
@@ -165,6 +145,7 @@ object frmMain: TfrmMain
             GridFixedLineColor = 13947601
             HoverRowCells = [hcNormal, hcSelected]
             OnGetCellPrintColor = grOneDayRoomsGetCellPrintColor
+            OnGetAlignment = grOneDayRoomsGetAlignment
             OnGridHint = grOneDayRoomsGridHint
             OnClickCell = grOneDayRoomsClickCell
             OnRightClickCell = grOneDayRoomsClickCell
@@ -579,7 +560,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 100
             Width = 1211
-            Height = 174
+            Height = 177
             Align = alClient
             BevelInner = bvNone
             BevelOuter = bvRaised
@@ -860,7 +841,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 0
             Width = 1211
-            Height = 124
+            Height = 127
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
@@ -870,7 +851,6 @@ object frmMain: TfrmMain
               Top = 0
               Width = 1211
               Height = 4
-              Hint = 'Search Filter Active'
               Align = alTop
               AutoSize = False
               Caption = '  Reading period...'
@@ -910,7 +890,7 @@ object frmMain: TfrmMain
               Left = 0
               Top = 28
               Width = 1211
-              Height = 74
+              Height = 77
               Cursor = crDefault
               Align = alClient
               BevelInner = bvNone
@@ -1137,7 +1117,7 @@ object frmMain: TfrmMain
             end
             object pnlLegends: TsPanel
               Left = 0
-              Top = 102
+              Top = 105
               Width = 1211
               Height = 22
               Align = alBottom
@@ -1296,7 +1276,7 @@ object frmMain: TfrmMain
           end
           object splitPeriod: TcxSplitter
             Left = 0
-            Top = 124
+            Top = 127
             Width = 1211
             Height = 8
             Hint = 'No Rooms'
@@ -1316,7 +1296,7 @@ object frmMain: TfrmMain
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
-            Top = 165
+            Top = 168
             Width = 1211
             Height = 109
             Hint = 'Test Hint'
@@ -1463,7 +1443,7 @@ object frmMain: TfrmMain
           end
           object pnlBottomViewSettings: TsPanel
             Left = 0
-            Top = 132
+            Top = 135
             Width = 1211
             Height = 33
             Align = alBottom
@@ -1646,7 +1626,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 0
             Width = 1211
-            Height = 274
+            Height = 277
             Align = alClient
             BorderStyle = bsNone
             TabOrder = 0
@@ -1657,7 +1637,7 @@ object frmMain: TfrmMain
         Left = 1227
         Top = 1
         Width = 304
-        Height = 302
+        Height = 305
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
@@ -1713,7 +1693,7 @@ object frmMain: TfrmMain
           Left = 0
           Top = 171
           Width = 304
-          Height = 131
+          Height = 134
           Margins.Left = 10
           Margins.Top = 0
           Margins.Right = 0
@@ -1762,14 +1742,13 @@ object frmMain: TfrmMain
       object Panel4: TsPanel
         Left = 0
         Top = 0
-        Width = 537
+        Width = 624
         Height = 33
         Align = alLeft
         BevelOuter = bvNone
         ParentBackground = False
         ParentColor = True
         TabOrder = 0
-        OnMouseEnter = tabsViewMouseEnter
         SkinData.SkinSection = 'PANEL'
         object btnHome: TsSpeedButton
           AlignWithMargins = True
@@ -1791,7 +1770,6 @@ object frmMain: TfrmMain
           Font.Style = [fsBold]
           ParentFont = False
           OnClick = btnHomeClick
-          OnMouseEnter = tabsViewMouseEnter
           ButtonStyle = tbsDropDown
           DropdownMenu = pupSelectHomePage
           Images = DImages.PngImageList25
@@ -1800,7 +1778,7 @@ object frmMain: TfrmMain
         object tabsView: TsTabControl
           Left = 50
           Top = 0
-          Width = 487
+          Width = 574
           Height = 33
           Cursor = crHandPoint
           Align = alClient
@@ -1824,15 +1802,14 @@ object frmMain: TfrmMain
           TabIndex = 0
           OnChange = tabsViewChange
           OnChanging = tabsViewChanging
-          OnMouseEnter = tabsViewMouseEnter
           SkinData.SkinSection = 'PAGECONTROL'
           SkinData.OuterEffects.Visibility = ovAlways
         end
       end
       object __PanGridsHeader: TsPanel
-        Left = 661
+        Left = 748
         Top = 0
-        Width = 871
+        Width = 784
         Height = 33
         Align = alClient
         Alignment = taLeftJustify
@@ -1847,7 +1824,7 @@ object frmMain: TfrmMain
           AlignWithMargins = True
           Left = 158
           Top = 3
-          Width = 286
+          Width = 312
           Height = 27
           Margins.Left = 5
           Align = alClient
@@ -1856,7 +1833,6 @@ object frmMain: TfrmMain
           ParentColor = False
           ParentFont = False
           OnDblClick = __PanGridsHeaderDblClick
-          OnMouseEnter = tabsViewMouseEnter
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -17
@@ -1866,9 +1842,9 @@ object frmMain: TfrmMain
           ExplicitHeight = 23
         end
         object sPanel3: TsPanel
-          Left = 447
+          Left = 473
           Top = 0
-          Width = 424
+          Width = 311
           Height = 33
           Margins.Left = 0
           Margins.Top = 0
@@ -1880,68 +1856,41 @@ object frmMain: TfrmMain
           Padding.Left = 3
           ParentColor = True
           TabOrder = 0
-          OnMouseEnter = tabsViewMouseEnter
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
-          object btnStatusFilter: TsSpeedButton
+          object btnFilterDropdown: TsSpeedButton
             AlignWithMargins = True
-            Left = 7
-            Top = 0
-            Width = 90
-            Height = 33
-            Margins.Left = 4
-            Margins.Top = 0
-            Margins.Right = 0
-            Margins.Bottom = 0
+            Left = 3
+            Top = 1
+            Width = 95
+            Height = 31
+            Margins.Left = 0
+            Margins.Top = 1
+            Margins.Bottom = 1
             Align = alLeft
-            Caption = 'Status'
-            Flat = True
-            PopupMenu = mnuItemStatus
-            OnClick = btnStatusFilterClick
-            OnMouseEnter = tabsViewMouseEnter
+            Caption = 'Filter'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -15
+            Font.Name = 'Segoe UI'
+            Font.Style = []
+            ParentFont = False
+            ParentShowHint = False
+            PopupMenu = mnuFilter
+            ShowHint = False
+            OnClick = btnFilterDropdownClick
             ButtonStyle = tbsDropDown
-            SkinData.SkinSection = 'SPEEDBUTTON'
-            DropdownMenu = mnuItemStatus
-            ExplicitHeight = 31
-          end
-          object btnLocationFilter: TsSpeedButton
-            Left = 187
-            Top = 0
-            Width = 90
-            Height = 33
-            Margins.Top = 0
-            Align = alLeft
-            Caption = 'Location'
-            Flat = True
-            OnClick = btnLocationFilterClick
-            OnMouseEnter = tabsViewMouseEnter
-            ButtonStyle = tbsDropDown
-            SkinData.SkinSection = 'SPEEDBUTTON'
-            DropdownMenu = mnuFilterLocation
-            ExplicitHeight = 31
-          end
-          object btnGroupsFilter: TsSpeedButton
-            Left = 97
-            Top = 0
-            Width = 90
-            Height = 33
-            Margins.Top = 0
-            Align = alLeft
-            Caption = 'Groups'
-            Flat = True
-            OnClick = btnGroupsFilterClick
-            OnMouseEnter = tabsViewMouseEnter
-            ButtonStyle = tbsDropDown
-            SkinData.SkinSection = 'SPEEDBUTTON'
-            DropdownMenu = G2
-            ExplicitHeight = 31
+            DropdownMenu = mnuFilter
+            Images = DImages.cxSmallImagesFlat
+            ImageIndex = 82
+            DrawOverBorder = False
           end
           object edtSearch: TButtonedEdit
             AlignWithMargins = True
-            Left = 280
+            Left = 104
             Top = 5
-            Width = 109
+            Width = 172
             Height = 23
             Margins.Top = 5
             Margins.Bottom = 5
@@ -1961,13 +1910,12 @@ object frmMain: TfrmMain
             RightButton.PressedImageIndex = 131
             TabOrder = 0
             OnChange = edtSearchChange
-            OnMouseEnter = tabsViewMouseEnter
             OnRightButtonClick = btnClearSearchClick
             ExplicitHeight = 21
           end
           object btnSearchForGuests: TsButton
             AlignWithMargins = True
-            Left = 392
+            Left = 279
             Top = 3
             Width = 27
             Height = 27
@@ -1996,7 +1944,6 @@ object frmMain: TfrmMain
           Padding.Left = 3
           ParentColor = True
           TabOrder = 1
-          OnMouseEnter = tabsViewMouseEnter
           SkinData.CustomColor = True
           SkinData.CustomFont = True
           SkinData.SkinSection = 'PANEL'
@@ -2025,7 +1972,6 @@ object frmMain: TfrmMain
             TabOrder = 0
             Text = '  -  -    '
             OnChange = dtDateChange
-            OnMouseEnter = tabsViewMouseEnter
             BoundLabel.Font.Charset = DEFAULT_CHARSET
             BoundLabel.Font.Color = clWindowText
             BoundLabel.Font.Height = -13
@@ -2200,7 +2146,7 @@ object frmMain: TfrmMain
         end
       end
       object Panel2: TsPanel
-        Left = 537
+        Left = 624
         Top = 0
         Width = 124
         Height = 33
@@ -2216,7 +2162,6 @@ object frmMain: TfrmMain
         ParentFont = False
         TabOrder = 2
         OnDblClick = __PanGridsHeaderDblClick
-        OnMouseEnter = tabsViewMouseEnter
         SkinData.CustomColor = True
         SkinData.CustomFont = True
         SkinData.SkinSection = 'PANEL'
@@ -2384,7 +2329,6 @@ object frmMain: TfrmMain
           ParentFont = False
           TabOrder = 0
           OnClick = btnRefreshOneDayClick
-          OnMouseEnter = tabsViewMouseEnter
         end
         object btnGotoToday: TsButton
           AlignWithMargins = True
@@ -2404,7 +2348,6 @@ object frmMain: TfrmMain
           ParentFont = False
           TabOrder = 1
           OnClick = btnToDayClick
-          OnMouseEnter = tabsViewMouseEnter
         end
         object btnForward: TsButton
           AlignWithMargins = True
@@ -2426,7 +2369,6 @@ object frmMain: TfrmMain
           ParentFont = False
           TabOrder = 2
           OnClick = btnBackForwardClick
-          OnMouseEnter = tabsViewMouseEnter
         end
         object btnBack: TsButton
           AlignWithMargins = True
@@ -2442,7 +2384,6 @@ object frmMain: TfrmMain
           Images = DImages.ilGuests
           TabOrder = 3
           OnClick = btnBackForwardClick
-          OnMouseEnter = tabsViewMouseEnter
         end
       end
     end
@@ -2611,7 +2552,6 @@ object frmMain: TfrmMain
     Contexts = <>
     TabOrder = 2
     TabStop = False
-    ExplicitLeft = 5
     object rbTabHome: TdxRibbonTab
       Active = True
       Caption = 'Roomer'
@@ -24167,50 +24107,6 @@ object frmMain: TfrmMain
     Left = 88
     Top = 424
   end
-  object mnuItemStatus: TPopupMenu
-    Left = 1032
-    Top = 392
-    object Currentguest1: TMenuItem
-      Caption = 'Current guest'
-      OnClick = C2Click
-    end
-    object Notarrived1: TMenuItem
-      Caption = 'Not arrived'
-      OnClick = C2Click
-    end
-    object Departed1: TMenuItem
-      Caption = 'Departed'
-      OnClick = C2Click
-    end
-    object Waitinglist1: TMenuItem
-      Caption = 'Waiting list'
-      OnClick = C2Click
-    end
-    object NOShow1: TMenuItem
-      Caption = 'NO-Show'
-      OnClick = C2Click
-    end
-    object Alotment1: TMenuItem
-      Caption = 'Alotment'
-      OnClick = C2Click
-    end
-    object Blockedroom1: TMenuItem
-      Caption = 'Blocked room'
-      OnClick = C2Click
-    end
-    object Cancellation1: TMenuItem
-      Caption = 'Cancellation'
-      OnClick = C2Click
-    end
-  end
-  object mnuFilterLocation: TPopupMenu
-    Left = 960
-    Top = 424
-  end
-  object G2: TPopupMenu
-    Left = 1048
-    Top = 440
-  end
   object pupGroups: TPopupMenu
     OnPopup = pupGroupsPopup
     Left = 424
@@ -24313,6 +24209,56 @@ object frmMain: TfrmMain
     object M1: TMenuItem
       Caption = 'Make current page the homepage'
       OnClick = M1Click
+    end
+  end
+  object mnuFilter: TPopupMenu
+    Left = 1064
+    Top = 344
+    object mnuFilterStatus: TMenuItem
+      Caption = 'Status'
+      object Currentguest1: TMenuItem
+        Caption = 'Current guest'
+        OnClick = C2Click
+      end
+      object Notarrived1: TMenuItem
+        Caption = 'Not arrived'
+        OnClick = C2Click
+      end
+      object Departed1: TMenuItem
+        Caption = 'Departed'
+        OnClick = C2Click
+      end
+      object Waitinglist1: TMenuItem
+        Caption = 'Waiting list'
+        OnClick = C2Click
+      end
+      object NOShow1: TMenuItem
+        Caption = 'NO-Show'
+        OnClick = C2Click
+      end
+      object Alotment1: TMenuItem
+        Caption = 'Alotment'
+        OnClick = C2Click
+      end
+      object Blockedroom1: TMenuItem
+        Caption = 'Blocked room'
+        OnClick = C2Click
+      end
+      object Cancellation1: TMenuItem
+        Caption = 'Cancellation'
+        OnClick = C2Click
+      end
+    end
+    object mnuFilterGroup: TMenuItem
+      Caption = 'Groups'
+    end
+    object mnuFilterLocation: TMenuItem
+      Caption = 'Location'
+      object TMenuItem
+      end
+    end
+    object mnuFilterRoomType: TMenuItem
+      Caption = 'Roomtype'
     end
   end
 end

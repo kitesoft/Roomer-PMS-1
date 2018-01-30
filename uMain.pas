@@ -428,7 +428,6 @@ type
     dxBarLargeButton4: TdxBarLargeButton;
     timSearch: TTimer;
     sLabel1: TsLabel;
-    lblSearchFilterActive: TsLabel;
     ilFilter: TImageList;
     dxSkinController1: TdxSkinController;
     tabFreeRooms: TsTabSheet;
@@ -506,7 +505,6 @@ type
     btnEmailTemplates: TdxBarLargeButton;
     btnCancelReservations: TMenuItem;
     btnTotallist: TdxBarLargeButton;
-    mnuItemStatus: TPopupMenu;
     Currentguest1: TMenuItem;
     Notarrived1: TMenuItem;
     Departed1: TMenuItem;
@@ -515,13 +513,8 @@ type
     Alotment1: TMenuItem;
     Blockedroom1: TMenuItem;
     Cancellation1: TMenuItem;
-    mnuFilterLocation: TPopupMenu;
-    G2: TPopupMenu;
     btnCustInvoices: TdxBarLargeButton;
     sPanel3: TsPanel;
-    btnStatusFilter: TsSpeedButton;
-    btnLocationFilter: TsSpeedButton;
-    btnGroupsFilter: TsSpeedButton;
     edtSearch: TButtonedEdit;
     pnlRBE: TsPanel;
     pupGroups: TPopupMenu;
@@ -691,6 +684,12 @@ type
     btnFinanceMutationTraces: TdxBarLargeButton;
     btnDailySalesAndStatistics: TdxBarLargeButton;
     btnConnectionsStatistics: TdxBarLargeButton;
+    btnFilterDropdown: TsSpeedButton;
+    mnuFilter: TPopupMenu;
+    mnuFilterStatus: TMenuItem;
+    mnuFilterGroup: TMenuItem;
+    mnuFilterLocation: TMenuItem;
+    mnuFilterRoomType: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -888,9 +887,6 @@ type
     procedure btnCancelThisReservationClick(Sender: TObject);
     procedure btnTotallistClick(Sender: TObject);
     procedure mnuRemovereservationClick(Sender: TObject);
-    procedure btnStatusFilterClick(Sender: TObject);
-    procedure btnLocationFilterClick(Sender: TObject);
-    procedure btnGroupsFilterClick(Sender: TObject);
     procedure dtMainHeaderPropertiesChange(Sender: TObject);
     procedure C4Click(Sender: TObject);
     procedure pupGroupsPopup(Sender: TObject);
@@ -916,7 +912,6 @@ type
     procedure cbxStatDayChange(Sender: TObject);
     procedure btnGuestsClick(Sender: TObject);
     procedure cbxViewTypesCloseUp(Sender: TObject);
-    procedure tabsViewMouseEnter(Sender: TObject);
     procedure pnlNoRoomButtonsMouseEnter(Sender: TObject);
     procedure btnNoRoomsHideClick(Sender: TObject);
     procedure btnOccupancyViewHideClick(Sender: TObject);
@@ -989,6 +984,9 @@ type
     procedure btnDailySalesAndStatisticsClick(Sender: TObject);
     procedure dxbtnReleaseNotesClick(Sender: TObject);
     procedure btnConnectionsStatisticsClick(Sender: TObject);
+    procedure grOneDayRoomsGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment;
+      var VAlign: TVAlignment);
+    procedure btnFilterDropdownClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1361,7 +1359,7 @@ type
     procedure GuestListReport;
     function FilteredData(aRoom: TRoomObject): boolean;
     // Reservation: TSingleReservations): Boolean;
-    procedure LocationMenuSelect(Sender: TObject);
+    procedure FilterMenuItemSelect(Sender: TObject);
     function SearchOrGroupFilterActive: boolean;
     function LocationFilter(OnlyLocations: boolean = true): boolean;
     procedure PrepareSkinSelections;
@@ -1480,6 +1478,9 @@ type
     procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
     procedure CheckFinanceConnect;
     procedure CheckPCIContract;
+    procedure FillRoomTypesMenu(mnu: TMenuItem; event: TNotifyEvent);
+    function FilteredRoomTypes: TSet_Of_Integer;
+    function RoomtypeFilterActive: boolean;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -1857,16 +1858,38 @@ begin
     FormatSettings.CurrencyString := '';
   end;
 
-  glb.FillLocationsMenu(mnuFilterLocation, LocationMenuSelect);
+  glb.FillLocationsMenu(mnuFilterLocation, FilterMenuItemSelect);
   GetMnuFilterLocationsFromStore;
 
+  FillRoomTypesMenu(mnuFilterRoomType, FilterMenuItemSelect);
+
 end;
+
+
+procedure TfrmMain.FillRoomTypesMenu(mnu: TMenuItem; event : TNotifyEvent);
+var item : TMenuItem;
+    i : integer;
+begin
+  mnu.Clear;
+  mnu.Checked := false;
+  glb.RoomTypesSet.First;
+  while NOT glb.RoomTypesSet.Eof do
+  begin
+    item := TMenuItem.Create(nil);
+    item.Caption := format('%s [%s]', [glb.RoomTypesSet['Description'], glb.RoomTypesSet['Roomtype']]);
+    item.OnClick := event;
+    item.Tag := glb.Roomtypesset['id'];
+    mnu.Add(item);
+    glb.RoomTypesSet.Next;
+  end;
+end;
+
 
 procedure TfrmMain.GetMnuFilterLocationsFromStore;
 var
   i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     mnuFilterLocation.Items[i].Checked := Str2Bool(ReadStringValueFromAppRegistry(d.roomerMainDataSet.userName,
       'LocationSelected_' + g.qHotelCode + '_' + inttostr(mnuFilterLocation.Items[i].Tag),
@@ -1879,7 +1902,7 @@ procedure TfrmMain.SetAllMnuFilterLocationsUnchecked;
 var
   i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     WriteStringValueToAppRegistry(d.roomerMainDataSet.userName, 'LocationSelected_' + g.qHotelCode + '_' +
       inttostr(mnuFilterLocation.Items[i].Tag),
@@ -2306,16 +2329,6 @@ begin
   RefreshGrid;
 end;
 
-procedure TfrmMain.btnGroupsFilterClick(Sender: TObject);
-var
-  i: integer;
-begin
-  for i := 0 to G2.Items.Count - 1 do
-    G2.Items[i].Checked := false;
-  checkFilterStatuses;
-  PerformFilterRefresh;
-end;
-
 procedure TfrmMain.BusyOn;
 begin
   Screen.Cursor := crHourglass;
@@ -2589,10 +2602,6 @@ const
 
   iLastPeriodHintRow: integer = -1;
   iLastPeriodHintCol: integer = -1;
-
-procedure TfrmMain.tabsViewMouseEnter(Sender: TObject);
-begin
-end;
 
 // ------------------------------------------------------------------------------
 // 19.02.2008 - row height not longer saved to iniFile - using autosize insted
@@ -3364,12 +3373,14 @@ begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
 end;
 
-procedure TfrmMain.LocationMenuSelect(Sender: TObject);
+procedure TfrmMain.FilterMenuItemSelect(Sender: TObject);
 begin
   TMenuItem(Sender).Checked := NOT TMenuItem(Sender).Checked;
-  WriteStringValueToAppRegistry(d.roomerMainDataSet.userName, 'LocationSelected_' + g.qHotelCode + '_' +
-    inttostr(TMenuItem(Sender).Tag),
-    Bool2Str(TMenuItem(Sender).Checked));
+
+  if TMenuItem(Sender).Parent = mnuFilterLocation then
+    WriteStringValueToAppRegistry(d.roomerMainDataSet.userName, 'LocationSelected_' + g.qHotelCode + '_' +
+      inttostr(TMenuItem(Sender).Tag),
+      Bool2Str(TMenuItem(Sender).Checked));
 
   checkFilterStatuses;
   RedisplayGuestWindows;
@@ -3385,6 +3396,19 @@ begin
   result := SearchActive OR ReservationStateFilter OR GroupsFilterActive;
 end;
 
+function TfrmMain.RoomtypeFilterActive: boolean;
+var
+  i: integer;
+begin
+  result := false;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+    if mnuFilterRoomType.Items[i].Checked then
+    begin
+      result := true;
+      break;
+    end;
+end;
+
 function TfrmMain.LocationOrFloorFilterActive: boolean;
 begin
   result := LocationFilter(false); // OR FreeRoomsFiltered;
@@ -3395,8 +3419,8 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to G2.Items.Count - 1 do
-    if G2.Items[i].Checked then
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    if mnuFilterGroup.Items[i].Checked then
     begin
       result := true;
       break;
@@ -3408,8 +3432,8 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to G2.Items.Count - 1 do
-    if (G2.Items[i].Checked) AND (GroupList[G2.Items[i].Tag].Reservation = Reservation) then
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    if (mnuFilterGroup.Items[i].Checked) AND (GroupList[mnuFilterGroup.Items[i].Tag].Reservation = Reservation) then
     begin
       result := true;
       break;
@@ -3438,8 +3462,8 @@ begin
 
   letter := status.AsStatusChar;
   i := pos(letter, RES_STATUS_FILTER_LOCATIONS) - 1;
-  if (i >= 0) AND (i < mnuItemStatus.Items.Count) then
-    result := (mnuItemStatus.Items[i].Checked);
+  if (i >= 0) AND (i < mnuFilterStatus.Count) then
+    result := (mnuFilterStatus.Items[i].Checked);
 end;
 
 function TfrmMain.ReservationStateFilter: boolean;
@@ -3447,9 +3471,9 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
+  for i := 0 to mnuFilterStatus.Count - 1 do
   begin
-    result := (mnuItemStatus.Items[i].Checked);
+    result := (mnuFilterStatus.Items[i].Checked);
     if result then
       break;
   end;
@@ -3460,7 +3484,7 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     result := (mnuFilterLocation.Items[i].Checked);
     if result then
@@ -3476,11 +3500,25 @@ var
   i: integer;
 begin
   result := TSet_Of_Integer.Create;
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     if (mnuFilterLocation.Items[i].Checked) AND (mnuFilterLocation.Items[i].Tag < 1000) then
     begin
       result.Add(mnuFilterLocation.Items[i].Tag);
+    end;
+  end;
+end;
+
+function TfrmMain.FilteredRoomTypes: TSet_Of_Integer;
+var
+  i: integer;
+begin
+  result := TSet_Of_Integer.Create;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+  begin
+    if (mnuFilterRoomType.Items[i].Checked) AND (mnuFilterRoomType.Items[i].Tag >= 0) then
+    begin
+      result.Add(mnuFilterRoomType.Items[i].Tag);
     end;
   end;
 end;
@@ -3490,7 +3528,7 @@ var
   i: integer;
 begin
   result := TSet_Of_Integer.Create;
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     if (mnuFilterLocation.Items[i].Checked) AND (mnuFilterLocation.Items[i].Tag >= 1000) then
     begin
@@ -3867,7 +3905,7 @@ begin
         hData.oRoomTypeRoomCount := TRoomTypeRoomCount.Create(g.qHotelCode);
 
         ClearGroupList;
-        G2.Items.Clear;
+        mnuFilterGroup.Clear;
 
         grOneDayRooms.FixedCols := 0;
 
@@ -3879,8 +3917,8 @@ begin
             mnuItem := TMenuItem.Create(nil);
             mnuItem.Caption := lReservations.NamePlusGuestName;
             mnuItem.Tag := GroupList.Add(TGroupEntity.Create(lReservations.Reservation, lReservations.name));
-            mnuItem.OnClick := LocationMenuSelect;
-            G2.Items.Add(mnuItem);
+            mnuItem.OnClick := FilterMenuItemSelect;
+            mnuFilterGroup.Add(mnuItem);
           end;
 
           for lRoom in lReservations.Rooms do
@@ -4257,7 +4295,7 @@ procedure TfrmMain.N12Click(Sender: TObject);
 var
   i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
     mnuFilterLocation.Items[i].Checked := false;
   edtSearch.Text := '';
   TMenuItem(Sender).Checked := NOT TMenuItem(Sender).Checked;
@@ -5298,6 +5336,7 @@ var
 
   Floors: TSet_Of_Integer;
   Locations: TSet_Of_Integer;
+  RoomTypes: TSet_Of_Integer;
   lRoom: TRoomObject;
   ii: Integer;
 
@@ -5331,10 +5370,11 @@ begin
 
   Floors := FilteredFloors;
   Locations := FilteredLocations;
+  RoomTypes := FilteredRoomTypes;
   try
-    if (NOT SearchOrGroupFilterActive) OR (Floors.Count > 0) OR (Locations.Count > 0) then
+    if (NOT SearchOrGroupFilterActive) OR (Floors.Count > 0) OR (Locations.Count > 0) or (Roomtypes.Count > 0) then
     begin
-      glb.FillRoomAndTypeGrid(grOneDayRooms, Locations, Floors, FFreeRooms, zOneDay_dtDate);
+      glb.FillRoomAndTypeGrid(grOneDayRooms, Locations, Floors, RoomTypes, FFreeRooms, zOneDay_dtDate);
       iRowCounter := grOneDayRooms.RowCount - 1;
     end;
 
@@ -5587,6 +5627,7 @@ begin
   finally
     Locations.Free;
     Floors.Free;
+    Roomtypes.Free;
   end;
 end;
 
@@ -5600,17 +5641,8 @@ begin
   if NOT result then
   begin
 
-    resultGroup := NOT GroupsFilterActive;
-    if NOT resultGroup then
-    begin
-      resultGroup := GroupFiltered(aRoom.Reservation);
-    end;
-
-    resultStatus := NOT ReservationStateFilter;
-    if NOT resultStatus then
-    begin
-      resultStatus := ReservationStateFiltered(aRoom.ResStatus);
-    end;
+    resultGroup := NOT GroupsFilterActive or GroupFiltered(aRoom.Reservation);
+    resultStatus := NOT ReservationStateFilter or ReservationStateFiltered(aRoom.ResStatus);
 
     resultSearch := edtSearch.Text = '';
 
@@ -6117,6 +6149,13 @@ end;
 procedure TfrmMain.grOneDayRoomsEnter(Sender: TObject);
 begin
   CurrentlyActiveGrid := TAdvStringGrid(Sender);
+end;
+
+procedure TfrmMain.grOneDayRoomsGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment;
+  var VAlign: TVAlignment);
+begin
+  if (aCol in c_GuestCount) then
+    HAlign := taCenter;
 end;
 
 procedure TfrmMain.grOneDayRoomsGetCellPrintColor(Sender: TObject; ARow, ACol: Integer; AState: TGridDrawState;
@@ -8264,7 +8303,7 @@ end;
 procedure TfrmMain.ApplyFiltersToPeriodView(Grid: TAdvStringGrid);
 var
   col, row: integer;
-  Floors, Locations: TSet_Of_Integer;
+  Floors, Locations, RoomTypes: TSet_Of_Integer;
   hideRow: boolean;
 begin
   if SearchOrGroupFilterActive then
@@ -8286,20 +8325,26 @@ begin
       end;
     end;
   end;
-  if LocationOrFloorFilterActive AND (Grid = grPeriodRooms) then
+  if (LocationOrFloorFilterActive or RoomtypeFilterActive) AND (Grid = grPeriodRooms) then
   begin
     Floors := FilteredFloors;
     Locations := FilteredLocations;
+    Roomtypes := FilteredRoomTypes;
     try
       for row := Grid.RowCount - 1 downto Grid.FixedRows do
       begin
-        if (NOT glb.IsValidInList(Floors, glb.GetRoomFloor(Grid.cells[1, row]))) OR
-          (NOT glb.IsValidInList(Locations, glb.GetLocationId(glb.GetRoomLocation(Grid.cells[1, row])))) then
+        if (NOT glb.IsValidInList(Floors, glb.GetRoomFloor(Grid.cells[1, row]))) then
+          Grid.RowHeights[row] := 0
+        else if  (NOT glb.IsValidInList(Locations, glb.GetLocationId(glb.GetRoomLocation(Grid.cells[1, row])))) then
+          Grid.RowHeights[row] := 0
+        else if  (NOT glb.IsValidInList(Roomtypes, glb.GetRoomTypeIdFromRoom(Grid.cells[1, row])))  then
           Grid.RowHeights[row] := 0;
+
       end;
     finally
       Locations.Free;
       Floors.Free;
+      RoomTypes.Free;
     end;
   end;
 
@@ -10591,18 +10636,16 @@ end;
 procedure TfrmMain.ClearFilter;
 var i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
     mnuFilterLocation.Items[i].Checked := false;
-//  T1.Checked := false;
-//  for i := 0 to S2.Count - 1 do
-//    S2.Items[i].Checked := false;
-  for i := 0 to G2.Items.Count - 1 do
-    G2.Items[i].Checked := false;
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
-    mnuItemStatus.Items[i].Checked := false;
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    mnuFilterGroup.Items[i].Checked := false;
+  for i := 0 to mnuFilterStatus.Count - 1 do
+    mnuFilterStatus.Items[i].Checked := false;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+    mnuFilterRoomType.Items[i].Checked := false;
   edtSearch.Text := '';
   PerformFilterRefresh;
-//  btnFilter.ImageIndex := ABS(Ord(FilterActive));
   SetAllMnuFilterLocationsUnchecked;
 end;
 
@@ -10780,6 +10823,11 @@ begin
   _RptMaidsList;
 end;
 
+procedure TfrmMain.btnFilterDropdownClick(Sender: TObject);
+begin
+  ClearFilter;
+end;
+
 procedure TfrmMain.btnFinanceConnectManagerClick(Sender: TObject);
 begin
   ManageFinanceConnect;
@@ -10866,16 +10914,6 @@ procedure TfrmMain.btnRoomTypesClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   _RoomTypeList;
-end;
-
-procedure TfrmMain.btnLocationFilterClick(Sender: TObject);
-var
-  i: integer;
-begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
-    mnuFilterLocation.Items[i].Checked := false;
-  SetAllMnuFilterLocationsUnchecked;
-  PerformFilterRefresh;
 end;
 
 procedure TfrmMain.btnLocationsClick(Sender: TObject);
@@ -11053,40 +11091,51 @@ end;
 procedure TfrmMain.checkFilterStatuses;
 var
   i: integer;
+  isFiltered: boolean;
 begin
-  btnStatusFilter.Font.Style := [];
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
-    if mnuItemStatus.Items[i].Checked then
+  isFiltered := false;
+  mnuFilterStatus.Checked := False;
+  for i := 0 to mnuFilterStatus.Count - 1 do
+    if mnuFilterStatus.Items[i].Checked then
     begin
-      btnStatusFilter.Font.Style := [fsUnderline];
+      mnuFilterStatus.Checked := True;
+      isFiltered := True;
       break;
     end;
 
-  btnLocationFilter.Font.Style := [];
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  mnuFilterLocation.Checked := False;
+  for i := 0 to mnuFilterLocation.Count - 1 do
     if mnuFilterLocation.Items[i].Checked then
     begin
-      btnLocationFilter.Font.Style := [fsUnderline];
+      mnuFilterLocation.Checked := True;
+      isFiltered := True;
       break;
     end;
 
-  btnGroupsFilter.Font.Style := [];
-  for i := 0 to G2.Items.Count - 1 do
-    if G2.Items[i].Checked then
+  mnuFilterGroup.Checked := False;
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    if mnuFilterGroup.Items[i].Checked then
     begin
-      btnGroupsFilter.Font.Style := [fsUnderline];
+      mnuFilterGroup.Checked := True;
+      isFiltered := True;
       break;
     end;
-end;
 
-procedure TfrmMain.btnStatusFilterClick(Sender: TObject);
-var
-  i: integer;
-begin
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
-    mnuItemStatus.Items[i].Checked := false;
-  checkFilterStatuses;
-  PerformFilterRefresh;
+  mnuFilterRoomType.Checked := False;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+    if mnuFilterRoomType.Items[i].Checked then
+    begin
+      mnuFilterRoomType.Checked := True;
+      isFiltered := True;
+      break;
+    end;
+
+  if isFiltered then
+    btnFilterDropdown.ImageIndex := 82
+  else
+    btnFilterDropdown.ImageIndex := -1;
+
+  btnFilterDropdown.Invalidate;
 end;
 
 procedure TfrmMain.btnPhonePricesClick(Sender: TObject);
