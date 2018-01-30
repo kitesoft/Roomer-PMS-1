@@ -201,6 +201,8 @@ const
     '(SELECT PAYCARD_TOKEN_ID FROM roomreservations WHERE RoomReservation=persons.RoomReservation) AS PAYCARD_TOKEN_ID, ' +
     '(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) AS Currency, ' +
     '(SELECT market from reservations WHERE Reservation=persons.Reservation) AS Market, ' +
+    '(SELECT roomtype from roomreservations WHERE roomReservation=persons.roomReservation LIMIT 1) AS Roomtype, ' +
+    '(SELECT Description from roomtypes WHERE roomtype = (SELECT Roomtype from roomreservations WHERE roomReservation=persons.roomReservation LIMIT 1)) AS RoomtypeDescription, ' +
     '(SELECT Avalue FROM currencies WHERE Currency=(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) LIMIT 1) AS CurrencyRate, '
     +
 

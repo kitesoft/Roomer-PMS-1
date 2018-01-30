@@ -28,10 +28,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Room 101'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -71,10 +67,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           object sTabSheet2: TsTabSheet
             Caption = 'Guest Info'
             SkinData.SkinSection = 'TRANSPARENT'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel6: TsLabel
               Left = 97
               Top = 126
@@ -547,8 +539,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object cbActiveLiveSearch: TsCheckBox
               Left = 190
               Top = 47
-              Width = 82
-              Height = 17
+              Width = 74
+              Height = 20
               Caption = 'Live search'
               TabOrder = 20
               OnClick = cbActiveLiveSearchClick
@@ -610,8 +602,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
             object chkCountryForAllGuests: TsCheckBox
               Left = 190
               Top = 559
-              Width = 252
-              Height = 17
+              Width = 244
+              Height = 20
               Hint = 
                 'When checked the selected country will be set for all guests of ' +
                 'this room that don'#39't already have a country set'
@@ -640,6 +632,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlLookup: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblDescription: TsLabel
+                  Width = 148
+                  Height = 20
+                end
               end
             end
             inline fraCountry: TfraCountryPanel
@@ -660,13 +656,17 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlLookup: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblDescription: TsLabel
+                  Width = 148
+                  Height = 20
+                end
               end
             end
             object chkNationalityForAllGuests: TsCheckBox
               Left = 190
               Top = 232
-              Width = 254
-              Height = 17
+              Width = 246
+              Height = 20
               Hint = 
                 'When checked the selected nationality will be set for all guests' +
                 ' of this room that don'#39't already have a nationality set'
@@ -680,10 +680,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -954,6 +950,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlLookup: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblDescription: TsLabel
+                  Width = 148
+                  Height = 20
+                end
               end
             end
           end
@@ -1217,10 +1217,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
             Caption = 'Credit card'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel12: TsLabel
               Left = 66
               Top = 117
@@ -1294,10 +1290,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet4: TsTabSheet
             Caption = 'Cash'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel16: TsLabel
               Left = 38
               Top = 21
@@ -1379,10 +1371,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet5: TsTabSheet
             Caption = 'None'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
         end
       end
