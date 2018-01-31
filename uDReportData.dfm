@@ -94,7 +94,6 @@ object DReportData: TDReportData
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    AfterOpen = kbmUnconfirmedInvoicelines_AfterOpen
     Left = 78
     Top = 34
   end

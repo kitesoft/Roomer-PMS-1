@@ -428,8 +428,6 @@ type
 
     function OpenChangeRate(var Rate : double; Currency : string) : boolean;
 
-    function openGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
-
     function openHiddenInfo(Refrence, RefrenceType : integer): boolean;
 
     procedure updateCurrentGuestList;
@@ -1680,32 +1678,6 @@ end;
 procedure TGlobalApplication.Lock;
 begin
   EnterCriticalSection(FLock);
-end;
-
-function TGlobalApplication.openGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
-begin
-  result := false;
-  frmGoToRoomAndDate := TfrmGoToRoomAndDate.Create(nil);
-  try
-    frmGoToRoomAndDate.zDate := aDate;
-    frmGoToRoomAndDate.zRoom := aRoom;
-
-    frmGoToRoomAndDate.ShowModal;
-    if frmGoToRoomAndDate.modalresult = mrOk then
-    begin
-      aRoom := frmGoToRoomAndDate.zRoom;
-      aDate := frmGoToRoomAndDate.zDate;
-      result := true;
-    end
-    else
-    begin
-      aRoom := '';
-      aDate := Date;
-    end;
-  finally
-    frmGoToRoomAndDate.free;
-    frmGoToRoomAndDate := nil;
-  end;
 end;
 
 function ResObjToBorder(Status : string; ascIndex, descIndex : integer; var BorderColor : TColor; var Left, Top, Right,

@@ -3811,17 +3811,7 @@ begin
 
   if CharInSet(Key, ['0' .. '9']) then
   begin
-    frmHomedate.dtHome.Date := dtDate.Date;
-    frmHomedate.Left := Left + 1;
-    frmHomedate.Top := Top + 1;
-
-    frmHomedate.dtHome.SelLength := 0;
-    frmHomedate.dtHome.SelStart := 0;
-    frmHomedate.dtHome.SelLength := 1;
-    frmHomedate.dtHome.SetSelText(s);
-    frmHomedate.dtHome.SelLength := 0;
-    frmHomedate.dtHome.SelStart := 1;
-    frmHomedate.ShowModal;
+    dtDate.Date := ShowHomeDateForm(dtDate.Date, Key);
     Key := #0;
   end;
 end;
@@ -11531,16 +11521,7 @@ end;
 
 procedure TfrmMain._ChangeDate;
 begin
-  frmHomedate.dtHome.Date := dtDate.Date;
-  frmHomedate.Show;
-  frmHomedate.Left := Left + 1;
-  frmHomedate.Top := Top - 1;
-
-  frmHomedate.ActiveControl := frmHomedate.dtHome;
-  frmHomedate.dtHome.SelLength := 0;
-  frmHomedate.dtHome.SetFocus;
-  frmHomedate.dtHome.SelStart := 0;
-  frmHomedate.dtHome.SelLength := length(frmHomedate.dtHome.Text);
+  dtDate.Date := ShowHomeDateForm(dtDate.Date);
 end;
 
 procedure TfrmMain._Refresh;
@@ -12396,7 +12377,7 @@ begin
   LogUserClickedButton(Sender);
   aRoom := '';
   aDate := Date - 1;
-  if g.openGoToRoomAndDate(aRoom, aDate) then
+  if openGoToRoomAndDate(aRoom, aDate) then
   begin
     if aRoom <> '' then
     begin

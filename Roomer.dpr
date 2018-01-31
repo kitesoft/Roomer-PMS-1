@@ -371,9 +371,8 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
-    Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
 
     Application.CreateForm(TDImages, DImages);
@@ -383,9 +382,6 @@ begin
     begin
       Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
       Application.CreateForm(TfrmRateQuery, frmRateQuery);
-      Application.CreateForm(TfrmHomedate, frmHomedate);
-      Application.CreateForm(TfrmDayNotes, frmDayNotes);
-      Application.CreateForm(TfrmGoToRoomandDate, frmGoToRoomandDate);
       Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
       Application.CreateForm(TembOccupancyView, embOccupancyView);
     end;

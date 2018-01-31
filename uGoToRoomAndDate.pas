@@ -53,14 +53,42 @@ type
     zRoom : string;
   end;
 
-var
-  frmGoToRoomandDate : TfrmGoToRoomandDate;
+function OpenGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
 
 implementation
 
 uses uD, uAppGlobal, PrjConst, uDImages, uUtils;
 
 {$R *.dfm}
+
+function OpenGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
+var
+  frm: TfrmGoToRoomAndDate;
+begin
+  result := false;
+  frm := TfrmGoToRoomAndDate.Create(nil);
+  try
+    frm.zDate := aDate;
+    frm.zRoom := aRoom;
+
+    frm.ShowModal;
+    if frm.modalresult = mrOk then
+    begin
+      aRoom := frm.zRoom;
+      aDate := frm.zDate;
+      result := true;
+    end
+    else
+    begin
+      aRoom := '';
+      aDate := Date;
+    end;
+  finally
+    frm.free;
+  end;
+end;
+
+
 
 procedure TfrmGoToRoomandDate.btnGetRoomAndDateClick(Sender : TObject);
 begin
