@@ -131,7 +131,6 @@ uses uAppGlobal,
 
   uReservationHintHolder,
   uEmbOccupancyView,
-  uembPeriodView,
   uFrmRateQuery,
 
   uRptTurnoverAndPayments,
@@ -1994,10 +1993,6 @@ begin
   embOccupancyView := TembOccupancyView.Create(nil);
   RoomerLanguage.TranslateThisForm(embOccupancyView);
   embOccupancyView.Free; embOccupancyView := nil;
-
-  embPeriodView := TembPeriodView.Create(nil);
-  RoomerLanguage.TranslateThisForm(embPeriodView);
-  embPeriodView.Free; embPeriodView := nil;
 
   FrmRateQuery := TFrmRateQuery.Create(nil);
   RoomerLanguage.TranslateThisForm(FrmRateQuery);

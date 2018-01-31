@@ -7,7 +7,7 @@ uses
   Windows, Messages, IOUtils, System.Generics.Collections, IdComponent, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, Grids, ComCtrls, Db,
   ADODB, ActiveX, StdCtrls, Menus, Mask, ComObj, ShellApi, Inifiles, ImgList, Buttons, Vcl.AppEvnts,
-  uReservationHintHolder, uEmbOccupancyView, uEmbPeriodView, uGuestProfiles, uStaffCommunication
+  uReservationHintHolder, uEmbOccupancyView, uGuestProfiles, uStaffCommunication
     , uAllotmentToRes
     , uRoomerContainerClasses
     , uRoomerDefinitions
@@ -1868,7 +1868,6 @@ end;
 
 procedure TfrmMain.FillRoomTypesMenu(mnu: TMenuItem; event : TNotifyEvent);
 var item : TMenuItem;
-    i : integer;
 begin
   mnu.Clear;
   mnu.Checked := false;
@@ -3346,10 +3345,6 @@ begin
   end;
   try
     RoomerLanguage.TranslateThisForm(embOccupancyView);
-  except
-  end;
-  try
-    RoomerLanguage.TranslateThisForm(embPeriodView);
   except
   end;
   try

@@ -160,7 +160,6 @@ uses
   uRptGuests in 'uRptGuests.pas' {frmRptGuests},
   uRptNotes in 'uRptNotes.pas' {frmRptNotes},
   uReservationHintHolder in 'uReservationHintHolder.pas' {FrmReservationHintHolder},
-  uEmbPeriodView in 'Embeddables\uEmbPeriodView.pas' {embPeriodView},
   uEmbOccupancyView in 'Embeddables\uEmbOccupancyView.pas' {embOccupancyView},
   uEmailingDialog in 'uEmailingDialog.pas' {FrmEmailingDialog},
   uMakeKreditInvoice in 'uMakeKreditInvoice.pas' {frmMakeKreditInvoice},
@@ -388,7 +387,6 @@ begin
       Application.CreateForm(TfrmDayNotes, frmDayNotes);
       Application.CreateForm(TfrmGoToRoomandDate, frmGoToRoomandDate);
       Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
-      Application.CreateForm(TembPeriodView, embPeriodView);
       Application.CreateForm(TembOccupancyView, embOccupancyView);
     end;
 
