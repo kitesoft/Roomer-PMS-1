@@ -448,7 +448,7 @@ begin
                          '''%s'', ' +
                          '''%s'', ' +
                          '%s ' +
-                         ') ',
+                         ') ON DUPLICATE KEY UPDATE text=text', // Ignore duplicates
                          [
                            FLangIds[i].id,
                            list[0],
