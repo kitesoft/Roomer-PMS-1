@@ -384,8 +384,7 @@ type
 
   end;
 
-var
-  frmDayNotes : TfrmDayNotes;
+function frmDayNotes: TfrmDayNotes;
 
 implementation
 
@@ -405,6 +404,17 @@ uses
   , uSQLUtils, uDateTimeHelper, ufrmInvoiceEdit, uInvoiceDefinitions;
 
 
+var
+  gFrmDayNotes : TfrmDayNotes;
+
+
+function frmDayNotes: TfrmDayNotes;
+begin
+  if not assigned(gFrmDayNotes) then
+    gFrmDayNotes := TfrmDayNotes.Create(nil);
+
+  result := gFrmDayNotes;
+end;
 
 {$R *.dfm}
 
@@ -1263,6 +1273,11 @@ begin
   timRefresh.Enabled := False;
   DoRefreshRoomStatus;
 end;
+
+initialization
+
+finalization
+  gFrmDayNotes.Free;
 
 end.
 

@@ -27,7 +27,7 @@ object frmDayNotes: TfrmDayNotes
     Top = 328
     Width = 50
     Height = 13
-    Caption = '19-1-2018'
+    Caption = '31-1-2018'
     DateTimeFormat = 'd/m/yyyy'
     Version = '1.1.0.0'
     RefreshInterval = 0
@@ -557,9 +557,6 @@ object frmDayNotes: TfrmDayNotes
         object tabActionLog: TcxTabSheet
           Caption = 'Actions'
           ImageIndex = 0
-          ExplicitLeft = 0
-          ExplicitTop = 24
-          ExplicitWidth = 928
           object memLog: TsMemo
             Left = 0
             Top = 41
@@ -581,7 +578,6 @@ object frmDayNotes: TfrmDayNotes
             BoundLabel.Font.Name = 'Tahoma'
             BoundLabel.Font.Style = []
             SkinData.SkinSection = 'EDIT'
-            ExplicitWidth = 928
           end
           object Panel5: TsPanel
             Left = 0
@@ -1096,7 +1092,6 @@ object frmDayNotes: TfrmDayNotes
               Align = alClient
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
-              ExplicitWidth = 502
               object Panel10: TsPanel
                 Left = 1
                 Top = 1
@@ -1139,7 +1134,6 @@ object frmDayNotes: TfrmDayNotes
                 BoundLabel.Font.Name = 'Tahoma'
                 BoundLabel.Font.Style = []
                 SkinData.SkinSection = 'EDIT'
-                ExplicitWidth = 500
               end
             end
             object cxSplitter2: TcxSplitter
