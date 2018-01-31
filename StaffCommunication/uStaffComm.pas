@@ -96,7 +96,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo, cxDropDownEdit, sBitBtn, Vcl.Mask, sMaskEdit,
   sCustomComboEdit, sToolEdit
-  , uROomerGridForm, uRoomerForm, cxGridBandedTableView, cxGridDBBandedTableView
+  , uROomerGridForm, uRoomerForm, cxGridBandedTableView, cxGridDBBandedTableView, System.Actions, Vcl.ActnList
 
   ;
 
@@ -111,8 +111,6 @@ type
     mnuiGridToHtml: TMenuItem;
     mnuiGridToText: TMenuItem;
     mnuiGridToXml: TMenuItem;
-    grPrinter: TdxComponentPrinter;
-    prLink_grData: TdxGridReportLink;
     m_: TdxMemData;
     m_ID: TIntegerField;
     m_date: TDateField;
