@@ -139,7 +139,7 @@ uses
   uFrmRBEContainer in 'uFrmRBEContainer.pas' {FrmRBEContainer},
   uFrmRbePreferences in 'uFrmRbePreferences.pas' {frmRbePreferences},
   uRptTotallist in 'uRptTotallist.pas' {frmRptTotallist},
-  uFrmRateQuery in 'uFrmRateQuery.pas' {FrmRateQuery},
+  uFrmRateQuery in 'mainEmbeddables\uFrmRateQuery.pas' {FrmRateQuery},
   uChart in 'uChart.pas' {frmChart},
   uCustomerTypes2 in 'uCustomerTypes2.pas' {frmCustomerTypes2},
   uRptbViewer in 'uRptbViewer.pas' {frmRptbViewer},
@@ -158,8 +158,8 @@ uses
   uLostAndFound in 'uLostAndFound.pas' {frmLostAndFound},
   uRptGuests in 'uRptGuests.pas' {frmRptGuests},
   uRptNotes in 'uRptNotes.pas' {frmRptNotes},
-  uReservationHintHolder in 'uReservationHintHolder.pas' {FrmReservationHintHolder},
-  uEmbOccupancyView in 'Embeddables\uEmbOccupancyView.pas' {embOccupancyView},
+  uReservationHintHolder in 'mainEmbeddables\uReservationHintHolder.pas' {FrmReservationHintHolder},
+  uEmbOccupancyView in 'mainEmbeddables\uEmbOccupancyView.pas' {embOccupancyView},
   uEmailingDialog in 'uEmailingDialog.pas' {FrmEmailingDialog},
   uMakeKreditInvoice in 'uMakeKreditInvoice.pas' {frmMakeKreditInvoice},
   uGuestPortfolioEdit in 'uGuestPortfolioEdit.pas' {frmGuestPortfolio},
@@ -248,7 +248,7 @@ uses
   uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame},
   ufrmRoomPrices in 'ufrmRoomPrices.pas' {frmRoomPrices},
   uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
-  uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
+  uEmbDateStatistics in 'mainEmbeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
   uHotelServicesAPICaller in 'OpenAPI\uHotelServicesAPICaller.pas',
@@ -371,18 +371,12 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     TSplashFormManager.UpdateProgress('Loading forms...');
 
     Application.CreateForm(TDImages, DImages);
     Application.CreateForm(TfrmMain, frmMain);
-
-    if D.roomerMainDataSet.IsConnectedToInternet then
-    begin
-      Application.CreateForm(TfrmRateQuery, frmRateQuery);
-      Application.CreateForm(TembOccupancyView, embOccupancyView);
-    end;
 
     Application.Run;
   finally

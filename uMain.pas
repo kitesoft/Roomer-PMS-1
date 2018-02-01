@@ -68,9 +68,9 @@ uses
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
   uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics, uVersionManagement
- , uReservationStateChangeHandler, uFraDayStatistics
-
-
+  , uReservationStateChangeHandler
+  , uFraDayStatistics
+  , uFrmRateQuery
     ;
 
 type
@@ -631,7 +631,6 @@ type
     R3: TMenuItem;
     N9: TMenuItem;
     btnRepArrivals: TdxBarLargeButton;
-    __TimingResult: TsLabel;
     mnuCancelRoomFromRoomReservation: TMenuItem;
     __N10: TMenuItem;
     dxBarButton6: TdxBarButton;
@@ -1006,6 +1005,9 @@ type
     FrmMessagesTemplates: TFrmMessagesTemplates;
     frmDateStatistics: TfrmEmbDateStatistics;
     FrmReservationHintHolder: TFrmReservationHintHolder;
+    embOccupancyView: TembOccupancyView;
+    frmRateQuery: TfrmRateQuery;
+
     curNoDrop: HCursor;
     curNoDropNew: HCursor;
 
@@ -1458,8 +1460,6 @@ type
     procedure NillifyEventHandlers(Grid: TAdvStringGrid);
     procedure RemoveHandlersAndObjects;
     procedure UpdateHotelsList;
-    procedure EndTimeMeasure;
-    procedure StartTimeMeasure;
     procedure RefreshMessagesOnUI;
     procedure CancelARoomReservation;
     procedure NullGlobals;
@@ -1591,7 +1591,6 @@ uses
 		, urptTotallist
 		, uFrmChannelTogglingRules
 		, uPersonviptypes
-		, uFrmRateQuery
 		,uPersonContactType
 		,uRptTurnoverAndPayments
 		, uRptTurnoverAndPayments2
@@ -2754,28 +2753,6 @@ begin
 
 end;
 
-{$IFDEF DEBUG}
-var
-  startTimeForMeasure,
-    endTimeForMeasure: longint;
-{$ENDIF}
-
-
-procedure TfrmMain.StartTimeMeasure;
-begin
-{$IFDEF DEBUG}
-  startTimeForMeasure := getTickCount;
-{$ENDIF}
-end;
-
-procedure TfrmMain.EndTimeMeasure;
-begin
-{$IFDEF DEBUG}
-  endTimeForMeasure := getTickCount;
-  __TimingResult.Caption := inttostr(endTimeForMeasure - startTimeForMeasure);
-{$ENDIF}
-end;
-
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   temp: String;
@@ -2790,12 +2767,6 @@ begin
   FReservationsModel := TReservationsModel.Create;
 
   zOneDay_stlTakenTypes := TStringList.Create;
-{$IFNDEF DEBUG}
-  __TimingResult.Visible := false;
-{$ELSE}
-  __TimingResult.Visible := true;
-  __TimingResult.Font.Color := clWhite;
-{$ENDIF}
   HintWindowShowing := false;
   try
     temp := ReadStringValueFromAnyRegistry('Software\Roomer\FormStatus\StoreMainV2\sSkinManager1', 'SkinName',
@@ -2857,6 +2828,8 @@ begin
   frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
 
   frmReservationHintHolder := TFrmReservationHintHolder.Create(Self);
+  embOccupancyView := TembOccupancyView.Create(Self);
+  frmRateQuery := TfrmRateQuery.Create(Self);
 
   PrepareFrontDeskPage(sbFrontDesk); // tabFrontDesk);
 end;
@@ -4080,7 +4053,6 @@ begin
     timRetryRefresh.Enabled := true;
     exit;
   end;
-  StartTimeMeasure;
 
   BusyRefreshingTodaysGrid := true;
   Screen.Cursor := crHourGlass;
@@ -4109,7 +4081,6 @@ begin
   finally
     Screen.Cursor := crDefault;
     BusyRefreshingTodaysGrid := false;
-    EndTimeMeasure;
   end;
 end;
 

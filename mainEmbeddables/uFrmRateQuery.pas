@@ -163,9 +163,6 @@ type
     property ShowDateTo: TDateTime read FShowDateTo write FShowDateTo;
   end;
 
-var
-  FrmRateQuery: TFrmRateQuery;
-
 implementation
 
 {$R *.dfm}
@@ -246,6 +243,7 @@ end;
 
 procedure TFrmRateQuery.FormCreate(Sender: TObject);
 begin
+  RoomerLanguage.TranslateThisForm(Self);
   _FrmViewDailyRates := TFrmViewDailyRates.Create(nil);
   FRates := TObjectDictionary<String, TDateRate>.Create([doOwnsValues]);
   RatesSet := CreateNewDataSet;

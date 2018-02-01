@@ -1987,14 +1987,9 @@ begin
   FrmCustomerDepartmentEdit := TFrmCustomerDepartmentEdit.Create(nil); FrmCustomerDepartmentEdit.Free; FrmCustomerDepartmentEdit := nil;
 
   TFrmReservationHintHolder.Create(nil).Free;
+  TembOccupancyView.Create(nil).Free;
 
-  embOccupancyView := TembOccupancyView.Create(nil);
-  RoomerLanguage.TranslateThisForm(embOccupancyView);
-  embOccupancyView.Free; embOccupancyView := nil;
-
-  FrmRateQuery := TFrmRateQuery.Create(nil);
-  RoomerLanguage.TranslateThisForm(FrmRateQuery);
-  FrmRateQuery.Free; FrmRateQuery := nil;
+  TFrmRateQuery.Create(nil).Free;
 
   TfrmOfflineReports.Create(nil).Free;
 

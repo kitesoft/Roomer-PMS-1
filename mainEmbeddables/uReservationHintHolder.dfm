@@ -642,9 +642,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Width = 209
       Height = 117
       BorderStyle = bsNone
-      Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
+      Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -667,9 +666,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Width = 201
       Height = 117
       BorderStyle = bsNone
-      Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
+      Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []

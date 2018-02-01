@@ -3092,27 +3092,6 @@ object frmMain: TfrmMain
       UseSkinColor = False
       ExplicitHeight = 18
     end
-    object __TimingResult: TsLabel
-      AlignWithMargins = True
-      Left = 1297
-      Top = 5
-      Width = 15
-      Height = 22
-      Margins.Top = 5
-      Align = alRight
-      Alignment = taRightJustify
-      Caption = '---'
-      Color = clWhite
-      ParentColor = False
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitHeight = 17
-    end
     object cbxStatDay: TsComboBox
       AlignWithMargins = True
       Left = 3

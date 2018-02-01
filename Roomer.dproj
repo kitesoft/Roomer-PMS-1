@@ -612,7 +612,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uRptTotallist.pas">
             <Form>frmRptTotallist</Form>
         </DCCReference>
-        <DCCReference Include="uFrmRateQuery.pas">
+        <DCCReference Include="mainEmbeddables\uFrmRateQuery.pas">
             <Form>FrmRateQuery</Form>
         </DCCReference>
         <DCCReference Include="uChart.pas">
@@ -665,10 +665,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uRptNotes.pas">
             <Form>frmRptNotes</Form>
         </DCCReference>
-        <DCCReference Include="uReservationHintHolder.pas">
+        <DCCReference Include="mainEmbeddables\uReservationHintHolder.pas">
             <Form>FrmReservationHintHolder</Form>
         </DCCReference>
-        <DCCReference Include="Embeddables\uEmbOccupancyView.pas">
+        <DCCReference Include="mainEmbeddables\uEmbOccupancyView.pas">
             <Form>embOccupancyView</Form>
         </DCCReference>
         <DCCReference Include="uEmailingDialog.pas">
@@ -845,7 +845,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>frmRoomPrices</Form>
         </DCCReference>
         <DCCReference Include="uRoomerConfirmationDialogs.pas"/>
-        <DCCReference Include="Embeddables\uEmbDateStatistics.pas">
+        <DCCReference Include="mainEmbeddables\uEmbDateStatistics.pas">
             <Form>frmEmbDateStatistics</Form>
         </DCCReference>
         <DCCReference Include="Rates\uMasterRateDefaults.pas">
