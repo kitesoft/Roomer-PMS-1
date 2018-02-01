@@ -96,7 +96,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 305
-        ActivePage = tabDashboard
+        ActivePage = tabFrontDesk
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange

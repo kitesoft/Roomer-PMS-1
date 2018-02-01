@@ -371,7 +371,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     TSplashFormManager.UpdateProgress('Loading forms...');
 
@@ -381,7 +381,6 @@ begin
     if D.roomerMainDataSet.IsConnectedToInternet then
     begin
       Application.CreateForm(TfrmRateQuery, frmRateQuery);
-      Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
       Application.CreateForm(TembOccupancyView, embOccupancyView);
     end;
 

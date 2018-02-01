@@ -1005,6 +1005,7 @@ type
     FormShowing: boolean;
     FrmMessagesTemplates: TFrmMessagesTemplates;
     frmDateStatistics: TfrmEmbDateStatistics;
+    FrmReservationHintHolder: TFrmReservationHintHolder;
     curNoDrop: HCursor;
     curNoDropNew: HCursor;
 
@@ -2854,6 +2855,9 @@ begin
 
   frmDateStatistics := TfrmEmbDateStatistics.Create(self);
   frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
+
+  frmReservationHintHolder := TFrmReservationHintHolder.Create(Self);
+
   PrepareFrontDeskPage(sbFrontDesk); // tabFrontDesk);
 end;
 

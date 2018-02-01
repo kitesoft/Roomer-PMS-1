@@ -1986,9 +1986,7 @@ begin
   FrmAlertPanel := TFrmAlertPanel.Create(nil); FrmAlertPanel.Free; FrmAlertPanel := nil;
   FrmCustomerDepartmentEdit := TFrmCustomerDepartmentEdit.Create(nil); FrmCustomerDepartmentEdit.Free; FrmCustomerDepartmentEdit := nil;
 
-  FrmReservationHintHolder := TFrmReservationHintHolder.Create(nil);
-  RoomerLanguage.TranslateThisForm(FrmReservationHintHolder);
-  FrmReservationHintHolder.Free; FrmReservationHintHolder := nil;
+  TFrmReservationHintHolder.Create(nil).Free;
 
   embOccupancyView := TembOccupancyView.Create(nil);
   RoomerLanguage.TranslateThisForm(embOccupancyView);
