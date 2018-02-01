@@ -1,62 +1,17 @@
-unit uFrmDaysStatistics;
+unit uFraDayStatistics;
 
 interface
 
 uses
-  Winapi.Windows
-  , Winapi.Messages
-  , System.SysUtils
-  , System.Variants
-  , System.Classes
-  , Vcl.Graphics
-  , System.Generics.Collections
-  , Vcl.Controls
-  , Vcl.Forms
-  , Vcl.Dialogs
-  , VCLTee.TeEngine
-  , VCLTee.TeeProcs
-  , VCLTee.Chart
-  , Vcl.ExtCtrls
-  , cxPC
-  , Xml.xmldom
-  , Xml.XMLIntf
-  , Xml.adomxmldom
-  , Xml.XMLDoc
-  , cxClasses
-  , dxDockControl
-  , sScrollBox
-  , Vcl.StdCtrls
-  , sLabel
-  , VCLTee.Series
-  , dxDockPanel
-, performance
-, uAppGlobal
-
-  , dxSkinsCore
-  , dxSkinDarkSide
-  , dxSkinDevExpressDarkStyle
-  , dxSkinMcSkin
-  , dxSkinOffice2013White
-  , dxSkinsDefaultPainters
-  , dxSkinsdxDockControlPainter, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld, sPanel
-
-;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, sScrollBox, Vcl.ExtCtrls, VCLTee.TeEngine, VCLTee.Series,
+  VCLTee.TeeProcs, VCLTee.Chart, Vcl.StdCtrls, sLabel, sPanel
+  , Generics.Collections
+  , Performance
+  , Xml.XMLDoc, Xml.xmldom, Xml.XMLIntf, Xml.adomxmldom, sSplitter
+  ;
 
 type
-
-  TIdDValue = class
-    id : Integer;
-    Value : Double;
-  public
-    constructor Create(_id : Integer; _value : Double);
-  end;
-
-  TIdSValue = class
-    id : Integer;
-    Value : String;
-  public
-    constructor Create(_id : Integer; const _value : String);
-  end;
 
   TRatesAndAvails = class
     roomType : String;
@@ -123,71 +78,61 @@ type
 
   TIdChannelValuesDictionary = TObjectDictionary<integer, TIdChannelValues>;
 
-  TfrmDaysStatistics = class(TForm)
-    sPanel1: TsPanel;
-    dxDockPanel1: TdxDockPanel;
-    dxDockingManager1: TdxDockingManager;
-    dxDockSite1: TdxDockSite;
-    dxLayoutDockSite1: TdxLayoutDockSite;
-    dxDockPanel2: TdxDockPanel;
-    dxVertContainerDockSite1: TdxVertContainerDockSite;
+  TfraDayStatistics = class(TFrame)
+    pnlLeft: TsPanel;
+    pnlRight: TsPanel;
+    pnlLeftRevenues: TsPanel;
+    pnlLeftRooms: TsPanel;
+    pnlRightPropertyStatus: TsPanel;
+    pnlRightTodayRates: TsPanel;
+    sPanel7: TsPanel;
+    sLabel2: TsLabel;
+    txtTotalRevenue: TsLabel;
+    txtCurrency: TsLabel;
     RevenueChart: TChart;
     Series1: TPieSeries;
-    dxDockSite2: TdxDockSite;
-    dxDockPanel3: TdxDockPanel;
-    dxLayoutDockSite2: TdxLayoutDockSite;
-    dxDockPanel4: TdxDockPanel;
-    dxLayoutDockSite3: TdxLayoutDockSite;
-    sbRates: TsScrollBox;
-    sPanel2: TsPanel;
+    RoomsChart: TChart;
+    PieSeries1: TPieSeries;
+    Shape2: TShape;
+    Shape3: TShape;
+    sLabel1: TsLabel;
+    sLabel11: TsLabel;
+    sLabel13: TsLabel;
+    sLabel16: TsLabel;
+    sLabel17: TsLabel;
+    sLabel24: TsLabel;
+    sLabel3: TsLabel;
+    sLabel5: TsLabel;
+    sLabel7: TsLabel;
+    sLabel9: TsLabel;
+    txtADR: TsLabel;
+    txtCheckedIn: TsLabel;
+    txtCheckedOut: TsLabel;
+    txtCheckins: TsLabel;
+    txtCheckouts: TsLabel;
+    txtNoShow: TsLabel;
+    txtOCC: TsLabel;
+    txtRevPAR: TsLabel;
+    txtSoldRooms: TsLabel;
+    sPanel8: TsPanel;
     sLabel19: TsLabel;
     sLabel20: TsLabel;
     sLabel21: TsLabel;
     sLabel23: TsLabel;
     sLabel22: TsLabel;
     Shape1: TShape;
+    sPanel9: TsPanel;
+    sbRates: TsScrollBox;
     txtRoomType: TsLabel;
     txtPrice: TsLabel;
     txtTotal: TsLabel;
     txtOccupied: TsLabel;
     txtAvailable: TsLabel;
-    RoomsChart: TChart;
-    PieSeries1: TPieSeries;
-    XMLDocument1: TXMLDocument;
-    sPanel3: TsPanel;
-    sLabel2: TsLabel;
-    txtTotalRevenue: TsLabel;
-    txtCurrency: TsLabel;
-    sPanel4: TsPanel;
-    sPanel5: TsPanel;
-    sPanel6: TsPanel;
-    sPanel7: TsPanel;
-    sLabel1: TsLabel;
-    txtSoldRooms: TsLabel;
-    txtCheckedIn: TsLabel;
-    txtCheckedOut: TsLabel;
-    sLabel3: TsLabel;
-    sLabel5: TsLabel;
-    Shape2: TShape;
-    sLabel7: TsLabel;
-    sLabel9: TsLabel;
-    sLabel11: TsLabel;
-    txtNoShow: TsLabel;
-    txtCheckouts: TsLabel;
-    txtCheckins: TsLabel;
-    Shape3: TShape;
-    sLabel13: TsLabel;
-    sLabel16: TsLabel;
-    sLabel17: TsLabel;
-    txtADR: TsLabel;
-    txtOCC: TsLabel;
-    txtRevPAR: TsLabel;
-    sLabel24: TsLabel;
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormKeyPress(Sender: TObject; var Key: Char);
-    procedure FormCreate(Sender: TObject);
+    XMLDoc: TXMLDocument;
+    splLeft: TsSplitter;
+    splRight: TsSplitter;
+    splMain: TsSplitter;
   private
-    { Private declarations }
     channels : TIdChannelValuesDictionary;
     FViewDate : TDateTime;
     FBeingViewed: Boolean;
@@ -202,6 +147,7 @@ type
 
     procedure PerformRequest;
   public
+    constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
     { Public declarations }
     procedure GetDaysNumbers(var OCC, ADR, REVPAR: Double; var RoomsSold: Integer);
@@ -209,12 +155,10 @@ type
     property ViewDate : TDateTime read FViewDate write SetViewDate;
   end;
 
-var
-  frmDaysStatistics: TfrmDaysStatistics;
-
 implementation
 
 {$R *.dfm}
+
 
 uses uD,
      uDateUtils,
@@ -225,12 +169,12 @@ uses uD,
      UITypes
      ;
 
-procedure TfrmDaysStatistics.PerformRequest;
+procedure TfraDayStatistics.PerformRequest;
 begin
   ProcessHttpResult(d.roomerMainDataSet.downloadRoomerUrlAsString(getUrl));
 end;
 
-function TfrmDaysStatistics.getUrl : String;
+function TfraDayStatistics.getUrl : String;
 begin
   result := format('statistics/performance1?startdate=%s&enddate=%s&hotel=%s&authUser=%s&authPassMD5=%s',
             [uDateUtils.dateToSqlString(viewDate), uDateUtils.dateToSqlString(viewDate),
@@ -240,33 +184,20 @@ begin
 end;
 
 
-destructor TfrmDaysStatistics.Destroy;
+destructor TfraDayStatistics.Destroy;
 begin
   Channels.Free;
   inherited;
 end;
 
-procedure TfrmDaysStatistics.FormCreate(Sender: TObject);
+constructor TfraDayStatistics.Create(aOwner: TComponent);
 begin
-  // hotel=berg host=http://localhost port=8080 user=hj pass=hordur.berg date=2014-01-01
-  // hotel=kef host=https://secure.roomercloud.net port=8443 user=hj pass=hordur date=2014-01-01
-  RoomerLanguage.TranslateThisForm(self);
-  glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
+  inherited;
   channels := TIdChannelValuesDictionary.Create([doOWnsValues]);
   FBeingViewed := False;
 end;
 
-procedure TfrmDaysStatistics.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  frmMain.FormKeyDown(Sender, Key, Shift);
-end;
-
-procedure TfrmDaysStatistics.FormKeyPress(Sender: TObject; var Key: Char);
-begin
-  frmMain.FormKeyPress(Sender, Key);
-end;
-
-procedure TfrmDaysStatistics.showTodaysRates(channel : TIdChannelValues);
+procedure TfraDayStatistics.showTodaysRates(channel : TIdChannelValues);
 var
   i, iLine: Integer;
   RatesAndAvails : TRatesAndAvails;
@@ -301,7 +232,7 @@ begin
   end;
 end;
 
-procedure TfrmDaysStatistics.PlaceRateAvailLabel(line, index : Integer; const labelValue : String);
+procedure TfraDayStatistics.PlaceRateAvailLabel(line, index : Integer; const labelValue : String);
 var ALabel, likeLabel : TsLabel;
     AName : String;
 begin
@@ -317,7 +248,7 @@ begin
     Exit;
   end;
 
-  ALabel := TsLabel.Create(frmDaysStatistics);
+  ALabel := TsLabel.Create(self);
 
   likeLabel.Visible := False;
   ALabel.Font.Size := likeLabel.Font.Size;
@@ -340,7 +271,7 @@ begin
 end;
 
 
-procedure TfrmDaysStatistics.RemoveTodaysRates;
+procedure TfraDayStatistics.RemoveTodaysRates;
 var
   i, l: Integer;
   ALabel : TsLAbel;
@@ -351,7 +282,7 @@ begin
     for l := 1 to 5 do
     begin
       AName := format('TR_%d_%d', [i,l]);
-      ALabel := TsLabel(frmDaysStatistics.FindComponent(AName));
+      ALabel := TsLabel(FindComponent(AName));
       if Assigned(ALabel) then
         ALabel.Free;
     end;
@@ -359,13 +290,13 @@ begin
 end;
 
 
-procedure TfrmDaysStatistics.GetDaysNumbers(var OCC, ADR, REVPAR : Double; var RoomsSold : Integer);
+procedure TfraDayStatistics.GetDaysNumbers(var OCC, ADR, REVPAR : Double; var RoomsSold : Integer);
 var performance : IXMLPerformanceType;
     channel : TIdChannelValues;
 begin
-  XMLDocument1.LoadFromXML(d.roomerMainDataSet.downloadRoomerUrlAsString(getUrl));
+  XMLDoc.LoadFromXML(d.roomerMainDataSet.downloadRoomerUrlAsString(getUrl));
 
-  performance := Getperformance(XMLDocument1); // 'C:\Temp\performance1.xml');
+  performance := Getperformance(XMLDoc); // 'C:\Temp\performance1.xml');
 
   getChannels(performance);
   channels.TryGetValue(0, channel);
@@ -378,13 +309,13 @@ begin
 
 end;
 
-procedure TfrmDaysStatistics.ProcessHttpResult(const result : String);
+procedure TfraDayStatistics.ProcessHttpResult(const result : String);
 var performance : IXMLPerformanceType;
     channel : TIdChannelValues;
 begin
-  XMLDocument1.LoadFromXML(result);
+  XMLDoc.LoadFromXML(result);
 
-  performance := Getperformance(XMLDocument1); // 'C:\Temp\performance1.xml');
+  performance := Getperformance(XMLDoc); // 'C:\Temp\performance1.xml');
 
   getChannels(performance);
   channels.TryGetValue(0, channel);
@@ -407,32 +338,8 @@ begin
   txtCurrency.Caption := performance.Currency;
 end;
 
-//procedure ColorToRGB(const Color: Integer; out R, G, B: Byte);
-//begin
-//  R := Color and $FF;
-//  G := (Color shr 8) and $FF;
-//  B := (Color shr 16) and $FF;
-//end;
-//
-//function GetAlphaColor(color : integer) : TAlphaColor;
-//var R,G,B : Byte;
-//    ColorStr : String;
-//begin
-//  if color <> 0 then
-//     ColorToRGB(color, R, G, B)
-//  else
-//  begin
-//    R := 255; G := R; B := R;
-//  end;
-//  ColorStr := '$' + IntToHex(R,2)+IntToHex(G,2)+IntToHex(B,2);
-//  result := TAlphaColorRec(ColorStr).Color;
-//  TAlphaColorRec(result).R := R;
-//  TAlphaColorRec(result).G := G;
-//  TAlphaColorRec(result).B := B;
-//  TAlphaColorRec(result).A := 255;
-//end;
 
-procedure TfrmDaysStatistics.SetViewDate(const Value: TDateTime);
+procedure TfraDayStatistics.SetViewDate(const Value: TDateTime);
 begin
   FViewDate := Value;
   try
@@ -441,7 +348,7 @@ begin
   end;
 end;
 
-procedure TfrmDaysStatistics.ShowRevenueGraph;
+procedure TfraDayStatistics.ShowRevenueGraph;
 var
   channel : TIdChannelValues;
   KeyName : Integer;
@@ -461,7 +368,7 @@ begin
 
 end;
 
-procedure TfrmDaysStatistics.getChannels(performance : IXMLPerformanceType);
+procedure TfraDayStatistics.getChannels(performance : IXMLPerformanceType);
 var i, l : Integer;
     channel : TIdChannelValues;
     ch : IXMLChannelType;
@@ -580,15 +487,6 @@ begin
 end;
 
 
-
-{ TIdDValue }
-
-constructor TIdDValue.Create(_id: Integer; _value: Double);
-begin
-  id := _id;
-  value := _value;
-end;
-
 { TIdChannelValues }
 
 constructor TIdChannelValues.Create(_id: Integer; const _name : String; _color : Integer; _adr: Double;
@@ -642,12 +540,5 @@ begin
   rate := _rate;
 end;
 
-{ TIdSValue }
-
-constructor TIdSValue.Create(_id: Integer; const _value: String);
-begin
-  id := _id;
-  value := _value;
-end;
 
 end.

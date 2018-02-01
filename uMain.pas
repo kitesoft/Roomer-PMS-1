@@ -68,7 +68,7 @@ uses
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
   uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics, uVersionManagement
- , uReservationStateChangeHandler
+ , uReservationStateChangeHandler, uFraDayStatistics
 
 
     ;
@@ -690,6 +690,7 @@ type
     mnuFilterGroup: TMenuItem;
     mnuFilterLocation: TMenuItem;
     mnuFilterRoomType: TMenuItem;
+    fraDayStatistics: TfraDayStatistics;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -1589,7 +1590,6 @@ uses
 		, urptTotallist
 		, uFrmChannelTogglingRules
 		, uPersonviptypes
-		, uFrmDaysStatistics
 		, uFrmRateQuery
 		,uPersonContactType
 		,uRptTurnoverAndPayments
@@ -3331,10 +3331,6 @@ begin
   except
   end;
   try
-    RoomerLanguage.TranslateThisForm(frmDaysStatistics);
-  except
-  end;
-  try
     RoomerLanguage.TranslateThisForm(FrmRateQuery);
   except
   end;
@@ -3792,7 +3788,7 @@ procedure TfrmMain.FormKeyPress(Sender: TObject; var Key: Char);
 var
   s: string;
 begin
-  if (ActiveControl <> grOneDayRooms) AND (ActiveControl <> grPeriodRooms) AND (NOT frmDaysStatistics.BeingViewed) AND
+  if (ActiveControl <> grOneDayRooms) AND (ActiveControl <> grPeriodRooms) AND (pageMainGrids.ActivePage <>  tabDashboard) AND
     (NOT FrmRateQuery.BeingViewed) AND (tabsView.TabIndex <> 7) then
     exit;
 
@@ -4115,7 +4111,7 @@ end;
 
 procedure TfrmMain.SetDateStatisticsDate;
 begin
-  frmDaysStatistics.ViewDate := dtDate.Date;
+  fraDayStatistics.ViewDate := dtDate.Date;
   frmDateStatistics.Date := trunc(dtDate.Date);
   frmDateStatistics.RefreshData;
 end;
@@ -7720,18 +7716,15 @@ begin
     1:
       begin
         DisplayStatusses(true);
-        if assigned(frmDaysStatistics) then
-        begin
-          frmDaysStatistics.BeingViewed := false;
-          FrmRateQuery.BeingViewed := false;
-          EnterDayView;
-          RefreshStats;
-        end;
+        fraDayStatistics.BeingViewed := false;
+        FrmRateQuery.BeingViewed := false;
+        EnterDayView;
+        RefreshStats;
       end;
     2:
       begin
         DisplayStatusses(false);
-        frmDaysStatistics.BeingViewed := false;
+        fraDayStatistics.BeingViewed := false;
         FrmRateQuery.BeingViewed := false;
         lblLoading.Show;
         lblLoading.Update;
@@ -7747,19 +7740,20 @@ begin
     3:
       begin
         DisplayStatusses(true);
-        frmDaysStatistics.BeingViewed := false;
+        fraDayStatistics.BeingViewed := false;
         FrmRateQuery.BeingViewed := false;
         EnterGuestListView;
       end;
     4:
       begin
         DisplayStatusses(true);
-        frmDaysStatistics.BeingViewed := true;
+        fraDayStatistics.BeingViewed := true;
         EnterDashboardView;
       end;
     5:
       begin
         aDate := trunc(dtDate.Date);
+        fraDayStatistics.BeingViewed := false;
         DisplayStatusses(true);
         FrmRateQuery.BeingViewed := true;
         EnterRateQueryView(aDate);
@@ -7767,6 +7761,7 @@ begin
     6:
       begin
         pageMainGrids.ActivePage := tabFrontDesk;
+        fraDayStatistics.BeingViewed := false;
         sbFrontDesk.VertScrollBar.Position := 0;
         pageMainGridsChange(pageMainGrids);
       end;
@@ -7778,12 +7773,11 @@ end;
 
 procedure TfrmMain.EnterDashboardView;
 begin
-  frmDaysStatistics.sPanel1.Parent := tabDashboard;
   ViewMode := vmDashboard;
   if tabsView.TabIndex <> 3 then
     tabsView.TabIndex := 3;
   pageMainGrids.ActivePage := tabDashboard;
-  frmDaysStatistics.ViewDate := dtDate.Date;
+  fraDayStatistics.ViewDate := dtDate.Date;
   tabDashboard.Update;
 end;
 

@@ -121,7 +121,6 @@ uses
   uFrmKeyPairSelector in 'uFrmKeyPairSelector.pas' {frmKeyPairSelector},
   uCurrencies in 'uCurrencies.pas' {frmCurrencies},
   uPersonviptypes in 'uPersonviptypes.pas' {frmPersonviptypes},
-  uFrmDaysStatistics in 'uFrmDaysStatistics.pas' {frmDaysStatistics},
   performance in 'Roomer\XML\performance.pas',
   uRptTurnoverAndPayments2 in 'uRptTurnoverAndPayments2.pas' {frmRptTurnoverAndPayments2},
   uTaxes in 'uTaxes.pas' {frmTaxes},
@@ -340,7 +339,8 @@ uses
   uFraPriceCodePanel in 'Embeddables\uFraPriceCodePanel.pas' {fraPriceCodePanel: TFrame},
   uFraChannelPanel in 'Embeddables\uFraChannelPanel.pas' {fraChannelPanel: TFrame},
   uFraCustomerPanel in 'Embeddables\uFraCustomerPanel.pas' {fraCustomerPanel: TFrame},
-  uFraStaffMemberPanel in 'Embeddables\uFraStaffMemberPanel.pas' {fraStaffMemberPanel: TFrame};
+  uFraStaffMemberPanel in 'Embeddables\uFraStaffMemberPanel.pas' {fraStaffMemberPanel: TFrame},
+  uFraDayStatistics in 'mainEmbeddables\uFraDayStatistics.pas' {fraDayStatistics: TFrame};
 
 {$R *.RES}
 
@@ -371,7 +371,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     TSplashFormManager.UpdateProgress('Loading forms...');
 
@@ -380,7 +380,6 @@ begin
 
     if D.roomerMainDataSet.IsConnectedToInternet then
     begin
-      Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
       Application.CreateForm(TfrmRateQuery, frmRateQuery);
       Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
       Application.CreateForm(TembOccupancyView, embOccupancyView);

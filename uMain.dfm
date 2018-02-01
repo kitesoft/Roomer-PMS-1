@@ -96,7 +96,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 305
-        ActivePage = tabPeriod
+        ActivePage = tabDashboard
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -1074,8 +1074,6 @@ object frmMain: TfrmMain
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
               Version = '8.2.4.1'
-              ExplicitLeft = -2
-              ExplicitTop = 24
               ColWidths = (
                 73
                 20
@@ -1618,6 +1616,81 @@ object frmMain: TfrmMain
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          inline fraDayStatistics: TfraDayStatistics
+            Left = 0
+            Top = 0
+            Width = 1211
+            Height = 277
+            Align = alClient
+            TabOrder = 0
+            ExplicitWidth = 1211
+            ExplicitHeight = 277
+            inherited splMain: TsSplitter
+              Height = 277
+            end
+            inherited pnlLeft: TsPanel
+              Height = 277
+              ExplicitHeight = 277
+              inherited pnlLeftRevenues: TsPanel
+                inherited RevenueChart: TChart
+                  PrintMargins = (
+                    15
+                    19
+                    15
+                    19)
+                end
+              end
+              inherited pnlLeftRooms: TsPanel
+                ExplicitTop = 302
+                ExplicitHeight = 276
+                inherited RoomsChart: TChart
+                  ExplicitHeight = 274
+                  PrintMargins = (
+                    15
+                    19
+                    15
+                    19)
+                end
+              end
+            end
+            inherited pnlRight: TsPanel
+              Width = 804
+              Height = 277
+              ExplicitLeft = 407
+              ExplicitWidth = 804
+              ExplicitHeight = 277
+              inherited splRight: TsSplitter
+                Width = 802
+              end
+              inherited pnlRightPropertyStatus: TsPanel
+                Width = 802
+                ExplicitLeft = 1
+                ExplicitTop = 1
+                ExplicitWidth = 802
+              end
+              inherited pnlRightTodayRates: TsPanel
+                Width = 802
+                Height = 29
+                ExplicitTop = 247
+                ExplicitWidth = 802
+                ExplicitHeight = 29
+                inherited sPanel8: TsPanel
+                  Width = 800
+                  ExplicitWidth = 800
+                end
+                inherited sPanel9: TsPanel
+                  Width = 800
+                  ExplicitWidth = 800
+                  ExplicitHeight = 297
+                  inherited sbRates: TsScrollBox
+                    Width = 800
+                    ExplicitWidth = 800
+                    ExplicitHeight = 297
+                  end
+                end
+              end
+            end
+          end
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
@@ -2734,8 +2807,8 @@ object frmMain: TfrmMain
     end
   end
   object pnlRBE: TsPanel
-    Left = 349
-    Top = 420
+    Left = 805
+    Top = 367
     Width = 297
     Height = 59
     TabOrder = 4
@@ -2743,8 +2816,8 @@ object frmMain: TfrmMain
     SkinData.SkinSection = 'TRANSPARENT'
   end
   object panelHide: TsPanel
-    Left = 356
-    Top = 525
+    Left = 805
+    Top = 455
     Width = 297
     Height = 59
     TabOrder = 3

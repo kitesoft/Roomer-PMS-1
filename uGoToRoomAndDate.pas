@@ -42,7 +42,6 @@ type
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
     procedure cxButton1Click(Sender : TObject);
-    procedure btnGetRoomAndDateClick(Sender : TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
@@ -86,13 +85,6 @@ begin
   finally
     frm.free;
   end;
-end;
-
-
-
-procedure TfrmGoToRoomandDate.btnGetRoomAndDateClick(Sender : TObject);
-begin
-  // **
 end;
 
 procedure TfrmGoToRoomandDate.cxButton1Click(Sender : TObject);

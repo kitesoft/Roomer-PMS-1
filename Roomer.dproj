@@ -562,9 +562,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uPersonviptypes.pas">
             <Form>frmPersonviptypes</Form>
         </DCCReference>
-        <DCCReference Include="uFrmDaysStatistics.pas">
-            <Form>frmDaysStatistics</Form>
-        </DCCReference>
         <DCCReference Include="Roomer\XML\performance.pas"/>
         <DCCReference Include="uRptTurnoverAndPayments2.pas">
             <Form>frmRptTurnoverAndPayments2</Form>
@@ -1032,6 +1029,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </DCCReference>
         <DCCReference Include="Embeddables\uFraStaffMemberPanel.pas">
             <Form>fraStaffMemberPanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="mainEmbeddables\uFraDayStatistics.pas">
+            <Form>fraDayStatistics</Form>
+            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <None Include="Roomer.todo"/>
