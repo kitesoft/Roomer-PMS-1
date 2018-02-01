@@ -10380,30 +10380,18 @@ end;
 procedure TfrmMain.btnDownPaymentsClick(Sender: TObject);
 var
   sRoom: string;
-  aDate: Tdate;
+  lDate: TDate;
 begin
   LogUserClickedButton(Sender);
-  // **
-  aDate := Date;
-  Application.CreateForm(TfrmRptDownPayments, frmRptDownPayments);
-  try
-    if frmRptDownPayments.ShowModal = mrOK then
-    begin
-      if frmRptDownPayments.zRoom <> '' then
-      begin
-        aDate := trunc(frmRptDownPayments.zArrival);
-        RefreshGrid;
-        sRoom := frmRptDownPayments.zRoom;
-      end;
-    end;
-  finally
-    frmRptDownPayments.Free;
-  end;
+  lDate := Date;
+
+  if OpenRptDownPayments(sRoom, lDate) then
+      RefreshGrid;
 
   if sRoom <> '' then
   begin
     SetViews(1);
-    SetDateWithoutEvents(aDate);
+    SetDateWithoutEvents(lDate);
     RefreshOneDayGrid;
     OneDay_DoAJump(sRoom);
   end;

@@ -1925,7 +1925,7 @@ begin
   frmKeyPairSelector := TfrmKeyPairSelector.Create(nil); frmKeyPairSelector.Free; frmKeyPairSelector := nil;
   frmResources := TfrmResources.Create(nil); frmResources.Free; frmResources := nil;
   frmAssignPayment := TfrmAssignPayment.Create(nil); frmAssignPayment.Free; frmAssignPayment := nil;
-  frmRptDownPayments := TfrmRptDownPayments.Create(nil); frmRptDownPayments.Free; frmRptDownPayments := nil;
+  TfrmRptDownPayments.Create(nil).Free;
   TfrmTaxes.Create(nil).Free;
 
   TFrmMessagesTemplates.Create(nil).Free;

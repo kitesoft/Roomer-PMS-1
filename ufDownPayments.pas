@@ -345,7 +345,6 @@ function OpenRptDownPayments(var Room: string; var Arrival: TDate) : boolean;
 var
   frm: TfrmRptDownPayments;
 begin
-  result := false;
   frm := TfrmRptDownPayments.Create(nil);
   try
     frm.ShowModal;
