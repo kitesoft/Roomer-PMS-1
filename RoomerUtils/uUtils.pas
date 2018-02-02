@@ -164,6 +164,7 @@ function ComponentRunning(aComponent: TComponent): boolean;
 function RunningInMainThread: boolean;
 
 function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
+function IsChildOfParent(aControl: TControl; aParent: TControl): boolean;
 function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
@@ -1562,6 +1563,19 @@ begin
   Result := aControl.Parent;
   while Assigned(Result) and (not result.ClassType.InheritsFrom(aClassType)) do
     Result := Result.parent;
+end;
+
+function IsChildOfParent(aControl: TControl; aParent: TControl): boolean;
+var
+  ctrl: TControl;
+begin
+  Result := false;
+  ctrl := aControl;
+  while not Result and assigned(ctrl.Parent) do
+  begin
+    Result := ctrl.Parent = aParent;
+    ctrl := ctrl.Parent;
+  end;
 end;
 
 function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;

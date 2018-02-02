@@ -184,7 +184,7 @@ type
     btnNext: TsButton;
     btnPrevius: TsButton;
     btnFinish: TsButton;
-    Panel5: TsPanel;
+    pnlNotes: TsPanel;
     panNotesPayment: TsPanel;
     Panel7: TsPanel;
     panNotesGeneral: TsPanel;
@@ -387,13 +387,10 @@ type
     clabCustomer: TsLabel;
     lblPortfolio: TsLabel;
     gbxGetReservation: TsGroupBox;
-    clabReservationName: TsLabel;
     sLabel9: TsLabel;
     clabMarketSegmentCode: TsLabel;
-    clabReservationType: TsLabel;
     lblMarket: TsLabel;
     lblCountry: TsLabel;
-    edReservationName: TsEdit;
     edInvRefrence: TsEdit;
     cbxMarket: TsComboBox;
     gbxDates: TsGroupBox;
@@ -603,8 +600,7 @@ type
     clabDiscountPerc: TsLabel;
     pnlReservationStatus: TsPanel;
     cbxRoomStatus: TsComboBox;
-    clabGroupInvoice: TsLabel;
-    chkisGroupInvoice: TsCheckBox;
+    chkGroupInvoice: TsCheckBox;
     pnlGuest: TsPanel;
     edtPortfolio: TsEdit;
     btnPortfolioLookup: TsSpeedButton;
@@ -627,6 +623,11 @@ type
     fraLookupMarketSegment: TfraLookupMarketSegment;
     fraPriceCodePanel: TfraPriceCodePanel;
     fraCustomerPanel: TfraCustomerPanel;
+    pnlReservationBaseData: TsPanel;
+    clabReservationType: TsLabel;
+    edReservationName: TsEdit;
+    clabReservationName: TsLabel;
+    pnlReservationDetaildata: TsPanel;
     procedure FormShow(Sender: TObject);
     procedure btnFinishClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -1213,12 +1214,7 @@ begin
   fraCurrencyPanel.OnChange := evtLookupOnChange;
   fraPriceCodePanel.OnChange := evtLookupOnChange;
 
-  with fraLookupCountry do
-  begin
-    RejectedCodes := '00';
-    OnChange := evtLookupOnChange;
-  end;
-
+  fraLookupCountry.OnChange := evtLookupOnChange;
   fraLookupMarketSegment.OnChange := evtLookupOnChange;
 
   pgcExtraAndAlert.ActivePageIndex := 0;
@@ -1330,8 +1326,8 @@ begin
   edtBreakfast.Visible := cbxBreakfast.Checked AND (NOT cbxBreakfastIncl.Checked);
   lblExtraCurrency.Visible := edtBreakfast.Visible;
   lblPerPerson.Visible := edtBreakfast.Visible;
-  cbxBreakfastGrp.Visible := edtBreakfast.Visible AND chkisGroupInvoice.Checked;
-  lblOnGroupInvoice.Visible := edtBreakfast.Visible AND chkisGroupInvoice.Checked;
+  cbxBreakfastGrp.Visible := edtBreakfast.Visible AND chkGroupInvoice.Checked;
+  lblOnGroupInvoice.Visible := edtBreakfast.Visible AND chkGroupInvoice.Checked;
 end;
 
 procedure TfrmMakeReservationQuick.ShowChannels;
@@ -1883,10 +1879,7 @@ begin
   cbxRoomStatus.ItemIndex := RoomStatusFromInfo(FNewReservation.HomeCustomer.RoomStatus);
   fraLookupMarketSegment.Code := FNewReservation.HomeCustomer.MarketSegmentCode;
 
-  if FNewReservation.HomeCustomer.IsGroupInvoice = true then
-    chkisGroupInvoice.Checked := true
-  else
-    chkisGroupInvoice.Checked := false;
+  chkGroupInvoice.Checked := FNewReservation.HomeCustomer.IsGroupInvoice;
 
   fraCurrencyPanel.Code := FNewReservation.HomeCustomer.Currency;
   fraPriceCodePanel.Code := FNewReservation.HomeCustomer.PcCode;
@@ -2522,65 +2515,52 @@ var
   i: integer;
 begin
   FOutOfOrderBlocking := Value;
-  gbxContact.Visible := NOT FOutOfOrderBlocking;
-  gbxRate.Visible := NOT FOutOfOrderBlocking;
-  gbxCustomerAlert.Visible := NOT FOutOfOrderBlocking;
-  gbxGetCustomer.Visible := NOT FOutOfOrderBlocking;
-  panNotesPayment.Visible := NOT FOutOfOrderBlocking;
-  panRoomNotes.Visible := NOT FOutOfOrderBlocking;
-  btnAutoSelectRooms.Visible := NOT FOutOfOrderBlocking;
-  btnSetAllAsNoRoom.Visible := NOT FOutOfOrderBlocking;
 
-  gbxRefresh.Visible := NOT FOutOfOrderBlocking;
-  gbxSelectedRoom.Visible := NOT FOutOfOrderBlocking;
-  chkAutoUpdateNullPrice.Visible := NOT FOutOfOrderBlocking;
+  DisableAlign;
+  try
+    gbxContact.Visible := NOT FOutOfOrderBlocking;
+    gbxRate.Visible := NOT FOutOfOrderBlocking;
+    gbxCustomerAlert.Visible := NOT FOutOfOrderBlocking;
+    gbxGetCustomer.Visible := NOT FOutOfOrderBlocking;
 
-  tvRoomResGuests.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResChildrenCount.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResinfantCount.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResMainGuest.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResAvragePrice.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResPackage.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResPackagePrice.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResStockItemsCount.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResStockitemsPrice.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResAvrageDiscount.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResPriceCode.Visible := NOT FOutOfOrderBlocking;
-  tvRoomResRatePlanCode.Visible := NOT FOutOfOrderBlocking;
+    pnlReservationDetaildata.Visible := NOT FOutOfOrderBlocking;
+    chkGroupInvoice.Visible := NOT FOutOfOrderBlocking;
 
-  if FOutOfOrderBlocking then
-  begin
-    clabReservationName.Caption := GetTranslatedText('shTx_FrmMakeReservationQuick_OutOfOrderDescription');
-    clabArrival.Caption := GetTranslatedText('shTx_FrmMakeReservationQuick_OutOfOrderStartDate');
-    clabdeparture.Caption := GetTranslatedText('shTx_FrmMakeReservationQuick_OutOfOrderEndDate');
-  end
-  else
-  begin
-    RoomerLanguage.TranslateThisControl(self, clabReservationName);
-    RoomerLanguage.TranslateThisControl(self, clabArrival);
-    RoomerLanguage.TranslateThisControl(self, clabdeparture);
-  end;
+    panNotesPayment.Visible := NOT FOutOfOrderBlocking;
+    panRoomNotes.Visible := NOT FOutOfOrderBlocking;
+    panSelectRoomsTop.Visible := NOT FOutOfOrderBlocking;
+    panTopRoomRates.Visible := NOT FOutOfOrderBlocking;
 
-  for i := 0 to ComponentCount - 1 do
-  begin
-    if (
-      (Components[i] IS TsLabel) OR
-      (Components[i] IS TsEdit) OR
-      (Components[i] IS TsComboBox) OR
-      (Components[i] IS TsCheckBox) OR
-      (Components[i] IS TsSpeedButton) OR
-      (Components[i] IS TfraCountryPanel) OR
-      (Components[i] IS TfraCurrencyPanel)
-      ) AND
-      (
-      (TControl(Components[i]).Parent = gbxGetReservation) AND
-      (Components[i].Name <> 'clabReservationName') AND
-      (Components[i].Name <> 'edReservationName') AND
-      (Components[i].Name <> 'clabReservationType') AND
-      (Components[i].Name <> 'cbxRoomStatus')
-      )
-    then
-      TControl(Components[i]).Visible := NOT FOutOfOrderBlocking;
+    tvRoomResGuests.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResChildrenCount.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResinfantCount.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResMainGuest.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResAvragePrice.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResPackage.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResPackagePrice.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResStockItemsCount.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResStockitemsPrice.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResAvrageDiscount.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResPriceCode.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResRatePlanCode.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResExpectedTimeOfArrival.Visible := NOT FOutOfOrderBlocking;
+    tvRoomResexpectedCheckouttime.Visible := NOT FOutOfOrderBlocking;
+
+    if FOutOfOrderBlocking then
+    begin
+      clabReservationName.Caption := GetTranslatedText('shTx_FrmMakeReservationQuick_OutOfOrderDescription');
+      clabArrival.Caption := GetTranslatedText('shTx_FrmMakeReservationQuick_OutOfOrderStartDate');
+      clabdeparture.Caption := GetTranslatedText('shTx_FrmMakeReservationQuick_OutOfOrderEndDate');
+    end
+    else
+    begin
+      RoomerLanguage.TranslateThisControl(self, clabReservationName);
+      RoomerLanguage.TranslateThisControl(self, clabArrival);
+      RoomerLanguage.TranslateThisControl(self, clabdeparture);
+    end;
+
+  finally
+    EnableAlign;
   end;
 
 end;
@@ -4138,7 +4118,7 @@ begin
   FNewReservation.HomeCustomer.ReservationName := edReservationName.Text;
   FNewReservation.HomeCustomer.RoomStatus := RoomStatusToInfo(cbxRoomStatus.ItemIndex);
   FNewReservation.HomeCustomer.MarketSegmentCode := fraLookupMarketSegment.Code;
-  FNewReservation.HomeCustomer.IsGroupInvoice := chkisGroupInvoice.Checked;
+  FNewReservation.HomeCustomer.IsGroupInvoice := chkGroupInvoice.Checked;
   FNewReservation.HomeCustomer.Currency := FCurrentCurrency.CurrencyCode;
   FNewReservation.HomeCustomer.PcCode := fraPriceCodePanel.Code;
   FNewReservation.HomeCustomer.PID := edPID.Text;
