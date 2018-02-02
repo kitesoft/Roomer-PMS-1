@@ -435,8 +435,8 @@ begin
     s := s+'  ,rr.room '#10;
     s := s+'  ,rr.roomType '#10;
     s := s+'  ,rr.invBreakfast AS Breakfast'#10;
-    s := s+'  ,RR_Arrival(rd.roomreservations, false) as Arrival '#10;
-    s := s+'  ,RR_Departure(rd.roomreservations, false) as Departure '#10;
+    s := s+'  ,RR_Arrival(rr.roomreservation, false) as Arrival '#10;
+    s := s+'  ,RR_Departure(rr.roomreservation, false) as Departure '#10;
     s := s+'  ,(SELECT count(*) from persons p where p.roomreservation = rr.roomreservation) as numGuests '#10;
     s := s+'  ,rr.status '#10;
     s := s+'  ,rooms.description as RoomDescription '#10;

@@ -339,7 +339,6 @@ inherited frmGroupGuests: TfrmGroupGuests
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
         OptionsData.Inserting = False
-        OptionsView.Footer = True
         OptionsView.GroupByBox = False
         OptionsView.Indicator = True
         OptionsView.BandHeaderEndEllipsis = True
@@ -698,6 +697,7 @@ inherited frmGroupGuests: TfrmGroupGuests
     Top = 208
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43112.424664120370000000
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end
