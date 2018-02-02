@@ -248,6 +248,7 @@ uses
   , uBookKeepingCodes
   , uUtils
   , UITypes
+  , uRoomerLanguage
   ;
 
 {$R *.dfm}

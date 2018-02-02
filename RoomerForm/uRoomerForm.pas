@@ -94,6 +94,7 @@ uses
   , uUtils
   , PrjConst
   , UITypes
+  , uRoomerLanguage
   ;
 
 type

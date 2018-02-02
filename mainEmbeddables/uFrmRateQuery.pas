@@ -179,7 +179,9 @@ uses
   , uAppGlobal
   , uCustomers2
   , PrjConst
-  , uRoomerCurrencymanager, uAmount;
+  , uRoomerCurrencymanager, uAmount
+  , uRoomerLanguage
+  ;
 
 const
   WM_REFRESH_ARRIVAL_DATE = WM_User + 32;

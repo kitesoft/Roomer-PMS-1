@@ -56,7 +56,14 @@ function OpenGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
 
 implementation
 
-uses uD, uAppGlobal, PrjConst, uDImages, uUtils;
+uses
+  uD
+  , uAppGlobal
+  , PrjConst
+  , uDImages
+  , uUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 

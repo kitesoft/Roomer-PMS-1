@@ -103,7 +103,9 @@ implementation
 uses uAppGlobal, uD, uDImages, uSQLUtils, uFrmPayCardView, uTokenHelpers, uFrmChargePayCard
     , uFrmTokenChargeHistory
     , Math
-    , uFloatUtils;
+    , uFloatUtils
+    , uRoomerLanguage
+    ;
 
 procedure TfrmDownPayment.btnCancelClick(Sender: TObject);
 begin

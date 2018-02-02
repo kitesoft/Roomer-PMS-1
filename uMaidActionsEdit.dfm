@@ -72,8 +72,6 @@ object frmMaidActionsEdit: TfrmMaidActionsEdit
     Align = alClient
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 415
-    ExplicitHeight = 105
     object sLabel1: TsLabel
       Left = 38
       Top = 30
@@ -169,8 +167,6 @@ object frmMaidActionsEdit: TfrmMaidActionsEdit
       Font.Style = []
       ParentFont = False
       TabOrder = 3
-      ExplicitWidth = 347
-      ExplicitHeight = 136
     end
   end
 end

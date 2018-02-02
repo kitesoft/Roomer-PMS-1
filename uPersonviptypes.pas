@@ -218,7 +218,8 @@ uses
    uD
   , uSqlDefinitions
   , uUtils
-;
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 

@@ -106,7 +106,9 @@ uses
   , uAvailabilityPerDay
   , uReservationStateDefinitions
   , uSQLUtils
-  , UITypes;
+  , UITypes
+  , uRoomerLanguage
+  ;
 
 {$R *.DFM}
 

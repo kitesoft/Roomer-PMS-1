@@ -195,7 +195,9 @@ uses
   , uDImages
   , uUtils
   , uResourceTypeDefinitions
-  , UITypes, uRoomerGridForm, uRoomerCurrencymanager;
+  , UITypes, uRoomerGridForm, uRoomerCurrencymanager
+  , uRoomerLanguage
+  ;
 
 
 function openCustomerEdit(var theData : recCustomerHolder; isInsert : boolean; _financeCustomerList : TKeyPairList = nil) : boolean;

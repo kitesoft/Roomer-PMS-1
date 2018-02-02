@@ -218,6 +218,7 @@ uses
    , uDImages
    , uUtils
    , UITypes
+  , uRoomerLanguage
   ;
 
 {$R *.dfm}

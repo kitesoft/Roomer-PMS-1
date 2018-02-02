@@ -75,7 +75,9 @@ uses
   , uSqlDefinitions
   , PrjConst
   , uDImages
-  , UITypes;
+  , UITypes
+  , uRoomerLanguage
+  ;
 
 
 procedure TfrmRoomDateProblem.GridInit;

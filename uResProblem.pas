@@ -67,6 +67,7 @@ uses
   , uDImages
   , uRoomerDefinitions
   , uReservationStateDefinitions
+  , uRoomerLanguage
   ;
 
 function StatusToColor(status : string;var backColor, fontColor : Tcolor ) : boolean;

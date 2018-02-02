@@ -88,7 +88,11 @@ uses
   , cmpRoomerDataset
   , uD
   , uUtils
-  , _Glob, hData, uSQLUtils;
+  , _Glob
+  , hData
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
 
 function EditPaymentRequirements(const aRoomTypeGroup: string): boolean;
 var

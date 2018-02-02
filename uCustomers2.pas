@@ -327,7 +327,9 @@ uses
   , uResourceTypeDefinitions
   , UITypes
   , uFrmFinanceConnect
-  , uFinanceConnectService;
+  , uFinanceConnectService
+  , uRoomerLanguage
+  ;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

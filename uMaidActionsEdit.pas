@@ -63,6 +63,7 @@ uses uD
   , uAppGlobal
   , PrjConst
   , uUtils
+  , uRoomerLanguage
   ;
 
 {$R *.dfm}

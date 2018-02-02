@@ -255,7 +255,9 @@ uses
   , uSqlDefinitions
   , uGuestProfile2
   , PrjConst
-  , uSQLUtils;
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
 {$R *.dfm}
 
 

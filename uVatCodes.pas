@@ -215,7 +215,9 @@ uses
   , uUtils
   , UITypes
   , uFrmFinanceConnect
-  , uFinanceConnectService;
+  , uFinanceConnectService
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 

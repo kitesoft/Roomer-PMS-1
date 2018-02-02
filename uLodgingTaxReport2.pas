@@ -306,7 +306,11 @@ uses
   , uAppGlobal
   , uDImages
   , uMain
-  , uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , uSQLUtils
+  , ufrmInvoiceEdit
+  , uInvoiceDefinitions
+  , uRoomerLanguage
+  ;
 
 
 {$R *.dfm}

@@ -363,7 +363,10 @@ uses
   , Math
   , uSQLUtils
   , uFrmFinanceConnect
-  , uFinanceConnectService, uRoomerCurrencymanager;
+  , uFinanceConnectService
+  , uRoomerCurrencymanager
+  , uRoomerLanguage
+  ;
 
 
 

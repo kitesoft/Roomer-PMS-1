@@ -237,7 +237,10 @@ uses
   , uCurrencies
   , uUtils
   , uSQLUtils
-  , UITypes, uRoomerGridForm;
+  , UITypes
+  , uRoomerGridForm
+  , uRoomerLanguage
+;
 
 
 

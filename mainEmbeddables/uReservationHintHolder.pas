@@ -92,6 +92,7 @@ implementation
 uses clipbrd
   , uMain
   , UITypes
+  , uRoomerLanguage
   ;
 
 { TFrmReservationHintHolder }

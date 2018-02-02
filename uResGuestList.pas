@@ -230,7 +230,10 @@ uses
   , uFileDependencyManager
   , uAppGlobal
   , PrjConst
-  , uDImages, uSQLUtils;
+  , uDImages
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
 {$R *.dfm}
 
 

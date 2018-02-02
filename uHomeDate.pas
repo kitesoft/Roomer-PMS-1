@@ -45,7 +45,9 @@ function ShowHomeDateForm(aDate: TDate; Key: char = ' '): TDate;
 implementation
 
 uses
-  uMain, uAppGlobal, uDImages, uUtils;
+  uMain, uAppGlobal, uDImages, uUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 

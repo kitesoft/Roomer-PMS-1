@@ -34,7 +34,8 @@ uses
   dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon,
   dxPScxPageControlProducer, dxPScxGridLnk, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, dxmdaset,
-  dxPSCore, dxPScxCommon, cxGridLevel, cxGridCustomView, cxGrid, sStatusBar, sEdit, sSpeedButton, sLabel, hData, cxMemo
+  dxPSCore, dxPScxCommon, cxGridLevel, cxGridCustomView, cxGrid, sStatusBar, sEdit, sSpeedButton, sLabel, hData, cxMemo,
+  dxPScxPivotGridLnk
 
   ;
 
@@ -149,7 +150,9 @@ uses
   , uAppGlobal
   , cxGridExportLink
   , UITypes
-  , uMaidActionsEdit;
+  , uMaidActionsEdit
+  , uRoomerLanguage
+  ;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

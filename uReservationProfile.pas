@@ -870,7 +870,9 @@ uses
   , uResourceTypeDefinitions
   , uFrmPayCardView
   , uFrmTokenChargeHistory
-  , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions, uRoomerCurrencymanager;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions, uRoomerCurrencymanager
+  , uRoomerLanguage
+;
 
 {$R *.DFM}
 

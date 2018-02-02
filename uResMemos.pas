@@ -150,7 +150,9 @@ uses
   , hdata
   , PrjConst
   , uDImages
-  , UITypes, uSQLUtils;
+  , UITypes, uSQLUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 

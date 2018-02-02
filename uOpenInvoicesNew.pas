@@ -183,7 +183,11 @@ uses
   , uRoomerDefinitions
   , uReservationStateDefinitions
   , UITypes
-  , uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , uSQLUtils
+  , ufrmInvoiceEdit
+  , uInvoiceDefinitions
+  , uRoomerLanguage
+  ;
 {$R *.dfm}
 
 procedure TfrmOpenInvoicesNew.FormCreate(Sender : TObject);

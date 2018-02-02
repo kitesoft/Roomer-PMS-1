@@ -83,6 +83,7 @@ uses
    ,uDImages
    , uUtils
    , UITypes
+   , uRoomerLanguage
    ;
 
 procedure TfrmChangeRate.btnGetFromWebClick(Sender: TObject);

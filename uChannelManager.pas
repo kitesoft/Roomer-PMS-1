@@ -280,6 +280,7 @@ uses
   , uDImages
   , u2dMatrix
   , UITypes
+  , uRoomerLanguage
   ;
 
 {$R *.dfm}

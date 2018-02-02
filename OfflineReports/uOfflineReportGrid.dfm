@@ -182,8 +182,9 @@ object frmOfflineReports: TfrmOfflineReports
       SearchFooter.HintFindPrev = 'Find previous occurence'
       SearchFooter.HintHighlight = 'Highlight occurences'
       SearchFooter.MatchCaseCaption = 'Match case'
+      SearchFooter.ResultFormat = '(%d of %d)'
       SortSettings.DefaultFormat = ssAutomatic
-      Version = '7.9.1.0'
+      Version = '8.2.4.1'
       WordWrap = False
       ColWidths = (
         52

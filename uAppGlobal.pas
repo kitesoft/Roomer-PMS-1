@@ -19,7 +19,6 @@ uses
   , Generics.Collections
   , objDayFreeRooms
   , uMessageList
-  , uRoomerLanguage
   , uActivityLogs
 
   , stdCtrls
@@ -327,12 +326,8 @@ Type
 var
   glb        : TGlobalSettings = nil;
   AppInifile : string;
-  RoomerLanguage : TRoomerLanguage;
-
 
 const
-  FMHandle : THandle = 0;
-
   RIGHTS_REPORTS_FINANCE = 94;
   RIGHTS_REPORTS_GUESTS = 80;
   RIGHTS_INVOICE = 88;
@@ -345,7 +340,6 @@ const
 
 procedure OpenAppSettings;
 procedure CloseAppSettings;
-procedure FilterRoom( RoomNumber : string );
 
 implementation
 
@@ -365,16 +359,7 @@ uses   dbTables
      , uCurrencymanager
      , uRoomerCurrencymanager
      , uFileDependencyManager
-     , uCachedDataHandler;
-
-procedure FilterRoom( RoomNumber : string );
-begin
-  with glb.RoomsSet do
-  begin
-    Filter := 'Room=''' + RoomNumber + '''';
-    Filtered := true;
-  end;
-end;
+     , uCachedDataHandler, uCurrencyConstants;
 
 { TGlobalSettings }
 
@@ -870,23 +855,13 @@ begin
 end;
 
 function TGlobalSettings.GetDataCacheLocation: String;
-//var AppDataPath : String;
-//    DataCache: String;
 begin
-//  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  DataCache := format('%s\' + cDatacachefoldername, [d.roomerMainDataSet.hotelId]);
-//  result := TPath.Combine(AppDataPath, DataCache);
-//
   Result := TPath.Combine(GetHotelAppDataLocation, cDatacachefoldername);
   forceDirectories(result);
 end;
 
 function TGlobalSettings.GetOfflineReportLocation: string;
-//var AppDataPath : String;
 begin
-//  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  result := format('%s\' + cofflinefoldername,[d.roomerMainDataSet.hotelId]);
-//  result := TPath.Combine(AppDataPath, Result);
   Result := TPath.Combine(GetHotelAppDataLocation, cOfflinefoldername);
   forceDirectories(result);
 end;
@@ -894,8 +869,6 @@ end;
 
 function TGlobalSettings.GetLanguageLocation: String;
 begin
-//  result := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  result := TPath.Combine(result, 'Languages');
   Result := TPath.Combine(RoomerAppDataPath, 'Languages');
   forceDirectories(result);
 end;
@@ -1688,7 +1661,7 @@ begin
   glb := TGlobalSettings.create;
   glb.LoadStaticTables(true);
   glb.ReloadPreviousGuests;
-  InitGlobalCurrencyManager(TRoomerCurrencyManager, glb.ControlSet.FieldByName('nativecurrency').asString);
+  InitGlobalCurrencyManager(TRoomerCurrencyManager, TCurrencyCode(glb.ControlSet.FieldByName('nativecurrency').asString));
 end;
 
 procedure CloseAppSettings;
@@ -1745,7 +1718,6 @@ end;
 initialization
 begin
   AppInifile := ChangeFileExt(Paramstr(0), '.ini' );
-  RoomerLanguage := uRoomerLanguage.RoomerLanguage;
 end;
 
 end.

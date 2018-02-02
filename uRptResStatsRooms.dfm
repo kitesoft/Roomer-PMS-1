@@ -42,7 +42,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object dtDateFrom: TsDateEdit
         Left = 16
         Top = 18
@@ -61,7 +60,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -84,7 +82,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateToChange
-        CheckOnExit = True
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -104,7 +101,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
       ParentFont = False
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       object cbxMonth: TsComboBox
         Left = 10
         Top = 18
@@ -202,7 +198,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
       Align = alRight
       TabOrder = 3
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       DesignSize = (
         810
         125)
@@ -238,7 +233,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
         Caption = 'Use Room with status of : '
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object chkExcluteWaitingList: TsCheckBox
           Left = 14
           Top = 17
@@ -351,7 +345,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
         Caption = 'Use NO Rooms with status of : '
         TabOrder = 3
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object chkExcluteWaitingListNoRooms: TsCheckBox
           Left = 14
           Top = 17
@@ -482,8 +475,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
     object SheetMainResult: TsTabSheet
       Caption = 'Pivot Result'
       OnShow = SheetMainResultShow
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -513,8 +504,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
             SkinData.SkinSection = 'PAGECONTROL'
             object sTabSheet2: TsTabSheet
               Caption = 'Result'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               ExplicitLeft = 0
               ExplicitTop = 0
               ExplicitWidth = 0
@@ -749,8 +738,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
             end
             object sTabSheet3: TsTabSheet
               Caption = 'Graph'
-              SkinData.CustomColor = False
-              SkinData.CustomFont = False
               ExplicitLeft = 0
               ExplicitTop = 0
               ExplicitWidth = 0
@@ -981,7 +968,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
           ParentFont = False
           TabOrder = 1
           SkinData.SkinSection = 'GROUPBOX'
-          Checked = False
         end
         object panLayoutShowMore: TsPanel
           Left = 1
@@ -1095,8 +1081,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
     end
     object sTabSheet4: TsTabSheet
       Caption = 'Data'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
@@ -1292,7 +1276,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
     end
     object prLinkGrDrill: TdxGridReportLink
       Component = grDrill
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -1305,7 +1288,6 @@ object frmRptResStatsRooms: TfrmRptResStatsRooms
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

@@ -262,7 +262,9 @@ uses
   , uStringUtils
   , uEmailingDialog
   , uResourceManagement
-  , uSQLUtils;
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.DFM}
 

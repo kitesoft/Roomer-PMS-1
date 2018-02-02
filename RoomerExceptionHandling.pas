@@ -58,6 +58,7 @@ uses
     , VCL.Forms
     , IOUtils
     , uUtils
+    , Windows
     ;
 
 procedure TRoomerExceptionHandler.LogStackTrace(ExceptObj: TObject; ExceptAddr: Pointer; IsOS: boolean);
@@ -127,6 +128,7 @@ begin
                                      aText]);
 
     TFile.AppendAllText(FullLogfilePath, '                    | ' + aText + #13#10);
+    OutputDebugString(PChar(aText));
   except
     result := false;
   end;

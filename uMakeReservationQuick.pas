@@ -815,7 +815,13 @@ uses
  , DateUtils
  , uSQLUtils
  , Math
- , uRoomerCurrencymanager, uAmount, uCurrencyConstants, uMarketDefinitions, uRoomerGridForm;
+ , uRoomerCurrencymanager
+ , uAmount
+ , uCurrencyConstants
+ , uMarketDefinitions
+ , uRoomerGridForm
+  , uRoomerLanguage
+ ;
 
 {$R *.dfm}
 

@@ -500,7 +500,6 @@ type
 
 var
   G : TGlobalApplication = nil;
-  _HHwinHwnd : HWND = 0;
 
 
 // Create and initialize the singelton TGlobalApplication object "g"
@@ -516,7 +515,6 @@ function ResStatusToColor(Status : string; var backColor, fontColor : TColor) : 
 function StatusToColor(Status : string; var backColor, fontColor : TColor; var fStyle : TFontStyles) : boolean;
 
 function Status2StatusTextForHints(Status : string) : string;
-function Status2StatusText(Status : string) : string;
 
 function CombineNames(sName, sSurname : string) : string;
 function InvoiceName(InvoiceType : integer; sName, sSurname : string) : string;
@@ -547,9 +545,6 @@ uses
   uD,
   uRubbishCollectors,
   _glob,
-//  ufrmSelHotel,
-//  uUDL,
-//  uHotelListMissing,
   uResProblem,
   uRoomDateProblem,
   uMaidActions,
@@ -675,25 +670,8 @@ begin
   if ch = 'P' then
 	  result := GetTranslatedText('shTx_G_DueToArrive')
   else
-    result := Status2StatusText(Status);
-
+    result := TReservationState.FromResStatus(Status).AsStatusText;
 end;
-
-function Status2StatusText(Status : string) : string;
-var
-  state : TReservationState;
-begin
-  result := '';
-  Status := trim(Status);
-  if Status = '' then
-    exit;
-
-  Status := UpperCase(Status);
-  State := TReservationState.FromResStatus(Status);
-  result := state.AsStatusText;
-end;
-
-
 
 { TGlobalApplication }
 

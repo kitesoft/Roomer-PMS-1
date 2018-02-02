@@ -458,6 +458,7 @@ uses
   , DateUtils
   , uSQLUtils
   , UITypes
+  , uRoomerLanguage
   ;
 
 const WM_LOAD_LAYOUT = WM_User + 401;

@@ -175,6 +175,7 @@ uses
    , uTokenHelpers
    , uFrmManagePCIConnection
   , uFrmTokenChargeHistory
+  , uRoomerLanguage
   ;
 
 {$R *.DFM}

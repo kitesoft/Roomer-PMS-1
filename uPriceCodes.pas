@@ -228,6 +228,7 @@ implementation
 uses
    uSqlDefinitions
    , UITypes
+  , uRoomerLanguage
    ;
 
 {$R *.dfm}

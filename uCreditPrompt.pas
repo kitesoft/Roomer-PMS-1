@@ -60,7 +60,9 @@ implementation
 uses
     uAppGlobal
   , uDImages
-  , uUtils;
+  , uUtils
+  , uRoomerLanguage
+  ;
 
 procedure TfrmCreditPrompt.FormCreate(Sender: TObject);
 begin

@@ -333,7 +333,11 @@ uses
   , PrjConst
   , uDImages
   , uUtils
-  , uMain, uSQLUtils;
+  , uMain
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
+
 {$R *.dfm}
 
 

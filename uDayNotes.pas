@@ -401,7 +401,9 @@ uses
   , uDImages
   , uRoomerDefinitions
   , uReservationStateDefinitions
-  , uSQLUtils, uDateTimeHelper, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , uSQLUtils, uDateTimeHelper, ufrmInvoiceEdit, uInvoiceDefinitions
+  , uRoomerLanguage
+  ;
 
 
 var

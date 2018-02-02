@@ -102,7 +102,9 @@ uses
   , PrjConst
   , _Glob
   , uDayClosingTimesAPICaller
-  , uD;
+  , uD
+  , uRoomerLanguage
+  ;
 
 procedure EditDayClosingTimes;
 begin

@@ -74,6 +74,10 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object SheetMain: TsTabSheet
       Caption = 'Customer'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxAddress: TsGroupBox
         Left = 0
         Top = 291
@@ -670,8 +674,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 134
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -708,8 +710,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 134
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -740,8 +740,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 134
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -772,8 +770,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 134
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -804,8 +800,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 282
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 134
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit

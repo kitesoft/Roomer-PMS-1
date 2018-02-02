@@ -218,6 +218,7 @@ uses
     uD
   , uSqlDefinitions
   , UITypes
+  , uRoomerLanguage
   ;
 
 {$R *.dfm}
@@ -440,7 +441,7 @@ end;
 procedure TfrmCountryGroups.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
-     glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
+  glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
   zFirstTime    := true;
   zAct          := actNone;
   zPostData     := false;

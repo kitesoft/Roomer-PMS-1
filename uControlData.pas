@@ -866,7 +866,10 @@ uses
   , uMandatoryFieldDefinitions
   , UITYpes
   , uResourceTypeDefinitions
-  , uPMSSettings;
+  , uPMSSettings
+  , uRoomerLanguage
+  ;
+
 {$R *.DFM}
 
 const

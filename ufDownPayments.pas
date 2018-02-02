@@ -313,7 +313,12 @@ uses
   , PrjConst
   , uAssignPayment
   , DateUtils
-  , uDImages, uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , uDImages
+  , uSQLUtils
+  , ufrmInvoiceEdit
+  , uInvoiceDefinitions
+  , uRoomerLanguage
+  ;
 
 
 procedure AddGroupToReport(aBreakName: String; aDataPipeline: TppDataPipeline;   aReport: TppCustomReport);

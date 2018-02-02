@@ -144,7 +144,9 @@ uses
   , uAppGlobal
   , uDImages
   , uReservationProfile
-  , uSQLUtils;
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.DFM}
 

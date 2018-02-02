@@ -666,7 +666,11 @@ uses
     , _Glob
     , ShellApi
     , Math
-    , uSQLUtils, uInvoiceDefinitions, ufrmInvoiceEdit;
+    , uSQLUtils
+    , uInvoiceDefinitions
+    , ufrmInvoiceEdit
+    , uRoomerLanguage
+    ;
 
 {$R *.dfm}
 

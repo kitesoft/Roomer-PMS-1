@@ -268,7 +268,9 @@ uses
   , uSqlDefinitions
   , uDimages
   , UITypes
-  , uRoomerGridForm;
+  , uRoomerGridForm
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 
