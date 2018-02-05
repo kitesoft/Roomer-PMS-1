@@ -987,6 +987,8 @@ type
     procedure grOneDayRoomsGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
     procedure btnFilterDropdownClick(Sender: TObject);
+    procedure grPeriodRooms_NOStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -999,7 +1001,7 @@ type
     FAlreadyIn: boolean;
     FOneDay_bMouseDown: boolean;
     FPeriod_bMouseDown: boolean;
-
+    FPeriodNO_MouseDown: boolean;
 
     FormShowing: boolean;
     FrmMessagesTemplates: TFrmMessagesTemplates;
@@ -2199,8 +2201,7 @@ procedure TfrmMain.AutoSizePeriodColumns;
 var
   i: integer;
 begin
-  grPeriodRooms.AutoSizeCol(0);
-  grPeriodRooms.colWidths[1] := LongestColText(grPeriodRooms, 1, 2) + 20;
+  grPeriodRooms.ColWidths[1] := max(LongestColText(grPeriodRooms, 1, 2), LongestColText(grPeriodRooms_NO, 1, 2)) + 40;
   grPeriodRooms.colWidths[2] := (LongestColText(grPeriodRooms, 2, 2) + 20);
   try
     if cbxViewTypes.ItemIndex > 0 then
@@ -6397,10 +6398,8 @@ end;
 
 procedure TfrmMain.grOneDayRoomsResize(Sender: TObject);
 begin
-  try
+  if ViewMode = vmOneDay then
     AutoResizeOneDayGrid;
-  except
-  end;
 end;
 
 procedure TfrmMain.AutoResizeOneDayGrid;
@@ -8750,8 +8749,11 @@ end;
 
 procedure TfrmMain.grPeriodRoomsResize(Sender: TObject);
 begin
-  grAutoSizeGrids;
-  AutoSizePeriodColumns;
+  if viewMode = vmPeriod then
+  begin
+    grAutoSizeGrids;
+    AutoSizePeriodColumns;
+  end;
 end;
 
 procedure TfrmMain.gridSectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
@@ -9322,13 +9324,17 @@ begin
 
   HoverPointPeriod := Point(X, Y);
 
-  if FPeriod_bMouseDown then
+
+  if ((Grid = grPeriodRooms) and FPeriod_bMouseDown) or ((Grid = grPeriodRooms_NO) and FPeriodNO_MouseDown) then
   begin
     if (ABS(PeriodMousePoint.X - X) > 6) or (ABS(PeriodMousePoint.Y - Y) > 6) then
     begin
-      FPeriod_bMouseDown := false;
       ApplicationCancelHint;
-      Grid.BeginDrag(true);
+      if TReservationState.FromResStatus(rri.resFlag) <> TReservationState.rsCancelled then
+      begin
+        OutputDebugString(PChar(Format('Mousemove - roomres: %d - Start drag!', [rri.RoomReservation])));
+        Grid.BeginDrag(true);
+      end;
     end;
   end;
 
@@ -9896,11 +9902,12 @@ var
   allow: boolean;
   lRoom: TResCell;
 begin
-
   if Button = mbRight then
     exit;
   grPeriodRooms_NO.MouseToCell(X, Y, ACol, ARow);
   cellContent := grPeriodRooms_NO.cells[ACol, ARow];
+
+  OutputDebugString(PChar(Format('MouseDown, %d, %d', [aCol, aRow])));
 
   zzSource := Sender;
   zzSourceCol := ACol;
@@ -9939,9 +9946,22 @@ begin
     zzSourceRow := ARow;
     zzSourceGridID := 1;
 
-    grPeriodRooms_NO.BeginDrag(true);
-    Perform(CM_CURSORCHANGED, 0, 0); // Attempt to refresh cursor icon faster, after issue from hotel EUPH
+    FPeriodNO_MouseDown := true;
+
+//    grPeriodRooms_NO.BeginDrag(true);
+//    Perform(CM_CURSORCHANGED, 0, 0); // Attempt to refresh cursor icon faster, after issue from hotel EUPH
   end;
+end;
+
+procedure TfrmMain.grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  OutputDebugString(PChar('MouseUp'));
+  FPeriodNO_MouseDown := false;
+end;
+
+procedure TfrmMain.grPeriodRooms_NOStartDrag(Sender: TObject; var DragObject: TDragObject);
+begin
+  OutputDebugString(PChar('StartDrag'));
 end;
 
 procedure TfrmMain.grPeriodRooms_NODragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
