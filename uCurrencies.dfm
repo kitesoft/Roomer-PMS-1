@@ -96,8 +96,6 @@ inherited frmCurrencies: TfrmCurrencies
     inherited grData: TcxGrid
       Width = 845
       Height = 364
-      ExplicitLeft = 2
-      ExplicitTop = 0
       ExplicitWidth = 845
       ExplicitHeight = 364
       inherited tvData: TcxGridDBBandedTableView
@@ -149,6 +147,7 @@ inherited frmCurrencies: TfrmCurrencies
         object tvDataAValue: TcxGridDBBandedColumn
           Caption = 'Rate'
           DataBinding.FieldName = 'AValue'
+          PropertiesClassName = 'TcxCalcEditProperties'
           HeaderAlignmentHorz = taRightJustify
           Width = 75
           Position.BandIndex = 0
@@ -301,6 +300,7 @@ inherited frmCurrencies: TfrmCurrencies
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43108.585563333330000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
