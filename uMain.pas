@@ -9894,7 +9894,9 @@ var
   ACol, ARow: integer;
   cellContent: string;
   allow: boolean;
+  lRoom: TResCell;
 begin
+
   if Button = mbRight then
     exit;
   grPeriodRooms_NO.MouseToCell(X, Y, ACol, ARow);
@@ -9907,8 +9909,13 @@ begin
   AscIndex := -1;
   if (grPeriodRooms_NO.Objects[ACol, ARow] <> nil) and (grPeriodRooms_NO.Objects[ACol, ARow] is TResCell) then
   begin
-    iRoomReservation := (grPeriodRooms_NO.Objects[ACol, ARow] as TresCell).RoomReservation;
-    AscIndex := (grPeriodRooms_NO.Objects[ACol, ARow] as TresCell).AscIndex;
+    lRoom := grPeriodRooms_NO.Objects[ACol, ARow] as TresCell;
+    iRoomReservation := lRoom.RoomReservation;
+    AscIndex := lRoom.AscIndex;
+
+    if (TReservationState.FromResStatus(lRoom.resFlag) = TReservationState.rsCancelled) then
+      exit;
+
   end;
 
   allow := (iRoomReservation > 0) and (AscIndex = 0);
