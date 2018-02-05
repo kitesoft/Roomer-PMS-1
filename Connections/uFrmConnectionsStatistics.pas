@@ -132,7 +132,6 @@ begin
 end;
 
 procedure TFrmConnectionsStatistics.DoLoadData;
->>>>>>> 6b79df7664bb8dc70a73070b286dcd2e08283c56
 begin
   inherited;
   With ParseConnectionSettingsXml(ConnectionsStatisticsService.GetSettings) do
