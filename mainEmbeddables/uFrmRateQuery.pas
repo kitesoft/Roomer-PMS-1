@@ -410,7 +410,8 @@ var
   sValue, sAvail: String;
   SavedAlign: word;
 begin
-  if (ACol > 0) AND (ARow > 0) AND (Assigned(grdRates.Objects[ACol, ARow])) AND
+  if ComponentRunning(grdRates) and
+     (ACol > 0) AND (ARow > 0) AND (Assigned(grdRates.Objects[ACol, ARow])) AND
     (grdRates.Objects[ACol, ARow] IS TRateEntity) AND (Round((grdRates.Objects[ACol, ARow] AS TRateEntity).Rate) > 0)
   then
   begin
@@ -419,7 +420,7 @@ begin
     if not rbTotal.Checked then
       lRate := lRate / edNights.Value;
 
-    sValue := RoomerCurrencyManager[theRate.Currency].FormattedValue(lrate, true);
+    sValue := RoomerCurrencyManager[theRate.Currency].FormattedValueWithCode(lrate);
     sAvail := inttostr(theRate.Availability);
 
     with grdRates.Canvas do
