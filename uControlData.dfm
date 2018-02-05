@@ -142,7 +142,7 @@ object frmControlData: TfrmControlData
         Top = 1
         Width = 1101
         Height = 743
-        ActivePage = tsInvoiceSystem
+        ActivePage = tsInvEmail
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -457,17 +457,19 @@ object frmControlData: TfrmControlData
               Top = 128
               Width = 218
               Height = 20
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
               TabOrder = 4
               ExplicitLeft = 213
               ExplicitTop = 128
               ExplicitWidth = 218
-              inherited pnlCountry: TsPanel
+              inherited pnlLookup: TsPanel
                 Width = 218
                 ExplicitWidth = 218
-                inherited lblCountryName: TLabel
-                  Width = 19
-                  Height = 13
-                end
               end
             end
           end
@@ -3814,7 +3816,6 @@ object frmControlData: TfrmControlData
               TabOrder = 3
               ExplicitLeft = 327
               ExplicitTop = 14
-              ExplicitHeight = 20
             end
           end
           object LMDGroupBox26: TsGroupBox
@@ -5671,46 +5672,22 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object labRackCustomerName: TsLabel
-              Left = 265
-              Top = 21
-              Width = 4
-              Height = 14
-              Caption = '-'
-              ParentFont = False
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -12
-              Font.Name = 'Tahoma'
-              Font.Style = []
-            end
-            object btnGetCustomer: TsSpeedButton
-              Left = 235
+            inline fraRackCustomerPanel: TfraCustomerPanel
+              AlignWithMargins = True
+              Left = 147
               Top = 19
-              Width = 23
-              Height = 21
-              Caption = '...'
-              OnClick = edRackCustomerDblClick
-              SkinData.SkinSection = 'SPEEDBUTTON'
-            end
-            object edRackCustomer: TsEdit
-              Left = 141
-              Top = 20
-              Width = 92
-              Height = 21
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
+              Width = 935
+              Height = 20
+              Margins.Left = 145
+              Align = alTop
               TabOrder = 0
-              TextHint = 'dbl-click to select from list'
-              OnChange = edRackCustomerChange
-              OnDblClick = edRackCustomerDblClick
-              OnExit = edRackCustomerExit
-              SkinData.SkinSection = 'EDIT'
+              ExplicitLeft = 472
+              ExplicitTop = 24
+              ExplicitWidth = 935
+              inherited pnlLookup: TsPanel
+                Width = 935
+                ExplicitWidth = 935
+              end
             end
           end
           object gbxExcludeRoomStatusFromStats: TsGroupBox
@@ -6569,10 +6546,6 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet6: TsTabSheet
           Caption = 'Accounting'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object gbxForceExternalIdCorrectness: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -6764,9 +6737,6 @@ object frmControlData: TfrmControlData
               ParentFont = False
               TabOrder = 1
               TextHint = 'dbl-click to select from list'
-              OnChange = edRackCustomerChange
-              OnDblClick = edRackCustomerDblClick
-              OnExit = edRackCustomerExit
               SkinData.SkinSection = 'EDIT'
             end
           end
@@ -6872,7 +6842,7 @@ object frmControlData: TfrmControlData
             SkinData.SkinSection = 'GROUPBOX'
             object lblCustomer: TsLabel
               Left = 5
-              Top = 33
+              Top = 22
               Width = 203
               Height = 13
               Alignment = taRightJustify
@@ -6887,7 +6857,7 @@ object frmControlData: TfrmControlData
             end
             object lblUser: TsLabel
               Left = 5
-              Top = 60
+              Top = 48
               Width = 203
               Height = 13
               Alignment = taRightJustify
@@ -6900,56 +6870,39 @@ object frmControlData: TfrmControlData
               Font.Name = 'Tahoma'
               Font.Style = []
             end
-            object btnSelectEndOfDayCustomer: TsSpeedButton
-              Left = 308
-              Top = 31
-              Width = 23
-              Height = 21
-              Caption = '...'
-              OnClick = btnSelectEndOfDayCustomerClick
-              SkinData.SkinSection = 'SPEEDBUTTON'
-            end
-            object btnSelectEndOfDayUser: TsSpeedButton
-              Left = 308
-              Top = 58
-              Width = 23
-              Height = 21
-              Caption = '...'
-              OnClick = btnSelectEndOfDayUserClick
-              SkinData.SkinSection = 'SPEEDBUTTON'
-            end
-            object edtEndOfDayCustomer: TsEdit
-              Left = 214
-              Top = 31
-              Width = 92
-              Height = 21
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
+            inline fraEndOfDayCustomerPanel: TfraCustomerPanel
+              AlignWithMargins = True
+              Left = 216
+              Top = 19
+              Width = 866
+              Height = 20
+              Margins.Left = 214
+              Align = alTop
               TabOrder = 0
-              TextHint = 'dbl-click to select from list'
-              OnDblClick = btnSelectEndOfDayCustomerClick
-              SkinData.SkinSection = 'EDIT'
+              ExplicitLeft = 504
+              ExplicitTop = 32
+              ExplicitWidth = 866
+              inherited pnlLookup: TsPanel
+                Width = 866
+                ExplicitWidth = 866
+              end
             end
-            object edtEndOfDayUser: TsEdit
-              Left = 214
-              Top = 58
-              Width = 92
-              Height = 21
-              Color = clWhite
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clBlack
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
+            inline fraStaffMemberPanel: TfraStaffMemberPanel
+              AlignWithMargins = True
+              Left = 216
+              Top = 45
+              Width = 866
+              Height = 20
+              Margins.Left = 214
+              Align = alTop
               TabOrder = 1
-              TextHint = 'dbl-click to select from list'
-              SkinData.SkinSection = 'EDIT'
+              ExplicitLeft = 520
+              ExplicitTop = 48
+              ExplicitWidth = 866
+              inherited pnlLookup: TsPanel
+                Width = 866
+                ExplicitWidth = 866
+              end
             end
           end
         end
@@ -9312,10 +9265,6 @@ object frmControlData: TfrmControlData
             TabOrder = 0
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 0
-              ExplicitHeight = 0
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20

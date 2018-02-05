@@ -93,8 +93,8 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit,
-  uCurrencyHandler
-  , uRoomerForm, dxSkinsdxStatusBarPainter, dxStatusBar, AdvSmoothProgressBar
+  uRoomerForm
+  , dxSkinsdxStatusBarPainter, dxStatusBar, AdvSmoothProgressBar
 
   ;
 

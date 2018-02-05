@@ -106,7 +106,9 @@ uses
   , uAvailabilityPerDay
   , uReservationStateDefinitions
   , uSQLUtils
-  , UITypes;
+  , UITypes
+  , uRoomerLanguage
+  ;
 
 {$R *.DFM}
 
@@ -154,8 +156,8 @@ begin
     iReservation := rSet.fieldbyname('reservation').AsInteger;
     sRoomType := rSet.fieldbyname('roomtype').AsString;
     sStatus := rSet.fieldbyname('status').AsString;
-    dtArrival := trunc(rSet.fieldbyname('rrArrival').AsDateTime);
-    dtDeparture := trunc(rSet.fieldbyname('rrDeparture').AsDateTime);
+    dtArrival := trunc(rSet.fieldbyname('Arrival').AsDateTime);
+    dtDeparture := trunc(rSet.fieldbyname('Departure').AsDateTime);
   finally
     freeandnil(rSet);
   end;
@@ -464,8 +466,8 @@ begin
       rSet.First;
       if not rSet.eof then
       begin
-        FromDate := trunc(rSet.fieldbyname('rrArrival').AsDateTime);
-        ToDate := trunc(rSet.fieldbyname('rrDeparture').AsDateTime);
+        FromDate := trunc(rSet.fieldbyname('Arrival').AsDateTime);
+        ToDate := trunc(rSet.fieldbyname('Departure').AsDateTime);
         CurrentRoomType := trim(rSet.fieldbyname('RoomType').AsString);
         CurrentRoom := trim(rSet.fieldbyname('Room').AsString);
       end

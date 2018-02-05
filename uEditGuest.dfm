@@ -72,12 +72,8 @@ object frmEditGuest: TfrmEditGuest
     TabOrder = 1
     TabWidth = 160
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitLeft = 8
-    ExplicitTop = 4
     object tabGuest: TsTabSheet
       Caption = 'Guest'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
       object sGroupBox1: TsGroupBox
         Left = 3
         Top = 3
@@ -92,7 +88,6 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel1: TsLabel
           Left = 105
           Top = 23
@@ -294,7 +289,6 @@ object frmEditGuest: TfrmEditGuest
           TabOrder = 5
           Text = '  -  -    '
           Visible = False
-          CheckOnExit = True
           BoundLabel.Font.Charset = DEFAULT_CHARSET
           BoundLabel.Font.Color = clWindowText
           BoundLabel.Font.Height = -13
@@ -323,21 +317,22 @@ object frmEditGuest: TfrmEditGuest
           Top = 144
           Width = 241
           Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 7
           ExplicitLeft = 174
           ExplicitTop = 144
           ExplicitWidth = 241
-          inherited pnlCountry: TsPanel
+          inherited pnlLookup: TsPanel
             Width = 241
-            ExplicitWidth = 306
-            inherited lblCountryName: TsLabel
-              ExplicitLeft = 63
-            end
-            inherited edCountryCode: TsEdit
-              ExplicitLeft = 0
-            end
-            inherited btnGetCountry: TsButton
-              ExplicitLeft = 38
+            ExplicitWidth = 241
+            inherited lblDescription: TsLabel
+              Width = 148
+              Height = 20
             end
           end
         end
@@ -356,7 +351,6 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel13: TsLabel
           Left = 74
           Top = 33
@@ -462,7 +456,6 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel3: TsLabel
           Left = 124
           Top = 21
@@ -588,21 +581,22 @@ object frmEditGuest: TfrmEditGuest
           Top = 126
           Width = 242
           Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 4
           ExplicitLeft = 173
           ExplicitTop = 126
           ExplicitWidth = 242
-          inherited pnlCountry: TsPanel
+          inherited pnlLookup: TsPanel
             Width = 242
-            ExplicitWidth = 307
-            inherited lblCountryName: TsLabel
-              ExplicitLeft = 63
-            end
-            inherited edCountryCode: TsEdit
-              ExplicitLeft = 0
-            end
-            inherited btnGetCountry: TsButton
-              ExplicitLeft = 38
+            ExplicitWidth = 242
+            inherited lblDescription: TsLabel
+              Width = 149
+              Height = 20
             end
           end
         end
@@ -610,10 +604,6 @@ object frmEditGuest: TfrmEditGuest
     end
     object tabCompany: TsTabSheet
       Caption = 'Company'
-      SkinData.CustomColor = False
-      SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 39
       object sGroupBox4: TsGroupBox
         Left = 3
         Top = 10
@@ -628,7 +618,6 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel23: TsLabel
           Left = 90
           Top = 23
@@ -704,7 +693,6 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 1
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel31: TsLabel
           Left = 73
           Top = 23
@@ -810,7 +798,6 @@ object frmEditGuest: TfrmEditGuest
         ParentFont = False
         TabOrder = 2
         SkinData.SkinSection = 'GROUPBOX'
-        Checked = False
         object sLabel25: TsLabel
           Left = 124
           Top = 23
@@ -936,20 +923,22 @@ object frmEditGuest: TfrmEditGuest
           Top = 122
           Width = 240
           Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 4
           ExplicitLeft = 173
           ExplicitTop = 122
           ExplicitWidth = 240
-          inherited pnlCountry: TsPanel
+          inherited pnlLookup: TsPanel
             Width = 240
-            inherited lblCountryName: TsLabel
-              ExplicitLeft = 63
-            end
-            inherited edCountryCode: TsEdit
-              ExplicitLeft = 0
-            end
-            inherited btnGetCountry: TsButton
-              ExplicitLeft = 38
+            ExplicitWidth = 240
+            inherited lblDescription: TsLabel
+              Width = 147
+              Height = 20
             end
           end
         end

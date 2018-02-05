@@ -29,51 +29,62 @@ type
     Panel2: TsPanel;
     dtHome: TsDateEdit;
     sPanel1: TsPanel;
-    Button2: TsButton;
-    Button1: TsButton;
+    btnOk: TsButton;
+    btnCancel: TsButton;
     procedure FormCreate(Sender : TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
-    procedure returnToHome;
   public
     { Public declarations }
   end;
 
-var
-  frmHomedate : TfrmHomedate;
+function ShowHomeDateForm(aDate: TDate; Key: char = ' '): TDate;
+
 
 implementation
 
 uses
-  uMain, uAppGlobal, uDImages, uUtils;
+  uMain, uAppGlobal, uDImages, uUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 
-procedure TfrmHomedate.Button1Click(Sender: TObject);
+function ShowHomeDateForm(aDate: TDate; Key: Char = ' '): TDate;
+var
+  frm: TfrmHomedate;
 begin
-//  dtHome.SetFocus;
-  Close;
+  Result := aDate;
+  frm := TfrmHomedate.Create(nil);
+  try
+    with frm do
+    begin
+      frm.dtHome.Date := aDate;
+      frm.Left := Application.MainForm.Left + 1;
+      frm.Top := Application.MainForm.Top + 1;
+      if Key in ['0' .. '9'] then
+      begin
+        dtHome.SelLength := 0;
+        dtHome.SelStart := 0;
+        dtHome.SelLength := 1;
+        dtHome.SetSelText(Key);
+        dtHome.SelLength := 0;
+        dtHome.SelStart := 1;
+      end;
+      if ShowModal = mrOk then
+        Result := dtHome.Date;
+    end;
+  finally
+    frm.Free;
+  end;
+
 end;
 
-procedure TfrmHomedate.Button2Click(Sender: TObject);
-begin
-//  dtHome.SetFocus;
-  returnToHome;
-end;
 
 procedure TfrmHomedate.FormActivate(Sender: TObject);
 begin
   dtHome.SetFocus;
-end;
-
-procedure TfrmHomedate.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  frmMain.KeyPreview := true;
 end;
 
 procedure TfrmHomedate.FormCreate(Sender : TObject);
@@ -84,23 +95,6 @@ begin
   dtHome.Date := now;
   dthome.CheckOnExit := False;
 end;
-
-procedure TfrmHomedate.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_RETURN then
-  begin
-    returnToHome;
-    Key := VK_NONAME;
-  end;
-end;
-
-procedure TfrmHomedate.returnToHome;
-begin
-    frmMain.dtDate.Date := dtHome.Date; // StrToDate(dtHome.Text); // dtHome.Date;
-    Close;
-end;
-
-
 
 end.
 

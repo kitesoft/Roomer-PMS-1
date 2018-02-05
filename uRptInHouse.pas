@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , uCurrencyHandler, AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit  ;
+  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit  ;
 
 type
   TfrmInHouseReport = class(TfrmBaseRoomerForm)
@@ -107,7 +107,6 @@ type
     procedure edFilterChange(Sender: TObject);
   private
     FRefreshingdata: boolean;
-    FCurrencyhandler: TCurrencyHandler;
     { Private declarations }
     function ConstructSQL: string;
   protected
@@ -115,8 +114,6 @@ type
     procedure DoUpdateControls; override;
     procedure DoShow; override;
   public
-    constructor Create(aOwner: TComponent); override;
-    destructor Destroy; override;
     { Public declarations }
   end;
 
@@ -149,7 +146,7 @@ uses
   , uReservationStateChangeHandler
   , uReservationStateDefinitions
   , uDataSetFilterUtils
-  , ufrmInvoiceEdit, uInvoiceDefinitions;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager;
 
 const
   cSQL = 'SELECT DISTINCT '#10 +
@@ -262,18 +259,6 @@ begin
   CopyToClipboard(Result);
 end;
 
-constructor TfrmInHouseReport.Create(aOwner: TComponent);
-begin
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-  inherited;
-end;
-
-destructor TfrmInHouseReport.Destroy;
-begin
-  inherited;
-  FCurrencyhandler.Free;
-end;
-
 procedure TfrmInHouseReport.DoShow;
 begin
   inherited;
@@ -288,7 +273,7 @@ end;
 procedure TfrmInHouseReport.grInHouseListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := FCurrencyhandler.GetcxEditProperties;
+  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(AProperties);
 end;
 
 procedure TfrmInHouseReport.grInHouseListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;

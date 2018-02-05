@@ -36,17 +36,14 @@ var
   url: string;
 begin
   Result := false;
-  try
-    if NOT aRSet.OfflineMode then
-    begin
-      url := 'messaging/statictableslastupdates';
-      if not aTableName.IsEmpty then
-        url := url + '/' + aTableName;
-      aRSet.OpenDatasetFromUrlAsString(url, false, 0, '');
-      Result := true;
-    end;
-  except
-    // Ignore ...
+
+  if NOT aRSet.OfflineMode then
+  begin
+    url := 'messaging/statictableslastupdates';
+    if not aTableName.IsEmpty then
+      url := url + '/' + aTableName;
+    aRSet.OpenDatasetFromUrlAsString(url, false, 0, '');
+    Result := true;
   end;
 end;
 

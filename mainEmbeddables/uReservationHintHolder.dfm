@@ -11,28 +11,9 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
   Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object AdvShape1: TAdvShape
-    Left = 41
-    Top = 147
-    Width = 120
-    Height = 120
-    Appearance.Brush.Style = bsClear
-    Appearance.Color = clWhite
-    Appearance.ColorTo = clBtnFace
-    Appearance.Direction = gdHorizontal
-    Appearance.URLColor = clBlue
-    BackGround.Position = bpTopLeft
-    RotationAngle = 33.000000000000000000
-    Shape = stStar
-    ShapeHeight = 100
-    ShapeWidth = 100
-    Text = ''
-    TextOffsetX = 0
-    TextOffsetY = 0
-    Version = '1.2.0.2'
-  end
   object pnlHint: TsPanel
     Left = 200
     Top = 8
@@ -661,9 +642,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Width = 209
       Height = 117
       BorderStyle = bsNone
-      Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
+      Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -686,9 +666,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Width = 201
       Height = 117
       BorderStyle = bsNone
-      Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
+      Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -708,8 +687,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
     object cbxBlocked: TsCheckBox
       Left = 19
       Top = 509
-      Width = 162
-      Height = 20
+      Width = 170
+      Height = 17
       Caption = 'Room is blocked from move'
       TabOrder = 2
       ImgChecked = 0

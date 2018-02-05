@@ -520,21 +520,22 @@ begin
     rSet1 := CreateNewDataSet;
     try
       rrList := GetInListSql;
-      s := '';
-      s := s+'SELECT '#10;
-      s := s+' rr.RoomReservation '#10;
+      s := 'SELECT xxx.* '#10;
+      s := s+' , to_Int(DATEDIFF(xxx.Departure, xxx.Arrival)) as Numdays '#10;
+      s := s+' , DATEDIFF(Departure, Arrival) * AverageRate as TotalStayRate '#10;
+      s := s+' , DATEDIFF(Departure, Arrival) * AverageRate * CurrencyRate as TotalStayRateNative '#10;
+      s := s+' FROM '#10;
+      s := s+' (SELECT '#10;
+      s := s+'    rr.RoomReservation '#10;
       s := s+'  , rv.Reservation '#10;
       s := s+'  , SUBSTR(rv.InvRefrence, 1, 30) AS BookingId '#10;
       s := s+'  , rv.Name AS ReservationName '#10;
-      s := s+'  , rr.rrArrival as Arrival '#10;
-      s := s+'  , rr.rrDeparture as Departure '#10;
+      s := s+'  , RR_Arrival(rr.roomreservation, false) as Arrival '#10;
+      s := s+'  , RR_Departure(rr.roomreservation, false) as Departure '#10;
       s := s+'  , rr.numGuests AS Adults '#10;
       s := s+'  , rr.numChildren AS Children '#10;
       s := s+'  , rr.numInfants AS Infants '#10;
       s := s+'  , (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
-      s := s+'  , to_int(DATEDIFF(rr.rrDeparture,rr.rrArrival)) as NumDays '#10;
-      s := s+'  , DATEDIFF(rr.rrDeparture,rr.rrArrival) * (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) as TotalStayRate '#10;
-      s := s+'  , DATEDIFF(rr.rrDeparture,rr.rrArrival) * (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=rr.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) * c.AValue as TotalStayRateNative '#10;
       s := s+'  , rr.Currency as Currency '#10;
       s := s+'  , c.AValue AS CurrencyRate '#10;
       s := s+'  , rr.room '#10;
@@ -585,7 +586,7 @@ begin
       end;
 
       s := s+' ORDER BY '#10;
-      s := s+'   rv.reservation, rr.room '#10;
+      s := s+'   rv.reservation, rr.room ) xxx '#10;
 
 //      copyToClipboard(s);
 //      DebugMessage(s);

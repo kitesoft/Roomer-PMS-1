@@ -222,7 +222,6 @@ type
     tvMemoDescription: TcxGridDBColumn;
     tvMemoPreference: TcxGridDBColumn;
     Memo_: TRoomerDataSet;
-    DBEdit1: TDBEdit;
     FormStore: TcxPropertiesStore;
     m_staytaxincluted: TBooleanField;
     tvDatastaytaxincluted: TcxGridDBColumn;
@@ -234,6 +233,7 @@ type
     tvDatanotes: TcxGridDBColumn;
     m_RatePlanId: TIntegerField;
     tvDataRatePlanId: TcxGridDBColumn;
+    tmrFilterChanged: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -251,7 +251,6 @@ type
     procedure tvDataDataControllerFilterChanged(Sender: TObject);
     procedure tvDataDataControllerSortingChanged(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
-    procedure btnOtherClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure mnuiPrintClick(Sender: TObject);
     procedure mnuiAllowGridEditClick(Sender: TObject);
@@ -271,12 +270,12 @@ type
     procedure tvDataPIDPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure tvDataColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure FormDestroy(Sender: TObject);
     procedure C2Click(Sender: TObject);
     procedure chkActiveClick(Sender: TObject);
     procedure tvDataCustomerPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure DSStateChange(Sender: TObject);
+    procedure tmrFilterChangedTimer(Sender: TObject);
   private
     { Private declarations }
     financeLookupList : TKeyPairList;
@@ -328,7 +327,9 @@ uses
   , uResourceTypeDefinitions
   , UITypes
   , uFrmFinanceConnect
-  , uFinanceConnectService;
+  , uFinanceConnectService
+  , uRoomerLanguage
+  ;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -379,7 +380,6 @@ var
   s    : string;
   rSet : TRoomerDataSet;
   active : boolean;
-  cust : string;
 begin
   m_.DisableControls;
   active := chkActive.Checked;
@@ -399,20 +399,20 @@ begin
         if m_.active then m_.Close;
         m_.LoadFromDataSet(rSet);
         rSet.First;
-        while not rSet.eof do
-        begin
-          if rSet.FieldByName('notes').AsString <> '' then
-          begin
-            cust := rSet.FieldByName('customer').AsString;
-            if m_.Locate('customer',cust,[]) then
-            begin
-              m_.edit;
-              m_['notes'] := rSet['notes'];
-              m_.post;
-            end;
-          end;
-          rSet.Next;
-        end;
+//        while not rSet.eof do
+//        begin
+//          if rSet.FieldByName('notes').AsString <> '' then
+//          begin
+//            cust := rSet.FieldByName('customer').AsString;
+//            if m_.Locate('customer',cust,[]) then
+//            begin
+//              m_.edit;
+//              m_['notes'] := rSet['notes'];
+//              m_.post;
+//            end;
+//          end;
+//          rSet.Next;
+//        end;
 
         if sGoto = '' then
         begin
@@ -572,7 +572,8 @@ begin
     tvData.DataController.Filter.Active := false;
   end else
   begin
-    applyFilter;
+    tmrFilterChanged.Enabled := false;
+    tmrFilterChanged.Enabled := true;
   end;
 end;
 
@@ -618,11 +619,6 @@ begin
   zisAddrow   := false;
 end;
 
-procedure TfrmCustomers2.FormDestroy(Sender: TObject);
-begin
-  glb.EnableOrDisableTableRefresh('customers', True);
-end;
-
 procedure TfrmCustomers2.FormShow(Sender: TObject);
 begin
   glb.EnableOrDisableTableRefresh('customers', False);
@@ -666,15 +662,8 @@ end;
 
 procedure TfrmCustomers2.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  tvdata.DataController.CheckBrowseMode;
   glb.EnableOrDisableTableRefresh('customers', True);
-  if tvdata.DataController.DataSet.State = dsInsert then
-  begin
-    tvdata.DataController.Post;
-  end;
-  if tvdata.DataController.DataSet.State = dsEdit then
-  begin
-    tvdata.DataController.Post;
-  end;
 end;
 
 procedure TfrmCustomers2.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -1027,6 +1016,12 @@ end;
 //  Filter
 /////////////////////////////////////////////////////////////////////////////
 
+procedure TfrmCustomers2.tmrFilterChangedTimer(Sender: TObject);
+begin
+  tmrFilterChanged.Enabled := false;
+  applyFilter;
+end;
+
 procedure TfrmCustomers2.tvDataColumn1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   StaticResources('Customer Resources', [TResourceType.rtCustomerDocument], TResourceAccessType.ratRestricted, m_['Customer']);
@@ -1071,12 +1066,8 @@ end;
 procedure TfrmCustomers2.BtnOkClick(Sender: TObject);
 begin
   fillHolder;
-   glb.RefreshOnServerTimestamp;
-end;
-
-procedure TfrmCustomers2.btnOtherClick(Sender: TObject);
-begin
-  //**
+  if zAct <> actLookup then
+    glb.RefreshOnServerTimestamp;
 end;
 
 procedure TfrmCustomers2.C2Click(Sender: TObject);

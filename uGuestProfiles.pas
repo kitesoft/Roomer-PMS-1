@@ -281,6 +281,7 @@ uses
   , uGuestPortfolioEdit
   , uFrmMergePortfolios
   , UITYpes
+  , uRoomerLanguage
   ;
 
 

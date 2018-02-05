@@ -1018,8 +1018,8 @@ var
     Arrival          := FnewRoomReservations.FRoomList[0].FArrival;
     Departure        := FnewRoomReservations.FRoomList[0].FDeparture;;
 
-    reservationData.Arrival   := _db(Arrival  , false);
-    reservationData.Departure := _db(Departure, false);
+    reservationData.Arrival   := Arrival;
+    reservationData.Departure := Departure;
 
     reservationData.Customer := Customer;
     reservationData.name     := copy(reservationName,1,100);
@@ -1303,17 +1303,14 @@ begin
           roomReservationData.Currency        := Currency;
           roomReservationData.Discount        := Discount;
           roomReservationData.PriceType       := PriceCode;
-          roomReservationData.Arrival         := _db(Arrival, false);
-          roomReservationData.Departure       := _db(Departure, false);
+          roomReservationData.Arrival         := Arrival;
+          roomReservationData.Departure       := Departure;
           roomReservationData.RoomType        := RoomType;
           roomReservationData.Package         := package;
           roomReservationData.PMInfo          := RoomPMInfo;
           roomReservationData.HiddenInfo      := RoomHiddenInfo;
           roomReservationData.RoomRentPaymentInvoice := -1;
-          roomReservationData.rrTmp               := '';;
           roomReservationData.rrDescription       := '';;
-          roomReservationData.rrArrival           := Arrival;
-          roomReservationData.rrDeparture         := Departure;
           roomReservationData.rrIsNoRoom          := isNoRoom;
           roomReservationData.rrRoomAlias         := RoomNumber;
           roomReservationData.rrRoomTypeAlias     := RoomType;

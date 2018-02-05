@@ -1,8 +1,8 @@
-object fraLookupPanel: TfraLookupPanel
+object fraCustomLookupPanel: TfraCustomLookupPanel
   Left = 0
   Top = 0
   Width = 250
-  Height = 19
+  Height = 20
   TabOrder = 0
   object pnlLookup: TsPanel
     Left = 0
@@ -35,7 +35,7 @@ object fraLookupPanel: TfraLookupPanel
       ParentFont = False
       Layout = tlCenter
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
+      Font.Color = clRed
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []

@@ -193,8 +193,8 @@ begin
 
     while not rSet.Eof do
     begin
-      Arrival    := rSet.fieldbyname('rrArrival').asDateTime;
-      Departure  := rSet.fieldbyname('rrDeparture').asDateTime;
+      Arrival    := rSet.fieldbyname('Arrival').asDateTime;
+      Departure  := rSet.fieldbyname('Departure').asDateTime;
       Room       := rSet.fieldbyname('room').asString;
       RoomType   := rSet.fieldbyname('roomType').asString;
       Status     := rSet.fieldbyname('Status').asString;

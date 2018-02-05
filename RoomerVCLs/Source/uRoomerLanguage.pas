@@ -124,6 +124,7 @@ type
     FLanguageId: Integer;
     FLangIds : TLanguageItemList;
     FPerformDBUpdatesWhenUnknownEntitiesFound: Boolean;
+    RoomerLanguageActivated : Boolean;
     procedure SetLanguageCode(const Value: String);
     procedure Clear;
     procedure CreateDictionaries;
@@ -244,18 +245,15 @@ type
   end;
 
 
-var RoomerLanguageActivated : Boolean;
-    RoomerLanguageCreated : Boolean;
-
-    RoomerLanguage : TRoomerLanguage;
-
-    constants : TDictionary<String, String>;
-
 procedure Register;
+function RoomerLanguage: TRoomerLanguage;
+
+var
+  constants : TDictionary<String, String>;
 
 implementation
 
-uses uFormCreateHook, uFileSystemUtils;
+uses uFileSystemUtils;
 
 resourcestring
   RoomerLanguageFileName = 'RoomerLanguage_%s(%d).src';
@@ -267,6 +265,18 @@ end;
 
 CONST KEY_MASK = '%s.%s.%s';
       NOT_FOUND_TEXT = '-*/:\*-';
+
+var
+  gRoomerLanguage : TRoomerLanguage;
+
+
+function RoomerLanguage: TRoomerLanguage;
+begin
+  if not assigned(gRoomerLanguage) then
+    gRoomerLanguage := TRoomerLanguage.Create(nil);
+  result := gRoomerLanguage;
+end;
+
 
 { TLanguageDictionary }
 
@@ -337,7 +347,9 @@ end;
 
 constructor TRoomerLanguage.Create(AOwner: TComponent);
 begin
-  inherited;  {$IFDEF DEBUG}
+  inherited;
+
+  {$IFDEF DEBUG}
   ShowComponentNameOnHint := Lowercase(ParameterByName('ShowComponentNameOnHint')) = 'true';
     {$IFDEF EXTRADEBUG}
       WrongIdCollection := TStringList.Create;
@@ -352,13 +364,14 @@ begin
   LanguageCollectionActive := false;
   FPerformDBUpdatesWhenUnknownEntitiesFound := false;
   CreateDictionaries;
-  RoomerLanguage := self;
+
+  RoomerLanguageActivated := False;
+  PerformDBUpdatesWhenUnknownEntitiesFound := Lowercase(ParameterByName('LanguageUpdateOn')) = 'true';
 end;
 
 destructor TRoomerLanguage.Destroy;
 begin
   Clear;
-  KillFormCreateHook;
   {$IFDEF DEBUG}
     {$IFDEF EXTRADEBUG}
       WrongIdCollection.Free;
@@ -448,7 +461,7 @@ begin
                          '''%s'', ' +
                          '''%s'', ' +
                          '%s ' +
-                         ') ',
+                         ') ON DUPLICATE KEY UPDATE text=text', // Ignore duplicates
                          [
                            FLangIds[i].id,
                            list[0],
@@ -746,8 +759,6 @@ begin
   CreateDictionaries;
 
   FRSet := RoomerDataset;
-  KillFormCreateHook;
-  InitFormCreateHook;
 
   RSetLanguages := RoomerDataset.ActivateNewDataset(RoomerDataset.SystemGetLanguages);
   try
@@ -762,9 +773,9 @@ begin
                           RSetLanguages['default']));
       RSetLanguages.Next;
     end;
-  except
+  finally
+    FreeAndNil(RSetLanguages);
   end;
-  FreeAndNil(RSetLanguages);
 end;
 
 procedure TRoomerLanguage.SetLanguageCode(const Value: String);
@@ -855,11 +866,8 @@ end;
 
 procedure TRoomerLanguage.DeactivateDBLanguageCollection;
 begin
-//  if LanguageCollectionActive AND FPerformDBUpdatesWhenUnknownEntitiesFound then
-//  begin
-    ExecutionPlan.Free;
-    CurrentCollection.Free;
-//  end;
+  ExecutionPlan.Free;
+  CurrentCollection.Free;
   ExecutionPlan := nil;
   CurrentCollection := nil;
   LanguageCollectionActive := false;
@@ -1512,14 +1520,7 @@ end;
 
 initialization
 
-  RoomerLanguageActivated := False;
-  RoomerLanguageCreated := False;
-  RoomerLanguage := TRoomerLanguage.Create(nil);
-  RoomerLanguageCreated := True;
-  RoomerLanguage.PerformDBUpdatesWhenUnknownEntitiesFound := Lowercase(ParameterByName('LanguageUpdateOn')) = 'true';
-
 finalization
-  RoomerLanguageCreated := False;
 
   {$IFDEF EXTRADEBUG}
   if RoomerLanguage.WrongIdCollection.Count > 0 then

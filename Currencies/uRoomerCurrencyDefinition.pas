@@ -20,6 +20,7 @@ type
     function ShortDescription: string; override;
 
     function GetcxEditProperties: TcxCurrencyEditProperties;
+    procedure SetcxEditProperties(aProperties: TcxCustomEditProperties);
     function GetcxEditPropertiesKeepEvents(aOrigProperties: TcxCustomEditProperties): TcxCustomEditProperties;
   end;
 
@@ -27,7 +28,8 @@ type
 implementation
 
 uses
-  uD
+  Classes
+  , uD
   , uAppGlobal
   , hData
   , DB
@@ -60,6 +62,7 @@ begin
         lFormat.CurrencyString := lRec.CurrencySign;
         lFormat.CurrencyFormat := lRec.CurrencyFormat;
         lFormat.CurrencyDecimals := lRec.Decimals;
+        lFormat.NegCurrFormat := 2;
         CurrencyFormatSettings := lFormat;
         Rate := lRec.Value;
         FID := lRec.ID;
@@ -82,6 +85,17 @@ end;
 function TRoomerCurrencyDefinition.GetcxEditProperties: TcxCurrencyEditProperties;
 begin
   Result := TcxCurrencyEditProperties(d.getCurrencyProperties(String(CurrencyCode)));
+end;
+
+procedure TRoomerCurrencyDefinition.SetcxEditProperties(aProperties: TcxCustomEditProperties);
+begin
+  if aProperties is TcxCurrencyEditProperties then
+  with TcxCurrencyEditProperties(aProperties) do
+  begin
+    Alignment.Horz := taRightJustify;
+    DecimalPlaces  := CurrencyFormatSettings.CurrencyDecimals;
+    DisplayFormat  := cxEditPropertiesCurrencyFormat(CurrencyFormatSettings);
+  end;
 end;
 
 function TRoomerCurrencyDefinition.GetcxEditPropertiesKeepEvents(aOrigProperties: TcxCustomEditProperties): TcxCustomEditProperties;

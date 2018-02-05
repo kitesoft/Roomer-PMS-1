@@ -85,7 +85,9 @@ uses
   CompProd
   , uUtils
   , uSQLUtils
-  , objRoomList2;
+  , objRoomList2
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 

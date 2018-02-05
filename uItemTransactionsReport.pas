@@ -271,7 +271,9 @@ begin
 
     sql := format('SELECT il.logTime, il.ItemSource, il.action, il.Reservation, il.RoomReservation, il.SplitNumber, il.InvoiceNumber, il.ItemId, il.Price, il.Number, ' +
            'il.Currency, il.CurrencyRate, rr.GroupAccount, it.Description AS ItemName, ' +
-           'rr.Room, rr.rrArrival, rr.rrDeparture, r.Customer, r.Name, r.ContactName, r.InvRefrence AS BookingId, ' +
+           'rr.Room, ' +
+           'RR_Arrival(rr.Roomreservation, false) as Arrival, ' +
+           'RR_Departure(rr.Roomreservation, false) as Departure, r.Customer, r.Name, r.ContactName, r.InvRefrence AS BookingId, ' +
            'p.Name AS GuestName, p.Country, p.Nationality, to_bool(il.ItemId=co.RoomRentItem) AS isRoomRentItem, to_bool(il.ItemId=co.StayTaxItem) AS isStayTaxItem ' +
            'FROM invoicelines_history il ' +
            'LEFT JOIN items it ON it.Item=il.ItemId ' +
@@ -330,8 +332,8 @@ begin
           mTrxListDate.AsDateTime        := rSet.fieldByName('logTime').AsDateTime;
           mTrxListTime.AsDateTime        := rSet.fieldByName('logTime').AsDateTime;
           mTrxListContactName.AsString   := rSet['ContactName'];
-          mTrxListArrival.AsDateTime     := trunc(rSet.fieldByName('rrArrival').AsDateTime);
-          mTrxListDeparture.AsDateTime   := trunc(rSet.fieldByName('rrDeparture').AsDateTime);
+          mTrxListArrival.AsDateTime     := trunc(rSet.fieldByName('Arrival').AsDateTime);
+          mTrxListDeparture.AsDateTime   := trunc(rSet.fieldByName('Departure').AsDateTime);
           mTrxListBookingId.AsString     := rSet['BookingId'];
           mTrxListRoom.AsString          := rSet['Room'];
 

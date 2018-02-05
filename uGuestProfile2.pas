@@ -330,7 +330,9 @@ uses
   , uAlerts
   , uUtils
   , uSQLUtils
-  , UITypes;
+  , UITypes
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 

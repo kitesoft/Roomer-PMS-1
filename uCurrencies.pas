@@ -206,7 +206,6 @@ type
 function Currencies(aMode: TRoomerGridFormMode; var theData : recCurrencyHolder; embedPanel : TsPanel = nil; WindowCloseEvent : TNotifyEvent = nil) : boolean;
 
 var
-  frmCurrencies: TfrmCurrencies;
   frmCurrenciesX: TfrmCurrencies;
 
 implementation
@@ -230,18 +229,6 @@ begin
   _frmCurrencies := TfrmCurrencies.Create(nil);
   try
     _frmCurrencies.zData := theData;
-//    _frmCurrencies.zAct := act;
-//    _frmCurrencies.embedded := (act = actNone) AND
-//                                    (embedPanel <> nil);
-//    _frmCurrencies.EmbedWindowCloseEvent := WindowCloseEvent;
-//    if _frmCurrencies.embedded then
-//    begin
-//      _frmCurrencies.pnlHolder.parent := embedPanel;
-//      embedPanel.Update;
-//      frmCurrenciesX := _frmCurrencies;
-//    end
-//    else
-//    begin
       _frmCurrencies.ShowModal(aMode);
       if _frmCurrencies.modalresult = mrOk then
       begin
@@ -252,10 +239,7 @@ begin
       begin
         theData.init;
       end;
-//    end;
   finally
-//    if (act <> actNone) OR
-//      (embedPanel = nil) then
       freeandnil(_frmCurrencies);
   end;
 end;
@@ -460,15 +444,6 @@ end;
 procedure TfrmCurrencies.DoShow;
 begin
   inherited;
-  if ZAct = actLookup then
-  begin
-    mnuiAllowGridEdit.Checked := false;
-    DialogButtons := mbOKCancel;
-  end else
-  begin
-    mnuiAllowGridEdit.Checked := true;
-    DialogButtons := [mbClose];
-  end;
   //-C
   zAllowGridEdit := mnuiAllowGridEdit.Checked;
   changeAllowGridEdit;

@@ -254,7 +254,6 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grCurrencyHistory
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -275,14 +274,13 @@ inherited frmCurrencyHistory: TfrmCurrencyHistory
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43103.624162187500000000
+      ReportDocument.CreationDate = 43129.563101446760000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

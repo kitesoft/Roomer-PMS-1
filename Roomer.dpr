@@ -8,10 +8,6 @@
 //  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
 //  {$endif}
 
-
-
-
-
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -125,7 +121,6 @@ uses
   uFrmKeyPairSelector in 'uFrmKeyPairSelector.pas' {frmKeyPairSelector},
   uCurrencies in 'uCurrencies.pas' {frmCurrencies},
   uPersonviptypes in 'uPersonviptypes.pas' {frmPersonviptypes},
-  uFrmDaysStatistics in 'uFrmDaysStatistics.pas' {frmDaysStatistics},
   performance in 'Roomer\XML\performance.pas',
   uRptTurnoverAndPayments2 in 'uRptTurnoverAndPayments2.pas' {frmRptTurnoverAndPayments2},
   uTaxes in 'uTaxes.pas' {frmTaxes},
@@ -144,7 +139,7 @@ uses
   uFrmRBEContainer in 'uFrmRBEContainer.pas' {FrmRBEContainer},
   uFrmRbePreferences in 'uFrmRbePreferences.pas' {frmRbePreferences},
   uRptTotallist in 'uRptTotallist.pas' {frmRptTotallist},
-  uFrmRateQuery in 'uFrmRateQuery.pas' {FrmRateQuery},
+  uFrmRateQuery in 'mainEmbeddables\uFrmRateQuery.pas' {FrmRateQuery},
   uChart in 'uChart.pas' {frmChart},
   uCustomerTypes2 in 'uCustomerTypes2.pas' {frmCustomerTypes2},
   uRptbViewer in 'uRptbViewer.pas' {frmRptbViewer},
@@ -163,9 +158,8 @@ uses
   uLostAndFound in 'uLostAndFound.pas' {frmLostAndFound},
   uRptGuests in 'uRptGuests.pas' {frmRptGuests},
   uRptNotes in 'uRptNotes.pas' {frmRptNotes},
-  uReservationHintHolder in 'uReservationHintHolder.pas' {FrmReservationHintHolder},
-  uEmbPeriodView in 'Embeddables\uEmbPeriodView.pas' {embPeriodView},
-  uEmbOccupancyView in 'Embeddables\uEmbOccupancyView.pas' {embOccupancyView},
+  uReservationHintHolder in 'mainEmbeddables\uReservationHintHolder.pas' {FrmReservationHintHolder},
+  uEmbOccupancyView in 'mainEmbeddables\uEmbOccupancyView.pas' {embOccupancyView},
   uEmailingDialog in 'uEmailingDialog.pas' {FrmEmailingDialog},
   uMakeKreditInvoice in 'uMakeKreditInvoice.pas' {frmMakeKreditInvoice},
   uGuestPortfolioEdit in 'uGuestPortfolioEdit.pas' {frmGuestPortfolio},
@@ -222,7 +216,6 @@ uses
   uRptArrivals in 'uRptArrivals.pas' {frmArrivalsReport},
   ufrmReservationExtras in 'StockItems\ufrmReservationExtras.pas',
   uRptDepartures in 'uRptDepartures.pas' {frmDeparturesReport},
-  uCurrencyHandler in 'uCurrencyHandler.pas',
   uFloatUtils in 'RoomerVCLs\Source\uFloatUtils.pas',
   uRptStockItems in 'uRptStockItems.pas' {frmRptStockItems},
   uOpenAPICaller in 'OpenAPI\uOpenAPICaller.pas',
@@ -255,10 +248,9 @@ uses
   uFraCountryPanel in 'Embeddables\uFraCountryPanel.pas' {fraCountryPanel: TFrame},
   ufrmRoomPrices in 'ufrmRoomPrices.pas' {frmRoomPrices},
   uRoomerConfirmationDialogs in 'uRoomerConfirmationDialogs.pas',
-  uEmbDateStatistics in 'Embeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
+  uEmbDateStatistics in 'mainEmbeddables\uEmbDateStatistics.pas' {frmEmbDateStatistics},
   uMasterRateDefaults in 'Rates\uMasterRateDefaults.pas' {frmMasterRateDefaults},
   uTopClassAvailabilityOrder in 'uTopClassAvailabilityOrder.pas' {FrmTopClassAvailabilityOrder},
-  uCurrencyHandlersMap in 'uCurrencyHandlersMap.pas',
   uHotelServicesAPICaller in 'OpenAPI\uHotelServicesAPICaller.pas',
   uRoomerHotelServicesCommunicationModel_RequestsResponses in 'OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas',
   uRptUserActivity in 'ActivityLogs\uRptUserActivity.pas' {frmUserActivityReport},
@@ -330,7 +322,7 @@ uses
   uCachedDataHandler in 'TableCache\uCachedDataHandler.pas',
   uReleaseNotes in 'VersionManagement\uReleaseNotes.pas',
   RoomerCurrencyEdit in 'RoomerVCLs\Source\RoomerCurrencyEdit.pas',
-  uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraLookupPanel: TFrame},
+  uFraLookupPanel in 'Embeddables\uFraLookupPanel.pas' {fraCustomLookupPanel: TFrame},
   uMarketDefinitions in 'Definitions\uMarketDefinitions.pas',
   uRptCurrencyHistory in 'Currencies\uRptCurrencyHistory.pas' {frmCurrencyHistory: {$R *.RES},
   ufrmVatCodesGrid in 'GridForms\ufrmVatCodesGrid.pas' {frmVatCodesGrid},
@@ -341,7 +333,14 @@ uses
   uRoomerEditGridForm in 'RoomerForm\uRoomerEditGridForm.pas' {frmBaseRoomerEditGridForm},
   uFrmConnectionsStatistics in 'Connections\uFrmConnectionsStatistics.pas' {FrmConnectionsStatistics},
   uConnectionsStatisticsService in 'Connections\uConnectionsStatisticsService.pas',
-  uSnapshotService in 'Connections\uSnapshotService.pas';
+  uSnapshotService in 'Connections\uSnapshotService.pas',
+  uResGuestList in 'uResGuestList.pas' {frmResGuestlist},
+  uFraMarketSegmentPanel in 'Embeddables\uFraMarketSegmentPanel.pas' {fraLookupMarketSegment: TFrame},
+  uFraPriceCodePanel in 'Embeddables\uFraPriceCodePanel.pas' {fraPriceCodePanel: TFrame},
+  uFraChannelPanel in 'Embeddables\uFraChannelPanel.pas' {fraChannelPanel: TFrame},
+  uFraCustomerPanel in 'Embeddables\uFraCustomerPanel.pas' {fraCustomerPanel: TFrame},
+  uFraStaffMemberPanel in 'Embeddables\uFraStaffMemberPanel.pas' {fraStaffMemberPanel: TFrame},
+  uFraDayStatistics in 'mainEmbeddables\uFraDayStatistics.pas' {fraDayStatistics: TFrame};
 
 {$R *.RES}
 
@@ -374,23 +373,10 @@ begin
     Application.CreateForm(TD, D);
     D.ApplicationId := cOpenAPIApplicationID;
 
-    Application.CreateForm(TDReportData, DReportData);
     TSplashFormManager.UpdateProgress('Loading forms...');
 
     Application.CreateForm(TDImages, DImages);
     Application.CreateForm(TfrmMain, frmMain);
-
-    if D.roomerMainDataSet.IsConnectedToInternet then
-    begin
-      Application.CreateForm(TfrmDaysStatistics, frmDaysStatistics);
-      Application.CreateForm(TfrmRateQuery, frmRateQuery);
-      Application.CreateForm(TfrmHomedate, frmHomedate);
-      Application.CreateForm(TfrmDayNotes, frmDayNotes);
-      Application.CreateForm(TfrmGoToRoomandDate, frmGoToRoomandDate);
-      Application.CreateForm(TFrmReservationHintHolder, FrmReservationHintHolder);
-      Application.CreateForm(TembPeriodView, embPeriodView);
-      Application.CreateForm(TembOccupancyView, embOccupancyView);
-    end;
 
     Application.Run;
   finally

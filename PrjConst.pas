@@ -131,7 +131,6 @@ uses uAppGlobal,
 
   uReservationHintHolder,
   uEmbOccupancyView,
-  uembPeriodView,
   uFrmRateQuery,
 
   uRptTurnoverAndPayments,
@@ -204,7 +203,8 @@ uses uAppGlobal,
   , ufrmInvoiceEdit
   , uUtils
   , Generics.Collections
-  ;
+  , uFrmConnectionsStatistics
+  , uResGuestList;
 
 
 const PRE_KEY_NAME = 'PrjConst.Constants.';
@@ -808,7 +808,11 @@ begin
                                              'to room %s? ');
   constants.Add('shTx_Invoice_FailedGroupInvoice', 'Moving to group invoice failed - Cancel ' + #10 +
                                              'Error : %s');
-											 
+  constants.Add('shTx_Payment_FailedGroupInvoice', 'Moving payment to group invoice failed' + #10 +
+                                             'Error : %s');
+  constants.Add('shTx_Payment_FailedRoomInvoice', 'Moving payment to Room %s failed' + #10 +
+                                             'Error : %s');
+
   constants.Add('shTx_Invoice_EmptyInvoice', 'Empty invoiceline');
   constants.Add('shTx_Invoice_CompressionNotReversibleMessage',
                                              'Compressing the room rental lines is not reversible.' + #13#13 +
@@ -905,6 +909,9 @@ begin
   constants.Add('shTx_OpenInvoiceNew_CashInvoice', 'This is a cash invoice');
   constants.Add('shTx_OpenInvoiceNew_CashInvoice2', 'This is cash invoice - not related to any reservation');
   constants.Add('shTx_Invoice_WarningCloseCashInvoice', 'Cash invoice will not be saved. Are you sure you want to close?');
+  constants.Add('shTx_InvoiceIndexHintText', 'SalesItems: %s'#13 +
+                                             'RoomRent:   %s'#13 +
+                                             'Payments:   %s');
   constants.Add('shTx_OpenInvoiceNew_Guest', 'Guest');
   constants.Add('shTx_OpenInvoiceNew_NotArrived', 'Not Arrived');
   constants.Add('shTx_OpenInvoiceNew_Departed', 'Departed');
@@ -985,6 +992,7 @@ begin
   constants.Add('shTx_RoomPricesEdit_Prices', 'Prices are ready');
   constants.Add('shTx_RoomPricesEdit_Error', 'Error');
   constants.Add('shTx_RoomPricesEdit_PriceGroup', 'Price Group must be specified');
+
   constants.Add('shRoomPrices_NotAllRoomsUpdated', 'There are differences in staydates between the rooms.'#10 +
                                                   'Therefore not all roomprices can be adjusted because of differences in stay dates.'#10+
                                                   'Continue with adjusting roomrates for rooms with the same staydates?');
@@ -1357,6 +1365,8 @@ begin
   constants.Add('shUI_BestAverageRate', 'BAR');
   constants.Add('shUI_OOO', 'Out-of-order');
   constants.Add('shUI_AverageDailyRate', 'ADR');
+  constants.Add('shUI_Average', 'Avg');
+  constants.Add('shUI_Sum', 'Sum');
 
   constants.Add('shUI_RoomRentInvoice', 'Room-rent Invoice : ');
   constants.Add('shUI_RoomInvoices', 'Room Invoice : ');
@@ -1540,6 +1550,7 @@ begin
   constants.Add('shTx_FrmMain_UserCannotMoveTheRoomReservation', 'This room reservation has been blocked from moving - You are unable to move the guest to a different room.'#13#13 +
                'If it is absolutely necessary to move this room reservation for a different room, then you will need to open'#13'the reservation profile and change the "Block Move" status to false.');
 
+  constants.Add('shTx_FrmMain_UserCannotMoveCancelledRoomReservation', 'This room reservation has been cancelled and cannot be moved.');
 
   constants.Add('shTx_FrmChannelTogglingRules_ConfirmRemove', 'Do you really want to remove the selected rule: ');
   constants.Add('shTx_FrmChannelTogglingRules_NewRule', '<New Rule>');
@@ -1901,7 +1912,7 @@ begin
   TfrmItems2.Create(nil).Free;
   frmItemTypes2 := TfrmItemTypes2.Create(nil); frmItemTypes2.Free; frmItemTypes2 := nil;
   frmLocations := TfrmLocations.Create(nil); frmLocations.Free; frmLocations := nil;
-  frmCurrencies := TfrmCurrencies.Create(nil); frmCurrencies.Free; frmCurrencies := nil;
+  TfrmCurrencies.Create(nil).Free;
   frmChannelManager := TfrmChannelManager.Create(nil); frmChannelManager.Free; frmChannelManager := nil;
   frmCommunicationTest := TfrmCommunicationTest.Create(nil); frmCommunicationTest.Free; frmCommunicationTest := nil;
   frmHouseKeeping := TfrmHouseKeeping.Create(nil); frmHouseKeeping.Free; frmHouseKeeping := nil;
@@ -1914,7 +1925,7 @@ begin
   frmKeyPairSelector := TfrmKeyPairSelector.Create(nil); frmKeyPairSelector.Free; frmKeyPairSelector := nil;
   frmResources := TfrmResources.Create(nil); frmResources.Free; frmResources := nil;
   frmAssignPayment := TfrmAssignPayment.Create(nil); frmAssignPayment.Free; frmAssignPayment := nil;
-  frmRptDownPayments := TfrmRptDownPayments.Create(nil); frmRptDownPayments.Free; frmRptDownPayments := nil;
+  TfrmRptDownPayments.Create(nil).Free;
   TfrmTaxes.Create(nil).Free;
 
   TFrmMessagesTemplates.Create(nil).Free;
@@ -1975,21 +1986,10 @@ begin
   FrmAlertPanel := TFrmAlertPanel.Create(nil); FrmAlertPanel.Free; FrmAlertPanel := nil;
   FrmCustomerDepartmentEdit := TFrmCustomerDepartmentEdit.Create(nil); FrmCustomerDepartmentEdit.Free; FrmCustomerDepartmentEdit := nil;
 
-  FrmReservationHintHolder := TFrmReservationHintHolder.Create(nil);
-  RoomerLanguage.TranslateThisForm(FrmReservationHintHolder);
-  FrmReservationHintHolder.Free; FrmReservationHintHolder := nil;
+  TFrmReservationHintHolder.Create(nil).Free;
+  TembOccupancyView.Create(nil).Free;
 
-  embOccupancyView := TembOccupancyView.Create(nil);
-  RoomerLanguage.TranslateThisForm(embOccupancyView);
-  embOccupancyView.Free; embOccupancyView := nil;
-
-  embPeriodView := TembPeriodView.Create(nil);
-  RoomerLanguage.TranslateThisForm(embPeriodView);
-  embPeriodView.Free; embPeriodView := nil;
-
-  FrmRateQuery := TFrmRateQuery.Create(nil);
-  RoomerLanguage.TranslateThisForm(FrmRateQuery);
-  FrmRateQuery.Free; FrmRateQuery := nil;
+  TFrmRateQuery.Create(nil).Free;
 
   TfrmOfflineReports.Create(nil).Free;
 
@@ -2025,6 +2025,8 @@ begin
 
   TfrmItemTransactionsReport.Create(nil).Free;
   TfrmInvoiceEdit.Create(nil).Free;
+  TFrmConnectionsStatistics.Create(nil).Free;
+  TfrmResGuestList.Create(nil).Free;
 end;
 
 

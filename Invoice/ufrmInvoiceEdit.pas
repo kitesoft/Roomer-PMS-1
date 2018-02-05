@@ -81,7 +81,7 @@ uses
   , Generics.Collections
   , cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
-  , uAmount, uCurrencyConstants, uFraLookupPanel
+  , uAmount, uCurrencyConstants, uFraLookupPanel, htmlhint, uFraCustomerPanel
   ;
 
 type
@@ -286,15 +286,12 @@ type
     clabAddress: TsLabel;
     cLabName: TsLabel;
     rgrInvoiceAddressType: TsRadioGroup;
-    edtCustomer: TsEdit;
     edtPersonalId: TsEdit;
     edtName: TsEdit;
     edtAddress1: TsEdit;
     edtAddress2: TsEdit;
     edtAddress3: TsEdit;
     edtAddress4: TsEdit;
-    btnClearAddresses: TsButton;
-    btnGetCustomer: TsButton;
     actToggleLodgingTax: TAction;
     actMoveRoomToGroupInvoice: TAction;
     actMoveRoomToRoomInvoice: TAction;
@@ -363,9 +360,20 @@ type
     acAggregateCityTax: TAction;
     mnuAggregateCitytax: TMenuItem;
     mPaymentscurrencyRate: TFloatField;
+    actMovePaymentToGroup: TAction;
+    actMovePaymentToRoom: TAction;
+    btnMovePayment: TsButton;
+    mnuMovePayment: TPopupMenu;
+    mnuMovePaymentToGroupinvoice: TMenuItem;
+    mnuMovePaymentToRoom: TMenuItem;
+    mPaymentsReservation: TIntegerField;
+    mPaymentsRoomreservation: TIntegerField;
+    N1: TMenuItem;
+    mnuTransferPaymentToInvoicedindex: TMenuItem;
+    fraCustomer: TfraCustomerPanel;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-    procedure edtCustomerDblClick(Sender: TObject);
+    procedure evtCustomerChangedAndValid(Sender: TObject);
     procedure agrLinesGetEditText(Sender: TObject; ACol, ARow: integer; var Value: string);
     procedure evtCurrencyChangedAndValid(Sender: TObject);
     procedure rgrInvoiceAddressTypeClick(Sender: TObject);
@@ -383,7 +391,6 @@ type
     procedure FormResize(Sender: TObject);
     procedure agrLinesGetCellColor(Sender: TObject; ARow, ACol: integer; AState: TGridDrawState; ABrush: TBrush;
       AFont: TFont);
-    procedure edtCustomerChange(Sender: TObject);
     procedure agrLinesGetAlignment(Sender: TObject; ARow, ACol: integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
     procedure agrLinesColumnSize(Sender: TObject; ACol: integer; var Allow: boolean);
@@ -439,6 +446,9 @@ type
     procedure actInvoiceActionsUpdate(Action: TBasicAction; var Handled: Boolean);
     procedure acAggregateCityTaxExecute(Sender: TObject);
     procedure agrLinesSelectionChanged(Sender: TObject; ALeft, ATop, ARight, ABottom: Integer);
+    procedure actMovePaymentToGroupExecute(Sender: TObject);
+    procedure mnuMovePaymentPopup(Sender: TObject);
+    procedure mnuMovePaymentToInvoiceIndexClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -650,6 +660,8 @@ type
     procedure UpdateCaptions;
     procedure SetAggregateCityTax(const Value: boolean);
     procedure RedrawGridThroughWinMessage;
+    procedure FillAllOtherRoomsFromReservationInMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
+    procedure mnuMovePaymentToRoomClick(Sender: TObject);
 
     property InvoiceIndex: TInvoiceIndex read FInvoiceIndex write SetInvoiceIndex;
     property AnyRowChecked: boolean read GetAnyRowSelected;
@@ -716,7 +728,7 @@ uses
   , uPMSSettings
   , uRoomerCurrencymanager
   , uAddAccommodation
-  ;
+  , uCurrencyDefinition;
 
 {$R *.DFM}
 
@@ -1367,7 +1379,7 @@ begin
   end;
 
   rgrInvoiceAddressType.itemIndex := 4;
-  edtCustomer.Text := CustomerHolder.customer;
+  fraCustomer.Code := CustomerHolder.customer;
   edtPersonalId.Text := CustomerHolder.PID;
   edtName.Text := CustomerHolder.CustomerName;
 end;
@@ -1797,7 +1809,7 @@ begin
   if not FStayTaxEnabled then
     exit;
 
-  glb.LocateSpecificRecordAndGetValue('customers', 'Customer', edtCustomer.Text, 'StayTaxIncluted', lIsIncludedCust);
+  glb.LocateSpecificRecordAndGetValue('customers', 'Customer', fraCustomer.Code, 'StayTaxIncluted', lIsIncludedCust);
 
   if ShowRentPerDay then
     Include(lCalcOptions, tcoCalcTaxPerNight);
@@ -1985,7 +1997,7 @@ begin
     lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, trunc(ItemCount), TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
     try
       fVat := GetVATForItem(lineItem, TotalPrice, ItemCount, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
-        edtCustomer.Text);
+        fraCustomer.Code);
     finally
       lInvRoom.Free;
     end;
@@ -2108,41 +2120,56 @@ var
   i: integer;
   pnl: TPanel;
   lInvLinesIndicator, lRoomRentIndicator: TShape;
+  CurrencyDef: TCurrencyDefinition;
+  HasAny: boolean;
+  lIdxTotal: TInvoiceIndexTotal;
 begin
 
   FInvoiceIndexTotals.UpdateIndexTotals(FReservation, FRoomReservation);
+  CurrencyDef := RoomerCurrencyManager[InvoiceCurrencyCode];
 
   for i := 0 to 9 do
   begin
+    HasAny := false;
     pnl := GetInvoiceIndexPanel(i);
     lInvLinesIndicator := GetInvoiceIndexItems(i);
     lRoomRentIndicator := GetInvoiceIndexItemsRR(i);
 
-    lInvLinesIndicator.Hint := '';
-    lInvLinesIndicator.Brush.Color := clWhite;
-
-    if FInvoiceIndexTotals.HasInvoiceLines[i] then
-    begin
-      lInvLinesIndicator.Hint := RoomerCurrencyManager[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalInvoiceLinesOnIndex[i]);
-      lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
-    end;
-    lInvLinesIndicator.Visible := FInvoiceIndexTotals.HasInvoiceLines[i];
-
-    lRoomRentIndicator.Hint := '';
-    lRoomRentIndicator.Brush.Color := clWhite;
-    if FInvoiceIndexTotals.HasRoomRentItems[i] then
-    begin
-      lRoomRentIndicator.Hint := RoomerCurrencyManager[InvoiceCurrencyCode].FormattedValueWithCode(FInvoiceIndexTotals.TotalRoomRentOnIndex[i]);
-      lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
-    end;
-    lRoomRentIndicator.Visible := FInvoiceIndexTotals.HasRoomRentItems[i];
-
+    lInvLinesIndicator.Visible := false;
+    lRoomRentIndicator.Visible := False;
+    pnl.Hint := '';
     if pnl.Tag = InvoiceIndex then
       pnl.Color := $00FFCFA8
     else
       pnl.Color := clWhite;
 
-    pnl.Font.Color := clBlack;
+    if not FInvoiceIndexTotals.TryGetValue(i, lIdxTotal) then
+      Continue;
+
+    lInvLinesIndicator.Brush.Color := clWhite;
+
+    if lIdxTotal.HasInvoiceLines or lIdxTotal.HasPayments then
+    begin
+      HasAny := True;
+      lInvLinesIndicator.Brush.Color := clRed; // $00C1FFFF;
+      lInvLinesIndicator.Visible := True;
+    end;
+
+    lRoomRentIndicator.Brush.Color := clWhite;
+    if lIdxTotal.HasRoomRentItems then
+    begin
+      HasAny := True;
+      lRoomRentIndicator.Brush.Color := clBlue; // $00FFCFA8;
+      lRoomRentIndicator.Visible := True;
+    end;
+
+    if HasAny then
+    begin
+      pnl.Hint := Format(GetTranslatedText('shTx_InvoiceIndexHintText'),
+                          [CurrencyDef.FormattedValueWithCode(lIdxTotal.InvoiceIndexTotal),
+                           CurrencyDef.FormattedValueWithCode(lIdxTotal.RoomRentIndexTotal),
+                           CurrencyDef.FormattedValueWithCode(lIdxTotal.PaymentsIndexTotal)])
+    end;
 
   end;
 end;
@@ -2276,8 +2303,7 @@ begin
       end;
 
       HeaderChanged := false;
-      btnGetCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
-      btnClearAddresses.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
+      fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
 
       InvoiceCurrencyCode := trim(lInvoiceHeadSet.FieldByName('ihCurrency').asString);
       memExtraText.Lines.Text := trim(lInvoiceHeadSet.FieldByName('ExtraText').asString);
@@ -2546,6 +2572,8 @@ begin
     while not eSet.eof do
     begin
       mPayments.insert;
+      mPaymentsReservation.AsInteger := eSet.FieldByName('Reservation').AsInteger;
+      mPaymentsRoomReservation.AsInteger := eSet.FieldByName('RoomReservation').AsInteger;
       mPaymentsPayType.asString := eSet.FieldByName('PayType').asString;
       mPaymentsPayDate.asdateTime := SQLToDateTime(eSet.FieldByName('PayDate').asString);
       mPaymentsCurrency.AsString := eSet.FieldByName('Currency').AsString;
@@ -2608,7 +2636,7 @@ begin
       begin
         lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, InvoiceCurrencyCode, InvoiceCurrencyRate, 0, 0, false);
         try
-          itemVAT := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, edtCustomer.Text);
+          itemVAT := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, fraCustomer.Code);
           // BHG
         finally
           lInvRoom.Free;
@@ -2724,6 +2752,8 @@ begin
 
   pnlTotalsInCurrency.Visible := InvoiceCurrencyCode <> g.qNativeCurrency;
   actPrintInvoice.Enabled := FInvoiceLinesList.Count > 0;
+
+  btnMovePayment.Enabled := (not IsDirectInvoice) and not mPayments.IsEmpty;
 
   chkChanged;
 end;
@@ -2858,6 +2888,9 @@ begin
 
   fraInvoiceCurrency.OnChangedAndValid := evtCurrencyChangedAndValid;
   fraInvoiceCurrency.Enabled := not IsDirectInvoice;
+
+  fraCustomer.lblDescription.Visible := false;
+  fraCustomer.OnChangedAndValid := evtCustomerChangedAndValid;
 
   RefreshData;
   UpdateCaptions;
@@ -3199,7 +3232,7 @@ begin
 
     LoadPayments; // Make sure you have all records, catches problems with mutliple cash invoices being created at once
     lOpenBalance := FInvoiceLinesList.TotalOnInvoice.ToNative.Rounded() - getTotalDownPayments.Rounded();
-    if SelectPaymentTypes(lOpenBalance, edtCustomer.Text, ptInvoice, InvoiceCurrencyCode,
+    if SelectPaymentTypes(lOpenBalance, fraCustomer.Code, ptInvoice, InvoiceCurrencyCode,
       InvoiceCurrencyRate, FReservation, FRoomreservation, FinvoiceIndex, not IsDirectInvoice, lstLocations, aInvoiceDate, aPayDate, aLocation) then
     begin
       SaveCompletePayments();
@@ -3277,7 +3310,7 @@ begin
     FRoomReservation,
     ord(FInvoiceType),
     aInvoiceNumber,
-    _db(edtCustomer.Text),
+    _db(fraCustomer.Code),
     _db(edtName.Text),
     _db(edtAddress1.Text),
     _db(edtAddress2.Text),
@@ -3305,7 +3338,7 @@ begin
     'InvoiceType=%d, '#10 +
     'ihCurrency=%s '
     , [aInvoiceNumber,
-      _db(edtCustomer.Text),
+      _db(fraCustomer.Code),
       _db(edtName.Text),
       _db(edtAddress1.Text),
       _db(edtAddress2.Text),
@@ -3377,7 +3410,7 @@ begin
   s := s + ', ' + format('(SELECT IFNULL((SELECT Customer FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
     '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
-    ord(FInvoiceType), InvoiceIndex, _db(edtCustomer.Text)]);
+    ord(FInvoiceType), InvoiceIndex, _db(fraCustomer.Code)]);
   s := s + ', ' + format('(SELECT IFNULL((SELECT Name FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
     '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
@@ -3958,7 +3991,7 @@ begin
         s := s + ', ' + inttostr(FRoomReservation);
         s := s + ', ' + _db(ord(FInvoiceType));
 
-        s := s + ', ' + _db(edtCustomer.Text);
+        s := s + ', ' + _db(fraCustomer.Code);
 
         s := s + ', ' + _db(_GetCurrentTick);
 
@@ -4011,41 +4044,29 @@ begin
   lExecutionPlan.AddExec(s);
 end;
 
-procedure TfrmInvoiceEdit.edtCustomerChange(Sender: TObject);
+procedure TfrmInvoiceEdit.evtCustomerChangedAndValid(Sender: TObject);
 var
-  customer: string;
-
+  CustomerHolderEX: recCustomerHolderEX;
 begin
-  customer := trim(edtCustomer.Text);
+  CustomerHolderEX := hData.Customer_GetHolder(fraCustomer.Code);
+  edtName.Text := InvoiceName(0, CustomerHolderEX.DisplayName, CustomerHolderEX.CustomerName);
+  edtPersonalId.Text := CustomerHolderEX.PID;
+  edtAddress1.Text := CustomerHolderEX.Address1;
+  edtAddress2.Text := CustomerHolderEX.Address2;
+  edtAddress3.Text := CustomerHolderEX.Address3;
+  edtAddress4.Text := CustomerHolderEX.Address4;
+  zCountry := CustomerHolderEX.Country;
+  HeaderChanged := True;
+  UpdateTaxinvoiceLinesForAllRooms;
+
   try
-    if NOT glb.LocateSpecificRecordAndGetValue('customers', 'Customer', customer, 'StayTaxIncluted', zStayTaxIncluded)
+    if NOT glb.LocateSpecificRecordAndGetValue('customers', 'Customer', fraCustomer.Code, 'StayTaxIncluted', zStayTaxIncluded)
     then
       zStayTaxIncluded := ctrlGetBoolean('StayTaxIncluted');
   except
     zStayTaxIncluded := ctrlGetBoolean('StayTaxIncluted');
   end;
-end;
 
-procedure TfrmInvoiceEdit.edtCustomerDblClick(Sender: TObject);
-var
-  CustomerHolder: recCustomerHolder;
-  CustomerHolderEX: recCustomerHolderEX;
-begin
-  CustomerHolder.customer := edtCustomer.Text;
-  if openCustomers(actLookup, True, CustomerHolder) then
-  begin
-    edtCustomer.Text := CustomerHolder.customer;
-    CustomerHolderEX := hData.Customer_GetHolder(CustomerHolder.customer);
-    edtName.Text := InvoiceName(0, CustomerHolderEX.DisplayName, CustomerHolderEX.CustomerName);
-    edtPersonalId.Text := CustomerHolderEX.PID;
-    edtAddress1.Text := CustomerHolderEX.Address1;
-    edtAddress2.Text := CustomerHolderEX.Address2;
-    edtAddress3.Text := CustomerHolderEX.Address3;
-    edtAddress4.Text := CustomerHolderEX.Address4;
-    zCountry := CustomerHolderEX.Country;
-    HeaderChanged := True;
-    UpdateTaxinvoiceLinesForAllRooms;
-  end;
 end;
 
 procedure TfrmInvoiceEdit.evtHeaderChanged(Sender: TObject);
@@ -4358,7 +4379,7 @@ begin
   zRoomRSet := CreateNewDataSet;
   lExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
-    sql := Select_Invoice_LoadInvoice3_WithInvoiceIndex(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text, false);
+    sql := Select_Invoice_LoadInvoice3_WithInvoiceIndex(FRoomReservation, FReservation, FInvoiceIndex, fraCustomer.Code, false);
     if FRoomReservation = 0 then
       // GroupInvoice
       sql := format(sql, [FReservation])
@@ -4448,8 +4469,8 @@ begin
         NumberGuests := zRoomRSet.FieldByName('numGuests').asinteger;
         RoomDescription := zRoomRSet.FieldByName('RoomDescription').asString;
         RoomTypeDescription := zRoomRSet.FieldByName('RoomTypeDescription').asString;
-        Arrival := zRoomRSet.FieldByName('rrArrival').asdateTime;
-        Departure := zRoomRSet.FieldByName('rrDeparture').asdateTime;
+        Arrival := zRoomRSet.FieldByName('Arrival').asdateTime;
+        Departure := zRoomRSet.FieldByName('Departure').asdateTime;
         ChildrenCount := zRoomRSet.FieldByName('numChildren').asinteger;
         infantCount := zRoomRSet.FieldByName('numInfants').asinteger;
         PriceCode := zRoomRSet.FieldByName('PriceType').asString;
@@ -4655,7 +4676,7 @@ var
   rentAmount: Double;
   Local_i: Integer;
 begin
-  sql := Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(FRoomReservation, FReservation, FInvoiceIndex, edtCustomer.Text);
+  sql := Select_Invoice_GenerateInvoiceLinesRoomRentPerDay(FRoomReservation, FReservation, FInvoiceIndex, fraCustomer.Code);
 
   lRoomsDateSet := CreateNewDataSet;
   try
@@ -4708,8 +4729,8 @@ begin
       NumberGuests := lRoomsDateSet.FieldByName('numGuests').asinteger;
       RoomDescription := lRoomsDateSet.FieldByName('RoomDescription').asString;
       RoomTypeDescription := lRoomsDateSet.FieldByName('RoomTypeDescription').asString;
-      Arrival := lRoomsDateSet.FieldByName('rrArrival').asdateTime;
-      Departure := lRoomsDateSet.FieldByName('rrDeparture').asdateTime;
+      Arrival := lRoomsDateSet.FieldByName('Arrival').asdateTime;
+      Departure := lRoomsDateSet.FieldByName('Departure').asdateTime;
       ChildrenCount := lRoomsDateSet.FieldByName('numChildren').asinteger;
       infantCount := lRoomsDateSet.FieldByName('numInfants').asinteger;
       PriceCode := lRoomsDateSet.FieldByName('PriceType').asString;
@@ -5217,18 +5238,13 @@ end;
 
 procedure TfrmInvoiceEdit.SetCustEdits;
 begin
-  edtCustomer.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3, 4, 5];
+  fraCustomer.Enabled := not rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3, 4, 5];
 
   if rgrInvoiceAddressType.itemIndex = 5 then
   begin
-    edtCustomer.Text := ctrlGetString('RackCustomer');
+    fraCustomer.Code := ctrlGetString('RackCustomer');
   end;
 
-//  edtName.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-//  edtAddress1.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-//  edtAddress2.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-//  edtAddress3.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
-//  edtAddress4.ReadOnly := rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3];
 end;
 
 procedure TfrmInvoiceEdit.SetHeaderChanged(const Value: boolean);
@@ -5433,7 +5449,7 @@ begin
   if FReservation = -1 then
     exit;
 
-  customer := edtCustomer.Text;
+  customer := fraCustomer.Code;
   if glb.LocateSpecificRecord('customers', 'Customer', customer) then
     with glb.CustomersSet do
     begin
@@ -5445,7 +5461,6 @@ begin
       Country := FieldByName('Country').asString;
       PID := FieldByName('PID').asString;
 
-      edtCustomer.Text := trim(customer);
       edtName.Text := trim(aname);
       edtPersonalId.Text := trim(PID);
       edtAddress1.Text := trim(Address1);
@@ -5515,7 +5530,7 @@ begin
     // �.e ekki fr�gengin reikningur
     if (InvoiceNumber = -1) or (FIsCredit) then
     begin
-      edtCustomer.Text := trim(customer);
+      fraCustomer.Code := trim(customer);
       edtName.Text := trim(name);
       edtPersonalId.Text := trim(CustPID);
       edtAddress1.Text := trim(Address1);
@@ -5590,7 +5605,7 @@ begin
   // �.e ekki fr�gengin reikningur
   if (InvoiceNumber = -1) or (FIsCredit) then
   begin
-    edtCustomer.Text := trim(customer);
+    fraCustomer.Code := trim(customer);
     edtName.Text := trim(name);
     edtPersonalId.Text := trim(CustPID);
     edtAddress1.Text := trim(Address1);
@@ -5657,7 +5672,7 @@ begin
       invRefrence := sTmp;
     end;
 
-    edtCustomer.Text := trim(customer);
+    fraCustomer.Code := trim(customer);
     edtName.Text := trim(name);
     edtPersonalId.Text := trim(CustPID);
     edtAddress1.Text := trim(Address1);
@@ -5734,7 +5749,7 @@ begin
       customer := rSet.FieldByName('Customer').asString;
     end;
 
-    edtCustomer.Text := customer;
+    fraCustomer.Code := customer;
     edtName.Text := trim(name);
     edtPersonalId.Text := trim(PID);
     edtAddress1.Text := trim(Address1);
@@ -5780,8 +5795,7 @@ end;
 
 procedure TfrmInvoiceEdit.rgrInvoiceAddressTypeClick(Sender: TObject);
 begin
-  btnGetCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
-  btnClearAddresses.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
+  fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
 
   case rgrInvoiceAddressType.itemIndex of
     0:
@@ -5805,7 +5819,7 @@ begin
       end;
     5:
       begin
-        edtCustomer.Text := ctrlGetString('RackCustomer');
+        fraCustomer.Code := ctrlGetString('RackCustomer');
         edtPersonalId.Text := '';
         edtName.Text := 'Invoice';
         edtAddress1.Text := '';
@@ -5840,7 +5854,7 @@ procedure TfrmInvoiceEdit.actPrintInvoiceExecute(Sender: TObject);
 var
   ok: boolean;
 begin
-  ok := hData.CustomerExist(trim(edtCustomer.Text));
+  ok := fraCustomer.IsValid;
 
   if not ok then
   begin
@@ -6086,7 +6100,7 @@ begin
     theData.Person := ord(FInvoiceType);
     theData.TypeIndex := ORD(ptDownPayment);
     theData.InvoiceNumber := zInvoiceNumber;
-    theData.customer := edtCustomer.Text;
+    theData.customer := fraCustomer.Code;
     theData.PayDate := _db(Date, false);
     if FIsCredit then
       theData.NativeAmount := TAmount.Create(rec.AmountInCurrency, InvoiceCurrencyCode).ToNative * -1
@@ -6119,8 +6133,10 @@ procedure TfrmInvoiceEdit.actInvoiceActionsUpdate(Action: TBasicAction; var Hand
 begin
   Handled := true;
   actRevertDownpayment.Enabled := not mPayments.IsEmpty;
-  actDeleteDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
-  actEditDownPayment.Enabled := (mPayments.RecordCount > 0) and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  actDeleteDownPayment.Enabled := not mPayments.IsEmpty and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  actEditDownPayment.Enabled := not mPayments.IsEmpty and (mPaymentsPaycardTraceIndex.AsInteger <= 0);
+  actMovePaymentToGroup.Enabled := not mPayments.IsEmpty and (mPaymentsRoomreservation.AsInteger > 0);
+  actMovePaymentToRoom.Enabled := not mPayments.IsEmpty;
 end;
 
 procedure TfrmInvoiceEdit.actAddLineExecute(Sender: TObject);
@@ -6825,12 +6841,49 @@ begin
   mnuItem.Clear;
   for i := 0 to SelectableExternalRooms.Count - 1 do
   begin
-    Item := TMenuItem.Create(nil);
+    Item := TMenuItem.Create(self);
     Item.Caption := SelectableExternalRooms[i].Room;
     Item.Tag := i;
     mnuItem.Add(Item);
     Item.OnClick := aEventHandler;
   end;
+end;
+
+procedure TfrmInvoiceEdit.FillAllOtherRoomsFromReservationInMenu(mnuItem: TMenuItem; aEventHandler: TNotifyEvent);
+var
+  Item: TMenuItem;
+  sql: string;
+  rSet: TRoomerDataSet;
+begin
+  mnuItem.Clear;
+  sql := format('SELECT DISTINCT rd.Room, rd.RoomReservation '#10 +
+                ' FROM roomsdate rd '#10 +
+                ' WHERE rd.reservation=%d '#10 +
+                 ' AND RoomReservation != %d AND ResFlag not IN (''X'',''C'')'#10 +
+                 ' ORDER BY rd.room ',
+                 [FReservation, FRoomReservation]);
+  rSet := CreateNewDataSet;
+  try
+    if hData.rSet_bySQL(rSet, sql, false) then
+    begin
+      rSet.first;
+      while NOT rSet.eof do
+      begin
+        if (rSet['RoomReservation'] <> FRoomReservation) then
+        begin
+          Item := TMenuItem.Create(Self);
+          Item.Caption := rSet['Room'];
+          Item.OnClick := aEventHandler;
+          Item.Tag := rSet['RoomReservation'];
+          mnuItem.Add(Item);
+          rSet.Next;
+        end;
+      end;
+    end;
+  finally
+    rSet.Free;
+  end;
+
 end;
 
 procedure TfrmInvoiceEdit.memExtraTextChange(Sender: TObject);
@@ -6844,6 +6897,88 @@ begin
   AddInvoiceIndicesToMenu(mnuMoveItemToInvoiceIndex, mnuMoveItemOrRoomToInvoiceIndexClick);
 
   actMoveItemToGroupInvoice.Visible:= (FRoomReservation > 0);
+end;
+
+procedure TfrmInvoiceEdit.mnuMovePaymentPopup(Sender: TObject);
+begin
+  inherited;
+  FillAllOtherRoomsFromReservationInMenu(mnuMovePaymentToRoom, mnuMovePaymentToRoomClick);
+  AddInvoiceIndicesToMenu(mnuTransferPaymentToInvoicedindex, mnuMovePaymentToInvoiceIndexClick);
+end;
+
+procedure TfrmInvoiceEdit.actMovePaymentToGroupExecute(Sender: TObject);
+var
+  s: string;
+begin
+  inherited;
+  if mPayments.RecordCount = 0 then
+    exit;
+
+  s := 'UPDATE payments SET '#10;
+  s := s + ' roomreservation = 0 '#10;
+  s := s + ' , invoiceindex = 0 '#10;
+  s := s + ' WHERE id=%d';
+
+  try
+    cmd_bySQL(Format(s, [mPaymentsID.AsInteger]));
+
+    AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FInvoiceIndex
+        , CHANGE_PAYMENT, mPaymentsPayType.AsString, mPaymentsNativeAmount.AsFloat, zInvoiceNumber,
+        'Moved payment to groupinvoice')
+  except
+    on E: Exception do
+      ShowMessage(format(GetTranslatedText('shTx_Payment_FailedGroupInvoice'), [e.Message]));
+  end;
+
+  LoadPayments;
+  DisplayTotals;
+end;
+
+procedure TfrmInvoiceEdit.mnuMovePaymentToRoomClick(Sender: TObject);
+var
+  s: string;
+  mnu: TMenuItem;
+begin
+  inherited;
+  mnu := TMenuItem(Sender);
+  if (mnu.Tag <> FRoomReservation) then
+  begin
+    if mPayments.RecordCount = 0 then
+      exit;
+
+    s := 'UPDATE payments SET '#10;
+    s := s + ' roomreservation = %d '#10;
+    s := s + ' , invoiceindex = 0 '#10;
+    s := s + ' WHERE id=%d';
+
+    try
+      cmd_bySQL(Format(s, [mnu.Tag, mPaymentsID.AsInteger]));
+
+      AddInvoiceActivityLog(g.qUser, FReservation, FRoomReservation, FInvoiceIndex
+          , CHANGE_PAYMENT, mPaymentsPayType.AsString, mPaymentsNativeAmount.AsFloat, zInvoiceNumber,
+          'Moved payment to roominvoice' + mnu.Caption)
+    except
+      on E: Exception do
+        ShowMessage(format(GetTranslatedText('shTx_Payment_FailedRoomInvoice'), [mnu.Caption, e.Message]));
+    end;
+
+    LoadPayments;
+    DisplayTotals;
+  end;
+end;
+
+procedure TfrmInvoiceEdit.mnuMovePaymentToInvoiceIndexClick(Sender: TObject);
+var
+  mnu: TMenuItem;
+begin
+  inherited;
+  mnu := TMenuItem(Sender);
+  if (mnu.Tag <> FInvoiceIndex) then
+  begin
+    MoveDownpaymentToInvoiceIndex(mnu.Tag);
+    LoadPayments;
+    DisplayTotals;
+  end;
 end;
 
 procedure TfrmInvoiceEdit.mnuMoveRoomPopup(Sender: TObject);
@@ -6868,7 +7003,7 @@ begin
     subItem.Tag := mnuInvoiceIndex.Items[l].Tag;
     subItem.OnClick := aEventHandler;
     mnuItem.Add(subItem);
-    subItem.Enabled := subItem.Tag >= 0;
+    subItem.Enabled := (subItem.Tag >= 0) and (subItem.Tag <> FInvoiceIndex);
   end;
 end;
 

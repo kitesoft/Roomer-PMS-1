@@ -74,7 +74,7 @@ end;
 
 function TRoomerCurrencyManager.GetDefinition(const CurCode: TCurrencyCode): TRoomerCurrencyDefinition;
 begin
-  Result := inherited CurrencyDefinition[CurCode] as TRoomerCurrencyDefinition;
+  Result := inherited CurrencyDefinition[CurCode] as TRoomerCurrencyDefinition
 end;
 
 procedure TRoomerCurrencyManager.UpdateDefinitions(aTable: TCachedTableEntity);

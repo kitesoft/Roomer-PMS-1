@@ -232,8 +232,8 @@ begin
     s := s+'   ,rv.name AS ReservationName '#10;
     s := s+'   ,rv.channel '#10;
     s := s+'   ,rv.invRefrence AS Refrence '#10;
-    s := s+'   ,rr.rrArrival AS Arrival '#10;
-    s := s+'   ,rr.rrDeparture AS Departure '#10;
+    s := s+'  , RR_Arrival(pm.roomreservation, false) as Arrival '#10;
+    s := s+'  , RR_Departure(pm.roomreservation, false) as Departure '#10;
     s := s+'   ,rr.room '#10;
     s := s+'   ,chnl.Name AS ChannelName '#10;
     s := s+'   ,cust.surname AS CustomerName '#10;
@@ -495,8 +495,8 @@ begin
     s := s+' SELECT '#10;
     s := s+'    rr.roomReservation '#10;
     s := s+'   ,rr.Reservation '#10;
-    s := s+'   ,rr.rrArrival AS Arrival '#10;
-    s := s+'   ,rr.rrDeparture AS Departure '#10;
+    s := s+'   , RR_Arrival(rr.Roomreservation, false) as Arrival '#10;
+    s := s+'   , RR_Departure(rr.Roomreservation, false) as Departure '#10;
     s := s+'   ,rr.room '#10;
     s := s+'   ,rr.GroupAccount '#10;
     s := s+'   ,rv.Customer '#10;

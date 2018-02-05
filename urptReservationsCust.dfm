@@ -243,13 +243,13 @@ object frmRptReservationsCust: TfrmRptReservationsCust
               Position.RowIndex = 0
             end
             object tvRoomsrrArrival: TcxGridDBBandedColumn
-              DataBinding.FieldName = 'rrArrival'
+              DataBinding.FieldName = 'Arrival'
               Position.BandIndex = 0
               Position.ColIndex = 0
               Position.RowIndex = 0
             end
             object tvRoomsrrDeparture: TcxGridDBBandedColumn
-              DataBinding.FieldName = 'rrDeparture'
+              DataBinding.FieldName = 'Departure'
               Position.BandIndex = 0
               Position.ColIndex = 1
               Position.RowIndex = 0
@@ -880,11 +880,11 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         Size = 30
       end
       item
-        Name = 'rrArrival'
+        Name = 'Arrival'
         DataType = ftDate
       end
       item
-        Name = 'rrDeparture'
+        Name = 'Departure'
         DataType = ftDate
       end
       item

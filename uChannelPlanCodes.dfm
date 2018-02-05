@@ -148,6 +148,7 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
       ParentFont = False
       TabOrder = 3
       Transparent = False
+      ExplicitWidth = 8
     end
     object edFilter: TsEdit
       Left = 54
@@ -414,7 +415,6 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -427,8 +427,7 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43110.393213784720000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      ReportDocument.CreationDate = 43133.559237511570000000
       BuiltInReportLink = True
     end
   end

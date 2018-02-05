@@ -67,6 +67,7 @@ uses
   uAppGlobal,
   Math,
   PrjConst
+  , uRoomerLanguage
   ;
 
 {$R *.dfm}

@@ -35,6 +35,7 @@ type
     acDelete: TAction;
     pmnuOther: TPopupMenu;
     Print1: TMenuItem;
+    tmrFilterChanged: TTimer;
     procedure btnClearClick(Sender: TObject);
     procedure edFilterChange(Sender: TObject);
     procedure chkActiveClick(Sender: TObject);
@@ -43,8 +44,10 @@ type
     procedure acDeleteExecute(Sender: TObject);
     procedure alGridActionsUpdate(Action: TBasicAction; var Handled: Boolean);
     procedure dsDataStateChange(Sender: TObject);
+    procedure tmrFilterChangedTimer(Sender: TObject);
   private
     FActiveFieldName: string;
+    procedure ResetChangeTimer;
     procedure ApplyFilter;
     { Private declarations }
   protected
@@ -72,7 +75,7 @@ end;
 procedure TfrmBaseRoomerEditGridForm.chkActiveClick(Sender: TObject);
 begin
   inherited;
-  ApplyFilter;
+  ResetChangeTimer;
 end;
 
 procedure TfrmBaseRoomerEditGridForm.DoShow;
@@ -103,6 +106,22 @@ end;
 
 procedure TfrmBaseRoomerEditGridForm.edFilterChange(Sender: TObject);
 begin
+  if edFilter.Text = '' then
+    ApplyFilter
+  else
+    ResetChangeTimer;
+end;
+
+procedure TfrmBaseRoomerEditGridForm.ResetChangeTimer;
+begin
+  tmrFilterChanged.Enabled := false;
+  tmrFilterChanged.Enabled := True;
+end;
+
+procedure TfrmBaseRoomerEditGridForm.tmrFilterChangedTimer(Sender: TObject);
+begin
+  inherited;
+  tmrFilterChanged.Enabled := false;
   ApplyFilter;
 end;
 

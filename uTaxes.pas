@@ -96,25 +96,13 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
   , uRoomerGridForm, uRoomerDialogForm, cxGridBandedTableView, cxGridDBBandedTableView, cxCalendar, cxCurrencyEdit
-  , uCurrencyHandler, cxCalc, cxCheckBox
+  , cxCalc, cxCheckBox, System.Actions, Vcl.ActnList, uRoomerEditGridForm
   ;
 
 type
-  TfrmTaxes = class(TfrmBaseRoomerGridForm)
-    mnuOther: TPopupMenu;
-    mnuiPrint: TMenuItem;
-    mnuiAllowGridEdit: TMenuItem;
-    N2: TMenuItem;
-    Export1: TMenuItem;
-    mnuiGridToExcel: TMenuItem;
-    mnuiGridToHtml: TMenuItem;
-    mnuiGridToText: TMenuItem;
-    mnuiGridToXml: TMenuItem;
-    grPrinter: TdxComponentPrinter;
-    prLink_grData: TdxGridReportLink;
+  TfrmTaxes = class(TfrmBaseRoomerEditGridForm)
     m_: TdxMemData;
     m_ID: TIntegerField;
-    A1: TMenuItem;
     m_Description: TWideStringField;
     m_Amount: TFloatField;
     m_Tax_Type: TWideStringField;
@@ -130,15 +118,6 @@ type
     m_Valid_From: TDateField;
     m_Valid_To: TDateField;
     m_TaxChildren: TWideStringField;
-    cLabFilter: TsLabel;
-    btnClear: TsSpeedButton;
-    btnDelete: TsButton;
-    btnOther: TsButton;
-    edFilter: TsEdit;
-    chkActive: TsCheckBox;
-    btnInsert: TsButton;
-    btnEdit: TsButton;
-    btnRefresh: TsButton;
     tvDataRecId: TcxGridDBBandedColumn;
     tvDataID: TcxGridDBBandedColumn;
     tvDataDescription: TcxGridDBBandedColumn;
@@ -164,20 +143,6 @@ type
     procedure m_BeforePost(DataSet: TDataSet);
     procedure m_NewRecord(DataSet: TDataSet);
     procedure BtnOkClick(Sender: TObject);
-    procedure btnCancelClick(Sender: TObject);
-    procedure btnDeleteClick(Sender: TObject);
-    procedure mnuiPrintClick(Sender: TObject);
-    procedure mnuiGridToExcelClick(Sender: TObject);
-    procedure mnuiGridToHtmlClick(Sender: TObject);
-    procedure mnuiGridToTextClick(Sender: TObject);
-    procedure mnuiGridToXmlClick(Sender: TObject);
-    procedure btnEditClick(Sender: TObject);
-    procedure btnClearClick(Sender: TObject);
-    procedure edFilterChange(Sender: TObject);
-    procedure btnInsertClick(Sender: TObject);
-    procedure btnRefreshClick(Sender: TObject);
-    procedure chkActiveClick(Sender: TObject);
-    procedure A1Click(Sender: TObject);
     procedure tvDataBooking_Item_IdPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvDataBooking_ItemPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure C1Click(Sender: TObject);
@@ -194,14 +159,12 @@ type
     { Private declarations }
     zFirstTime       : boolean;
     zData: recTaxesHolder;
-    FCurrencyhandler: TCurrencyHandler;
     procedure fillHolder;
-    procedure applyFilter;
     function CheckMultipleValidTaxes: boolean;
 
   protected
+    procedure DoShow; override;
     procedure DoLoadData; override;
-    procedure DoUpdateControls; override;
 
   public
     constructor Create(aOwner: TComponent); override;
@@ -221,7 +184,7 @@ uses
   , UITypes
   , uItems2
   , DateUtils
-  , uTaxCalcDefinitions;
+  , uTaxCalcDefinitions, uRoomerCurrencymanager;
 
 
 
@@ -234,7 +197,7 @@ var _frmTaxes: TfrmTaxes;
 begin
   _frmTaxes := TfrmTaxes.Create(nil);
   try
-    Result := (_frmTaxes.ShowModal = mrOk);
+    Result := (_frmTaxes.ShowModal(TRoomerGridFormMode.Edit) = mrOk);
   finally
     _frmTaxes.Free;
   end;
@@ -267,6 +230,13 @@ begin
   tvdata.ApplyBestFit;
 end;
 
+procedure TfrmTaxes.DoShow;
+begin
+  inherited;
+  DialogButtons := [mbClose];
+  m_.ReadOnly := False;
+end;
+
 procedure TfrmTaxes.fillHolder;
 begin
   initTaxesHolder(zData);
@@ -297,42 +267,10 @@ begin
   CanClose := CheckMultipleValidTaxes;
 end;
 
-procedure TfrmTaxes.chkActiveClick(Sender: TObject);
-begin
-  btnRefresh.Click;
-end;
-
 constructor TfrmTaxes.Create(aOwner: TComponent);
 begin
   inherited;
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-end;
-
-procedure TfrmTaxes.edFilterChange(Sender: TObject);
-begin
-  if edFilter.Text = '' then
-  begin
-    tvData.DataController.Filter.Root.Clear;
-    tvData.DataController.Filter.Active := false;
-  end else
-  begin
-    applyFilter;
-  end;
-
-end;
-
-procedure TfrmTaxes.A1Click(Sender: TObject);
-begin
-  tvdata.ApplyBestFit;
-end;
-
-procedure TfrmTaxes.applyFilter;
-begin
-  tvData.DataController.Filter.Options := [fcoCaseInsensitive];
-  tvData.DataController.Filter.Root.BoolOperatorKind := fboOr;
-  tvData.DataController.Filter.Root.Clear;
-  tvData.DataController.Filter.Root.AddItem(tvDataDescription,foLike,'%'+edFilter.Text+'%','%'+edFilter.Text+'%');
-  tvData.DataController.Filter.Active := True;
+  ActiveFieldName := 'active';
 end;
 
 
@@ -457,12 +395,6 @@ begin
   dataset['VALID_FROM'] := rec.VALID_FROM;
   dataset['VALID_TO'] := rec.VALID_TO;
 end;
-
-procedure TfrmTaxes.DoUpdateControls;
-begin
-  DialogButtons := [mbClose];
-  m_.ReadOnly := False;
-end;
 ////////////////////////////////////////////////////////////////////////////
 //  Filter
 /////////////////////////////////////////////////////////////////////////////
@@ -473,7 +405,7 @@ procedure TfrmTaxes.tvDataAmountGetProperties(Sender: TcxCustomGridTableItem; AR
 begin
   inherited;
   if m_Tax_Type.AsString = 'FIXED_AMOUNT' then
-    aProperties := FCurrencyhandler.GetcxEditProperties
+    RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(aProperties)
   else
     TcxCalcEditProperties(aProperties).DisplayFormat := '0.0 %';
 end;
@@ -553,98 +485,11 @@ begin
   fillHolder;
 end;
 
-procedure TfrmTaxes.btnRefreshClick(Sender: TObject);
-begin
-  RefreshData;
-  zFirstTime := false;
-end;
 
 procedure TfrmTaxes.C1Click(Sender: TObject);
 begin
   DuplicateCurrentRow(m_);
   tvData.Columns[0].Focused := True;
-end;
-
-procedure TfrmTaxes.btnCancelClick(Sender: TObject);
-begin
-  initTaxesHolder(zData);
-end;
-
-procedure TfrmTaxes.btnClearClick(Sender: TObject);
-begin
-  edFilter.Text := '';
-end;
-
-procedure TfrmTaxes.btnDeleteClick(Sender: TObject);
-begin
-  m_.Delete;
-end;
-
-procedure TfrmTaxes.btnEditClick(Sender: TObject);
-begin
-  grData.SetFocus;
-  tvData.GetColumnByFieldName('Description').Focused := True;
-  m_.Edit;
-  showmessage(GetTranslatedText('shTx_Rates_EditInGrid'));
-end;
-
-procedure TfrmTaxes.btnInsertClick(Sender: TObject);
-begin
-  if m_.Active = false then m_.Open;
-  grData.SetFocus;
-  m_.Insert;
-  tvData.GetColumnByFieldName('Description').Focused := True;
-end;
-
-//---------------------------------------------------------------------------
-// Menu in other actions
-//-----------------------------------------------------------------------------
-
-
-procedure TfrmTaxes.mnuiPrintClick(Sender: TObject);
-begin
-  grPrinter.PrintTitle := caption;
-  prLink_grData.ReportTitle.Text := caption;
-  grPrinter.Preview(true, prLink_grData);
-end;
-
-procedure TfrmTaxes.mnuiGridToExcelClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToExcel(sFilename, grData, true, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
-  //  To export ot xlsx form then use this
-  //  ExportGridToXLSX(sFilename, grData, true, true, true);
-  //  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xlsx'), nil, nil, sw_shownormal);
-end;
-
-procedure TfrmTaxes.mnuiGridToHtmlClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToHtml(sFilename, grData, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.html'), nil, nil, sw_shownormal);
-end;
-
-procedure TfrmTaxes.mnuiGridToTextClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToText(sFilename, grData, true, true,';','','','txt');
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.txt'), nil, nil, sw_shownormal);
-end;
-
-procedure TfrmTaxes.mnuiGridToXmlClick(Sender: TObject);
-var
-  sFilename : string;
-begin
-  sFilename := g.qProgramPath + caption;
-  ExportGridToXml(sFilename, grData, true, true);
-  ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xml'), nil, nil, sw_shownormal);
 end;
 
 end.

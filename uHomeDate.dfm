@@ -17,9 +17,7 @@ object frmHomedate: TfrmHomedate
   OldCreateOrder = False
   Position = poDefault
   OnActivate = FormActivate
-  OnClose = FormClose
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object Panel2: TsPanel
@@ -76,7 +74,7 @@ object frmHomedate: TfrmHomedate
       DesignSize = (
         212
         33)
-      object Button2: TsButton
+      object btnOk: TsButton
         Left = 52
         Top = 5
         Width = 74
@@ -86,13 +84,13 @@ object frmHomedate: TfrmHomedate
         Default = True
         ImageIndex = 82
         Images = DImages.PngImageList1
+        ModalResult = 1
         TabOrder = 0
-        OnClick = Button2Click
         SkinData.SkinSection = 'BUTTON'
       end
-      object Button1: TsButton
+      object btnCancel: TsButton
         Left = 132
-        Top = 4
+        Top = 5
         Width = 75
         Height = 25
         Anchors = [akTop, akRight]
@@ -102,7 +100,6 @@ object frmHomedate: TfrmHomedate
         Images = DImages.PngImageList1
         ModalResult = 2
         TabOrder = 1
-        OnClick = Button1Click
         SkinData.SkinSection = 'BUTTON'
       end
     end

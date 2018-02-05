@@ -104,7 +104,10 @@ uses
   PrjConst
   , uDImages
   , UITypes
-  , uRoomerVersionInfo, uSQLUtils;
+  , uRoomerVersionInfo, uSQLUtils
+  , uRoomerLanguage
+  ;
+
 {$R *.dfm}
 
 function openLogin(var userName, password : string) : boolean;

@@ -211,7 +211,10 @@ end;
 
 function TCurrencyManager.GetCurrencyDefinitionByCode(const CurCode: TCurrencyCode): TCurrencyDefinition;
 begin
-  Result := FDefinitions.Items[CurCode];
+  if DefinitionExists(CurCode) then
+    Result := FDefinitions.Items[CurCode]
+  else
+    Result := DefaultCurrencyDefinition;
 end;
 
 function TCurrencyManager.GetCurrencyDefinitionByID(CurID: integer): TCurrencyDefinition;

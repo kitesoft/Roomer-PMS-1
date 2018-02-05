@@ -294,10 +294,7 @@ type
     zArrival : TDateTime;
   end;
 
-function OpenRptDownPayments : boolean;
-
-var
-  frmRptDownPayments: TfrmRptDownPayments;
+function OpenRptDownPayments(var Room: string; var Arrival: TDate) : boolean;
 
 implementation
 
@@ -316,7 +313,12 @@ uses
   , PrjConst
   , uAssignPayment
   , DateUtils
-  , uDImages, uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , uDImages
+  , uSQLUtils
+  , ufrmInvoiceEdit
+  , uInvoiceDefinitions
+  , uRoomerLanguage
+  ;
 
 
 procedure AddGroupToReport(aBreakName: String; aDataPipeline: TppDataPipeline;   aReport: TppCustomReport);
@@ -344,22 +346,21 @@ begin
 end; {procedure, AddGroupToReport}
 
 
-function OpenRptDownPayments : boolean;
+function OpenRptDownPayments(var Room: string; var Arrival: TDate) : boolean;
+var
+  frm: TfrmRptDownPayments;
 begin
-  result := false;
-  frmRptDownPayments := TfrmRptDownPayments.Create(frmRptDownPayments);
+  frm := TfrmRptDownPayments.Create(nil);
   try
-    frmRptDownPayments.ShowModal;
-    if frmRptDownPayments.modalresult = mrOk then
+    frm.ShowModal;
+    Result :=  frm.modalresult = mrOk;
+    if Result then
     begin
-      result := true;
-    end
-    else
-    begin
-
+      Room := frm.zRoom;
+      Arrival := frm.zArrival;
     end;
   finally
-    freeandnil(frmRptDownPayments);
+    frm.Free;
   end;
 end;
 
@@ -558,8 +559,8 @@ begin
       s := s+'   ,rv.name AS ReservationName '#10;
       s := s+'   ,rv.channel '#10;
       s := s+'   ,rv.invRefrence AS Refrence '#10;
-      s := s+'   ,if(pm.roomreservation=0,date(rv.Arrival),rr.rrArrival) AS Arrival '#10;
-      s := s+'   ,if(pm.roomreservation=0,date(rv.Departure),rr.rrDeparture) AS Departure '#10;
+      s := s+'   ,if(pm.roomreservation=0, RV_Arrival(pm.reservation, false), RR_Arrival(pm.Roomreservation, false)) AS Arrival '#10;
+      s := s+'   ,if(pm.roomreservation=0, RV_Departure(pm.reservation, false), RR_Departure(pm.Roomreservation, false)) AS Departure'#10;
       s := s+'   ,rr.room '#10;
       s := s+'   ,chnl.Name AS ChannelName '#10;
       s := s+'   ,cust.surname AS CustomerName '#10;

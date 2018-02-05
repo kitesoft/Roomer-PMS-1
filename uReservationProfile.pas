@@ -76,7 +76,8 @@ uses
   , uReservationStateChangeHandler, uFraCountryPanel, cxGridBandedTableView, cxGridDBBandedTableView
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
-  , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable
+  , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable,
+  uFraLookupPanel, uFraMarketSegmentPanel, uFraCustomerPanel
   ;
 
 type
@@ -497,15 +498,12 @@ type
     tvRoomsinfantcount: TcxGridDBBandedColumn;
     pnlCustomer: TsPanel;
     Label9: TsLabel;
-    edtCustomer: TsEdit;
-    edGetCustomer: TsButton;
     pnlTopButtons : TsPanel;
     btnCheckIn: TsButton;
     btnExcel: TsButton;
     btnCheckOut: TsButton;
     btnDocuments: TsButton;
     lblMarket: TsLabel;
-    pnlMarketSegment: TsPanel;
     tsContact: TsTabSheet;
     edtContactAddress1: TsEdit;
     edtContactAddress2: TsEdit;
@@ -531,10 +529,6 @@ type
     edtGuestAddress2: TsEdit;
     edtGuestAddress1: TsEdit;
     mAllGuestsMainName: TBooleanField;
-    Label8: TsLabel;
-    lblCustomerType: TsLabel;
-    edtType: TsEdit;
-    btnGetCustomerType: TsButton;
     ppmCheckin: TPopupMenu;
     alReservation: TActionList;
     acCheckinReservation: TAction;
@@ -589,7 +583,6 @@ type
     fraGuestNationality: TfraCountryPanel;
     fraGuestCountry: TfraCountryPanel;
     fraContactCountry: TfraCountryPanel;
-    sPanel3: TsPanel;
     mAllGuestsemail: TWideStringField;
     lblGuestCountry: TsLabel;
     lblGuestNationality: TsLabel;
@@ -622,6 +615,9 @@ type
     mGuestsMainName: TBooleanField;
     mGuestsID: TIntegerField;
     tvRoomsGuestlist: TcxGridDBBandedColumn;
+    fraLookupMarketSegment: TfraLookupMarketSegment;
+    Label8: TsLabel;
+    fraCustomerPanel: TfraCustomerPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -638,7 +634,6 @@ type
       var AText: string);
     procedure mRoomsAfterScroll(DataSet: TDataSet);
     procedure btnClipboardToHinndenMemoClick(Sender: TObject);
-    procedure btnShowHiddenMemoClick(Sender: TObject);
     procedure tvRoomsbreakfastTextPropertiesChange(Sender: TObject);
     procedure tvRoomsaccountTypeTextPropertiesChange(Sender: TObject);
     procedure tvRoomsStatusTextPropertiesChange(Sender: TObject);
@@ -666,9 +661,8 @@ type
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
     procedure tvRoomsInitEdit(Sender: TcxCustomGridTableView;
       AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
-    procedure edtTypeDblClick(Sender: TObject);
     procedure mainPageChange(Sender: TObject);
-    procedure edGetCustomerClick(Sender: TObject);
+    procedure evtCustomerChangedAndValid(Sender: TObject);
     procedure tvRoomsDeparturePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsArrivalPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvRoomsdayCountPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -684,14 +678,6 @@ type
     procedure tvInvoiceHeadsAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvInvoiceHeadsAmountTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesPriceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvInvoiceLinesAmountTaxGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure sButton4Click(Sender: TObject);
     procedure tvRoomsPackagePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -879,13 +865,14 @@ uses
   uFrmNotepad,
   ufrmReservationExtras
   , uInvoiceContainer
-  , uCurrencyHandler
   , uAccountTypeDefinitions, uBreakfastStateDefinitions, uSQLUtils, ufrmRoomPrices
   , uDateTimeHelper
   , uResourceTypeDefinitions
   , uFrmPayCardView
   , uFrmTokenChargeHistory
-  , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions, uRoomerCurrencymanager
+  , uRoomerLanguage
+;
 
 {$R *.DFM}
 
@@ -1035,15 +1022,18 @@ begin
   vStartName := frmReservationProfile.edtName.text;
 
   fraGuestNationality.AllowEdit := True;
-  fraGuestNationality.OnCountryChangeAndValid := btnChangeNationalitiesAllGuestsClick;
+  fraGuestNationality.OnChangedAndValid := btnChangeNationalitiesAllGuestsClick;
   fraGuestCountry.AllowEdit := True;
-  fraGuestCountry.OnCountryChangeAndValid := btnChangeCountryAllGuestsClick;
+  fraGuestCountry.OnChangedAndValid := btnChangeCountryAllGuestsClick;
   fraContactCountry.AllowEdit := False;
 
   pnlAllGuestsNationality.Visible := glb.PMSSettings.ReservationProfileSettings.EditAllGuestsNationality;
 
   tvRoomsExpectedTimeOfArrival.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
   tvRoomsExpectedCheckoutTime.OnHeaderClick := FColumnHeaderPopupActivator.OnCxColumnHeaderClick;
+
+  fraCustomerPanel.OnChangedAndValid := evtCustomerChangedAndValid;
+  fraCustomerPanel.btnLast.Visible := False;
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);
@@ -1144,9 +1134,9 @@ begin
         edtInvRefrence.ReadOnly := glb.GetBooleanValueOfFieldFromId('channels', 'managedByChannelManager',
           fieldbyname('channel').asInteger);
 
-        edtCustomer.text := trim(fieldbyname('Customer').asstring);
+        fraCustomerPanel.Code := trim(fieldbyname('Customer').asstring);
         // OPT?
-        ciCustomerInfo := hData.Customer_GetHolder(edtCustomer.text);
+        ciCustomerInfo := hData.Customer_GetHolder(fraCustomerPanel.Code);
 
         edtContactName.text := trim(fieldbyname('ContactName').asstring);
         edtContactEmail.text := trim(fieldbyname('ContactEmail').asstring);
@@ -1159,7 +1149,7 @@ begin
 
         fraContactCountry.DisableEvents;
         try
-          fraContactCountry.CountryCode := trim(fieldbyname('ContactCountry').asstring);
+          fraContactCountry.Code := trim(fieldbyname('ContactCountry').asstring);
         finally
           fraContactCountry.EnableEvents;
         end;
@@ -1182,8 +1172,7 @@ begin
         memInformation.Lines.text := trim(fieldbyname('Information').asstring);
         memPMInfo.Lines.text := trim(fieldbyname('PMInfo').asstring);
 
-        edtType.text := trim(fieldbyname('MarketSegment').asstring);
-        lblCustomerType.caption := d.GET_CustomerTypesDescription_byCustomerType(edtType.text);
+        fraLookupMarketSegment.Code := trim(fieldbyname('MarketSegment').asstring);
 
         edtInvRefrence.text := trim(fieldbyname('invRefrence').asstring);
         edtBookingId.Text := edtInvRefrence.text;
@@ -1243,18 +1232,16 @@ begin
 end;
 
 procedure TfrmReservationProfile.sButton4Click(Sender: TObject);
+var
+  frm: TfrmResGuestList;
 begin
   // guestlist
-  frmResGuestList := TfrmResGuestList.Create(self);
+  frm := TfrmResGuestList.Create(nil);
   try
-    frmResGuestList.zReservation := zReservation;
-    frmResGuestList.ShowModal;
-    if frmResGuestList.ModalResult = mrOK then
-    begin
-    end;
+    frm.zReservation := zReservation;
+    frm.ShowModal;
   finally
-    frmResGuestList.free;
-    frmResGuestList := nil;
+    frm.free;
   end;
 end;
 
@@ -1371,7 +1358,7 @@ begin
       hData.rSet_bySQL(rSet, s);
 
       rSet.Edit;
-      rSet.fieldbyname('Customer').asstring := edtCustomer.text;
+      rSet.fieldbyname('Customer').asstring := fraCustomerPanel.Code;
       rSet.fieldbyname('Name').asstring := edtName.text;
       rSet.fieldbyname('CustPID').asstring := edtKennitala.text;
       rSet.fieldbyname('Address1').asstring := edtAddress1.text;
@@ -1379,8 +1366,8 @@ begin
       rSet.fieldbyname('Address3').asstring := edtAddress3.text;
       rSet.fieldbyname('CustomerWebSite').asstring := edtCustomerWebSite.text;
       rSet.fieldbyname('CustomerEmail').asstring := edtCustomerEmail.text;
-      rSet.fieldbyname('Country').asstring := fraContactCountry.CountryCode;
-      rSet.fieldbyname('MarketSegment').asstring := edtType.text;
+      rSet.fieldbyname('Country').asstring := fraContactCountry.Code;
+      rSet.fieldbyname('MarketSegment').asstring := fraLookupMarketSegment.Code;
       rSet.fieldbyname('Tel1').asstring := edtTel1.text;
       rSet.fieldbyname('Fax').asstring := edtFax.text;
       rSet.fieldbyname('Tel2').asstring := edtTel2.text;
@@ -1396,7 +1383,7 @@ begin
       rSet.fieldbyname('ContactAddress2').asstring := edtContactAddress2.text;
       rSet.fieldbyname('ContactAddress3').asstring := edtContactAddress3.text;
       rSet.fieldbyname('ContactAddress4').asstring := edtContactAddress4.text;
-      rSet.fieldbyname('ContactCountry').asstring := fraContactCountry.CountryCode;
+      rSet.fieldbyname('ContactCountry').asstring := fraContactCountry.Code;
       rSet.fieldbyname('invRefrence').asstring := edtInvRefrence.text;
       rSet.Post;
 
@@ -1437,7 +1424,7 @@ var
 begin
   fra := fraGuestNationality;
 
-  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirm'), [fra.CountryName]);
+  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeNationalityConfirm'), [fra.Description]);
   lAnswer := MessageDlg(s, mtConfirmation, [mbYes, mbNo, mbAll], 0, mbYes);
 
   lPerson := 0;
@@ -1459,7 +1446,7 @@ begin
       Exit;
   end;
 
-  if not d.ChangeNationality(fra.CountryCode, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
+  if not d.ChangeNationality(fra.Code, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
     showmessage(GetTranslatedText('shTx_ReservationProfile_NationalityChangeFailed'))
   else
     getGuestData(mRoomsRoomReservation.Asinteger, True);
@@ -1475,7 +1462,7 @@ var
 begin
   fra := fraGuestCountry;
 
-  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirm'), [fra.CountryName]);
+  s := format(GetTranslatedText('shTx_ReservationProfile_ChangeCountryConfirm'), [fra.Description]);
   lAnswer := MessageDlg(s, mtConfirmation, [mbYes, mbNo, mbAll], 0, mbYes);
 
   lPerson := 0;
@@ -1497,7 +1484,7 @@ begin
       Exit;
   end;
 
-  if not d.ChangeCountry(fra.CountryCode, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
+  if not d.ChangeCountry(fra.Code, mRoomsReservation.Asinteger, mRoomsRoomReservation.Asinteger, lPerson, lMethod) then
     showmessage(GetTranslatedText('shTx_ReservationProfile_CountryChangeFailed'))
   else
     getGuestData(mRoomsRoomReservation.Asinteger, True);
@@ -1522,57 +1509,30 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.btnShowHiddenMemoClick(Sender: TObject);
-begin
-
-end;
-
-
 // ********************************************************************************************
 //
 // Edits Dbl-click to select
 //
 // ********************************************************************************************
 
-procedure TfrmReservationProfile.edGetCustomerClick(Sender: TObject);
+procedure TfrmReservationProfile.evtCustomerChangedAndValid(Sender: TObject);
 var
-  CustomerHolder: recCustomerHolder;
   CustomerHolderEX: recCustomerHolderEX;
 begin
-  CustomerHolder.Customer := edtCustomer.text;
-  if openCustomers(actLookup, true, CustomerHolder) then
-  begin
-    edtCustomer.text := CustomerHolder.Customer;
-    CustomerHolderEX := hData.Customer_GetHolder(CustomerHolder.Customer);
-    edtName.text := InvoiceName(0, CustomerHolderEX.DisplayName, CustomerHolderEX.CustomerName);
-    edtKennitala.text := CustomerHolderEX.PID;
-    edtAddress1.text := CustomerHolderEX.Address1;
-    edtAddress2.text := CustomerHolderEX.Address2;
-    edtAddress3.text := CustomerHolderEX.Address3;
-    edtTel1.text := CustomerHolderEX.Tel1;
-    edtTel2.text := CustomerHolderEX.Tel2;
-    edtFax.text := CustomerHolderEX.Fax;
-    edtCustomerEmail.text := CustomerHolderEX.EmailAddress;
-    edtCustomerWebSite.text := CustomerHolderEX.HomePage;
-    edtContactName.text := CustomerHolderEX.ContactPerson;
-    edtContactEmail.text := CustomerHolderEX.ContactEmail;
-    edtContactPhone.text := CustomerHolderEX.ContactPhone;
-  end;
-end;
-
-procedure TfrmReservationProfile.edtTypeDblClick(Sender: TObject);
-var
-  theData: recCustomerTypeHolder;
-  id: Integer;
-begin
-  theData.customerType := edtType.text;
-  glb.LocateSpecificRecordAndGetValue('customertypes', 'CustomerType', edtType.text, 'ID', id);
-  theData.id := id;
-  if openCustomerTypes(actLookup, theData) then
-  begin
-    edtType.text := theData.customerType;
-    lblCustomerType.caption := theData.description;
-  end;
+  CustomerHolderEX := hData.Customer_GetHolder(fraCustomerPanel.Code);
+  edtName.text := InvoiceName(0, CustomerHolderEX.DisplayName, CustomerHolderEX.CustomerName);
+  edtKennitala.text := CustomerHolderEX.PID;
+  edtAddress1.text := CustomerHolderEX.Address1;
+  edtAddress2.text := CustomerHolderEX.Address2;
+  edtAddress3.text := CustomerHolderEX.Address3;
+  edtTel1.text := CustomerHolderEX.Tel1;
+  edtTel2.text := CustomerHolderEX.Tel2;
+  edtFax.text := CustomerHolderEX.Fax;
+  edtCustomerEmail.text := CustomerHolderEX.EmailAddress;
+  edtCustomerWebSite.text := CustomerHolderEX.HomePage;
+  edtContactName.text := CustomerHolderEX.ContactPerson;
+  edtContactEmail.text := CustomerHolderEX.ContactEmail;
+  edtContactPhone.text := CustomerHolderEX.ContactPhone;
 end;
 
 // **************************************************************************************
@@ -2000,13 +1960,13 @@ begin
       oldRoomreservation := zRoomReservation;
       iRoomreservation := RR_SetNewID();
 
-      Customer := trim(edtCustomer.text);
+      Customer := trim(fraCustomerPanel.Code );
       ReservationName := edtName.text;
       Address1 := edtAddress1.text;
       Address2 := edtAddress1.text;
       Address3 := edtAddress1.text;
       Address4 := edtAddress1.text;
-      Country := fraContactCountry.CountryCode;
+      Country := fraContactCountry.Code;
 
       Currency := mRoomsCurrency.asstring;
       isGroupInvoice := mRoomsisGroupAccount.AsBoolean;
@@ -2023,7 +1983,7 @@ begin
 
       RoomType := newRoomType;
 
-      numGuests := mRoomsGuestCount.asInteger;
+      numGuests := theData.NumberGuests; // mRoomsGuestCount.asInteger;
       numChildren := 0;
       numInfants := 0;
 
@@ -2051,13 +2011,11 @@ begin
       roomReservationData.invBreakfast := isBreckfastIncluted;
       roomReservationData.Currency := Currency;
       roomReservationData.PriceType := PriceCode;
-      roomReservationData.arrival := _db(arrival, false);
-      roomReservationData.departure := _db(departure, false);
+      roomReservationData.arrival := arrival;
+      roomReservationData.departure := departure;
       roomReservationData.RoomType := RoomType;
       roomReservationData.PMInfo := RoomPMInfo;
       roomReservationData.HiddenInfo := RoomHiddenInfo;
-      roomReservationData.rrArrival := arrival;
-      roomReservationData.rrDeparture := departure;
       roomReservationData.rrIsNoRoom := true;
       roomReservationData.rrRoomAlias := '';
       roomReservationData.rrRoomTypeAlias := RoomType;
@@ -2606,8 +2564,8 @@ begin
     s := s + '    , rr.Room '#10;
     s := s + '    , rr.RoomType '#10;
     s := s + '    , rr.package '#10;
-    s := s + '    , cast((SELECT min(rd.aDate) from roomsdate rd where rd.Roomreservation=rr.roomreservation) as DateTIME) as Arrival'#10;
-    s := s + '    , cast((SELECT DATE_ADD(max(rd.aDate), INTERVAL 1 DAY) from roomsdate rd where rd.Roomreservation=rr.roomreservation) as DateTIME) as Departure'#10;
+    s := s + '    , RR_Arrival(rr.roomreservation, true) as Arrival'#10;
+    s := s + '    , RR_Departure(rr.roomreservation, true) as Departure'#10;
     s := s + '    , ExpectedTimeOfArrival'#10;
     s := s + '    , ExpectedCheckoutTime'#10;
     s := s + '    , rr.Status '#10;
@@ -2737,14 +2695,14 @@ begin
 
     fraGuestCountry.DisableEvents;
     try
-      fraGuestCountry.CountryCode := mAllGuestsCountry.AsString;
+      fraGuestCountry.Code := mAllGuestsCountry.AsString;
     finally
       fraGuestCountry.EnableEvents;
     end;
 
     fraGuestNationality.DisableEvents;
     try
-      fraGuestNationality.CountryCode := mAllGuestsNationality.AsString;
+      fraGuestNationality.Code := mAllGuestsNationality.AsString;
     finally
       fraGuestNationality.EnableEvents;
     end;
@@ -2757,8 +2715,8 @@ begin
     edtGuestAddress2.Text := '';
     edtGuestAddress3.Text := '';
     edtGuestAddress4.Text := '';
-    fraGuestCountry.CountryCode := '';
-    fraGuestNationality.CountryCode := '';
+    fraGuestCountry.Code := '';
+    fraGuestNationality.Code := '';
   end
 end;
 
@@ -3342,7 +3300,6 @@ var
   price: double;
   Nights: Integer;
   r: double;
-  lCurrencyHandler: TCurrencyHandler;
 begin
   Nights := 0;
   price := 0.00;
@@ -3361,25 +3318,13 @@ begin
     r := price / Nights;
   end;
 
-  lCurrencyHandler := TCurrencyHandler.Create(g.qNativeCurrency);
-  try
-    AText := lCurrencyhandler.FormattedValue(r) + ' ' + GetTranslatedText('shTx_FrmReservationprofile_PerNight');
-  finally
-    lCurrencyHandler.Free;
-  end;
+  AText := RoomerCurrencyManager.DefaultCurrencyDefinition.FormattedValue(r) + ' ' + GetTranslatedText('shTx_FrmReservationprofile_PerNight');
 end;
 
 procedure TfrmReservationProfile.tvGetCurrencyProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
-var
-  lCurrencyHandler: TCurrencyHandler;
 begin
-  lCurrencyHandler := TCurrencyHandler.Create(mRoomsCurrency.AsString);
-  try
-    aProperties := lCurrencyHandler.GetcxEditProperties
-  finally
-    lCurrencyHandler.Free;
-  end;
+  RoomerCurrencyManager[mRoomsCurrency.AsString].SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmReservationProfile.tvRoomsunpaidRentPricePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -3942,36 +3887,9 @@ procedure TfrmReservationProfile.tvGetNativeCurrentProperties(Sender: TcxCustomG
   ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(aProperties);
 end;
 
-procedure TfrmReservationProfile.tvInvoiceLinesAmountNoTaxGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
-
-procedure TfrmReservationProfile.tvInvoiceLinesAmountTaxGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
-
-procedure TfrmReservationProfile.tvInvoiceLinesAmountWithTaxGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
-
-procedure TfrmReservationProfile.tvInvoiceLinesPriceGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
-end;
 
 { TsCombobox }
 

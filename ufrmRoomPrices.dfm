@@ -154,12 +154,11 @@ inherited frmRoomPrices: TfrmRoomPrices
         AlignWithMargins = True
         Left = 5
         Top = 18
-        Width = 175
+        Width = 60
         Height = 13
         Align = alTop
         Alignment = taCenter
         Caption = '<autofilled>'
-        ExplicitWidth = 60
       end
     end
   end
@@ -199,12 +198,14 @@ inherited frmRoomPrices: TfrmRoomPrices
         item
           Format = '###0.00;###0.00'
           Kind = skSum
+          OnGetText = tvRoomResTcxGridDBDataControllerTcxDataSummaryFooterSummaryItems3GetText
           FieldName = 'AveragePrice'
           Column = tvRoomResAveragePriceDisplay
         end
         item
           Format = '###0.00;###0.00'
           Kind = skAverage
+          OnGetText = tvRoomResTcxGridDBDataControllerTcxDataSummaryFooterSummaryItems4GetText
           FieldName = 'AveragePrice'
           Column = tvRoomResAveragePriceDisplay
         end>

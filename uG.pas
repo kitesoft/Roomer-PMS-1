@@ -237,6 +237,7 @@ type
 
     function GetHotelCode: string;
     procedure SetPCIContract(const Value: String);
+    function GetNativeCurrency: string;
   public
     PCIContractWildcards : TStrings;
     qConnected : boolean;
@@ -287,7 +288,6 @@ type
     qWarnMoveRoomToNewRoomtype : Boolean;
 
 
-    qNativeCurrency : string;
     qCountry : string;
     qBreakFastItem : string;
 
@@ -428,8 +428,6 @@ type
 
     function OpenChangeRate(var Rate : double; Currency : string) : boolean;
 
-    function openGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
-
     function openHiddenInfo(Refrence, RefrenceType : integer): boolean;
 
     procedure updateCurrentGuestList;
@@ -442,6 +440,7 @@ type
     property qHotelName : string read FqHotelName write FqHotelName;
     property qRoomCount : integer read FqRoomCount write FqRoomCount;
     property qMeetingsRoomCount : integer read FqMeetingsRoomCount write FqMeetingsRoomCount;
+    property qNativeCurrency: string read GetNativeCurrency; // deprecated, use ROomerCurrencymanager.DefaultCurrencyDefinition
 
     property qExpDate : TDate read FqExpDate write FqExpDate;
     property qDiskSerial : string read FqDiskSerial write FqDiskSerial;
@@ -501,7 +500,6 @@ type
 
 var
   G : TGlobalApplication = nil;
-  _HHwinHwnd : HWND = 0;
 
 
 // Create and initialize the singelton TGlobalApplication object "g"
@@ -517,7 +515,6 @@ function ResStatusToColor(Status : string; var backColor, fontColor : TColor) : 
 function StatusToColor(Status : string; var backColor, fontColor : TColor; var fStyle : TFontStyles) : boolean;
 
 function Status2StatusTextForHints(Status : string) : string;
-function Status2StatusText(Status : string) : string;
 
 function CombineNames(sName, sSurname : string) : string;
 function InvoiceName(InvoiceType : integer; sName, sSurname : string) : string;
@@ -548,9 +545,6 @@ uses
   uD,
   uRubbishCollectors,
   _glob,
-//  ufrmSelHotel,
-//  uUDL,
-//  uHotelListMissing,
   uResProblem,
   uRoomDateProblem,
   uMaidActions,
@@ -571,7 +565,7 @@ uses
   System.UITypes,
   uSQLUtils,
   uRoomerConfirmationDialogs
-  , ActiveX;
+  , ActiveX, uRoomerCurrencymanager;
 
 function GetNameCombination(order : Integer; Customer, Guest : String) : String;
 begin
@@ -676,25 +670,8 @@ begin
   if ch = 'P' then
 	  result := GetTranslatedText('shTx_G_DueToArrive')
   else
-    result := Status2StatusText(Status);
-
+    result := TReservationState.FromResStatus(Status).AsStatusText;
 end;
-
-function Status2StatusText(Status : string) : string;
-var
-  state : TReservationState;
-begin
-  result := '';
-  Status := trim(Status);
-  if Status = '' then
-    exit;
-
-  Status := UpperCase(Status);
-  State := TReservationState.FromResStatus(Status);
-  result := state.AsStatusText;
-end;
-
-
 
 { TGlobalApplication }
 
@@ -807,7 +784,6 @@ begin
     qUserPID := '';
     qUserType := '';
     qUserLanguage := 0;
-    qNativeCurrency := '';
     qCountry := '';
     qBreakFastItem := '';
 
@@ -902,6 +878,11 @@ end;
 function TGlobalApplication.GetHotelCode: string;
 begin
   Result := d.roomerMainDataSet.hotelId;
+end;
+
+function TGlobalApplication.GetNativeCurrency: string;
+begin
+  Result := RoomerCurrencyManager.DefaultCurrency;
 end;
 
 function TGlobalApplication.TestConnection(var Connstr, strResult : string) : boolean;
@@ -1675,32 +1656,6 @@ end;
 procedure TGlobalApplication.Lock;
 begin
   EnterCriticalSection(FLock);
-end;
-
-function TGlobalApplication.openGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
-begin
-  result := false;
-  frmGoToRoomAndDate := TfrmGoToRoomAndDate.Create(nil);
-  try
-    frmGoToRoomAndDate.zDate := aDate;
-    frmGoToRoomAndDate.zRoom := aRoom;
-
-    frmGoToRoomAndDate.ShowModal;
-    if frmGoToRoomAndDate.modalresult = mrOk then
-    begin
-      aRoom := frmGoToRoomAndDate.zRoom;
-      aDate := frmGoToRoomAndDate.zDate;
-      result := true;
-    end
-    else
-    begin
-      aRoom := '';
-      aDate := Date;
-    end;
-  finally
-    frmGoToRoomAndDate.free;
-    frmGoToRoomAndDate := nil;
-  end;
 end;
 
 function ResObjToBorder(Status : string; ascIndex, descIndex : integer; var BorderColor : TColor; var Left, Top, Right,

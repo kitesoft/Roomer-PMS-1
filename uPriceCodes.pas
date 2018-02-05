@@ -219,11 +219,6 @@ type
   end;
 
 function priceCodes(act : TActTableAction; var theData : recPriceCodeHolder) : boolean;
-function getPriceCode(ed : TAdvEdit; lab : TsLabel) : boolean;  overload;
-function getPriceCode(ed : TDBEdit; lab : TsLabel) : boolean;  overload;
-function getPriceCode(ed : TEdit; lab : TsLabel) : boolean; overload;
-function getPriceID(ed : TDBEdit; lab : TsLabel) : boolean;
-function priceCodeValidate(ed : TAdvEdit; lab: TsLabel) : boolean;
 
 var
   frmPriceCodes: TfrmPriceCodes;
@@ -233,6 +228,7 @@ implementation
 uses
    uSqlDefinitions
    , UITypes
+  , uRoomerLanguage
    ;
 
 {$R *.dfm}
@@ -263,119 +259,6 @@ begin
   end;
 end;
 
-function getPriceCode(ed : TAdvEdit; lab : TsLabel) : boolean;
-var
-  theData : recPriceCodeHolder;
-begin
-  initPriceCodeHolder(theData);
-  theData.pcCode := trim(ed.text);
-  result := priceCodes(actLookup,theData);
-
-  if trim(theData.pcCode) = trim(ed.text) then
-  begin
-    result := false;
-    exit;
-  end;
-
-  if result and (theData.pcCode <> ed.text) then
-  begin
-    ed.text := theData.pcCode;
-    lab.Caption := theData.pcDescription;
-  end;
-end;
-
-
-function getPriceCode(ed : TDBEdit; lab : TsLabel) : boolean;
-var
-  theData : recPriceCodeHolder;
-begin
-  initPriceCodeHolder(theData);
-  theData.pcCode := trim(ed.text);
-  result := priceCodes(actLookup,theData);
-
-  if trim(theData.pcCode) = trim(ed.text) then
-  begin
-    result := false;
-    exit;
-  end;
-
-  if result and (theData.pcCode <> ed.text) then
-  begin
-    ed.text := theData.pcCode;
-    lab.Caption := theData.pcDescription;
-  end;
-end;
-
-
-function getPriceCode(ed : TEdit; lab : TsLabel) : boolean;
-var
-  theData : recPriceCodeHolder;
-begin
-  initPriceCodeHolder(theData);
-  theData.pcCode := trim(ed.text);
-  result := priceCodes(actLookup,theData);
-
-  if trim(theData.pcCode) = trim(ed.text) then
-  begin
-    result := false;
-    exit;
-  end;
-
-  if result and (theData.pcCode <> ed.text) then
-  begin
-    ed.text := theData.pcCode;
-    lab.Caption := theData.pcDescription;
-  end;
-end;
-
-
-function getPriceID(ed : TDBEdit; lab : TsLabel) : boolean;
-var
-  theData : recPriceCodeHolder;
-  ID : integer;
-begin
-  try
-    Id := strToInt(ed.Text);
-  Except
-    id := priceCode_RackID();
-  end;
-  initPriceCodeHolder(theData);
-  theData.ID := id;
-  result := priceCodes(actLookup,theData);
-
-  if theData.id = id then
-  begin
-    result := false;
-    exit;
-  end;
-
-  if result and (theData.Id <> id) then
-  begin
-    ed.text := inttostr(theData.Id);
-    lab.Caption := theData.pcDescription;
-  end;
-end;
-
-
-function priceCodeValidate(ed : TAdvEdit; lab : TsLabel) : boolean;
-var
-  theData : recPriceCodeHolder;
-begin
-  initPriceCodeHolder(theData);
-  theData.pcCode := trim(ed.Text);
-  result := hdata.GET_priceCodeHolder(theData);
-  if not result then
-  begin
-    ed.SetFocus;
-    lab.Color := clRed;
-    lab.caption := GetTranslatedText('shNotF_star');
-  end else
-  begin
-    lab.Color := clBtnFace;
-    lab.caption := theData.pcDescription;
-  end;
-end;
-//END unit global functions
 
 ///////////////////////////////////////////////////////////////////////
 //

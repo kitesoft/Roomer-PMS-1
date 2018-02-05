@@ -284,7 +284,10 @@ uses
   , uUtils
   , PrjConst
   , DateUtils
-  , uDImages, uSQLUtils;
+  , uDImages
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
 
 
 procedure ShowReservationStatistics;

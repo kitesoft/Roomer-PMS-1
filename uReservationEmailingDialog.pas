@@ -14,7 +14,7 @@ type
   TEmailType = (EMAIL_TYPE_NEW_RESERVATION_CONFIRMATION, EMAIL_TYPE_CANCEL_RESERVATION_CONFIRMATION);
 
   TFrmReservationEmailingDialog = class(TForm)
-    sPanel1: TsPanel;
+    pnlTop: TsPanel;
     sPanel2: TsPanel;
     sLabel1: TsLabel;
     edTemplate: TsComboBox;
@@ -249,10 +249,17 @@ begin
   s := format(
        'SELECT DISTINCT Email FROM ' +
        '( ' +
-       'SELECT ContactEmail AS Email FROM reservations WHERE Reservation=%d AND ContactEmail<>'''' AND (NOT ISNULL(ContactEmail)) ' +
+       'SELECT ContactEmail AS Email FROM reservations WHERE Reservation=%d AND TRIM(IFNULL(ContactEmail, '''')) <> '''' ' +
        'UNION ALL ' +
-       'SELECT Email FROM persons WHERE Reservation=%d AND Email<>'''' AND (NOT ISNULL(Email)) ' +
-       ') xxx', [ReservationId, ReservationId]);
+       'SELECT Email FROM persons WHERE Reservation=%d AND MainName AND TRIM(IFNULL(Email, '''')) <> '''' ' +
+       'UNION ALL ' +
+       'SELECT EmailAddress as Email '#10 +
+       '  FROM customers c '#10 +
+       '  JOIN reservations r on r.reservation=%d and r.customer=c.customer '#10 +
+       '  WHERE TRIM(IFNULL(EmailAddress, '''')) <> '''' ' +
+       'UNION ALL ' +
+       'SELECT Email FROM persons WHERE Reservation=%d AND not persons.MainName and TRIM(IFNULL(Email, '''')) <> '''' ' +
+       ') xxx', [ReservationId, ReservationId, ReservationId, ReservationId]);
   rSet := CreateNewDataset;
   edTo.Items.Clear;
   edCC.Items.Clear;
@@ -266,6 +273,9 @@ begin
       rSet.Next;
     end;
   end;
+
+  if edTo.Items.Count = 1 then
+    edTo.ItemIndex := 0;
 end;
 
 procedure TFrmReservationEmailingDialog.FormShow(Sender: TObject);

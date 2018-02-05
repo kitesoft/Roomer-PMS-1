@@ -306,7 +306,11 @@ uses
   , uAppGlobal
   , uDImages
   , uMain
-  , uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , uSQLUtils
+  , ufrmInvoiceEdit
+  , uInvoiceDefinitions
+  , uRoomerLanguage
+  ;
 
 
 {$R *.dfm}
@@ -440,7 +444,6 @@ sql := sql +    '   ih.InvoiceNumber ';
     try
       s :=  format(sql,[_db(zDateFrom),_db(zDateTo),inLocation]);
       copytoclipboard(s);
-      debugmessage(s);
 
       hData.rSet_bySQL(rSet,s);
 

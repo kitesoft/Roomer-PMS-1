@@ -219,6 +219,7 @@ implementation
 uses
    uD, uDImages, uUtils
    , UITypes
+  , uRoomerLanguage
    ;
 
 {$R *.dfm}

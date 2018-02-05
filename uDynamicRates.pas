@@ -6,7 +6,6 @@ uses
   cmpRoomerDataSet,
   SysUtils,
   classes
-  , uCurrencyHandlersMap
   ;
 
 type
@@ -15,7 +14,6 @@ type
     chRates : TRoomerDataSet;
     arrival, departure : TDate;
     channelCode, chManCode : String;
-    FCurrHandlers: TCurrencyHandlersMap;
     procedure Clear;
   public
     constructor Create;
@@ -44,7 +42,7 @@ uses
   System.Generics.Collections,
   _Glob, uSQLUtils
   , uG
-  ;
+  , uRoomerCurrencymanager, uAmount, uCurrencyConstants;
 
 function TDynamicRates.Active: Boolean;
 begin
@@ -70,7 +68,7 @@ begin
        (chRates['date'] >= arrival) AND
        (chRates['date'] < departure) then
     begin
-      lnativeRate := FCurrHandlers.ConvertAmount(chRates['rate'], chRates['chCurrencyCode'], g.qNativeCurrency);
+      lnativeRate := RoomerCurrencyManager.ConvertAmountToDefault(TAmount.Create(chRates.FieldByName('rate').AsFloat, chRates.FieldByName('chCurrencyCode').AsString));
       result := result + lnativeRate;
       Inc(Counter);
     end;
@@ -105,7 +103,7 @@ begin
          (chRates['date'] >= arrival) AND
          (chRates['date'] < departure) then
       begin
-        lRate := FCurrHandlers.ConvertAmount(chRates['rate'], chRates['chCurrencyCode'], aCurrCode);
+        lRate := RoomerCurrencyManager.ConvertAmount(TAmount.Create(chRates.FieldByName('rate').AsFloat, chRates.FieldByName('chCurrencyCode').AsString), aCurrCode);
         Total := Total + lRate;
         s := format('UPDATE roomsdate SET RoomRate=%s WHERE ADate=%s AND RoomReservation=%d',
                     [
@@ -140,13 +138,11 @@ begin
   departure := arrival + 1;
   channelCode := '';
   chManCode := '';
-  FCurrHandlers := TCurrencyHandlersMap.create;
 end;
 
 destructor TDynamicRates.Destroy;
 begin
   Clear;
-  FCurrHandlers.Free;
   inherited;
 end;
 

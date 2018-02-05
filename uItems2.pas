@@ -95,8 +95,7 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit, cxCheckBox, cxCalendar, cxCurrencyEdit,
-  uCurrencyHandler
-  , RoomerExceptionHandling
+  RoomerExceptionHandling
   , uTaxCalc
   ;
 
@@ -281,7 +280,6 @@ type
       AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure GetPriceProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure FormDestroy(Sender: TObject);
     procedure dsItemsStateChange(Sender: TObject);
   private
     { Private declarations }
@@ -295,7 +293,6 @@ type
     FAvailSet: TRoomerDataset;
 
     FLocateAfterPost: integer;
-    FCurrencyhandler: TCurrencyHandler;
     FActiveTax: TTax;
     Procedure fillGridFromDataset(sGoto : string);
     procedure fillHolder;
@@ -366,7 +363,10 @@ uses
   , Math
   , uSQLUtils
   , uFrmFinanceConnect
-  , uFinanceConnectService;
+  , uFinanceConnectService
+  , uRoomerCurrencymanager
+  , uRoomerLanguage
+  ;
 
 
 
@@ -904,12 +904,6 @@ begin
   zFirstTime  := true;
   zAct        := actNone;
   FAvailSet := TRoomerDataSet.Create(self);
-  FCurrencyhandler := TCurrencyHandler.Create(g.qNativeCurrency);
-end;
-
-procedure TfrmItems2.FormDestroy(Sender: TObject);
-begin
-  FCurrencyHandler.Free;
 end;
 
 procedure TfrmItems2.FormShow(Sender: TObject);
@@ -1360,7 +1354,7 @@ end;
 procedure TfrmItems2.GetPriceProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := FCurrencyHandler.GetcxEditProperties;
+  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmItems2.tvDataDblClick(Sender: TObject);

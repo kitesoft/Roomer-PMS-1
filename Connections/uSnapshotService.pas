@@ -23,7 +23,7 @@ type
 
 function CreateConnectionSettingsXml(settings : TSnapshotSettings) : String;
 
-function ParseConnectionSettingsXml(settings : String) : TSnapshotSettings;
+function ParseConnectionSettingsXml(const settings : String) : TSnapshotSettings;
 
 implementation
 
@@ -61,7 +61,7 @@ begin
               ]);
 end;
 
-function ParseConnectionSettingsXml(settings : String) : TSnapshotSettings;
+function ParseConnectionSettingsXml(const settings : String) : TSnapshotSettings;
 var
   XML: IXMLDOMDocument2;
   listNode, rootNode, authNode: IXMLDOmNode;

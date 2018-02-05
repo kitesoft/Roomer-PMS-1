@@ -18,11 +18,10 @@ type
   private
     FSystemCode : String;
   public
-    constructor Create(SystemCode : String);
-    destructor Destroy;
+    constructor Create(const SystemCode : String);
 
     function GetSettings : String;
-    function SaveSettings(settingsAsXml : String): String;
+    function SaveSettings(const settingsAsXml : String): String;
     procedure forceExport(ExportType : TExportType);
   end;
 
@@ -30,14 +29,9 @@ implementation
 
 { TConnectionsStatisticsService }
 
-constructor TConnectionsStatisticsService.Create(SystemCode: String);
+constructor TConnectionsStatisticsService.Create(const SystemCode: String);
 begin
   FSystemCode := SystemCode;
-end;
-
-destructor TConnectionsStatisticsService.Destroy;
-begin
-  //
 end;
 
 procedure TConnectionsStatisticsService.forceExport(ExportType: TExportType);
@@ -53,7 +47,7 @@ begin
   result := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'statisticsConnect/' + FSystemCode);
 end;
 
-function TConnectionsStatisticsService.SaveSettings(settingsAsXml : String): String;
+function TConnectionsStatisticsService.SaveSettings(const settingsAsXml : String): String;
 begin
   result := d.roomerMainDataSet.downloadUrlAsStringUsingPut(d.roomerMainDataSet.RoomerUri + 'statisticsConnect/' + FSystemCode, settingsAsXml);
 end;

@@ -9,7 +9,7 @@ uses
   , ufraLookupPanel;
 
 type
-  TfraCurrencyPanel = class(TfraLookupPanel)
+  TfraCurrencyPanel = class(TfraCustomLookupPanel)
   private
     FShowCurrencyName: boolean;
     function GetCurrencyRate: double;
@@ -19,7 +19,7 @@ type
   protected
     procedure DoInternalSelect; override;
     function ValidateCode(const aCode: string): boolean; override;
-    function GetDescription(const aCode: string): string; override;
+    function ReadDescription(const aCode: string): string; override;
   public
     constructor Create(aOwner: TComponent); override;
     property CurrencyRate: double read GetCurrencyRate;
@@ -80,7 +80,7 @@ begin
     Result := 1.0;
 end;
 
-function TfraCurrencyPanel.GetDescription(const aCode: string): string;
+function TfraCurrencyPanel.ReadDescription(const aCode: string): string;
 begin
   Result := RoomerCurrencyManager[aCode].Description;
 end;

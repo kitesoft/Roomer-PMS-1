@@ -208,6 +208,7 @@ uses
   , uSqlDefinitions
   , uDimages
   , UITypes
+  , uRoomerLanguage
   ;
 
 {$R *.dfm}

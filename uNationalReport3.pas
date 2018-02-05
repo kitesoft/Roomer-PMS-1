@@ -333,7 +333,11 @@ uses
   , PrjConst
   , uDImages
   , uUtils
-  , uMain, uSQLUtils;
+  , uMain
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
+
 {$R *.dfm}
 
 
@@ -661,8 +665,8 @@ begin
     '   , roomreservations.RoomType '#10+
     '   , roomreservations.Status '#10+
     '   , roomreservations.GroupAccount '#10+
-    '   , roomreservations.rrArrival As Arrival'#10+
-    '   , roomreservations.rrDeparture As Departure'#10+
+    '   , RR_Arrival(roomreservations.roomreservation, false) As Arrival'#10+
+    '   , RR_Departure(roomreservations.roomreservation, false) As Departure'#10+
     '   , roomreservations.rrIsNoRoom as NoRoom'#10+
     '   , reservations.Name AS ReservationsName '#10+
     '   , reservations.Country AS ReservationCountry '#10+

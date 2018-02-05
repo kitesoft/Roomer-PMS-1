@@ -16,7 +16,6 @@ object frmCustomers2: TfrmCustomers2
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnShow = FormShow
@@ -79,7 +78,6 @@ object frmCustomers2: TfrmCustomers2
       Images = DImages.PngImageList1
       Style = bsSplitButton
       TabOrder = 0
-      OnClick = btnOtherClick
       SkinData.SkinSection = 'BUTTON'
     end
     object edFilter: TsEdit
@@ -143,17 +141,6 @@ object frmCustomers2: TfrmCustomers2
       OnClick = btnDeleteClick
       SkinData.SkinSection = 'BUTTON'
     end
-    object DBEdit1: TDBEdit
-      Left = 616
-      Top = 9
-      Width = 121
-      Height = 21
-      DataField = 'Customer'
-      DataSource = DS
-      TabOrder = 5
-      Visible = False
-      OnChange = DBEdit1Change
-    end
     object chkActive: TsCheckBox
       Left = 52
       Top = 64
@@ -162,7 +149,7 @@ object frmCustomers2: TfrmCustomers2
       Caption = 'Active (if checked then just active are visible'
       Checked = True
       State = cbChecked
-      TabOrder = 6
+      TabOrder = 5
       OnClick = chkActiveClick
       SkinData.SkinSection = 'CHECKBOX'
       ImgChecked = 0
@@ -643,7 +630,11 @@ object frmCustomers2: TfrmCustomers2
     end
   end
   object m_: TdxMemData
-    Indexes = <>
+    Indexes = <
+      item
+        FieldName = 'Customer'
+        SortOptions = []
+      end>
     SortOptions = []
     BeforeInsert = m_BeforeInsert
     BeforePost = m_BeforePost
@@ -763,7 +754,11 @@ object frmCustomers2: TfrmCustomers2
     end
   end
   object mMemo_: TdxMemData
-    Indexes = <>
+    Indexes = <
+      item
+        FieldName = 'Customer'
+        SortOptions = []
+      end>
     SortOptions = []
     Left = 120
     Top = 112
@@ -822,5 +817,12 @@ object frmCustomers2: TfrmCustomers2
     StorageType = stRegistry
     Left = 710
     Top = 152
+  end
+  object tmrFilterChanged: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmrFilterChangedTimer
+    Left = 32
+    Top = 120
   end
 end

@@ -104,7 +104,7 @@ uses
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, AdvDropDown, AdvColorPickerDropDown, AdvGlowButton, AdvOfficeSelectors, AsgCombo, ColorCombo, dxGalleryControl, dxColorGallery, dxColorEdit,
   sListBox, sCheckListBox, uFraCountryPanel
   , uHotelServicesSettings
-  , RegularExpressions, uFraLookupPanel, ufraCurrencyPanel
+  , RegularExpressions, uFraLookupPanel, ufraCurrencyPanel, ufraCustomerPanel, uFraStaffMemberPanel
   ;
 
   //
@@ -499,7 +499,6 @@ type
     sLabel5: TsLabel;
     LMDGroupBox25: TsGroupBox;
     Label64: TsLabel;
-    labRackCustomerName: TsLabel;
     gbxExcludeRoomStatusFromStats: TsGroupBox;
     chkExcluteWaitingList: TsCheckBox;
     chkExcluteAllotment: TsCheckBox;
@@ -574,8 +573,6 @@ type
     sLabel11: TsLabel;
     chkUseSetUnclean: TsCheckBox;
     ChkMakeRoomsDirtyOvernight: TsCheckBox;
-    edRackCustomer: TsEdit;
-    btnGetCustomer: TsSpeedButton;
     sGroupBox7: TsGroupBox;
     sLabel13: TsLabel;
     sLabel14: TsLabel;
@@ -648,10 +645,6 @@ type
     gbxExternalPOS: TsGroupBox;
     lblCustomer: TsLabel;
     lblUser: TsLabel;
-    btnSelectEndOfDayCustomer: TsSpeedButton;
-    btnSelectEndOfDayUser: TsSpeedButton;
-    edtEndOfDayCustomer: TsEdit;
-    edtEndOfDayUser: TsEdit;
     tabMandatory: TsTabSheet;
     pcMandatoryInfo: TsPageControl;
     tabGuestInformation: TsTabSheet;
@@ -750,6 +743,9 @@ type
     cbAggregateCityTax: TsCheckBox;
     fraCurrencyPnl: TfraCurrencyPanel;
     fraMasterRateCurrency: TfraCurrencyPanel;
+    fraRackCustomerPanel: TfraCustomerPanel;
+    fraEndOfDayCustomerPanel: TfraCustomerPanel;
+    fraStaffMemberPanel: TfraStaffMemberPanel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -776,7 +772,6 @@ type
     procedure edCallMinPriceChange(Sender : TObject);
     procedure editBreakFastItemDblClick(Sender : TObject);
     procedure editRoomRentItemDblClick(Sender : TObject);
-    procedure edRackCustomerDblClick(Sender : TObject);
     procedure editDiscountItemDblClick(Sender : TObject);
     procedure editPhoneUseItemDblClick(Sender : TObject);
     procedure editPaymentItemDblClick(Sender : TObject);
@@ -793,8 +788,6 @@ type
     procedure edInvPriceGroupDblClick(Sender: TObject);
     procedure edConfirmMinuteOfTheDayChange(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure edRackCustomerChange(Sender: TObject);
-    procedure edRackCustomerExit(Sender: TObject);
     procedure sSpeedButton1Click(Sender: TObject);
     procedure sSpeedButton2Click(Sender: TObject);
     procedure cbxBackColorSelectColor(Sender: TObject; AColor: TColor);
@@ -803,8 +796,6 @@ type
     procedure btnInvoiceTemplateResourcesClick(Sender: TObject);
     procedure panGuestStayingClick(Sender: TObject);
     procedure panGuestStayingDblClick(Sender: TObject);
-    procedure btnSelectEndOfDayCustomerClick(Sender: TObject);
-    procedure btnSelectEndOfDayUserClick(Sender: TObject);
     procedure btnMFSelectAllClick(Sender: TObject);
     procedure btnMFSelectNoneClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -840,7 +831,6 @@ type
 
     procedure itemLookup(edit : TsComboEdit; lab : TsLabel);
     procedure calcRequestInterval;
-    function  customerValidate : boolean;
     procedure SetCheckStatus(True_or_False: Boolean; box : TsCheckListBox);
   public
     { public declarations }
@@ -876,7 +866,10 @@ uses
   , uMandatoryFieldDefinitions
   , UITYpes
   , uResourceTypeDefinitions
-  , uPMSSettings;
+  , uPMSSettings
+  , uRoomerLanguage
+  ;
+
 {$R *.DFM}
 
 const
@@ -905,23 +898,6 @@ begin
 
   labInPosSeconds.Caption := inttostr(hours) + ' hours ' + inttostr(minutes) + ' minutes ' + inttostr(seconds) + ' seconds';
 end;
-
-function TfrmControlData.customerValidate : boolean;
-var
-  sCustomer : string;
-begin
-  sCustomer := trim(edRackCustomer.Text);
-  result :=  glb.CustomersSet.Locate('customer',scustomer,[]);
-  if not result then
-  begin
-    try edRackCustomer.SetFocus; except end;
-    labRackCustomerName.Caption := GetTranslatedText('shNotF_star');
-  end else
-  begin
-    labRackCustomerName.Caption := glb.customersset.FieldByName('SurName').AsString;
-  end;
-end;
-
 
 destructor TfrmControlData.Destroy;
 begin
@@ -1065,7 +1041,7 @@ g.ReadWriteSettingsToRegistry(0);
     editAddress2.Text := rControlData.fieldbyname('Address2').AsString;
     editAddress3.Text := rControlData.fieldbyname('Address3').AsString;
     editAddress4.Text := rControlData.fieldbyname('Address4').AsString;
-    fraCountry.CountryCode := rControlData.fieldbyname('Country').AsString;
+    fraCountry.Code := rControlData.fieldbyname('Country').AsString;
 
     editTelephone1.Text := rControlData.fieldbyname('Telephone1').AsString;
     editTelephone2.Text := rControlData.fieldbyname('Telephone2').AsString;
@@ -1124,12 +1100,10 @@ g.ReadWriteSettingsToRegistry(0);
     end;
 
     try
-      edRackCustomer.Text := rControlData.fieldbyname('RackCustomer').AsString;
+      fraRackCustomerPanel.Code := rControlData.fieldbyname('RackCustomer').AsString;
     Except
-      edRackCustomer.Text := '0';
+      fraRackCustomerPanel.Code := '0';
     end;
-
-    labRackCustomerName.Caption := d.GetCustomerName(edRackCustomer.Text);
 
     CheckBoxBreakfastInclDefault.checked := rControlData['BreakfastInclDefault'];
     CheckBoxArrivalDateRulesPrice.checked := rControlData['ArrivalDateRulesPrice'];
@@ -1444,15 +1418,15 @@ g.ReadWriteSettingsToRegistry(0);
     end;
 
     try
-      edtEndOfDayCustomer.Text := rSethotelconfigurations.FieldByName('CustomerOfExternalSales').AsString;
+      fraEndOfDayCustomerPanel.Code := rSethotelconfigurations.FieldByName('CustomerOfExternalSales').AsString;
     except
-      edtEndOfDayCustomer.Text := edRackCustomer.Text;
+      fraEndOfDayCustomerPanel.Code := fraRackCustomerPanel.Code;
     end;
 
     try
-      edtEndOfDayUser.Text := rSethotelconfigurations.FieldByName('UserOfExternalSales').AsString;
+      fraStaffMemberPanel.Code := rSethotelconfigurations.FieldByName('UserOfExternalSales').AsString;
     except
-      edtEndOfDayUser.Text := '';
+      fraStaffMemberPanel.Code := '';
     end;
 
     try
@@ -1715,7 +1689,7 @@ begin
       rControlData.fieldbyname('Address2').AsString := editAddress2.Text;
       rControlData.fieldbyname('Address3').AsString := editAddress3.Text;
       rControlData.fieldbyname('Address4').AsString := editAddress4.Text;
-      rControlData.fieldbyname('Country').AsString := fraCountry.CountryCode;
+      rControlData.fieldbyname('Country').AsString := fraCountry.Code;
 
       rControlData.fieldbyname('Telephone1').AsString := editTelephone1.Text;
       rControlData.fieldbyname('Telephone2').AsString := editTelephone2.Text;
@@ -1753,8 +1727,8 @@ begin
       rControlData.fieldbyname('BreakfastInclDefault').AsBoolean := CheckBoxBreakfastInclDefault.checked;
       rControlData.fieldbyname('ArrivalDateRulesPrice').AsBoolean := CheckBoxArrivalDateRulesPrice.checked;
 
-      rControlData.fieldbyname('RackCustomer').AsString := edRackCustomer.Text;
-      g.qRackCustomer := edRackCustomer.Text;
+      rControlData.fieldbyname('RackCustomer').AsString := fraRackCustomerPanel.Code;
+      g.qRackCustomer := fraRackCustomerPanel.Code;
 
       // tsRoomStatusColors
       rControlData.fieldbyname('GreenColor').AsString := EditGreenColor.Text;
@@ -2126,12 +2100,12 @@ begin
       end;
 
       try
-        rSethotelconfigurations.FieldByName('CustomerOfExternalSales').AsString := edtEndOfDayCustomer.Text;
+        rSethotelconfigurations.FieldByName('CustomerOfExternalSales').AsString := fraEndOfDayCustomerPanel.Code;
       except
       end;
 
       try
-        rSethotelconfigurations.FieldByName('UserOfExternalSales').AsString := edtEndOfDayUser.Text;
+        rSethotelconfigurations.FieldByName('UserOfExternalSales').AsString := fraStaffMemberPanel.Code;
       except
       end;
 
@@ -3447,26 +3421,6 @@ begin
   end;
 end;
 
-procedure TfrmControlData.btnSelectEndOfDayCustomerClick(Sender: TObject);
-var
-  theData : recCustomerHolder;
-begin
-  initCustomerHolder(theData);
-  theData.Customer := edtEndOfDayCustomer.text;
-  if OpenCustomers(actLookup, true, theData) and (theData.Customer <> '') then
-    edtEndOfDayCustomer.Text := theData.Customer;
-end;
-
-procedure TfrmControlData.btnSelectEndOfDayUserClick(Sender: TObject);
-var
-  theData : recStaffMemberHolder;
-begin
-  initStaffMemberHolder(theData);
-  theData.Initials := edtEndOfDayUser.text;
-  if openStaffMembers(actLookup, theData) and (theData.Initials <> '') then
-    edtEndOfDayUser.Text := theData.Initials;
-end;
-
 procedure TfrmControlData.editBreakFastItemCustomButtons0Click(Sender : TObject; index : Integer);
 begin
   itemLookup(editBreakFastItem, labBreakFastItemDescription);
@@ -3493,35 +3447,6 @@ begin
     TEdit(Sender).Font.Color := frmMain.sSkinManager1.GetGlobalFontColor
    else
     TEdit(Sender).Font.Color := clRed;
-end;
-
-procedure TfrmControlData.edRackCustomerChange(Sender: TObject);
-begin
-  if not FUpdatingControls then
-   customerValidate;
-end;
-
-procedure TfrmControlData.edRackCustomerDblClick(Sender : TObject);
-var
-  s : string;
-  theData : recCustomerHolder;
-begin
- theData.Customer := trim(edRackCustomer.text);
- if OpenCustomers(actLookup, true, theData) then
- begin
-   s := theData.Customer;
-   if (s <> '') and (s <> trim(edRackCustomer.text)) then
-   begin
-     edRackCustomer.text := s;
-   end;
- end;
-end;
-
-procedure TfrmControlData.edRackCustomerExit(Sender: TObject);
-begin
-  if customerValidate then
-  begin
-  end;
 end;
 
 procedure TfrmControlData.editDiscountItemDblClick(Sender : TObject);

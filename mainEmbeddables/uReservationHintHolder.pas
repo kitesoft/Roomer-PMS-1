@@ -42,7 +42,6 @@ type
     clblDaily: TsLabel;
     timHide: TTimer;
     shpStatus: TShape;
-    AdvShape1: TAdvShape;
     Shape1: TShape;
     sLabel1: TsLabel;
     __hlbBookingIds: THTMLabel;
@@ -68,6 +67,7 @@ type
     procedure pnlHintMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure PopupMenu1Popup(Sender: TObject);
     procedure pnlHintMouseEnter(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     currentControl : TObject;
     rri: RecRDInfo;
@@ -83,12 +83,7 @@ type
     procedure CancelHint;
 
     procedure ActivateHint(X, Y, CellWidth, CellHeight : Integer; rri: RecRDInfo);
-
-
   end;
-
-var
-  FrmReservationHintHolder: TFrmReservationHintHolder;
 
 implementation
 
@@ -97,6 +92,7 @@ implementation
 uses clipbrd
   , uMain
   , UITypes
+  , uRoomerLanguage
   ;
 
 { TFrmReservationHintHolder }
@@ -469,6 +465,11 @@ procedure TFrmReservationHintHolder.CM_MenuClosed(var msg: TMessage);
 begin
   //
   timHide.Enabled := True;
+end;
+
+procedure TFrmReservationHintHolder.FormCreate(Sender: TObject);
+begin
+  RoomerLanguage.TranslateThisForm(Self);
 end;
 
 procedure TFrmReservationHintHolder.InitEmbededHint(prnt: TWinControl);

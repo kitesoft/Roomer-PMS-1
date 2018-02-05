@@ -11,6 +11,7 @@ object embOccupancyView: TembOccupancyView
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object pnlEmbeddable: TsPanel
@@ -131,10 +132,11 @@ object embOccupancyView: TembOccupancyView
       SearchFooter.HintFindPrev = 'Find previous occurrence'
       SearchFooter.HintHighlight = 'Highlight occurrences'
       SearchFooter.MatchCaseCaption = 'Match case'
+      SearchFooter.ResultFormat = '(%d of %d)'
       SelectionColor = clHighlight
       SelectionTextColor = clHighlightText
       SortSettings.DefaultFormat = ssAutomatic
-      Version = '7.9.1.1'
+      Version = '8.2.4.1'
       WordWrap = False
     end
   end

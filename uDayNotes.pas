@@ -384,8 +384,7 @@ type
 
   end;
 
-var
-  frmDayNotes : TfrmDayNotes;
+function frmDayNotes: TfrmDayNotes;
 
 implementation
 
@@ -402,9 +401,22 @@ uses
   , uDImages
   , uRoomerDefinitions
   , uReservationStateDefinitions
-  , uSQLUtils, uDateTimeHelper, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , uSQLUtils, uDateTimeHelper, ufrmInvoiceEdit, uInvoiceDefinitions
+  , uRoomerLanguage
+  ;
 
 
+var
+  gFrmDayNotes : TfrmDayNotes;
+
+
+function frmDayNotes: TfrmDayNotes;
+begin
+  if not assigned(gFrmDayNotes) then
+    gFrmDayNotes := TfrmDayNotes.Create(nil);
+
+  result := gFrmDayNotes;
+end;
 
 {$R *.dfm}
 
@@ -546,8 +558,8 @@ begin
                 Floor                := rSet.FieldByName('Floor').asstring;
                 GuestName            := rSet.FieldByName('GuestName').asstring;
                 GuestCountry         := rSet.FieldByName('CountryName').asstring;
-                Arrival              := rSet.FieldByName('rrArrival').asDateTime;
-                Departure            := rSet.FieldByName('rrDeparture').asDateTime;
+                Arrival              := rSet.FieldByName('Arrival').asDateTime;
+                Departure            := rSet.FieldByName('Departure').asDateTime;
 
                 Customer             := rSet.FieldByName('Customer').asstring;
                 CustomerName         := rSet.FieldByName('CustomerName').asstring;
@@ -1263,6 +1275,11 @@ begin
   timRefresh.Enabled := False;
   DoRefreshRoomStatus;
 end;
+
+initialization
+
+finalization
+  gFrmDayNotes.Free;
 
 end.
 

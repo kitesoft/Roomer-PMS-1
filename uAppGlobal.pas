@@ -19,7 +19,6 @@ uses
   , Generics.Collections
   , objDayFreeRooms
   , uMessageList
-  , uRoomerLanguage
   , uActivityLogs
 
   , stdCtrls
@@ -185,7 +184,6 @@ Type
     function GetMaintenanceCodes: TRoomerDataSet;
     function GetMaintenanceRoomNotes: TRoomerDataSet;
     function GetStaffMembers: TRoomerDataset;
-
    public
       constructor Create;
       destructor Destroy; override;
@@ -195,6 +193,7 @@ Type
       procedure FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                     Location : TSet_Of_Integer;
                                     Floor : TSet_Of_Integer;
+                                    RoomTypes: TSet_Of_Integer;
                                     oFreeRooms : TFreeRooms = nil;
                                     zOneDay_dtDate : TDateTime = 0);
 
@@ -219,7 +218,7 @@ Type
       procedure LoadStaticTables(startingUp : Boolean = False);
       procedure RefreshTablesWhenNeeded;
       procedure FillRoomAndTypeGridNew(agrRooms : TStringGrid );
-      procedure FillLocationsMenu(mnu : TPopupMenu; event : TNotifyEvent);
+      procedure FillLocationsMenu(mnu : TMenuItem; event : TNotifyEvent);
 
       function GetRoomLocation(Room: String): String;
       function LocateRoom(Room : String) : Boolean;
@@ -228,6 +227,7 @@ Type
       function GetRoomStatistics(Room : String) : Boolean;
       function GetRoomFloor(Room: String): Integer;
       function GetRoomTypeFromRoom(Room: String): String;
+      function GetRoomTypeIdFromRoom(Room: String): Integer;
       function GetLocationId(Location: String): integer;
       function GetNumberOfItems( aType : string ) : integer;
       function GetRoomTypeNumberGuests( aType : string ) : integer;
@@ -326,12 +326,8 @@ Type
 var
   glb        : TGlobalSettings = nil;
   AppInifile : string;
-  RoomerLanguage : TRoomerLanguage;
-
 
 const
-  FMHandle : THandle = 0;
-
   RIGHTS_REPORTS_FINANCE = 94;
   RIGHTS_REPORTS_GUESTS = 80;
   RIGHTS_INVOICE = 88;
@@ -344,7 +340,6 @@ const
 
 procedure OpenAppSettings;
 procedure CloseAppSettings;
-procedure FilterRoom( RoomNumber : string );
 
 implementation
 
@@ -364,16 +359,7 @@ uses   dbTables
      , uCurrencymanager
      , uRoomerCurrencymanager
      , uFileDependencyManager
-     , uCachedDataHandler;
-
-procedure FilterRoom( RoomNumber : string );
-begin
-  with glb.RoomsSet do
-  begin
-    Filter := 'Room=''' + RoomNumber + '''';
-    Filtered := true;
-  end;
-end;
+     , uCachedDataHandler, uCurrencyConstants;
 
 { TGlobalSettings }
 
@@ -636,7 +622,10 @@ begin
   begin
     tableEntity.RefreshEnabled := enable;
     if enable then
-      tableEntity.RefreshFromServer;
+    begin
+      tableList.RefreshTimeStampsFromServer;
+      tableEntity.RefreshIfNeeded;
+    end;
   end;
 end;
 
@@ -696,11 +685,12 @@ begin
 end;
 
 
-procedure TGlobalSettings.FillLocationsMenu(mnu: TPopupMenu; event : TNotifyEvent);
+procedure TGlobalSettings.FillLocationsMenu(mnu: TMenuItem; event : TNotifyEvent);
 var item : TMenuItem;
     i : integer;
 begin
-  mnu.Items.Clear;
+  mnu.Clear;
+  mnu.Checked := false;
   locations.First;
   while NOT locations.Eof do
   begin
@@ -708,13 +698,13 @@ begin
     item.Caption := format('%s [%s]', [locations['Description'], locations['Location']]);
     item.Tag := locations['Id'] + 1000;
     item.OnClick := event;
-    mnu.Items.Add(item);
+    mnu.Add(item);
     locations.Next;
   end;
 
   item := TMenuItem.Create(nil);
   item.Caption := '-';
-  mnu.Items.Add(item);
+  mnu.Add(item);
 
   for i := 0 to FRoomFloors.Count - 1 do
   begin
@@ -722,21 +712,17 @@ begin
     item.Caption := format('%s %d', [GetTranslatedText('shTx_Floor'), FRoomFloors[i]]);
     item.Tag := FRoomFloors[i];
     item.OnClick := event;
-    mnu.Items.Add(item);
+    mnu.Add(item);
   end;
 end;
 
 procedure TGlobalSettings.FillRoomAndTypeGrid(agrRooms : TStringGrid;
                                               Location : TSet_Of_Integer;
                                               Floor : TSet_Of_Integer;
+                                              RoomTypes: TSet_Of_Integer;
                                               oFreeRooms : TFreeRooms = nil;
                                               zOneDay_dtDate : TDateTime = 0);
 var l : integer;
-
-    FloorFilterActive,
-    LocationFilterActive,
-    FloorFilterPassed,
-    LocationFilterPassed,
     FilterPassed : Boolean;
 begin
   // --
@@ -751,15 +737,8 @@ begin
     begin
       if not RoomsSet['Hidden'] then
       begin
-        FloorFilterActive := Floor.Count > 0;
-        LocationFilterActive := Location.Count > 0;
-        FloorFilterPassed := IsValidInList(Floor, RoomsSet['Floor']);
-        LocationFilterPassed := IsValidInList(Location, GetLocationId(RoomsSet['Location']));
-        FilterPassed := (NOT FloorFilterActive) OR (FloorFilterPassed AND FloorFilterActive);
-        FilterPassed := FilterPassed AND
-                        ((NOT LocationFilterActive) OR (LocationFilterPassed AND LocationFilterActive));
-
-
+        filterPassed := IsValidInList(Floor, RoomsSet['Floor']) and IsValidInList(Location, GetLocationId(RoomsSet['Location']))
+                        and (LocateRoomType(RoomsSet['Roomtype']) and IsValidInList(RoomTypes, RoomTypesSet['id']));
         if FilterPassed then
         begin
           inc(l);
@@ -876,23 +855,13 @@ begin
 end;
 
 function TGlobalSettings.GetDataCacheLocation: String;
-//var AppDataPath : String;
-//    DataCache: String;
 begin
-//  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  DataCache := format('%s\' + cDatacachefoldername, [d.roomerMainDataSet.hotelId]);
-//  result := TPath.Combine(AppDataPath, DataCache);
-//
   Result := TPath.Combine(GetHotelAppDataLocation, cDatacachefoldername);
   forceDirectories(result);
 end;
 
 function TGlobalSettings.GetOfflineReportLocation: string;
-//var AppDataPath : String;
 begin
-//  AppDataPath := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  result := format('%s\' + cofflinefoldername,[d.roomerMainDataSet.hotelId]);
-//  result := TPath.Combine(AppDataPath, Result);
   Result := TPath.Combine(GetHotelAppDataLocation, cOfflinefoldername);
   forceDirectories(result);
 end;
@@ -900,8 +869,6 @@ end;
 
 function TGlobalSettings.GetLanguageLocation: String;
 begin
-//  result := TPath.Combine(LocalAppDataPath, 'Roomer');
-//  result := TPath.Combine(result, 'Languages');
   Result := TPath.Combine(RoomerAppDataPath, 'Languages');
   forceDirectories(result);
 end;
@@ -1380,6 +1347,13 @@ begin
     result := RoomsSet['Floor'];
 end;
 
+function TGlobalSettings.GetRoomTypeIdFromRoom(Room : String) : Integer;
+begin
+  result := 0;
+  if LocateSpecificRecord('rooms', 'Room', Room) and LocateRoomType(RoomsSet['roomtype']) then
+    result := RoomTypesSet['id'];
+end;
+
 function TGlobalSettings.LocateCountryGroup(CountryGroup : String) : Boolean;
 begin
   result := LocateSpecificRecord('countrygroups', 'CountryGroup', CountryGroup);
@@ -1687,7 +1661,7 @@ begin
   glb := TGlobalSettings.create;
   glb.LoadStaticTables(true);
   glb.ReloadPreviousGuests;
-  InitGlobalCurrencyManager(TRoomerCurrencyManager, glb.ControlSet.FieldByName('nativecurrency').asString);
+  InitGlobalCurrencyManager(TRoomerCurrencyManager, TCurrencyCode(glb.ControlSet.FieldByName('nativecurrency').asString));
 end;
 
 procedure CloseAppSettings;
@@ -1744,7 +1718,6 @@ end;
 initialization
 begin
   AppInifile := ChangeFileExt(Paramstr(0), '.ini' );
-  RoomerLanguage := uRoomerLanguage.RoomerLanguage;
 end;
 
 end.

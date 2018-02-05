@@ -64,7 +64,6 @@ begin
 end;
 
 initialization
-
   RoomerLanguage := nil;
 
 end.

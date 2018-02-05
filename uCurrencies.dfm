@@ -53,9 +53,6 @@ inherited frmCurrencies: TfrmCurrencies
       inherited btnInsert: TsButton
         TabOrder = 4
       end
-      inherited btnEdit: TsButton
-        ExplicitTop = 4
-      end
       object btnHistory: TsButton
         AlignWithMargins = True
         Left = 423

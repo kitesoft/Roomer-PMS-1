@@ -255,7 +255,10 @@ uses
   , uAppGlobal
   , hData
   , uDImages
-  , uMain, uSQLUtils;
+  , uMain
+  , uSQLUtils
+  , uRoomerLanguage
+  ;
 
 
 procedure TfrmHouseKeeping.FormDestroy(Sender: TObject);
@@ -764,8 +767,8 @@ begin
               s := s+'  `roomreservations`.`Reservation`, '#10;
               s := s+'  `roomreservations`.`Room`, '#10;
               s := s+'  `roomreservations`.`Status` AS `ResStatus`, '#10;
-              s := s+'  `roomreservations`.`rrDeparture`, '#10;
-              s := s+'  `roomreservations`.`rrArrival`, '#10;
+              s := s+'  RR_Arrival(roomreservations.roomreservation, false) as Arrival '#10;
+              s := s+'  RR_Departure(roomreservations.roomreservation, false) as Departure '#10;
               s := s+'  `roomreservations`.`hiddenInfo`, '#10;
               s := s+'  `rooms`.`Description` AS `RoomDecriprion`, '#10;
               s := s+'  `rooms`.`RoomType`, '#10;
@@ -790,8 +793,8 @@ begin
               CopyToClipboard(s);
               if hData.rSet_bySQL(rRR,s) then
               begin
-                Arrival     := rRR.fieldbyname('rrArrival').asDateTime;
-                Departure   := rRR.fieldbyname('rrDeparture').asDateTime;
+                Arrival     := rRR.fieldbyname('Arrival').asDateTime;
+                Departure   := rRR.fieldbyname('Departure').asDateTime;
                 Reservation := rRR.fieldbyname('Reservation').asInteger;
                 GuestStatus := rRR.fieldbyname('Status').asString;
 

@@ -145,7 +145,7 @@ uses Data.DB,
      uUtils
      , UITypes
      , Types
-     , uFrmManagePCIConnection, uRoomerCurrencyDefinition;
+     , uFrmManagePCIConnection;
 
 const
 
@@ -160,6 +160,7 @@ const
   XML_OPERATON_TYPE = 'operationtype';
   XML_AMOUNT = 'amount';
   XML_CURRENCY = 'currency';
+  XML_CURRENCYRATE = 'currencyrate';
   XML_RESERVATION = 'reservation';
   XML_ROOMRESERVATION = 'roomreservation';
 
@@ -386,7 +387,7 @@ begin
 
   edResAmount.Text := trim(_floattostr(charge.amount, 20, 2));
   edResCurrency.Text := charge.currency;
-  lblResRate.Caption := format('(Rate: %s)', [FloatToStr(charge.currencyRate)]);
+  lblResRate.Caption := format('(' + GetTranslatedText('shCurrencyRate') + ': %s)', [FloatToStr(charge.currencyRate)]);
   edResOperationType.Text := charge.operationType;
 
   edResOperationResult.Text := charge.operationResultCode;
@@ -429,6 +430,7 @@ var
   _XML_GATEWAY_RESULT_DESCRIPTION,
   _XML_OPERATON_TYPE,
   _XML_CURRENCY : String;
+  _XML_CURRENCYRATE : Double;
   _XML_AMOUNT : Double;
   _XML_ROOMRESERVATION : integer;
 begin
@@ -438,6 +440,8 @@ begin
   result := nil;
   _XML_AMOUNT := 0;
   _XML_ROOMRESERVATION := 0;
+  _XML_CURRENCYRATE := 1.0;
+
   if listNode <> nil then
   begin
     if Sametext(listNode.nodeName, 'paymentresponse') then
@@ -483,7 +487,10 @@ begin
                _XML_ROOMRESERVATION := StrToIntDef(rootNode.text, 0)
             else
             if SameText(rootNode.nodeName, XML_CURRENCY) then
-               _XML_CURRENCY := rootNode.text;
+               _XML_CURRENCY := rootNode.text
+            else
+            if SameText(rootNode.nodeName, XML_CURRENCYRATE) then
+               _XML_CURRENCYRATE := _StrToFloat(rootNode.text);
           end;
         end;
       end;
@@ -492,7 +499,8 @@ begin
                           ReservationId,
                           _XML_ROOMRESERVATION,
                           _XML_AMOUNT,
-                          _XML_CURRENCY, 1.00,
+                          _XML_CURRENCY,
+                          _XML_CURRENCYRATE,
                           _XML_AUTHORIZATION_CODE,
                           _XML_OPERATON_TYPE,
                           _XML_OPERATION_RESULT_CODE,

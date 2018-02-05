@@ -5,12 +5,12 @@ interface
 uses
   cmpRoomerDataset
   , Generics.Collections
-  , SysUtils
+  , SysUtils, RoomerExceptionHandling
   ;
 
 type
 
-  ERefreshTableException = class(Exception);
+  ERefreshTableException = class(ERoomerUserException);
 
   TCachedTableEntity = class;
   TTableDictionary = class;

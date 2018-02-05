@@ -1,28 +1,28 @@
 inherited frmEditRoomPrice: TfrmEditRoomPrice
   Caption = 'Edit roomprice'
   ClientHeight = 497
-  ClientWidth = 732
+  ClientWidth = 925
   Font.Height = -11
-  OnDestroy = FormDestroy
-  ExplicitWidth = 748
+  ExplicitWidth = 941
   ExplicitHeight = 536
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 477
-    Width = 732
+    Width = 925
     ExplicitTop = 477
     ExplicitWidth = 732
   end
   object Panel1: TsPanel [1]
     Left = 0
     Top = 0
-    Width = 732
+    Width = 925
     Height = 136
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 732
     object gbxForAllDates: TsGroupBox
       AlignWithMargins = True
       Left = 3
@@ -218,12 +218,13 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       AlignWithMargins = True
       Left = 419
       Top = 3
-      Width = 310
+      Width = 503
       Height = 130
       Align = alClient
       Caption = 'Room info'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitWidth = 310
       object clabRoom: TsLabel
         Left = 12
         Top = 16
@@ -397,11 +398,12 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
   object grRoomRates: TcxGrid [2]
     Left = 0
     Top = 136
-    Width = 732
+    Width = 925
     Height = 304
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 732
     object tvRoomRates: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = kbmRoomRatesDS
@@ -411,36 +413,42 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         item
           Format = '###0.00;###0.00'
           Kind = skSum
+          OnGetText = tvRoomRatesFooterSummaryCurrencyGetText
           FieldName = 'Rate'
           Column = tvRoomRatesRate
         end
         item
           Format = 'Sum ###0.00;###0.00'
           Kind = skSum
+          OnGetText = tvRoomRatesFoooterSummaryCurrencyGetTextSum
           FieldName = 'DiscountAmount'
           Column = tvRoomRatesDiscountAmount
         end
         item
           Format = '###0.00;###0.00'
           Kind = skSum
+          OnGetText = tvRoomRatesFoooterSummaryCurrencyGetTextSum
           FieldName = 'RentAmount'
           Column = tvRoomRatesRentAmount
         end
         item
           Format = '###0.00;###0.00'
           Kind = skSum
+          OnGetText = tvRoomRatesFooterSummaryNativeGetText
           FieldName = 'NativeAmount'
           Column = tvRoomRatesNativeAmount
         end
         item
           Format = '###0.00;###0.00'
           Kind = skAverage
+          OnGetText = tvRoomRatesFoooterSummaryCurrencyGetTextAvg
           FieldName = 'RentAmount'
           Column = tvRoomRatesRentAmount
         end
         item
           Format = 'Avg ###0.00;###0.00'
           Kind = skAverage
+          OnGetText = tvRoomRatesFoooterSummaryCurrencyGetTextAvg
           FieldName = 'DiscountAmount'
           Column = tvRoomRatesDiscountAmount
         end>
@@ -510,6 +518,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         Caption = 'Total Discount '
         DataBinding.FieldName = 'DiscountAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        OnGetProperties = tvRoomRatesRateGetProperties
         Options.Editing = False
         Width = 92
       end
@@ -517,7 +526,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         Caption = 'Total'
         DataBinding.FieldName = 'RentAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        OnGetProperties = tvRoomRatesRentDiscountGetProperties
+        OnGetProperties = tvRoomRatesRateGetProperties
         Options.Editing = False
         Width = 83
       end
@@ -537,15 +546,16 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
   object Panel2: TsPanel [3]
     Left = 0
     Top = 440
-    Width = 732
+    Width = 925
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 732
     object btnCancel: TsButton
       AlignWithMargins = True
-      Left = 625
+      Left = 818
       Top = 3
       Width = 104
       Height = 31
@@ -557,6 +567,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       ModalResult = 2
       TabOrder = 3
       SkinData.SkinSection = 'BUTTON'
+      ExplicitLeft = 625
     end
     object btnOK: TsButton
       AlignWithMargins = True

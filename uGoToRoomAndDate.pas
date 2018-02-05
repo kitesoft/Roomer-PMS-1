@@ -42,7 +42,6 @@ type
     procedure FormCreate(Sender : TObject);
     procedure FormShow(Sender : TObject);
     procedure cxButton1Click(Sender : TObject);
-    procedure btnGetRoomAndDateClick(Sender : TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
@@ -53,18 +52,46 @@ type
     zRoom : string;
   end;
 
-var
-  frmGoToRoomandDate : TfrmGoToRoomandDate;
+function OpenGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
 
 implementation
 
-uses uD, uAppGlobal, PrjConst, uDImages, uUtils;
+uses
+  uD
+  , uAppGlobal
+  , PrjConst
+  , uDImages
+  , uUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 
-procedure TfrmGoToRoomandDate.btnGetRoomAndDateClick(Sender : TObject);
+function OpenGoToRoomAndDate(var aRoom : string; var aDate : TDate) : boolean;
+var
+  frm: TfrmGoToRoomAndDate;
 begin
-  // **
+  result := false;
+  frm := TfrmGoToRoomAndDate.Create(nil);
+  try
+    frm.zDate := aDate;
+    frm.zRoom := aRoom;
+
+    frm.ShowModal;
+    if frm.modalresult = mrOk then
+    begin
+      aRoom := frm.zRoom;
+      aDate := frm.zDate;
+      result := true;
+    end
+    else
+    begin
+      aRoom := '';
+      aDate := Date;
+    end;
+  finally
+    frm.free;
+  end;
 end;
 
 procedure TfrmGoToRoomandDate.cxButton1Click(Sender : TObject);

@@ -476,8 +476,8 @@ type
     Currency: string;
     Discount: double;
     PriceType: string;
-    Arrival: string;
-    Departure: string;
+    Arrival: TDate;
+    Departure: TDate;
     RoomType: string;
     PMInfo: string;
     HiddenInfo: string;
@@ -487,10 +487,7 @@ type
     RoomRentPaymentInvoice: integer;
     Hallres: integer;
 
-    rrTmp: string;
     rrDescription: string;
-    rrArrival: Tdate;
-    rrDeparture: Tdate;
     rrIsNoRoom: boolean;
     rrRoomAlias: string;
     rrRoomTypeAlias: string;
@@ -523,8 +520,8 @@ type
 
   recReservationHolder = record
     Reservation: integer;
-    Arrival: string;
-    Departure: string;
+    Arrival: TDate;
+    Departure: TDate;
     Customer: string;
     name: string;
     Address1: string;
@@ -2880,16 +2877,13 @@ begin
     // ctrlGetString('NativeCurrency', Connection,loglevel,logPath);
     Discount := 0.00;
     PriceType := '';
-    Arrival := _db(TDate(date), false);
-    Departure := _db(TDate(IncDay(date, 1)), false);;
+    Arrival := TDate(date);
+    Departure := TDate(IncDay(date, 1));
     RoomType := '';
     PMInfo := '';
     HiddenInfo := '';
     RoomRentPaymentInvoice := -1;
-    rrTmp := '';
     rrDescription := '';
-    rrArrival := date;
-    rrDeparture := date + 1;
     rrIsNoRoom := false;
     rrRoomAlias := '';
     rrRoomTypeAlias := '';
@@ -2942,8 +2936,8 @@ begin
   begin
     Reservation := 0;
 
-    Arrival := _db(TDate(date), false);
-    Departure := _db(TDate(IncDay(date, 1)), false);
+    Arrival := TDate(date);
+    Departure := IncDay(date);
     Customer := '0';
     name := '';
     Address1 := '';
@@ -3636,8 +3630,8 @@ var
 begin
   s := '';
   s := s + 'update reservations set '#10;
-  s := s + ' 	 Arrival = ' + quotedstr(theData.Arrival) + #10;
-  s := s + ' 	,Departure = ' + quotedstr(theData.Departure) + #10;
+  s := s + ' 	 Arrival = ' + _db(theData.Arrival) + #10;
+  s := s + ' 	,Departure = ' + _db(theData.Departure) + #10;
   s := s + ' 	,Customer = ' + quotedstr(theData.Customer) + #10;
   s := s + ' 	,Name = ' + quotedstr(theData.name) + #10;
   s := s + ' 	,Address1 = ' + quotedstr(theData.Address1) + #10;
@@ -3834,10 +3828,7 @@ begin
     b.Append('   ,`RoomRentPaid3` ' + #10);
     b.Append('   ,`RoomRentPaymentInvoice` ' + #10);
     b.Append('   ,`Hallres` ' + #10);
-    b.Append('   ,`rrTmp` ' + #10);
     b.Append('   ,`rrDescription` ' + #10);
-    b.Append('   ,`rrArrival` ' + #10);
-    b.Append('   ,`rrDeparture` ' + #10);
     b.Append('   ,`rrIsNoRoom` ' + #10);
     b.Append('   ,`rrRoomAlias` ' + #10);
     b.Append('   ,`rrRoomTypeAlias` ' + #10);
@@ -3883,10 +3874,7 @@ begin
     b.Append('  , ' + _db(theData.RoomRentPaid3) + #10);
     b.Append('  , ' + _db(theData.RoomRentPaymentInvoice) + #10);
     b.Append('  , ' + _db(theData.Hallres) + #10);
-    b.Append('  , ' + _db(theData.rrTmp) + #10);
     b.Append('  , ' + _db(theData.rrDescription) + #10);
-    b.Append('  , ' + _db(theData.rrArrival) + #10);
-    b.Append('  , ' + _db(theData.rrDeparture) + #10);
     b.Append('  , ' + _db(theData.rrIsNoRoom) + #10);
     b.Append('  , ' + _db(theData.rrRoomAlias) + #10);
     b.Append('  , ' + _db(theData.rrRoomTypeAlias) + #10);
@@ -3895,7 +3883,6 @@ begin
     b.Append('  , ' + _db(theData.numGuests) + #10);
     b.Append('  , ' + _db(theData.numChildren) + #10);
     b.Append('  , ' + _db(theData.numInfants) + #10);
-//    b.Append('  , ' + _db(theData.averageRate) + #10);
     b.Append('  , ' + _db(theData.rateCount) + #10);
     b.Append('  , ' + _db(theData.package) + #10);
     b.Append('  , ' + _db(theData.ManualChannelId) + #10);
@@ -3945,8 +3932,8 @@ begin
     b.Append('   ,Currency = ' + _db(theData.Currency) + #10);
     b.Append('   ,Discount = ' + _db(theData.Discount) + #10);
     b.Append('   ,PriceType = ' + _db(theData.PriceType) + #10);
-    b.Append('   ,Arrival = ' + _db(theData.Arrival) + #10);
-    b.Append('   ,Departure = ' + _db(theData.Departure) + #10);
+//    b.Append('   ,Arrival = ' + _db(theData.Arrival) + #10);
+//    b.Append('   ,Departure = ' + _db(theData.Departure) + #10);
     b.Append('   ,RoomType = ' + _db(theData.RoomType) + #10);
     b.Append('   ,PMInfo = ' + _db(theData.PMInfo) + #10);
     b.Append('   ,HiddenInfo = ' + _db(theData.HiddenInfo) + #10);
@@ -3955,10 +3942,7 @@ begin
     b.Append('   ,RoomRentPaid3 = ' + _db(theData.RoomRentPaid3) + #10);
     b.Append('   ,RoomRentPaymentInvoice = ' + _db(theData.RoomRentPaymentInvoice) + #10);
     b.Append('   ,Hallres = ' + _db(theData.Hallres) + #10);
-    b.Append('   ,rrTmp = ' + _db(theData.rrTmp) + #10);
     b.Append('   ,rrDescription = ' + _db(theData.rrDescription) + #10);
-    b.Append('   ,rrArrival = ' + _db(theData.rrArrival) + #10);
-    b.Append('   ,rrDeparture = ' + _db(theData.rrDeparture) + #10);
     b.Append('   ,rrIsNoRoom = ' + _db(theData.rrIsNoRoom) + #10);
     b.Append('   ,rrRoomAlias = ' + _db(theData.rrRoomAlias) + #10);
     b.Append('   ,rrRoomTypeAlias = ' + _db(theData.rrRoomTypeAlias) + #10);
@@ -4016,8 +4000,8 @@ begin
   s := s + '  ,Currency ' + #10;
   s := s + '  ,Discount ' + #10;
   s := s + '  ,PriceType ' + #10;
-  s := s + '  ,Arrival ' + #10;
-  s := s + '  ,Departure ' + #10;
+//  s := s + '  ,Arrival ' + #10;
+//  s := s + '  ,Departure ' + #10;
   s := s + '  ,RoomType ' + #10;
   s := s + '  ,PMInfo ' + #10;
   s := s + '  ,HiddenInfo ' + #10;
@@ -4026,10 +4010,7 @@ begin
   s := s + '  ,RoomRentPaid3 ' + #10;
   s := s + '  ,RoomRentPaymentInvoice ' + #10;
   s := s + '  ,Hallres ' + #10;
-  s := s + '  ,rrTmp ' + #10;
   s := s + '  ,rrDescription ' + #10;
-  s := s + '  ,rrArrival ' + #10;
-  s := s + '  ,rrDeparture ' + #10;
   s := s + '  ,rrIsNoRoom ' + #10;
   s := s + '  ,rrRoomAlias ' + #10;
   s := s + '  ,rrRoomTypeAlias ' + #10;
@@ -4063,8 +4044,8 @@ begin
   s := s + '  , ' + _db(theData.Currency) + #10;
   s := s + '  , ' + _db(theData.Discount) + #10;
   s := s + '  , ' + _db(theData.PriceType) + #10;
-  s := s + '  , ' + _db(theData.Arrival) + #10;
-  s := s + '  , ' + _db(theData.Departure) + #10;
+//  s := s + '  , ' + _db(theData.Arrival) + #10;
+//  s := s + '  , ' + _db(theData.Departure) + #10;
   s := s + '  , ' + _db(theData.RoomType) + #10;
   s := s + '  , ' + _db(theData.PMInfo) + #10;
   s := s + '  , ' + _db(theData.HiddenInfo) + #10;
@@ -4073,10 +4054,7 @@ begin
   s := s + '  , ' + _db(theData.RoomRentPaid3) + #10;
   s := s + '  , ' + _db(theData.RoomRentPaymentInvoice) + #10;
   s := s + '  , ' + _db(theData.Hallres) + #10;
-  s := s + '  , ' + _db(theData.rrTmp) + #10;
   s := s + '  , ' + _db(theData.rrDescription) + #10;
-  s := s + '  , ' + _db(theData.rrArrival, true) + #10;
-  s := s + '  , ' + _db(theData.rrDeparture, true) + #10;
   s := s + '  , ' + _db(theData.rrIsNoRoom) + #10;
   s := s + '  , ' + _db(theData.rrRoomAlias) + #10;
   s := s + '  , ' + _db(theData.rrRoomTypeAlias) + #10;
@@ -4329,8 +4307,8 @@ begin
       result.Currency := rSet.fieldbyname('Currency').asString;
       result.Discount := rSet.fieldbyname('Discount').AsFloat;
       result.PriceType := rSet.fieldbyname('PriceType').asString;
-      result.Arrival := rSet.fieldbyname('Arrival').asString;
-      result.Departure := rSet.fieldbyname('Departure').asString;
+      result.Arrival := rSet.fieldbyname('Arrival').AsDateTime;
+      result.Departure := rSet.fieldbyname('Departure').asDateTime;
       result.RoomType := rSet.fieldbyname('RoomType').asString;
       result.PMInfo := rSet.fieldbyname('PMInfo').asString;
       result.HiddenInfo := rSet.fieldbyname('HiddenInfo').asString;
@@ -4339,10 +4317,7 @@ begin
       result.RoomRentPaid3 := rSet.fieldbyname('RoomRentPaid3').AsFloat;
       result.RoomRentPaymentInvoice := rSet.fieldbyname('RoomRentPaymentInvoice').asInteger;
       result.Hallres := rSet.fieldbyname('Hallres').asInteger;
-      result.rrTmp := rSet.fieldbyname('rrTmp').asString;
       result.rrDescription := rSet.fieldbyname('rrDescription').asString;
-      result.rrArrival := rSet.fieldbyname('rrArrival').AsDateTime;
-      result.rrDeparture := rSet.fieldbyname('rrDeparture').AsDateTime;
       result.rrIsNoRoom := rSet['rrIsNoRoom'];
       result.rrRoomAlias := rSet.fieldbyname('rrRoomAlias').asString;
       result.rrRoomTypeAlias := rSet.fieldbyname('rrRoomTypeAlias').asString;
@@ -4378,8 +4353,8 @@ begin
     if hData.rSet_bySQL(rSet, sql) then
     begin
       result.Reservation := rSet.fieldbyname('Reservation').asInteger;
-      result.Arrival := rSet.fieldbyname('Arrival').asString;
-      result.Departure := rSet.fieldbyname('Departure').asString;
+      result.Arrival := rSet.fieldbyname('Arrival').AsDateTime;
+      result.Departure := rSet.fieldbyname('Departure').AsDateTime;
       result.Customer := rSet.fieldbyname('Customer').asString;
       result.name := rSet.fieldbyname('name').asString;
       result.Address1 := rSet.fieldbyname('Address1').asString;
@@ -6000,38 +5975,6 @@ begin
   end;
 end;
 
-function RR_GetDayCount(iRoomReservation: integer): integer;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-  Arrival, Departure: Tdate;
-begin
-  result := 0;
-
-  rSet := CreateNewDataSet;
-  try
-    s := '';
-    s := s + 'SELECT '#10;
-    s := s + '  rrArrival '#10;
-    s := s + '  ,rrDeparture '#10;
-    s := s + 'FROM '#10;
-    s := s + '  `roomreservations` '#10;
-    s := s + 'WHERE '#10;
-    s := s + ' `RoomReservation` = %d ';
-
-    s := format(s, [iRoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      rSet.First;
-      Arrival := rSet.fieldbyname('rrArrival').AsDateTime;
-      Departure := rSet.fieldbyname('rrDeparture').AsDateTime;
-      result := trunc(Departure) - trunc(Arrival);
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
-
 function Room_GetRec(Room: string): recRoomInfo;
 var
   s: string;
@@ -6217,7 +6160,7 @@ begin
     s := format(select_GetAttivalText, [RoomReservation]);
     if hData.rSet_bySQL(rSet, s) then
     begin
-      Arrival := rSet.fieldbyname('rrArrival').AsDateTime;
+      Arrival := rSet.fieldbyname('Arrival').AsDateTime;
       guestStatus := rSet.fieldbyname('Status').asString;
     end;
 
@@ -6842,6 +6785,7 @@ end;
 
 procedure recCurrencyHolder.ReadFromDataset(aRset: TDataset);
 begin
+  Init;
   id := aRSet.fieldbyname('ID').asInteger;
   Currency := aRSet.fieldbyname('currency').asString;
   Description := aRSet.fieldbyname('description').asString;
@@ -6864,6 +6808,7 @@ begin
   DisplayFormat := '';
   CurrencySign := '';
   active := true;
+  CurrencyFormat := 2;
 end;
 
 function GET_CurrencyHolderByCurrency(var theData: recCurrencyHolder; justActive: boolean = true): boolean;

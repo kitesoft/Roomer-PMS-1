@@ -355,7 +355,11 @@ uses
 
   , ufrmPaymentReqRoomtypeGroup
   , uTopClassAvailabilityOrder
-  , uResourceTypeDefinitions, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions;
+  , uResourceTypeDefinitions
+  , uCalculationTypeDefinitions
+  , uCalculationTypeExtraDefinitions
+  , uRoomerLanguage
+;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

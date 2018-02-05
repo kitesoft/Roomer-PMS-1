@@ -16,6 +16,7 @@ type
     grdOccupancy: TAdvStringGrid;
     procedure grdOccupancyGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment; var VAlign: TVAlignment);
     procedure grdOccupancyDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
+    procedure FormCreate(Sender: TObject);
   private
     fromDate, toDate: TDateTime;
     FOccupancyViewType: TOccupancyViewType;
@@ -46,9 +47,6 @@ type
 
     property Cell0FontSize : Integer read FCell0FontSize write SetCell0FontSize;
   end;
-
-var
-  embOccupancyView: TembOccupancyView;
 
 implementation
 
@@ -193,6 +191,11 @@ begin
   CheckResizeFont;
 end;
 
+
+procedure TembOccupancyView.FormCreate(Sender: TObject);
+begin
+  RoomerLanguage.TranslateThisForm(Self);
+end;
 
 function TembOccupancyView.GetOriginalParentHeight: Integer;
 begin

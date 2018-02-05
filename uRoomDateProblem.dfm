@@ -70,7 +70,6 @@ object frmRoomDateProblem: TfrmRoomDateProblem
       Caption = 'Select method to resolve reservation conflict'
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      Checked = False
       Items.Strings = (
         '1.  Set current rooms as no-room'
         '2.  Set conflict rooms as no-room'
@@ -183,8 +182,9 @@ object frmRoomDateProblem: TfrmRoomDateProblem
     SearchFooter.HintFindPrev = 'Find previous occurence'
     SearchFooter.HintHighlight = 'Highlight occurences'
     SearchFooter.MatchCaseCaption = 'Match case'
+    SearchFooter.ResultFormat = '(%d of %d)'
     SortSettings.DefaultFormat = ssAutomatic
-    Version = '7.9.1.0'
+    Version = '8.2.4.1'
     ColWidths = (
       64
       64

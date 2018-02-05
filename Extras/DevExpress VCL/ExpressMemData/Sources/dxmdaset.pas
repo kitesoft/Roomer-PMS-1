@@ -4042,6 +4042,8 @@ procedure TdxCustomMemData.LoadFromDataSet(DataSet : TDataSet);
     Result := ASource = ADestination;
     if not Result then
       Result := (ASource = ftAutoInc) and (ADestination = ftInteger);
+    if not Result then
+      Result := (aSource in [ftDate, ftDateTime]) and (aDestination in [ftDate, ftDateTime]);
   end;
 
   procedure ClearAutoIncList;

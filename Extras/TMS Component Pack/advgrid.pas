@@ -57496,6 +57496,9 @@ begin
     {$ENDIF}
     if FOleDropTargetAssigned then
       RevokeDragDrop(self.Handle);
+
+//    if assigned(FGridDropTarget) then
+//      FGridDropTarget := nil;
     KillTimer(Handle,FGridTimerID);
 
     if FocusHelper.Enabled then
@@ -62586,7 +62589,10 @@ begin
 
   if not (csDesigning in FGrid.ComponentState) then
   begin
-    if FOleDropTarget then
+    //ROOMER PATCH: Avoid creating multiple DropTargets causing memory leaks
+    if FOleDropTarget and not assigned(FGrid.FGridDropTarget) then
+    //    if FOleDropTarget then
+    // END PATCH
     begin
       FGrid.FGridDropTarget := TGridDropTarget.Create(FGrid);
       FGrid.FOleDropTargetAssigned := RegisterDragDrop(FGrid.Handle, FGrid.FGridDropTarget) = s_OK;

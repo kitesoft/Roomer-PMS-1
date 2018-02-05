@@ -134,6 +134,7 @@ end;
 
 procedure TGetSQLDataThreaded.ThreadTerminateAfterGet(Sender: TObject);
 begin
+  // Executed in MainThread!
   try
     if assigned(FROomerDataset) then
       FRoomerDataSet.RecordSet := TDBThread(Sender).RecordSet;
@@ -201,10 +202,13 @@ begin
         FRoomerDataSet.Free;
       end;
     except
-      {ifdef DEBUG}
       on E: Exception do
+      begin
+        {ifdef DEBUG}
         MessageDlg(Format('Exception occured when executing thread [%s]'+ #10 + ' Messsge [%s]', [classname, e.Message]), mtError, [mbOK], 0);
-      {endif}
+        {endif}
+        raise;
+      end;
     end;
   finally
     CoUnInitialize;
@@ -215,14 +219,10 @@ end;
 procedure TDBThread.InternalExecute;
 begin
   inherited;
-  try
-    case FOperationType of
-      OT_EXECUTE:  ExecuteSQL(FSQL);
-      OT_PUT:      ExecutePut(FSQL, FData);
-      OT_POST:     ExecutePost(FSQL, FData);
-    end;
-  except
-    // what to do here ...
+  case FOperationType of
+    OT_EXECUTE:  ExecuteSQL(FSQL);
+    OT_PUT:      ExecutePut(FSQL, FData);
+    OT_POST:     ExecutePost(FSQL, FData);
   end;
 end;
 

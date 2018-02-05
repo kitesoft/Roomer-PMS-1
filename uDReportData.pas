@@ -9,25 +9,34 @@ type
   TDReportData = class(TDataModule)
     kbmUnconfirmedInvoicelines_: TkbmMemTable;
     UnconfirmedInvoicelinesDS: TDataSource;
-    procedure kbmUnconfirmedInvoicelines_AfterOpen(DataSet: TDataSet);
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-var
-  DReportData: TDReportData;
+
+function DReportData: TDReportData;
 
 implementation
+
+uses
+  VCL.Forms
+  ;
+
+var
+  gReportData: TDReportData;
+
+function DReportData: TDReportData;
+begin
+  if not assigned(gReportData) then
+    gReportData := TDReportData.Create(Application);
+
+  Result := gReportData;
+end;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
-
-procedure TDReportData.kbmUnconfirmedInvoicelines_AfterOpen(DataSet: TDataSet);
-begin
-//  ShowMessage('xxx');
-end;
 
 end.

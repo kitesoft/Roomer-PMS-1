@@ -240,7 +240,9 @@ uses
   , uPackageItems
   , uDImages
   , UITypes
-  , uRoomerGridForm;
+  , uRoomerGridForm
+  , uRoomerLanguage
+  ;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

@@ -8,11 +8,23 @@ uses
   Data.DB;
 
 type
-  TfraLookupPanel = class;
   TLookupPanelSelectEvent = function(var aCode: string): boolean of object;
   TLookupPanelValidateEvent = function(const aCode: string): boolean of object;
 
-  TfraLookupPanel = class(TFrame)
+  /// <summary>
+  ///  Generic frame to select one item from a dataset
+  ///  </summary>
+  ///  <example>
+  ///    with fraLookupPriceCode do
+  ///      begin
+  ///        Dataset := glb.TblpricecodesSet;
+  ///        CodeField := 'pccode';
+  ///        DescriptionField := 'pcdescription';
+  ///        OnChange := evtLookupOnChange;
+  ///        OnSelect := evtSelectPriceCode;
+  ///      end;
+  ///  </example>
+  TfraCustomLookupPanel = class(TFrame)
     pnlLookup: TsPanel;
     edCode: TsEdit;
     btnSelect: TsButton;
@@ -43,11 +55,13 @@ type
     procedure SetOnSelect(const Value: TLookupPanelSelectEvent);
     function ValidateInDataset(const aCode: string): boolean;
     procedure SetAllowEmpty(const Value: boolean);
+    function GetDescription: string;
     { Private declarations }
   protected
     procedure DoInternalSelect(); virtual;
     function ValidateCode(const aCode: string): boolean; virtual;
-    function GetDescription(const aCode: string): string; virtual;
+    function ReadDescription(const aCode: string): string; virtual;
+    procedure SetFocus; override;
   public
     constructor Create(aOwner: TCOmponent); override;
     destructor Destroy; override;
@@ -55,20 +69,13 @@ type
     procedure EnableEvents;
     function EventsEnabled: boolean;
     property IsValid: boolean read GetIsValid;
-  published
+    procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
+
+  protected
     { Public declarations }
-    property AllowEdit: boolean read FAllowEdit write SetAllowEdit;
-    property AllowEmpty: boolean read FAllowEmpty write SetAllowEmpty;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
-    property OnChangedAndValid: TNotifyEvent read FOnChangedAndValid write FOnChangedAndValid;
     property OnSelect: TLookupPanelSelectEvent read FOnSelect write SetOnSelect;
     property OnValidate: TLookupPanelValidateEvent read FOnValidate write FOnValidate;
-    property Code: string read GetCode write SetCode;
 
-    /// <summary>
-    ///   A comma separated list of codes that are not accepted
-    /// </summary>
-    property RejectedCodes: string read GetRejectedCodes write SetRejectedCodes;
     /// <summary>
     ///   Dataset used to locate the entered Code for validation, if assigned and active
     /// </summary>
@@ -81,6 +88,26 @@ type
     ///   Fieldname in Dataset used to retrieve the description of a selected item
     /// </summary>
     property DescriptionField: string read FDescriptionField write FDescriptionField;
+  published
+    property Code: string read GetCode write SetCode;
+    property Description: string read GetDescription;
+    /// <summary>
+    ///   A comma separated list of codes that are not accepted
+    /// </summary>
+    property RejectedCodes: string read GetRejectedCodes write SetRejectedCodes;
+    property AllowEdit: boolean read FAllowEdit write SetAllowEdit;
+    property AllowEmpty: boolean read FAllowEmpty write SetAllowEmpty;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnChangedAndValid: TNotifyEvent read FOnChangedAndValid write FOnChangedAndValid;
+  end;
+
+  TfraLookupPanel = class(TfraCustomLookupPanel)
+  public
+    property OnSelect;
+    property OnValidate;
+    property Dataset;
+    property CodeField;
+    property DescriptionField;
   end;
 
 implementation
@@ -96,12 +123,12 @@ uses
 
 { TfraLookupPanel }
 
-procedure TfraLookupPanel.DoInternalSelect;
+procedure TfraCustomLookupPanel.DoInternalSelect;
 begin
 end;
 
 
-procedure TfraLookupPanel.btnSelectClick(Sender: TObject);
+procedure TfraCustomLookupPanel.btnSelectClick(Sender: TObject);
 var
   lCode: string;
 begin
@@ -115,7 +142,7 @@ begin
     DoInternalSelect;
 end;
 
-constructor TfraLookupPanel.Create(aOwner: TCOmponent);
+constructor TfraCustomLookupPanel.Create(aOwner: TCOmponent);
 begin
   FRejectedCodes := TStringlist.Create;
   FRejectedCodes.Duplicates := dupIgnore;
@@ -124,18 +151,18 @@ begin
   inherited;
 end;
 
-destructor TfraLookupPanel.Destroy;
+destructor TfraCustomLookupPanel.Destroy;
 begin
   FRejectedCodes.Free;
   inherited;
 end;
 
-procedure TfraLookupPanel.DisableEvents;
+procedure TfraCustomLookupPanel.DisableEvents;
 begin
   inc(FDisableEventCount);
 end;
 
-function TfraLookupPanel.ValidateInDataset(const aCode: string): boolean;
+function TfraCustomLookupPanel.ValidateInDataset(const aCode: string): boolean;
 var
   bm: TBookmark;
 const
@@ -158,7 +185,7 @@ begin
   end;
 end;
 
-function TfraLookupPanel.GetDescription(const aCode: string): string;
+function TfraCustomLookupPanel.ReadDescription(const aCode: string): string;
 var
   bm: TBookmark;
 begin
@@ -177,7 +204,7 @@ begin
   end;
 end;
 
-function TfraLookupPanel.ValidateCode(const aCode: string): boolean;
+function TfraCustomLookupPanel.ValidateCode(const aCode: string): boolean;
 var
   idx: integer;
 begin
@@ -189,19 +216,21 @@ begin
     result := Result and (not assigned(FDataset) or ValidateInDataset(aCode));
 end;
 
-procedure TfraLookupPanel.edCodeChange(Sender: TObject);
+procedure TfraCustomLookupPanel.edCodeChange(Sender: TObject);
 begin
   FIsValidCode := (FAllowEmpty and (trim(edCode.Text) = '')) or ValidateCode(edCode.Text);
 
   if NOT FIsValidCode then
   begin
+    lblDescription.UseSkinColor := false;
     lblDescription.Font.Color := clRed;
     lblDescription.caption := GetTranslatedText('shNotF_star');
   end
   else
   begin
+    lblDescription.UseSkinColor := true;
     lblDescription.Font.Color := clWindowText;
-    lblDescription.Caption := GetDescription(edCode.Text);
+    lblDescription.Caption := ReadDescription(edCode.Text);
   end;
 
   if EventsEnabled and Assigned(FOnChange) then
@@ -211,12 +240,12 @@ begin
     FOnChangedAndValid(Self);
 end;
 
-procedure TfraLookupPanel.edCodeDblClick(Sender: TObject);
+procedure TfraCustomLookupPanel.edCodeDblClick(Sender: TObject);
 begin
   btnSelect.Click;
 end;
 
-procedure TfraLookupPanel.edCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TfraCustomLookupPanel.edCodeKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_F2 then
   begin
@@ -225,56 +254,75 @@ begin
   end;
 end;
 
-procedure TfraLookupPanel.EnableEvents;
+procedure TfraCustomLookupPanel.EnableEvents;
 begin
   Dec(FDisableEventCount);
   FDisableEventCount := max(0, FDisableEventCount);
 end;
 
-function TfraLookupPanel.EventsEnabled: boolean;
+function TfraCustomLookupPanel.EventsEnabled: boolean;
 begin
   Result := (FDisableEventCount <= 0);
 end;
 
-function TfraLookupPanel.GetCode: string;
+procedure TfraCustomLookupPanel.GetChildren(Proc: TGetChildProc; Root: TComponent);
+begin
+//  inherited;
+
+end;
+
+function TfraCustomLookupPanel.GetCode: string;
 begin
   Result := edCode.Text;
 end;
 
-function TfraLookupPanel.GetIsValid: boolean;
+function TfraCustomLookupPanel.GetDescription: string;
+begin
+  Result := '';
+  if IsValid then
+    Result := lblDescription.Caption;
+end;
+
+function TfraCustomLookupPanel.GetIsValid: boolean;
 begin
   Result := FIsValidCode;
 end;
 
-function TfraLookupPanel.GetRejectedCodes: string;
+function TfraCustomLookupPanel.GetRejectedCodes: string;
 begin
   Result := FRejectedCodes.CommaText;
 end;
 
-procedure TfraLookupPanel.SetAllowEdit(const Value: boolean);
+procedure TfraCustomLookupPanel.SetAllowEdit(const Value: boolean);
 begin
   FAllowEdit := Value;
   edCode.ReadOnly := not FAllowEdit;
   btnSelect.Visible := FAllowEdit;
 end;
 
-procedure TfraLookupPanel.SetAllowEmpty(const Value: boolean);
+procedure TfraCustomLookupPanel.SetAllowEmpty(const Value: boolean);
 begin
   FAllowEmpty := Value;
   edCodeChange(self);
 end;
 
-procedure TfraLookupPanel.SetCode(const Value: string);
+procedure TfraCustomLookupPanel.SetCode(const Value: string);
 begin
   edCode.Text := Value;
 end;
 
-procedure TfraLookupPanel.SetOnSelect(const Value: TLookupPanelSelectEvent);
+procedure TfraCustomLookupPanel.SetFocus;
+begin
+//  inherited;
+  edCode.SetFocus;
+end;
+
+procedure TfraCustomLookupPanel.SetOnSelect(const Value: TLookupPanelSelectEvent);
 begin
   FOnSelect := Value;
 end;
 
-procedure TfraLookupPanel.SetRejectedCodes(const Value: string);
+procedure TfraCustomLookupPanel.SetRejectedCodes(const Value: string);
 begin
   FRejectedCodes.CommaText := Value;
   edCodeChange(Self);

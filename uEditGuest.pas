@@ -35,7 +35,7 @@ uses
   , sPageControl
   , sButton
   , sPanel
-  , PrjConst, cxClasses, cxPropertiesStore, uFraCountryPanel
+  , PrjConst, cxClasses, cxPropertiesStore, uFraCountryPanel, uFraLookupPanel
 
 
 
@@ -153,7 +153,7 @@ procedure TfrmEditGuest.BtnOkClick(Sender: TObject);
 begin
   zPersonData.name         := trim(trim(edFirstname.text)+' '+trim(edLastname.text));
   zPersonData.title        := trim(edTitle.Text);
-  zPersonData.Nationality  := trim(fraNationality.CountryCode);
+  zPersonData.Nationality  := trim(fraNationality.Code);
   zPersonData.DateOfBirth  := edDateOfBirth.Date;
 
   zPersondata.Address1     := trim(edAddress1.Text);
@@ -163,7 +163,7 @@ begin
 
   zPersondata.PersonalIdentificationId := trim(edCardId.Text);
   zPersondata.SocialSecurityNumber     := trim(edSSN.Text);
-  zPersondata.Country                  := trim(fraCountry.CountryCode);
+  zPersondata.Country                  := trim(fraCountry.Code);
   zPersondata.Tel1                     := trim(edTel1.Text);
   zPersondata.Tel2                     := trim(edMobile.Text);
   zPersondata.Email                    := trim(edEmail.Text);
@@ -177,7 +177,7 @@ begin
   zPersondata.CompAddress2   := trim(edCompAddress2.text)    ;
   zPersondata.CompZip        := trim(edCompZipcode.text)     ;
   zPersondata.CompCity       := trim(edCompCity.text)        ;
-  zPersondata.CompCountry    := trim(fraCompanyCountry.CountryCode)     ;
+  zPersondata.CompCountry    := trim(fraCompanyCountry.Code)     ;
 end;
 
 procedure TfrmEditGuest.FormShow(Sender: TObject);
@@ -194,14 +194,14 @@ begin
 
   edTitle.Text       := zPersonData.title;
   edSSN.Text         := zPersonData.SocialSecurityNumber;
-  fraNationality.CountryCode := zPersonData.Nationality;
+  fraNationality.Code := zPersonData.Nationality;
   edDateOfBirth.Date := zPersonData.DateOfBirth;
 
   edAddress1.Text  := zPersondata.Address1;
   edAddress2.Text  := zPersondata.Address2;
   edZipcode.Text   := zPersondata.Address3;
   edCity.Text      := zPersondata.Address4;
-  fraCountry.CountryCode := zPersondata.Country;
+  fraCountry.Code := zPersondata.Country;
 
   edTel1.Text    := zPersondata.Tel1;
   edMobile.Text  := zPersondata.Tel2;
@@ -216,7 +216,9 @@ begin
  edCompAddress2.text   :=   zPersondata.CompAddress2   ;
  edCompZipcode.text    :=   zPersondata.CompZip        ;
  edCompCity.text       :=   zPersondata.CompCity       ;
- fraCompanyCountry.CountryCode :=   zPersondata.CompCountry    ;
+ fraCompanyCountry.Code :=   zPersondata.CompCountry    ;
+
+ pageMain.ActivePageIndex := 0;
 end;
 
 end.

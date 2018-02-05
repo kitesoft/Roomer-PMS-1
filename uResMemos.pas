@@ -150,7 +150,9 @@ uses
   , hdata
   , PrjConst
   , uDImages
-  , UITypes, uSQLUtils;
+  , UITypes, uSQLUtils
+  , uRoomerLanguage
+  ;
 
 {$R *.dfm}
 
@@ -321,8 +323,8 @@ begin
     zTnformationText := res_.FieldByName('Information').asstring; ;
     zPMinfoText := res_.FieldByName('PMInfo').asstring; ;
 
-    dtArrival := SQLToDate(res_.FieldByName('arrival').asstring);
-    dtDeparture := SQLToDate(res_.FieldByName('departure').asstring);
+    dtArrival := res_.FieldByName('arrival').AsDateTime;
+    dtDeparture := res_.FieldByName('departure').asDateTime;
 
     dateTimeToString(sArrival, 'dd.mm.yyyy - ddd', dtArrival);
     dateTimeToString(sDeparture, 'dd.mm.yyyy - ddd', dtDeparture);
@@ -350,8 +352,8 @@ begin
     mRR.Append;
     mRR.FieldByName('Room').asstring := RR_.FieldByName('Room').asstring;
     mRR.FieldByName('RoomType').asstring := RR_.FieldByName('RoomType').asstring;
-    mRR.FieldByName('Arrival').AsDateTime := RR_.FieldByName('rrArrival').AsDateTime;
-    mRR.FieldByName('Departure').AsDateTime := RR_.FieldByName('rrDeparture').AsDateTime;
+    mRR.FieldByName('Arrival').AsDateTime := RR_.FieldByName('Arrival').AsDateTime;
+    mRR.FieldByName('Departure').AsDateTime := RR_.FieldByName('Departure').AsDateTime;
     mRR.FieldByName('RoomReservation').AsInteger := RR_.FieldByName('RoomReservation').AsInteger;
     mRR.FieldByName('mem').asstring := RR_.FieldByName('HiddenInfo').asstring;
     mRR.FieldByName('GuestName').asstring := d.RR_GetFirstGuestName(RR_.FieldByName('RoomReservation').AsInteger);

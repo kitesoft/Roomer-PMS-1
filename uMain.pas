@@ -7,7 +7,7 @@ uses
   Windows, Messages, IOUtils, System.Generics.Collections, IdComponent, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, Grids, ComCtrls, Db,
   ADODB, ActiveX, StdCtrls, Menus, Mask, ComObj, ShellApi, Inifiles, ImgList, Buttons, Vcl.AppEvnts,
-  uReservationHintHolder, uEmbOccupancyView, uEmbPeriodView, uGuestProfiles, uStaffCommunication
+  uReservationHintHolder, uEmbOccupancyView, uGuestProfiles, uStaffCommunication
     , uAllotmentToRes
     , uRoomerContainerClasses
     , uRoomerDefinitions
@@ -68,9 +68,9 @@ uses
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
   uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics, uVersionManagement
- , uReservationStateChangeHandler
-
-
+  , uReservationStateChangeHandler
+  , uFraDayStatistics
+  , uFrmRateQuery
     ;
 
 type
@@ -428,7 +428,6 @@ type
     dxBarLargeButton4: TdxBarLargeButton;
     timSearch: TTimer;
     sLabel1: TsLabel;
-    lblSearchFilterActive: TsLabel;
     ilFilter: TImageList;
     dxSkinController1: TdxSkinController;
     tabFreeRooms: TsTabSheet;
@@ -495,7 +494,7 @@ type
     tvAllReservationsReservationName: TcxGridDBColumn;
     tvAllReservationsCustomerName: TcxGridDBColumn;
     tvAllReservationsGroupReservationName: TcxGridDBColumn;
-    tvAllReservationsmem: TcxGridDBColumn;
+    tvAllReservationsRoomNotes: TcxGridDBColumn;
     P1: TMenuItem;
     __N7: TMenuItem;
     dlgAdvGridPrintSettings: TAdvGridPrintSettingsDialog;
@@ -506,7 +505,6 @@ type
     btnEmailTemplates: TdxBarLargeButton;
     btnCancelReservations: TMenuItem;
     btnTotallist: TdxBarLargeButton;
-    mnuItemStatus: TPopupMenu;
     Currentguest1: TMenuItem;
     Notarrived1: TMenuItem;
     Departed1: TMenuItem;
@@ -515,13 +513,8 @@ type
     Alotment1: TMenuItem;
     Blockedroom1: TMenuItem;
     Cancellation1: TMenuItem;
-    mnuFilterLocation: TPopupMenu;
-    G2: TPopupMenu;
     btnCustInvoices: TdxBarLargeButton;
     sPanel3: TsPanel;
-    btnStatusFilter: TsSpeedButton;
-    btnLocationFilter: TsSpeedButton;
-    btnGroupsFilter: TsSpeedButton;
     edtSearch: TButtonedEdit;
     pnlRBE: TsPanel;
     pupGroups: TPopupMenu;
@@ -638,7 +631,6 @@ type
     R3: TMenuItem;
     N9: TMenuItem;
     btnRepArrivals: TdxBarLargeButton;
-    __TimingResult: TsLabel;
     mnuCancelRoomFromRoomReservation: TMenuItem;
     __N10: TMenuItem;
     dxBarButton6: TdxBarButton;
@@ -691,6 +683,13 @@ type
     btnFinanceMutationTraces: TdxBarLargeButton;
     btnDailySalesAndStatistics: TdxBarLargeButton;
     btnConnectionsStatistics: TdxBarLargeButton;
+    btnFilterDropdown: TsSpeedButton;
+    mnuFilter: TPopupMenu;
+    mnuFilterStatus: TMenuItem;
+    mnuFilterGroup: TMenuItem;
+    mnuFilterLocation: TMenuItem;
+    mnuFilterRoomType: TMenuItem;
+    fraDayStatistics: TfraDayStatistics;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -888,9 +887,6 @@ type
     procedure btnCancelThisReservationClick(Sender: TObject);
     procedure btnTotallistClick(Sender: TObject);
     procedure mnuRemovereservationClick(Sender: TObject);
-    procedure btnStatusFilterClick(Sender: TObject);
-    procedure btnLocationFilterClick(Sender: TObject);
-    procedure btnGroupsFilterClick(Sender: TObject);
     procedure dtMainHeaderPropertiesChange(Sender: TObject);
     procedure C4Click(Sender: TObject);
     procedure pupGroupsPopup(Sender: TObject);
@@ -916,7 +912,6 @@ type
     procedure cbxStatDayChange(Sender: TObject);
     procedure btnGuestsClick(Sender: TObject);
     procedure cbxViewTypesCloseUp(Sender: TObject);
-    procedure tabsViewMouseEnter(Sender: TObject);
     procedure pnlNoRoomButtonsMouseEnter(Sender: TObject);
     procedure btnNoRoomsHideClick(Sender: TObject);
     procedure btnOccupancyViewHideClick(Sender: TObject);
@@ -989,6 +984,9 @@ type
     procedure btnDailySalesAndStatisticsClick(Sender: TObject);
     procedure dxbtnReleaseNotesClick(Sender: TObject);
     procedure btnConnectionsStatisticsClick(Sender: TObject);
+    procedure grOneDayRoomsGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment;
+      var VAlign: TVAlignment);
+    procedure btnFilterDropdownClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1006,6 +1004,10 @@ type
     FormShowing: boolean;
     FrmMessagesTemplates: TFrmMessagesTemplates;
     frmDateStatistics: TfrmEmbDateStatistics;
+    FrmReservationHintHolder: TFrmReservationHintHolder;
+    embOccupancyView: TembOccupancyView;
+    frmRateQuery: TfrmRateQuery;
+
     curNoDrop: HCursor;
     curNoDropNew: HCursor;
 
@@ -1361,7 +1363,7 @@ type
     procedure GuestListReport;
     function FilteredData(aRoom: TRoomObject): boolean;
     // Reservation: TSingleReservations): Boolean;
-    procedure LocationMenuSelect(Sender: TObject);
+    procedure FilterMenuItemSelect(Sender: TObject);
     function SearchOrGroupFilterActive: boolean;
     function LocationFilter(OnlyLocations: boolean = true): boolean;
     procedure PrepareSkinSelections;
@@ -1458,8 +1460,6 @@ type
     procedure NillifyEventHandlers(Grid: TAdvStringGrid);
     procedure RemoveHandlersAndObjects;
     procedure UpdateHotelsList;
-    procedure EndTimeMeasure;
-    procedure StartTimeMeasure;
     procedure RefreshMessagesOnUI;
     procedure CancelARoomReservation;
     procedure NullGlobals;
@@ -1480,6 +1480,9 @@ type
     procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
     procedure CheckFinanceConnect;
     procedure CheckPCIContract;
+    procedure FillRoomTypesMenu(mnu: TMenuItem; event: TNotifyEvent);
+    function FilteredRoomTypes: TSet_Of_Integer;
+    function RoomtypeFilterActive: boolean;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -1588,8 +1591,6 @@ uses
 		, urptTotallist
 		, uFrmChannelTogglingRules
 		, uPersonviptypes
-		, uFrmDaysStatistics
-		, uFrmRateQuery
 		,uPersonContactType
 		,uRptTurnoverAndPayments
 		, uRptTurnoverAndPayments2
@@ -1656,7 +1657,8 @@ uses
 	  , uInvoiceDefinitions
     , uFinanceTransactionReport
     , uDailyTotalsReport
-    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics;
+    , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
+  uRoomReservationOBJ;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -1856,16 +1858,37 @@ begin
     FormatSettings.CurrencyString := '';
   end;
 
-  glb.FillLocationsMenu(mnuFilterLocation, LocationMenuSelect);
+  glb.FillLocationsMenu(mnuFilterLocation, FilterMenuItemSelect);
   GetMnuFilterLocationsFromStore;
 
+  FillRoomTypesMenu(mnuFilterRoomType, FilterMenuItemSelect);
+
 end;
+
+
+procedure TfrmMain.FillRoomTypesMenu(mnu: TMenuItem; event : TNotifyEvent);
+var item : TMenuItem;
+begin
+  mnu.Clear;
+  mnu.Checked := false;
+  glb.RoomTypesSet.First;
+  while NOT glb.RoomTypesSet.Eof do
+  begin
+    item := TMenuItem.Create(nil);
+    item.Caption := format('%s [%s]', [glb.RoomTypesSet['Description'], glb.RoomTypesSet['Roomtype']]);
+    item.OnClick := event;
+    item.Tag := glb.Roomtypesset['id'];
+    mnu.Add(item);
+    glb.RoomTypesSet.Next;
+  end;
+end;
+
 
 procedure TfrmMain.GetMnuFilterLocationsFromStore;
 var
   i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     mnuFilterLocation.Items[i].Checked := Str2Bool(ReadStringValueFromAppRegistry(d.roomerMainDataSet.userName,
       'LocationSelected_' + g.qHotelCode + '_' + inttostr(mnuFilterLocation.Items[i].Tag),
@@ -1878,7 +1901,7 @@ procedure TfrmMain.SetAllMnuFilterLocationsUnchecked;
 var
   i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     WriteStringValueToAppRegistry(d.roomerMainDataSet.userName, 'LocationSelected_' + g.qHotelCode + '_' +
       inttostr(mnuFilterLocation.Items[i].Tag),
@@ -2305,16 +2328,6 @@ begin
   RefreshGrid;
 end;
 
-procedure TfrmMain.btnGroupsFilterClick(Sender: TObject);
-var
-  i: integer;
-begin
-  for i := 0 to G2.Items.Count - 1 do
-    G2.Items[i].Checked := false;
-  checkFilterStatuses;
-  PerformFilterRefresh;
-end;
-
 procedure TfrmMain.BusyOn;
 begin
   Screen.Cursor := crHourglass;
@@ -2589,10 +2602,6 @@ const
   iLastPeriodHintRow: integer = -1;
   iLastPeriodHintCol: integer = -1;
 
-procedure TfrmMain.tabsViewMouseEnter(Sender: TObject);
-begin
-end;
-
 // ------------------------------------------------------------------------------
 // 19.02.2008 - row height not longer saved to iniFile - using autosize insted
 // 11.03.2008 - B�tt vi� a� vista font � 5dayGrind
@@ -2744,28 +2753,6 @@ begin
 
 end;
 
-{$IFDEF DEBUG}
-var
-  startTimeForMeasure,
-    endTimeForMeasure: longint;
-{$ENDIF}
-
-
-procedure TfrmMain.StartTimeMeasure;
-begin
-{$IFDEF DEBUG}
-  startTimeForMeasure := getTickCount;
-{$ENDIF}
-end;
-
-procedure TfrmMain.EndTimeMeasure;
-begin
-{$IFDEF DEBUG}
-  endTimeForMeasure := getTickCount;
-  __TimingResult.Caption := inttostr(endTimeForMeasure - startTimeForMeasure);
-{$ENDIF}
-end;
-
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   temp: String;
@@ -2780,12 +2767,6 @@ begin
   FReservationsModel := TReservationsModel.Create;
 
   zOneDay_stlTakenTypes := TStringList.Create;
-{$IFNDEF DEBUG}
-  __TimingResult.Visible := false;
-{$ELSE}
-  __TimingResult.Visible := true;
-  __TimingResult.Font.Color := clWhite;
-{$ENDIF}
   HintWindowShowing := false;
   try
     temp := ReadStringValueFromAnyRegistry('Software\Roomer\FormStatus\StoreMainV2\sSkinManager1', 'SkinName',
@@ -2845,6 +2826,11 @@ begin
 
   frmDateStatistics := TfrmEmbDateStatistics.Create(self);
   frmDateStatistics.pnlStatistics.Parent := pnlStatistics;
+
+  frmReservationHintHolder := TFrmReservationHintHolder.Create(Self);
+  embOccupancyView := TembOccupancyView.Create(Self);
+  frmRateQuery := TfrmRateQuery.Create(Self);
+
   PrepareFrontDeskPage(sbFrontDesk); // tabFrontDesk);
 end;
 
@@ -3322,18 +3308,6 @@ begin
   except
   end;
   try
-    RoomerLanguage.TranslateThisForm(frmGoToRoomandDate);
-  except
-  end;
-  try
-    RoomerLanguage.TranslateThisForm(frmHomedate);
-  except
-  end;
-  try
-    RoomerLanguage.TranslateThisForm(frmDaysStatistics);
-  except
-  end;
-  try
     RoomerLanguage.TranslateThisForm(FrmRateQuery);
   except
   end;
@@ -3344,10 +3318,6 @@ begin
   end;
   try
     RoomerLanguage.TranslateThisForm(embOccupancyView);
-  except
-  end;
-  try
-    RoomerLanguage.TranslateThisForm(embPeriodView);
   except
   end;
   try
@@ -3371,12 +3341,14 @@ begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
 end;
 
-procedure TfrmMain.LocationMenuSelect(Sender: TObject);
+procedure TfrmMain.FilterMenuItemSelect(Sender: TObject);
 begin
   TMenuItem(Sender).Checked := NOT TMenuItem(Sender).Checked;
-  WriteStringValueToAppRegistry(d.roomerMainDataSet.userName, 'LocationSelected_' + g.qHotelCode + '_' +
-    inttostr(TMenuItem(Sender).Tag),
-    Bool2Str(TMenuItem(Sender).Checked));
+
+  if TMenuItem(Sender).Parent = mnuFilterLocation then
+    WriteStringValueToAppRegistry(d.roomerMainDataSet.userName, 'LocationSelected_' + g.qHotelCode + '_' +
+      inttostr(TMenuItem(Sender).Tag),
+      Bool2Str(TMenuItem(Sender).Checked));
 
   checkFilterStatuses;
   RedisplayGuestWindows;
@@ -3392,6 +3364,19 @@ begin
   result := SearchActive OR ReservationStateFilter OR GroupsFilterActive;
 end;
 
+function TfrmMain.RoomtypeFilterActive: boolean;
+var
+  i: integer;
+begin
+  result := false;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+    if mnuFilterRoomType.Items[i].Checked then
+    begin
+      result := true;
+      break;
+    end;
+end;
+
 function TfrmMain.LocationOrFloorFilterActive: boolean;
 begin
   result := LocationFilter(false); // OR FreeRoomsFiltered;
@@ -3402,8 +3387,8 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to G2.Items.Count - 1 do
-    if G2.Items[i].Checked then
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    if mnuFilterGroup.Items[i].Checked then
     begin
       result := true;
       break;
@@ -3415,8 +3400,8 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to G2.Items.Count - 1 do
-    if (G2.Items[i].Checked) AND (GroupList[G2.Items[i].Tag].Reservation = Reservation) then
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    if (mnuFilterGroup.Items[i].Checked) AND (GroupList[mnuFilterGroup.Items[i].Tag].Reservation = Reservation) then
     begin
       result := true;
       break;
@@ -3445,8 +3430,8 @@ begin
 
   letter := status.AsStatusChar;
   i := pos(letter, RES_STATUS_FILTER_LOCATIONS) - 1;
-  if (i >= 0) AND (i < mnuItemStatus.Items.Count) then
-    result := (mnuItemStatus.Items[i].Checked);
+  if (i >= 0) AND (i < mnuFilterStatus.Count) then
+    result := (mnuFilterStatus.Items[i].Checked);
 end;
 
 function TfrmMain.ReservationStateFilter: boolean;
@@ -3454,9 +3439,9 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
+  for i := 0 to mnuFilterStatus.Count - 1 do
   begin
-    result := (mnuItemStatus.Items[i].Checked);
+    result := (mnuFilterStatus.Items[i].Checked);
     if result then
       break;
   end;
@@ -3467,7 +3452,7 @@ var
   i: integer;
 begin
   result := false;
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     result := (mnuFilterLocation.Items[i].Checked);
     if result then
@@ -3483,11 +3468,25 @@ var
   i: integer;
 begin
   result := TSet_Of_Integer.Create;
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     if (mnuFilterLocation.Items[i].Checked) AND (mnuFilterLocation.Items[i].Tag < 1000) then
     begin
       result.Add(mnuFilterLocation.Items[i].Tag);
+    end;
+  end;
+end;
+
+function TfrmMain.FilteredRoomTypes: TSet_Of_Integer;
+var
+  i: integer;
+begin
+  result := TSet_Of_Integer.Create;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+  begin
+    if (mnuFilterRoomType.Items[i].Checked) AND (mnuFilterRoomType.Items[i].Tag >= 0) then
+    begin
+      result.Add(mnuFilterRoomType.Items[i].Tag);
     end;
   end;
 end;
@@ -3497,7 +3496,7 @@ var
   i: integer;
 begin
   result := TSet_Of_Integer.Create;
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
   begin
     if (mnuFilterLocation.Items[i].Checked) AND (mnuFilterLocation.Items[i].Tag >= 1000) then
     begin
@@ -3766,7 +3765,7 @@ procedure TfrmMain.FormKeyPress(Sender: TObject; var Key: Char);
 var
   s: string;
 begin
-  if (ActiveControl <> grOneDayRooms) AND (ActiveControl <> grPeriodRooms) AND (NOT frmDaysStatistics.BeingViewed) AND
+  if (ActiveControl <> grOneDayRooms) AND (ActiveControl <> grPeriodRooms) AND (pageMainGrids.ActivePage <>  tabDashboard) AND
     (NOT FrmRateQuery.BeingViewed) AND (tabsView.TabIndex <> 7) then
     exit;
 
@@ -3785,17 +3784,7 @@ begin
 
   if CharInSet(Key, ['0' .. '9']) then
   begin
-    frmHomedate.dtHome.Date := dtDate.Date;
-    frmHomedate.Left := Left + 1;
-    frmHomedate.Top := Top + 1;
-
-    frmHomedate.dtHome.SelLength := 0;
-    frmHomedate.dtHome.SelStart := 0;
-    frmHomedate.dtHome.SelLength := 1;
-    frmHomedate.dtHome.SetSelText(s);
-    frmHomedate.dtHome.SelLength := 0;
-    frmHomedate.dtHome.SelStart := 1;
-    frmHomedate.ShowModal;
+    dtDate.Date := ShowHomeDateForm(dtDate.Date, Key);
     Key := #0;
   end;
 end;
@@ -3874,7 +3863,7 @@ begin
         hData.oRoomTypeRoomCount := TRoomTypeRoomCount.Create(g.qHotelCode);
 
         ClearGroupList;
-        G2.Items.Clear;
+        mnuFilterGroup.Clear;
 
         grOneDayRooms.FixedCols := 0;
 
@@ -3886,8 +3875,8 @@ begin
             mnuItem := TMenuItem.Create(nil);
             mnuItem.Caption := lReservations.NamePlusGuestName;
             mnuItem.Tag := GroupList.Add(TGroupEntity.Create(lReservations.Reservation, lReservations.name));
-            mnuItem.OnClick := LocationMenuSelect;
-            G2.Items.Add(mnuItem);
+            mnuItem.OnClick := FilterMenuItemSelect;
+            mnuFilterGroup.Add(mnuItem);
           end;
 
           for lRoom in lReservations.Rooms do
@@ -4064,7 +4053,6 @@ begin
     timRetryRefresh.Enabled := true;
     exit;
   end;
-  StartTimeMeasure;
 
   BusyRefreshingTodaysGrid := true;
   Screen.Cursor := crHourGlass;
@@ -4093,13 +4081,12 @@ begin
   finally
     Screen.Cursor := crDefault;
     BusyRefreshingTodaysGrid := false;
-    EndTimeMeasure;
   end;
 end;
 
 procedure TfrmMain.SetDateStatisticsDate;
 begin
-  frmDaysStatistics.ViewDate := dtDate.Date;
+  fraDayStatistics.ViewDate := dtDate.Date;
   frmDateStatistics.Date := trunc(dtDate.Date);
   frmDateStatistics.RefreshData;
 end;
@@ -4264,7 +4251,7 @@ procedure TfrmMain.N12Click(Sender: TObject);
 var
   i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
     mnuFilterLocation.Items[i].Checked := false;
   edtSearch.Text := '';
   TMenuItem(Sender).Checked := NOT TMenuItem(Sender).Checked;
@@ -4851,6 +4838,7 @@ end;
 // ------------------------------------------------------------------------------
 procedure TfrmMain.OneDay_ShowTheNameList;
 var
+  frm: TfrmResGuestList;
   idxReservation, Reservation, iRoom: integer;
 begin
   if ViewMode = vmOneDay then
@@ -4860,14 +4848,12 @@ begin
     OneDay_GetResAndRoom_IDX(idxReservation, iRoom);
     Reservation := FReservationsModel.Reservations[idxReservation].Reservation;
 
-    frmResGuestList := TfrmResGuestList.Create(self);
+    frm := TfrmResGuestList.Create(nil);
     try
-      frmResGuestList.zReservation := Reservation;
-      frmResGuestList.ShowModal;
-      if frmResGuestList.ModalResult = mrOK then;
+      frm.zReservation := Reservation;
+      frm.ShowModal;
     finally
-      frmResGuestList.Free;
-      frmResGuestList := nil;
+      frm.Free;
     end;
   end
   else if ViewMode = vmGuestList then
@@ -5306,6 +5292,7 @@ var
 
   Floors: TSet_Of_Integer;
   Locations: TSet_Of_Integer;
+  RoomTypes: TSet_Of_Integer;
   lRoom: TRoomObject;
   ii: Integer;
 
@@ -5339,10 +5326,11 @@ begin
 
   Floors := FilteredFloors;
   Locations := FilteredLocations;
+  RoomTypes := FilteredRoomTypes;
   try
-    if (NOT SearchOrGroupFilterActive) OR (Floors.Count > 0) OR (Locations.Count > 0) then
+    if (NOT SearchOrGroupFilterActive) OR (Floors.Count > 0) OR (Locations.Count > 0) or (Roomtypes.Count > 0) then
     begin
-      glb.FillRoomAndTypeGrid(grOneDayRooms, Locations, Floors, FFreeRooms, zOneDay_dtDate);
+      glb.FillRoomAndTypeGrid(grOneDayRooms, Locations, Floors, RoomTypes, FFreeRooms, zOneDay_dtDate);
       iRowCounter := grOneDayRooms.RowCount - 1;
     end;
 
@@ -5595,6 +5583,7 @@ begin
   finally
     Locations.Free;
     Floors.Free;
+    Roomtypes.Free;
   end;
 end;
 
@@ -5608,17 +5597,8 @@ begin
   if NOT result then
   begin
 
-    resultGroup := NOT GroupsFilterActive;
-    if NOT resultGroup then
-    begin
-      resultGroup := GroupFiltered(aRoom.Reservation);
-    end;
-
-    resultStatus := NOT ReservationStateFilter;
-    if NOT resultStatus then
-    begin
-      resultStatus := ReservationStateFiltered(aRoom.ResStatus);
-    end;
+    resultGroup := NOT GroupsFilterActive or GroupFiltered(aRoom.Reservation);
+    resultStatus := NOT ReservationStateFilter or ReservationStateFiltered(aRoom.ResStatus);
 
     resultSearch := edtSearch.Text = '';
 
@@ -6127,6 +6107,13 @@ begin
   CurrentlyActiveGrid := TAdvStringGrid(Sender);
 end;
 
+procedure TfrmMain.grOneDayRoomsGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment;
+  var VAlign: TVAlignment);
+begin
+  if (aCol in c_GuestCount) then
+    HAlign := taCenter;
+end;
+
 procedure TfrmMain.grOneDayRoomsGetCellPrintColor(Sender: TObject; ARow, ACol: Integer; AState: TGridDrawState;
   ABrush: TBrush; AFont: TFont);
 begin
@@ -6488,14 +6475,22 @@ procedure TfrmMain.grOneDayRoomsStartDrag(Sender: TObject; var DragObject: TDrag
 var
   Arrival, Departure: Tdate;
   iReservation, iRoomReservation: integer;
+  lROom: TRoomObject;
 begin
   GetDragGuestIndexes(iDragCell, iReservation, iRoomReservation);
-  if FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].BlockMove AND
-    (Copy(FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation].RoomNumber, 1, 1) <> '<') then
+  lRoom := FReservationsModel.Reservations[iReservation].Rooms[iRoomReservation];
+  if (lRoom.BlockMove AND not lRoom.IsUnAssigned) then
   begin
     MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveTheRoomReservation'), mtError, [mbOk], 0);
     exit;
   end;
+
+  if (lRoom.ResStatus = TReservationState.rsCancelled) then
+  begin
+    MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveCancelledRoomReservation'), mtError, [mbOk], 0);
+    exit;
+  end;
+
   if IsShiftKeyPressed then
   begin
     OneDayGridArrivalAndDepartureOfCell(iDragCell, Arrival, Departure);
@@ -6688,6 +6683,8 @@ var
   Grid: TAdvStringGrid;
 
   penStyle: TPenStyle;
+  lReservation: TSingleReservations;
+  lRoom: TRoomObject;
 
 begin
 
@@ -6726,7 +6723,6 @@ begin
           LoadImageFromImageList(DImages.ilGuests, 5, Grid.Canvas, Point(Rect.Left + (Rect.Right - Rect.Left) div 2 - 8,
             Rect.Top + (Rect.Bottom - Rect.Top) div 2 - 8), Brush.Color,
             [Point(clRed, sSkinManager1.GetGlobalFontColor)]);
-          exit;
         end;
         exit;
       end;
@@ -6751,14 +6747,6 @@ begin
       // [2, 3, 4, 5, 9, 10, 11, 12]
       if (ACol in c_GuestInfo) then
       begin
-
-        iRes := -1;
-        iRoom := 0;
-
-        iRes := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 1];
-        iRoom := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 2];
-        // Ef samskonar herbergistegund er utan �� er �a� s�nt me� �v� a� lita brottfarardagsetningu
-        // me�h�ndla vinsta megin
         if ((OneDay_GetIsLeftOrRight(ACol) = cLefthalf) and (Grid.cells[Left_Departure, ARow] = '')) OR
           ((OneDay_GetIsLeftOrRight(ACol) = cRightHalf) and (Grid.cells[Right_Departure, ARow] = '')) then
         begin
@@ -6780,15 +6768,18 @@ begin
           exit;
         end;
 
-        // Ef gestur er a� fara og annar a� koma er GestCellan Tv�skipt
-        // annar hlutinn Gr�r (s� sem er a� fara) en hinn Aqua (s� sem er a� koma)
+        iRes := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 1];
+        iRoom := zOneDayResPointers[ARow].ptrRooms[OneDay_GetIsLeftOrRight(ACol), 2];
+
+        lReservation := FReservationsModel.Reservations[iRes];
+        lRoom := FReservationsModel.Reservations[iRes].Rooms[iRoom];
+
         if Grid.cells[ACol, ARow].StartsWith(cGoingStr) then
         begin
           // Who is leaving
           LeavingName := Grid.cells[ACol, ARow];
           // Who is comming
-          ArrivingName := OneDay_RoomReservedName(FReservationsModel.Reservations[iRes].Rooms[iRoom].RoomNumber,
-            iRes, iRoom);
+          ArrivingName := OneDay_RoomReservedName(lRoom.RoomNumber, iRes, iRoom);
           GetArrivingGuestIndexes(iRoom, iRes, ACol, ARow);
 
           if ArrivingName <> '' then
@@ -6799,16 +6790,11 @@ begin
             Brush.Color := tmpBackColor;
             Font.Color := tmpFontColor;
 
-            // Fyrri helmingurinn fyrir �ann sem er a� koma
             iWidth := (Rect.Right - Rect.Left) div 2;
             myRect := Rect;
             myRect.Right := myRect.Left + iWidth;
 
-            // if ReservationsModel.Reservations[iRes].OutOfOrderBlocking then
-            // Brush.Style := bsDiagCross;
-
             MyRoundedRect(Grid.Canvas, myRect.Left, myRect.Top, myRect.Right, myRect.Bottom);
-            // FillRect(myRect);
             iTemp := Grid.Canvas.TextHeight(ArrivingName);
 
             ExtTextOut(handle, myRect.Left + 2, (myRect.Bottom + myRect.Top) div 2 - iTemp div 2, ETO_CLIPPED, @myRect,
@@ -6816,7 +6802,7 @@ begin
               // ETO_CLIPPED or ETO_OPAQUE, @myRect, PChar(ArrivingName),
               length(ArrivingName), nil);
 
-            if NOT FReservationsModel.Reservations[iRes].OutOfOrderBlocking then
+            if NOT lReservation.OutOfOrderBlocking then
             begin
               if iRectangleSpaceForUnpaidItems > 0 then
               begin
@@ -6825,8 +6811,7 @@ begin
                 chRect.Top := myRect.Top + 3;
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForUnpaidItems;
-                iTempColor := getUnpaidItemsColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].TotalNoRent > 0,
-                  Brush.Color);
+                iTempColor := getUnpaidItemsColor(lRoom.TotalNoRent > 0, Brush.Color);
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
               end;
 
@@ -6836,7 +6821,7 @@ begin
                 chRect.Top := myRect.Top + 3;
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForChannelColor;
-                iTempColor := getChannelColor(FReservationsModel.Reservations[iRes]);
+                iTempColor := getChannelColor(lReservation);
                 if iTempColor = -1 then
                   iTempColor := 15793151;
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6848,7 +6833,7 @@ begin
                 chRect.Top := myRect.Top + 3;
                 chRect.Bottom := myRect.Bottom - 3;
                 chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-                iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+                iTempColor := getInvoiceMadeColor(lRoom);
                 if iTempColor = -1 then
                   iTempColor := Brush.Color;
                 DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6862,7 +6847,7 @@ begin
             myRect := Rect;
             myRect.Left := myRect.Left + iWidth;
 
-            if FReservationsModel.Reservations[iRes].OutOfOrderBlocking AND (ACol in c_custs) then
+            if lReservation.OutOfOrderBlocking AND (ACol in c_custs) then
             begin
               Brush.Color := clSilver;
               Font.Color := clBlack;
@@ -6872,7 +6857,7 @@ begin
             // FillRect(myRect);
             iTemp := Grid.Canvas.TextHeight(ArrivingName);
 
-            if FReservationsModel.Reservations[iRes].OutOfOrderBlocking then
+            if lReservation.OutOfOrderBlocking then
             begin
               tempString := GetTranslatedText('shTx_FrmMain_OutOfOrder') + StringOfChar(' ', 255) + #0;
               ExtTextOut(handle, myRect.Left + 2, (myRect.Bottom + myRect.Top) div 2 - iTemp div 2, ETO_CLIPPED,
@@ -6899,7 +6884,7 @@ begin
               chRect.Top := myRect.Top + 3;
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForUnpaidItems;
-              iTempColor := getUnpaidItemsColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].TotalNoRent > 0,
+              iTempColor := getUnpaidItemsColor(lRoom.TotalNoRent > 0,
                 Brush.Color);
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
             end;
@@ -6910,7 +6895,7 @@ begin
               chRect.Top := myRect.Top + 3;
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForChannelColor;
-              iTempColor := getChannelColor(FReservationsModel.Reservations[iRes]);
+              iTempColor := getChannelColor(lReservation);
               if iTempColor = -1 then
                 iTempColor := 15793151;
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6922,7 +6907,7 @@ begin
               chRect.Top := myRect.Top + 3;
               chRect.Bottom := myRect.Bottom - 3;
               chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-              iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+              iTempColor := getInvoiceMadeColor(lRoom);
               if iTempColor = -1 then
                 iTempColor := Brush.Color;
               DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -6931,31 +6916,31 @@ begin
             exit;
           end;
         end
-        else if (ACol in c_departure) AND (FReservationsModel.Reservations[iRes].Rooms[iRoom].CodedColor <> -1) then
+        else if (ACol in c_departure) AND (lRoom.CodedColor <> -1) then
         begin
           FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestStaying);
           // override with reservation specific colloring
-          Brush.Color := FReservationsModel.Reservations[iRes].Rooms[iRoom].CodedColor;
-          Font.Color := InverseColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].CodedColor);
+          Brush.Color := lRoom.CodedColor;
+          Font.Color := InverseColor(lRoom.CodedColor);
         end
-        else if FReservationsModel.Reservations[iRes].Rooms[iRoom].IsDepartingOn(zOneDay_dtDate) then
+        else if lROom.IsDepartingOn(zOneDay_dtDate) then
           FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Departing)
         else
-          case FReservationsModel.Reservations[iRes].Rooms[iRoom].ResStatus of
-            rsReservation: FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Order);
-            rsDeparted:     FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Departed);
-            rsOptionalBooking:   FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Option);
-            rsWaitingList:   FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_WaitingList);
-            rsAllotment:     FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Allotment);
-            rsNoShow:       FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_NoShow);
-            rsBlocked:      FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Blocked);
-            rsCancelled:     FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Canceled);
-            rsTmp1:         FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp1);
-            rsAwaitingPayment:         FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp2);
-            rsGuests:       if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure = zOneDay_dtDate + 1) then
-                              FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestLeavingNextDay)
-                            else if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure > zOneDay_dtDate + 1) then
-                              FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestStaying);
+          case lRoom.ResStatus of
+            rsReservation:      FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Order);
+            rsDeparted:         FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Departed);
+            rsOptionalBooking:  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Option);
+            rsWaitingList:      FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_WaitingList);
+            rsAllotment:        FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Allotment);
+            rsNoShow:           FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_NoShow);
+            rsBlocked:          FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Blocked);
+            rsCancelled:        FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Canceled);
+            rsTmp1:             FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp1);
+            rsAwaitingPayment:  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_Tmp2);
+            rsGuests:           if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure = zOneDay_dtDate + 1) then
+                                  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestLeavingNextDay)
+                                else if (FReservationsModel.Reservations[iRes].Rooms[iRoom].Departure > zOneDay_dtDate + 1) then
+                                  FormatToReservationAttrib(Grid.Canvas, g.qStatusAttr_GuestStaying);
 
           end;
 
@@ -6966,7 +6951,7 @@ begin
           Font.Style := Font.Style + [fsBold];
         end;
 
-        if FReservationsModel.Reservations[iRes].OutOfOrderBlocking then
+        if lReservation.OutOfOrderBlocking then
         begin
           Brush.Color := clSilver;
           Font.Color := clWhite;
@@ -6977,7 +6962,7 @@ begin
         MyRoundedRect(Grid.Canvas, Rect.Left, Rect.Top, Rect.Right, Rect.Bottom);
         iTemp := Grid.Canvas.TextHeight(tempString);
 
-        if FReservationsModel.Reservations[iRes].OutOfOrderBlocking AND (ACol in c_custs) then
+        if lReservation.OutOfOrderBlocking AND (ACol in c_custs) then
         begin
           tempString := GetTranslatedText('shTx_FrmMain_OutOfOrder') + StringOfChar(' ', 255) + #0;
           ExtTextOut(handle, Rect.Left + 2, (Rect.Bottom + Rect.Top) div 2 - iTemp div 2, ETO_CLIPPED, @Rect,
@@ -7001,7 +6986,7 @@ begin
           chRect.Top := Rect.Top + 3;
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForUnpaidItems;
-          iTempColor := getUnpaidItemsColor(FReservationsModel.Reservations[iRes].Rooms[iRoom].TotalNoRent > 0,
+          iTempColor := getUnpaidItemsColor(lRoom.TotalNoRent > 0,
             Brush.Color);
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
         end;
@@ -7012,7 +6997,7 @@ begin
           chRect.Top := Rect.Top + 3;
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForChannelColor;
-          iTempColor := getChannelColor(FReservationsModel.Reservations[iRes]);
+          iTempColor := getChannelColor(lReservation);
           if iTempColor = -1 then
             iTempColor := 15793151;
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -7024,7 +7009,7 @@ begin
           chRect.Top := Rect.Top + 3;
           chRect.Bottom := Rect.Bottom - 3;
           chRect.Right := chRect.Left + iRectangleSpaceForInvoiceMade;
-          iTempColor := getInvoiceMadeColor(FReservationsModel.Reservations[iRes].Rooms[iRoom]);
+          iTempColor := getInvoiceMadeColor(lRoom);
           if iTempColor = -1 then
             iTempColor := Brush.Color;
           DrawRectanglOnCanvas(Grid.Canvas, iTempColor, chRect);
@@ -7706,18 +7691,15 @@ begin
     1:
       begin
         DisplayStatusses(true);
-        if assigned(frmDaysStatistics) then
-        begin
-          frmDaysStatistics.BeingViewed := false;
-          FrmRateQuery.BeingViewed := false;
-          EnterDayView;
-          RefreshStats;
-        end;
+        fraDayStatistics.BeingViewed := false;
+        FrmRateQuery.BeingViewed := false;
+        EnterDayView;
+        RefreshStats;
       end;
     2:
       begin
         DisplayStatusses(false);
-        frmDaysStatistics.BeingViewed := false;
+        fraDayStatistics.BeingViewed := false;
         FrmRateQuery.BeingViewed := false;
         lblLoading.Show;
         lblLoading.Update;
@@ -7733,19 +7715,20 @@ begin
     3:
       begin
         DisplayStatusses(true);
-        frmDaysStatistics.BeingViewed := false;
+        fraDayStatistics.BeingViewed := false;
         FrmRateQuery.BeingViewed := false;
         EnterGuestListView;
       end;
     4:
       begin
         DisplayStatusses(true);
-        frmDaysStatistics.BeingViewed := true;
+        fraDayStatistics.BeingViewed := true;
         EnterDashboardView;
       end;
     5:
       begin
         aDate := trunc(dtDate.Date);
+        fraDayStatistics.BeingViewed := false;
         DisplayStatusses(true);
         FrmRateQuery.BeingViewed := true;
         EnterRateQueryView(aDate);
@@ -7753,6 +7736,7 @@ begin
     6:
       begin
         pageMainGrids.ActivePage := tabFrontDesk;
+        fraDayStatistics.BeingViewed := false;
         sbFrontDesk.VertScrollBar.Position := 0;
         pageMainGridsChange(pageMainGrids);
       end;
@@ -7764,12 +7748,11 @@ end;
 
 procedure TfrmMain.EnterDashboardView;
 begin
-  frmDaysStatistics.sPanel1.Parent := tabDashboard;
   ViewMode := vmDashboard;
   if tabsView.TabIndex <> 3 then
     tabsView.TabIndex := 3;
   pageMainGrids.ActivePage := tabDashboard;
-  frmDaysStatistics.ViewDate := dtDate.Date;
+  fraDayStatistics.ViewDate := dtDate.Date;
   tabDashboard.Update;
 end;
 
@@ -8274,7 +8257,7 @@ end;
 procedure TfrmMain.ApplyFiltersToPeriodView(Grid: TAdvStringGrid);
 var
   col, row: integer;
-  Floors, Locations: TSet_Of_Integer;
+  Floors, Locations, RoomTypes: TSet_Of_Integer;
   hideRow: boolean;
 begin
   if SearchOrGroupFilterActive then
@@ -8296,20 +8279,26 @@ begin
       end;
     end;
   end;
-  if LocationOrFloorFilterActive AND (Grid = grPeriodRooms) then
+  if (LocationOrFloorFilterActive or RoomtypeFilterActive) AND (Grid = grPeriodRooms) then
   begin
     Floors := FilteredFloors;
     Locations := FilteredLocations;
+    Roomtypes := FilteredRoomTypes;
     try
       for row := Grid.RowCount - 1 downto Grid.FixedRows do
       begin
-        if (NOT glb.IsValidInList(Floors, glb.GetRoomFloor(Grid.cells[1, row]))) OR
-          (NOT glb.IsValidInList(Locations, glb.GetLocationId(glb.GetRoomLocation(Grid.cells[1, row])))) then
+        if (NOT glb.IsValidInList(Floors, glb.GetRoomFloor(Grid.cells[1, row]))) then
+          Grid.RowHeights[row] := 0
+        else if  (NOT glb.IsValidInList(Locations, glb.GetLocationId(glb.GetRoomLocation(Grid.cells[1, row])))) then
+          Grid.RowHeights[row] := 0
+        else if  (NOT glb.IsValidInList(Roomtypes, glb.GetRoomTypeIdFromRoom(Grid.cells[1, row])))  then
           Grid.RowHeights[row] := 0;
+
       end;
     finally
       Locations.Free;
       Floors.Free;
+      RoomTypes.Free;
     end;
   end;
 
@@ -8779,10 +8768,20 @@ begin
   rri := Period_GetResInfo(PeriodViewSelectedCol, PeriodViewSelectedRow, _grid.Tag);
   // _grid.col, _grid.row, _grid.Tag);
   if rri.Reservation > -1 then
+  begin
     if rri.BlockMove AND (Copy(rri.Room, 1, 1) <> '<') then
     begin
       MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveTheRoomReservation'), mtError, [mbOk], 0);
+      Exit;
     end;
+
+    if (rri.resFlag = TReservationState.rsCancelled.AsStatusChar) then
+    begin
+      MessageDlg(GetTranslatedText('shTx_FrmMain_UserCannotMoveCancelledRoomReservation'), mtError, [mbOk], 0);
+      exit;
+    end;
+
+  end;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -10381,30 +10380,18 @@ end;
 procedure TfrmMain.btnDownPaymentsClick(Sender: TObject);
 var
   sRoom: string;
-  aDate: Tdate;
+  lDate: TDate;
 begin
   LogUserClickedButton(Sender);
-  // **
-  aDate := Date;
-  Application.CreateForm(TfrmRptDownPayments, frmRptDownPayments);
-  try
-    if frmRptDownPayments.ShowModal = mrOK then
-    begin
-      if frmRptDownPayments.zRoom <> '' then
-      begin
-        aDate := trunc(frmRptDownPayments.zArrival);
-        RefreshGrid;
-        sRoom := frmRptDownPayments.zRoom;
-      end;
-    end;
-  finally
-    frmRptDownPayments.Free;
-  end;
+  lDate := Date;
+
+  if OpenRptDownPayments(sRoom, lDate) then
+      RefreshGrid;
 
   if sRoom <> '' then
   begin
     SetViews(1);
-    SetDateWithoutEvents(aDate);
+    SetDateWithoutEvents(lDate);
     RefreshOneDayGrid;
     OneDay_DoAJump(sRoom);
   end;
@@ -10591,18 +10578,16 @@ end;
 procedure TfrmMain.ClearFilter;
 var i: integer;
 begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  for i := 0 to mnuFilterLocation.Count - 1 do
     mnuFilterLocation.Items[i].Checked := false;
-//  T1.Checked := false;
-//  for i := 0 to S2.Count - 1 do
-//    S2.Items[i].Checked := false;
-  for i := 0 to G2.Items.Count - 1 do
-    G2.Items[i].Checked := false;
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
-    mnuItemStatus.Items[i].Checked := false;
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    mnuFilterGroup.Items[i].Checked := false;
+  for i := 0 to mnuFilterStatus.Count - 1 do
+    mnuFilterStatus.Items[i].Checked := false;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+    mnuFilterRoomType.Items[i].Checked := false;
   edtSearch.Text := '';
   PerformFilterRefresh;
-//  btnFilter.ImageIndex := ABS(Ord(FilterActive));
   SetAllMnuFilterLocationsUnchecked;
 end;
 
@@ -10780,6 +10765,11 @@ begin
   _RptMaidsList;
 end;
 
+procedure TfrmMain.btnFilterDropdownClick(Sender: TObject);
+begin
+  ClearFilter;
+end;
+
 procedure TfrmMain.btnFinanceConnectManagerClick(Sender: TObject);
 begin
   ManageFinanceConnect;
@@ -10866,16 +10856,6 @@ procedure TfrmMain.btnRoomTypesClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
   _RoomTypeList;
-end;
-
-procedure TfrmMain.btnLocationFilterClick(Sender: TObject);
-var
-  i: integer;
-begin
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
-    mnuFilterLocation.Items[i].Checked := false;
-  SetAllMnuFilterLocationsUnchecked;
-  PerformFilterRefresh;
 end;
 
 procedure TfrmMain.btnLocationsClick(Sender: TObject);
@@ -11053,40 +11033,51 @@ end;
 procedure TfrmMain.checkFilterStatuses;
 var
   i: integer;
+  isFiltered: boolean;
 begin
-  btnStatusFilter.Font.Style := [];
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
-    if mnuItemStatus.Items[i].Checked then
+  isFiltered := false;
+  mnuFilterStatus.Checked := False;
+  for i := 0 to mnuFilterStatus.Count - 1 do
+    if mnuFilterStatus.Items[i].Checked then
     begin
-      btnStatusFilter.Font.Style := [fsUnderline];
+      mnuFilterStatus.Checked := True;
+      isFiltered := True;
       break;
     end;
 
-  btnLocationFilter.Font.Style := [];
-  for i := 0 to mnuFilterLocation.Items.Count - 1 do
+  mnuFilterLocation.Checked := False;
+  for i := 0 to mnuFilterLocation.Count - 1 do
     if mnuFilterLocation.Items[i].Checked then
     begin
-      btnLocationFilter.Font.Style := [fsUnderline];
+      mnuFilterLocation.Checked := True;
+      isFiltered := True;
       break;
     end;
 
-  btnGroupsFilter.Font.Style := [];
-  for i := 0 to G2.Items.Count - 1 do
-    if G2.Items[i].Checked then
+  mnuFilterGroup.Checked := False;
+  for i := 0 to mnuFilterGroup.Count - 1 do
+    if mnuFilterGroup.Items[i].Checked then
     begin
-      btnGroupsFilter.Font.Style := [fsUnderline];
+      mnuFilterGroup.Checked := True;
+      isFiltered := True;
       break;
     end;
-end;
 
-procedure TfrmMain.btnStatusFilterClick(Sender: TObject);
-var
-  i: integer;
-begin
-  for i := 0 to mnuItemStatus.Items.Count - 1 do
-    mnuItemStatus.Items[i].Checked := false;
-  checkFilterStatuses;
-  PerformFilterRefresh;
+  mnuFilterRoomType.Checked := False;
+  for i := 0 to mnuFilterRoomType.Count - 1 do
+    if mnuFilterRoomType.Items[i].Checked then
+    begin
+      mnuFilterRoomType.Checked := True;
+      isFiltered := True;
+      break;
+    end;
+
+  if isFiltered then
+    btnFilterDropdown.ImageIndex := 82
+  else
+    btnFilterDropdown.ImageIndex := -1;
+
+  btnFilterDropdown.Invalidate;
 end;
 
 procedure TfrmMain.btnPhonePricesClick(Sender: TObject);
@@ -11487,16 +11478,7 @@ end;
 
 procedure TfrmMain._ChangeDate;
 begin
-  frmHomedate.dtHome.Date := dtDate.Date;
-  frmHomedate.Show;
-  frmHomedate.Left := Left + 1;
-  frmHomedate.Top := Top - 1;
-
-  frmHomedate.ActiveControl := frmHomedate.dtHome;
-  frmHomedate.dtHome.SelLength := 0;
-  frmHomedate.dtHome.SetFocus;
-  frmHomedate.dtHome.SelStart := 0;
-  frmHomedate.dtHome.SelLength := length(frmHomedate.dtHome.Text);
+  dtDate.Date := ShowHomeDateForm(dtDate.Date);
 end;
 
 procedure TfrmMain._Refresh;
@@ -12352,7 +12334,7 @@ begin
   LogUserClickedButton(Sender);
   aRoom := '';
   aDate := Date - 1;
-  if g.openGoToRoomAndDate(aRoom, aDate) then
+  if openGoToRoomAndDate(aRoom, aDate) then
   begin
     if aRoom <> '' then
     begin
@@ -12807,7 +12789,7 @@ begin
 
             Currency := rSet.FieldByName('Currency').asString;
             AverageRate := rSet.FieldByName('AverageRate').AsFloat;
-            numDays := rSet.FieldByName('NumDays').asinteger;
+            numDays := trunc(DepartureDate - ArrivalDate);
             TotalRate := numDays * AverageRate;
             Adults := rSet.FieldByName('NumGuests').asinteger;
             Children := rSet.FieldByName('NumChildren').asinteger;
@@ -12877,6 +12859,7 @@ begin
             mAllReservations.FieldByName('Adults').asinteger := Adults;
             mAllReservations.FieldByName('Children').asinteger := Children;
             mAllReservations.FieldByName('Infants').asinteger := Infants;
+            mAllReservations.FieldByName('RoomNotes').AsString := rSet.FieldByName('Hiddeninfo').AsString;
 
             mAllReservations.Post;
             rSet.next;

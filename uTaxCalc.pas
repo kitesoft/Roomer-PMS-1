@@ -80,6 +80,12 @@ type
 
 
     function IsValidOn(aDate: TDate): boolean;
+    /// <summary>
+    ///   Determines if we are valid somewhere in the suplied period stay period
+    ///  Notice that the departure date itself doesnt need to be in the tax-valid period
+    /// </summary>
+    function IsValidInStay(aArrival: TDate; aDeparture: TDate): boolean;
+    function ValidDaysDuringStay(aArrival: TDate; aDeparture: TDate): integer;
   end;
 
   TTaxList = TObjectList<TTax>;
@@ -114,12 +120,14 @@ function MakeTaxListForRoomEntity(aRoomEntity: TInvoiceRoomEntity; ItemTypeInfo:
 implementation
 
 uses
-  uAppGlobal,
-  _Glob,
-  uMain
+  uAppGlobal
+  , _Glob
+  , uMain
   , uDateTimeHelper
   , uCurrencyConstants
-  , TypInfo;
+  , TypInfo
+  , Math
+  ;
 
 procedure initializeTaxes;
 var
@@ -497,6 +505,8 @@ begin
   if aTax.TAXCHILDREN then
     taxGuests := taxGuests + aInvoiceRoomEntity.NumChildren;
 
+  lNumNights := min(lNumNights, aTax.ValidDaysDuringStay(aInvoiceRoomEntity.Arrival, aInvoiceRoomEntity.Departure));
+
   if aTax.TAX_TYPE = TT_FIXED_AMOUNT then
   begin
     Amount := TAmount(aTax.Amount); // / aInvoiceRoomEntity.CurrencyRate; //in room currency
@@ -554,7 +564,7 @@ begin
 
   for Tax in TaxList do
       if ((Tax.PROBE_DATE = TTaxProbeDate.InvoiceDate) AND Tax.IsValidOn(now)) OR
-         ((Tax.PROBE_DATE = TTaxProbeDate.StayDate) AND Tax.IsValidOn(aRoomEntity.Departure)) then
+         ((Tax.PROBE_DATE = TTaxProbeDate.StayDate) AND Tax.IsValidInStay(aRoomEntity.Arrival, aRoomEntity.Departure)) then
       Result.Add(MakeInvoiceTaxEntity(Tax, aRoomEntity, ItemTypeInfo, aOptions));
 end;
 
@@ -737,9 +747,22 @@ begin
     result := TT_FIXED_AMOUNT;
 end;
 
+function TTax.IsValidInStay(aArrival: TDate; aDeparture: TDate): boolean;
+begin
+  Result := (VALID_FROM < aDeparture) and (VALID_TO >= aArrival);
+end;
+
 function TTax.IsValidOn(aDate: TDate): boolean;
 begin
   result := (aDate >= VALID_FROM) AND (aDate <= VALID_TO);
+end;
+
+function TTax.ValidDaysDuringStay(aArrival, aDeparture: TDate): integer;
+begin
+  if IsValidInStay(aArrival, aDeparture) then
+    Result := min(trunc(aDeparture-1), trunc(VALID_TO)) - max(trunc(aArrival), trunc(VALID_FROM)) + 1
+  else
+    result := 0;
 end;
 
 function TTax.getEnumTaxBase(_tax_base: String): TEnumTaxBase;

@@ -309,6 +309,7 @@ object frmGuestSearch: TfrmGuestSearch
     Images = DImages.PngImageList1
     TabOrder = 2
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 147
     object tvData: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = kbmDataDS
@@ -316,13 +317,11 @@ object frmGuestSearch: TfrmGuestSearch
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsView.HeaderAutoHeight = True
-      object tvDataRoomReservation: TcxGridDBColumn
-        DataBinding.FieldName = 'RoomReservation'
-        Visible = False
-      end
       object tvDataReservation: TcxGridDBColumn
         DataBinding.FieldName = 'Reservation'
-        Visible = False
+        PropertiesClassName = 'TcxCalcEditProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        Width = 83
       end
       object tvDataRoom: TcxGridDBColumn
         DataBinding.FieldName = 'Room'
@@ -371,6 +370,11 @@ object frmGuestSearch: TfrmGuestSearch
       object tvDatareference: TcxGridDBColumn
         DataBinding.FieldName = 'reference'
         Width = 118
+      end
+      object tvDataRoomReservation: TcxGridDBColumn
+        DataBinding.FieldName = 'RoomReservation'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        Properties.Alignment.Horz = taLeftJustify
       end
     end
     object lvData: TcxGridLevel

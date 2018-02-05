@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">DebugBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -192,7 +192,7 @@
         <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_Release>18</VerInfo_Release>
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.18.2;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.18.2;Comments=;ExtraBuild=180105b;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.18.2;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.18.2;Comments=;ExtraBuild=180123;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
@@ -201,7 +201,7 @@
         <PostBuildEvent><![CDATA[$(OUTPUTDIR)DeployOnDev.bat
 $(PostBuildEvent)]]></PostBuildEvent>
         <VerInfo_Release>19</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.19.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.19.0;Comments=;ExtraBuild=190116Acc;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.19.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.19.0;Comments=;ExtraBuild=180202Acc;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>
@@ -563,9 +563,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uPersonviptypes.pas">
             <Form>frmPersonviptypes</Form>
         </DCCReference>
-        <DCCReference Include="uFrmDaysStatistics.pas">
-            <Form>frmDaysStatistics</Form>
-        </DCCReference>
         <DCCReference Include="Roomer\XML\performance.pas"/>
         <DCCReference Include="uRptTurnoverAndPayments2.pas">
             <Form>frmRptTurnoverAndPayments2</Form>
@@ -616,7 +613,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uRptTotallist.pas">
             <Form>frmRptTotallist</Form>
         </DCCReference>
-        <DCCReference Include="uFrmRateQuery.pas">
+        <DCCReference Include="mainEmbeddables\uFrmRateQuery.pas">
             <Form>FrmRateQuery</Form>
         </DCCReference>
         <DCCReference Include="uChart.pas">
@@ -669,13 +666,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uRptNotes.pas">
             <Form>frmRptNotes</Form>
         </DCCReference>
-        <DCCReference Include="uReservationHintHolder.pas">
+        <DCCReference Include="mainEmbeddables\uReservationHintHolder.pas">
             <Form>FrmReservationHintHolder</Form>
         </DCCReference>
-        <DCCReference Include="Embeddables\uEmbPeriodView.pas">
-            <Form>embPeriodView</Form>
-        </DCCReference>
-        <DCCReference Include="Embeddables\uEmbOccupancyView.pas">
+        <DCCReference Include="mainEmbeddables\uEmbOccupancyView.pas">
             <Form>embOccupancyView</Form>
         </DCCReference>
         <DCCReference Include="uEmailingDialog.pas">
@@ -799,7 +793,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="uRptDepartures.pas">
             <Form>frmDeparturesReport</Form>
         </DCCReference>
-        <DCCReference Include="uCurrencyHandler.pas"/>
         <DCCReference Include="RoomerVCLs\Source\uFloatUtils.pas"/>
         <DCCReference Include="uRptStockItems.pas">
             <Form>frmRptStockItems</Form>
@@ -853,7 +846,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>frmRoomPrices</Form>
         </DCCReference>
         <DCCReference Include="uRoomerConfirmationDialogs.pas"/>
-        <DCCReference Include="Embeddables\uEmbDateStatistics.pas">
+        <DCCReference Include="mainEmbeddables\uEmbDateStatistics.pas">
             <Form>frmEmbDateStatistics</Form>
         </DCCReference>
         <DCCReference Include="Rates\uMasterRateDefaults.pas">
@@ -863,7 +856,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>FrmTopClassAvailabilityOrder</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uCurrencyHandlersMap.pas"/>
         <DCCReference Include="OpenAPI\uHotelServicesAPICaller.pas"/>
         <DCCReference Include="OpenAPI\schema\uRoomerHotelServicesCommunicationModel_RequestsResponses.pas"/>
         <DCCReference Include="ActivityLogs\uRptUserActivity.pas">
@@ -987,7 +979,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="VersionManagement\uReleaseNotes.pas"/>
         <DCCReference Include="RoomerVCLs\Source\RoomerCurrencyEdit.pas"/>
         <DCCReference Include="Embeddables\uFraLookupPanel.pas">
-            <Form>fraLookupPanel</Form>
+            <Form>fraCustomLookupPanel</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Definitions\uMarketDefinitions.pas"/>
@@ -1016,6 +1008,35 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </DCCReference>
         <DCCReference Include="Connections\uConnectionsStatisticsService.pas"/>
         <DCCReference Include="Connections\uSnapshotService.pas"/>
+        <DCCReference Include="uResGuestList.pas">
+            <Form>frmResGuestlist</Form>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraMarketSegmentPanel.pas">
+            <Form>fraLookupMarketSegment</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraPriceCodePanel.pas">
+            <Form>fraPriceCodePanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraChannelPanel.pas">
+            <Form>fraChannelPanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraCustomerPanel.pas">
+            <Form>fraCustomerPanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Embeddables\uFraStaffMemberPanel.pas">
+            <Form>fraStaffMemberPanel</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="mainEmbeddables\uFraDayStatistics.pas">
+            <Form>fraDayStatistics</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

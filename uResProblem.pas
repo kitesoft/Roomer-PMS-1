@@ -67,6 +67,7 @@ uses
   , uDImages
   , uRoomerDefinitions
   , uReservationStateDefinitions
+  , uRoomerLanguage
   ;
 
 function StatusToColor(status : string;var backColor, fontColor : Tcolor ) : boolean;
@@ -240,10 +241,10 @@ begin
       sRoom            := rSet.fieldbyname('Room').AsString;
       sRoomType        := hdata.GET_RoomsType_byRoom(sRoom);
 
-      dtTemp           := rSet.fieldbyname('rrArrival').AsDateTime;
+      dtTemp           := rSet.fieldbyname('Arrival').AsDateTime;
       dateTimeToString(sArrival,'dd mmm',dtTemp);
 
-      dtTemp           := rSet.fieldbyname('rrDeparture').AsDateTime;
+      dtTemp           := rSet.fieldbyname('Departure').AsDateTime;
       dateTimeToString(sDeparture,'dd mmm',dtTemp);
 
       sGuest           := d.RR_GetFirstGuestName(iRoomReservation);

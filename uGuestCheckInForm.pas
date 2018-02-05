@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, sEdit,
   sLabel, Vcl.ComCtrls, sPageControl, sButton, Vcl.ExtCtrls, sPanel, sComboBox, Vcl.Mask, sMaskEdit, sCustomComboEdit, sTooledit, sCheckBox, cmpRoomerDataSet,
   hData, uG, frxDesgn, frxClass, frxDBSet, System.Generics.Collections, uRoomerFilterComboBox
-  , uCurrencyHandler, uFraCountryPanel, uTokenHelpers, udImages, sCurrEdit
+  , uFraCountryPanel, uTokenHelpers, udImages, sCurrEdit, uFraLookupPanel
+  , uCurrencyDefinition
     ;
 
 type
@@ -152,11 +153,11 @@ type
     procedure cbxGuaranteeTypesChange(Sender: TObject);
   private
     FisCheckIn: Boolean;
-    FCurrencyhandler: TCurrencyHandler;
     FCurrentRealBalance: Double;
     ResSetGuest: TRoomerDataSet;
     rec: recDownPayment;
     theDownPaymentData: recPaymentHolder;
+    FInvoiceCurrency: TCurrencyDefinition;
 
     procedure Prepare;
     procedure UpdateControls;
@@ -176,7 +177,7 @@ type
     { Public declarations }
     Reservation, RoomReservation: Integer;
     PersonId: Integer;
-    NativeCurrency, Customer: String;
+    Customer: String;
     tokens : TObjectList<TToken>;
     procedure WndProc(var message: TMessage); override;
     procedure SaveGuestInfo;
@@ -200,6 +201,8 @@ const
     '(SELECT PAYCARD_TOKEN_ID FROM roomreservations WHERE RoomReservation=persons.RoomReservation) AS PAYCARD_TOKEN_ID, ' +
     '(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) AS Currency, ' +
     '(SELECT market from reservations WHERE Reservation=persons.Reservation) AS Market, ' +
+    '(SELECT roomtype from roomreservations WHERE roomReservation=persons.roomReservation LIMIT 1) AS Roomtype, ' +
+    '(SELECT Description from roomtypes WHERE roomtype = (SELECT Roomtype from roomreservations WHERE roomReservation=persons.roomReservation LIMIT 1)) AS RoomtypeDescription, ' +
     '(SELECT Avalue FROM currencies WHERE Currency=(SELECT Currency FROM roomreservations WHERE RoomReservation=persons.RoomReservation LIMIT 1) LIMIT 1) AS CurrencyRate, '
     +
 
@@ -343,7 +346,7 @@ uses uRoomerLanguage,
   , uRoomerBookingDataModel_ModelObjects
   , uRoomerCanonicalDataModel_SimpleTypes
   , uFrmTokenChargeHistory
-  , uMarketDefinitions;
+  , uMarketDefinitions, uRoomerCurrencymanager, uAmount, uCurrencyConstants;
 
 const
   WM_SET_COMBO_TEXT = WM_User + 101;
@@ -533,7 +536,7 @@ begin
         edAddress2.Text := glb.PreviousGuestsSet['Address2'];
         edZipcode.Text := glb.PreviousGuestsSet['Address3'];
         edCity.Text := glb.PreviousGuestsSet['Address4'];
-        fraCountry.CountryCode := glb.PreviousGuestsSet['Country'];
+        fraCountry.Code := glb.PreviousGuestsSet['Country'];
         edTel1.Text := glb.PreviousGuestsSet['Tel1'];
         edMobile.Text := glb.PreviousGuestsSet['Tel2'];
         edEmail.Text := glb.PreviousGuestsSet['Email'];
@@ -560,7 +563,7 @@ begin
       edAddress2.Text := glb.PersonProfiles['Address2'];
       edZipcode.Text := glb.PersonProfiles['Zip'];
       edCity.Text := glb.PersonProfiles['City'];
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+      fraCountry.Code := glb.PersonProfiles['Country'];
       edTel1.Text := glb.PersonProfiles['TelLandLine'];
       edMobile.Text := glb.PersonProfiles['TelMobile'];
       edEmail.Text := glb.PersonProfiles['Email'];
@@ -569,8 +572,8 @@ begin
         try edCity.Text := glb.PreviousGuestsSet['Address4']; except end;
     end;
 
-    if fraCountry.CountryCode = '' then
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+    if fraCountry.Code = '' then
+      fraCountry.Code := glb.PersonProfiles['Country'];
 
   end;
 end;
@@ -629,13 +632,11 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
 
-  FCurrencyhandler := nil; // Created when and if needed
+  fraNationality.OnChange := Changed;
+  fraNationality.RejectedCodes := '00';
 
-  fraNationality.OnCountryChange := Changed;
-  fraNationality.RejectCountryCodes := '00';
-
-  fraCountry.OnCountryChange := Changed;
-  fraCountry.RejectCountryCodes := '00';
+  fraCountry.OnChange := Changed;
+  fraCountry.RejectedCodes := '00';
 
   tokens := TObjectList<TToken>.Create;
   Prepare;
@@ -649,7 +650,6 @@ end;
 
 procedure TFrmGuestCheckInForm.FormDestroy(Sender: TObject);
 begin
-  FCurrencyhandler.Free;
   tokens.Free;
   Release;
 end;
@@ -679,6 +679,7 @@ function TFrmGuestCheckInForm.GetTotalTaxesForRoomreservation(aReservation: inte
 var
   lResponse: TxsdRoomRentTaxReceiptList;
   lCaller: TBookingsTaxesTabAPICaller;
+  lCityTaxAmount: TAmount;
 begin
   Result := 0.00;
   lResponse := nil;
@@ -686,7 +687,10 @@ begin
   try
     lResponse := TxsdRoomRentTaxReceiptList.Create;
     if lCaller.GetRoomReservationTaxes(aReservation, aRoomReservation, lResponse) then
-      Result := FCurrencyhandler.ConvertFrom(lResponse.TotalCityTax.Amount, lResponse.TotalCityTax.Currency.asString);
+    begin
+      lCityTaxAmount := TAmount.Create(lResponse.TotalCityTax.Amount, lResponse.TotalCityTax.Currency.AsString);
+      Result := RoomerCurrencyManager.ConvertAmount(lCityTaxAmount, FInvoiceCurrency.CurrencyCode);
+    end;
   finally
     lResponse.Free;
     lCaller.Free;
@@ -703,7 +707,6 @@ end;
 procedure TFrmGuestCheckInForm.LoadGuestInfo;
 var
   lRoomInvoice: TInvoice;
-
 begin
   if GetGuestInfoRSet(ResSetGuest, RoomReservation) then
   begin
@@ -714,29 +717,24 @@ begin
       LoadPayCardInfo(ResSetGuest['PAYCARD_TOKEN_ID']);
       PersonId := ResSetGuest['ID'];
       Customer := ResSetGuest['Customer'];
-      NativeCurrency := ResSetGuest['NativeCurrency'];
 
-      if not assigned(FCurrencyhandler) or (not FCurrencyhandler.CurrencyCode.Equals(ResSetGuest['Currency'])) then
-      begin
-        FCurrencyhandler.Free;
-        FCurrencyhandler := TCurrencyHandler.Create(ResSetGuest.FieldByName('Currency').AsString);
-      end;
+      FInvoiceCurrency := RoomerCurrencymanager[lRoomInvoice.Currency]; // RoomerCurrencymanager[ResSetGuest['Currency']];
 
       sTabSheet1.Caption := GetTranslatedText('shTx_RoomEdit_Room') + ResSetGuest['RoomNumber'];
 
-      lbRoomRent.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalRoomRent); //Trim(_floatToStr(ResSetGuest['TotalPrice'], 12, 2));
-      lbSales.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalSales); //Trim(_floatToStr(ResSetGuest['CurrentSales'], 12, 2));
-      lbSubTotal.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalRoomRent
+      lbRoomRent.Caption :=  FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalRoomRent); //Trim(_floatToStr(ResSetGuest['TotalPrice'], 12, 2));
+      lbSales.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalSales); //Trim(_floatToStr(ResSetGuest['CurrentSales'], 12, 2));
+      lbSubTotal.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalRoomRent
                                                              + lRoomInvoice.TotalSales
                                                              + lRoomInvoice.TotalTaxes); // Trim(_floatToStr(ResSetGuest['TotalPrice'] + ResSetGuest['CurrentSales'], 12, 2));
-      lbPAyments.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
+      lbPAyments.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalPayments); //Trim(_floatToStr(ResSetGuest['CurrentPayments'], 12, 2));
 
       if glb.PMSSettings.BetaFunctionality.UseNewTaxcalcMethod then
-        lbTaxes.Caption := FCurrencyHandler.FormattedValue(GetTotalTaxesForRoomreservation(Reservation, RoomReservation))
+        lbTaxes.Caption := FInvoiceCurrency.FormattedValue(GetTotalTaxesForRoomreservation(Reservation, RoomReservation))
       else
-        lbTaxes.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
+        lbTaxes.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.TotalTaxes); //Trim(_floatToStr(ExtraTaxes, 12, 2));
 
-      lbBalance.Caption := FCurrencyHandler.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
+      lbBalance.Caption := FInvoiceCurrency.FormattedValue(lRoomInvoice.Balance);// Trim(_floatToStr(CurrentRealBalance, 12, 2));
       FCurrentRealBalance := lRoomInvoice.balance;
 
       edFax.Text := ResSetGuest['CompFax'];
@@ -752,13 +750,13 @@ begin
       edAddress2.Text := ResSetGuest['Address2'];
       edZipcode.Text := ResSetGuest['ZIPCode'];
       edCity.Text := ResSetGuest['City'];
-      fraCountry.CountryCode := ResSetGuest['Country'];
+      fraCountry.Code := ResSetGuest['Country'];
 
       edTel1.Text := ResSetGuest['Telephone'];
       edMobile.Text := ResSetGuest['MobileNumber'];
       edEmail.Text := ResSetGuest['GuestEmail'];
 
-      fraNationality.CountryCode := ResSetGuest['Nationality'];
+      fraNationality.Code := ResSetGuest['Nationality'];
 
       cbxMarket.ItemIndex := TReservationMarketType.FromDBString(ResSetGuest['market'], TReservationMarketType.mtUnknown).ToItemIndex;
 
@@ -767,7 +765,7 @@ begin
       edCompAddress2.Text := ResSetGuest['CompAddress2'];
       edCompZipcode.Text := ResSetGuest['CompZip'];
       edCompCity.Text := ResSetGuest['CompCity'];
-      fraCompCountry.CountryCode := ResSetGuest['CompCountry'];
+      fraCompCountry.Code := ResSetGuest['CompCountry'];
       edCompTelNumber.Text := ResSetGuest['CompTel'];
       edCompEmail.Text := ResSetGuest['CompEmail'];
 
@@ -806,13 +804,13 @@ begin
   try
 
     s := format(PUT_GUEST_CHECKIN_CHECKOUT, [_DB(edTitle.Text), _DB(Trim(edFirstname.Text + ' ' + edLastName.Text)), _DB(edAddress1.Text), _DB(edAddress2.Text),
-      _DB(edZipcode.Text), _DB(edCity.Text), _DB(fraCountry.CountryCode),
+      _DB(edZipcode.Text), _DB(edCity.Text), _DB(fraCountry.Code),
 
       _DB(edTel1.Text), _DB(edMobile.Text), _DB(edEmail.Text),
 
-      _DB(fraNationality.CountryCode),
+      _DB(fraNationality.Code),
 
-      _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(fraCompCountry.CountryCode),
+      _DB(edCompany.Text), _DB(edCompAddress1.Text), _DB(edCompAddress2.Text), _DB(edCompZipcode.Text), _DB(edCompCity.Text), _DB(fraCompCountry.Code),
       _DB(edCompTelNumber.Text), _DB(edCompEmail.Text), _DB(inttostr(btnPortfolio.Tag)),
 
       _DB(edFax.Text), _DB(edVAT.Text), _DB(edSSN.Text),
@@ -832,14 +830,14 @@ begin
 
     if chkCountryForAllGuests.Checked then
     begin
-      s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(fraCountry.CountryCode), RoomReservation]);
+      s := format(PUT_GUESTsCOUNTRY_CHECKIN_CHECKOUT, [_db(fraCountry.Code), RoomReservation]);
       CopyToClipboard(s);
       lExecPlan.AddExec(s);
     end;
 
     if chkNationalityForAllGuests.Checked then
     begin
-      s := format(PUT_GUESTsNATIONALITY_CHECKIN_CHECKOUT, [_db(fraNationality.CountryCode), RoomReservation]);
+      s := format(PUT_GUESTsNATIONALITY_CHECKIN_CHECKOUT, [_db(fraNationality.Code), RoomReservation]);
       CopyToClipboard(s);
       lExecPlan.AddExec(s);
     end;
@@ -936,7 +934,7 @@ begin
     theDownPaymentData.NativeAmount := rec.AmountInCurrency * Rate;
     theDownPaymentData.Description := rec.Description;
     theDownPaymentData.CurrencyRate := 1.00; // ATH
-    theDownPaymentData.Currency := NativeCurrency;
+    theDownPaymentData.Currency := RoomerCurrencyManager.DefaultCurrency;
     theDownPaymentData.confirmDate := 2; // _db('1900-01-01 00:00:00');
     theDownPaymentData.Notes := rec.Notes;
     theDownPaymentData.PayType := rec.PaymentType;
@@ -988,9 +986,7 @@ begin
   edFirstname.Text := '';
   edLastName.Text := '';
 
-  fraNationality.CountryCode := '';
-//  edNationality.Text := '';
-//  lbNationality.Caption := '';
+  fraNationality.Code := '';
 
   edDateOfBirth.Date := 0;
   edTel1.Text := '';
@@ -1001,7 +997,7 @@ begin
   edAddress2.Text := '';
   edZipcode.Text := '';
   edCity.Text := '';
-  fraCountry.CountryCode := '';
+  fraCountry.Code := '';
 
   edCompany.Text := '';
   edCompTelNumber.Text := '';
@@ -1011,7 +1007,7 @@ begin
   edCompAddress2.Text := '';
   edCompZipcode.Text := '';
   edCompCity.Text := '';
-  fraCompCountry.CountryCode := '';
+  fraCompCountry.Code := '';
 
   LoadGuestInfo;
 
@@ -1035,7 +1031,7 @@ begin
       edFirstname.Text := glb.PersonProfiles['Firstname'];
       edLastName.Text := glb.PersonProfiles['LastName'];
 
-      fraNationality.CountryCode := glb.PersonProfiles['Nationality'];
+      fraNationality.Code := glb.PersonProfiles['Nationality'];
 
       edDateOfBirth.Date := glb.PersonProfiles['DateOfBirth'];
       edTel1.Text := glb.PersonProfiles['TelLandLine'];
@@ -1046,7 +1042,7 @@ begin
       edAddress2.Text := glb.PersonProfiles['Address2'];
       edZipcode.Text := glb.PersonProfiles['Zip'];
       edCity.Text := glb.PersonProfiles['City'];
-      fraCountry.CountryCode := glb.PersonProfiles['Country'];
+      fraCountry.Code := glb.PersonProfiles['Country'];
 
       edCompany.Text := glb.PersonProfiles['CompanyName'];
       edVAT.Text := glb.PersonProfiles['CompVATNumber'];
@@ -1058,7 +1054,7 @@ begin
       edCompAddress2.Text := glb.PersonProfiles['CompAddress2'];
       edCompZipcode.Text := glb.PersonProfiles['CompZip'];
       edCompCity.Text := glb.PersonProfiles['CompCity'];
-      fraCompCountry.CountryCode  := glb.PersonProfiles['CompCountry'];
+      fraCompCountry.Code  := glb.PersonProfiles['CompCountry'];
 
     end;
   end;

@@ -151,50 +151,39 @@ type
     mGuestsCompFax: TWideStringField;
     mGuestsCompEmail: TWideStringField;
     mCompare: TdxMemData;
-    IntegerField1: TIntegerField;
-    IntegerField2: TIntegerField;
-    IntegerField3: TIntegerField;
-    IntegerField4: TIntegerField;
-    IntegerField5: TIntegerField;
-    WideStringField1: TWideStringField;
-    WideStringField2: TWideStringField;
-    WideStringField3: TWideStringField;
-    WideStringField4: TWideStringField;
-    WideStringField5: TWideStringField;
-    WideStringField6: TWideStringField;
-    WideStringField7: TWideStringField;
-    WideStringField8: TWideStringField;
-    WideStringField9: TWideStringField;
-    WideStringField10: TWideStringField;
-    WideStringField11: TWideStringField;
-    WideStringField12: TWideStringField;
-    WideStringField13: TWideStringField;
-    BooleanField1: TBooleanField;
-    WideStringField14: TWideStringField;
-    WideStringField15: TWideStringField;
-    WideStringField16: TWideStringField;
-    DateTimeField1: TDateTimeField;
-    WideStringField17: TWideStringField;
-    WideStringField18: TWideStringField;
-    BooleanField2: TBooleanField;
-    DateTimeField2: TDateTimeField;
-    DateTimeField3: TDateTimeField;
-    IntegerField6: TIntegerField;
-    WideStringField19: TWideStringField;
-    WideStringField20: TWideStringField;
-    WideStringField21: TWideStringField;
-    StringField1: TStringField;
-    WideStringField22: TWideStringField;
-    StringField2: TStringField;
-    WideStringField23: TWideStringField;
-    WideStringField24: TWideStringField;
-    WideStringField25: TWideStringField;
-    WideStringField26: TWideStringField;
-    WideStringField27: TWideStringField;
-    WideStringField28: TWideStringField;
-    WideStringField29: TWideStringField;
-    WideStringField30: TWideStringField;
-    mCompareRoomNotes: TWideMemoField;
+    mCompareId: TIntegerField;
+    mComparePerson: TIntegerField;
+    mCompareRoomReservation: TIntegerField;
+    mComparePersonsProfilesId: TIntegerField;
+    mComparetitle: TWideStringField;
+    mCompareName: TWideStringField;
+    mCompareAddress1: TWideStringField;
+    mCompareAddress2: TWideStringField;
+    mCompareAddress3: TWideStringField;
+    mCompareAddress4: TWideStringField;
+    mCompareCountry: TWideStringField;
+    mComparetel1: TWideStringField;
+    mComparetel2: TWideStringField;
+    mCompareFax: TWideStringField;
+    mCompareEmail: TWideStringField;
+    mCompareNationality: TWideStringField;
+    mComparePID: TWideStringField;
+    mCompareMainName: TBooleanField;
+    mCompareCustomer: TWideStringField;
+    mCompareState: TWideStringField;
+    mComparePersonalIdentificationId: TWideStringField;
+    mCompareDateOfBirth: TDateTimeField;
+    mCompareSocialSecurityNumber: TWideStringField;
+    mCompareCompanyName: TStringField;
+    mCompareCompVATNumber: TWideStringField;
+    mCompareCompAddress1: TStringField;
+    mCompareCompAddress2: TWideStringField;
+    mCompareCompZip: TWideStringField;
+    mCompareCompCity: TWideStringField;
+    mCompareCompCountry: TWideStringField;
+    mCompareCompTel: TWideStringField;
+    mCompareCompFax: TWideStringField;
+    mCompareCompEmail: TWideStringField;
     mRooms: TdxMemData;
     mRoomsRoomReservation: TIntegerField;
     mRoomsRoom: TWideStringField;
@@ -242,6 +231,7 @@ type
     splClient: TsSplitter;
     mGuestsReservation: TIntegerField;
     cxMasterBackground: TcxStyle;
+    tvGuestsRecId: TcxGridDBBandedColumn;
     procedure chkCompactViewClick(Sender: TObject);
     procedure rgrShowClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
@@ -261,6 +251,7 @@ type
     procedure mRoomsBeforePost(DataSet: TDataSet);
     procedure mGuestsAfterPost(DataSet: TDataSet);
     procedure tvGuestsCompCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure tvGuestsDblClick(Sender: TObject);
   private
     { Private declarations }
     FHasUnsavedChanges: boolean;
@@ -444,8 +435,8 @@ begin
     s := s+'  ,rr.room '#10;
     s := s+'  ,rr.roomType '#10;
     s := s+'  ,rr.invBreakfast AS Breakfast'#10;
-    s := s+'  ,CAST((SELECT Min(aDate) from roomsdate rd where rd.roomreservation = rr.roomreservation and rd.resflag not in (''X'', ''C'')) as DateTime) as Arrival '#10;
-    s := s+'  ,CAST((SELECT DATE_ADD(Max(aDate), INTERVAL 1 DAY) from roomsdate rd where rd.roomreservation = rr.roomreservation and rd.resflag not in (''X'', ''C'')) as DateTime) as Departure '#10;
+    s := s+'  ,RR_Arrival(rr.roomreservation, false) as Arrival '#10;
+    s := s+'  ,RR_Departure(rr.roomreservation, false) as Departure '#10;
     s := s+'  ,(SELECT count(*) from persons p where p.roomreservation = rr.roomreservation) as numGuests '#10;
     s := s+'  ,rr.status '#10;
     s := s+'  ,rooms.description as RoomDescription '#10;
@@ -453,7 +444,7 @@ begin
     s := s+'  ,rr.HiddenInfo as roomNotes'#10;
     s := s+' FROM '#10;
     s := s+'  roomreservations rr '#10;
-    s := s+' JOIN rooms on rooms.room = rr.room'#10;
+    s := s+' LEFT JOIN rooms on rooms.room = rr.room'#10;
     s := s+' WHERE '#10;
     s := s+'  (rr.Reservation='+_db(zReservation)+') '#10;
     s := s+'  AND rr.status not in (''X'', ''C'') '#10;
@@ -623,36 +614,43 @@ begin
   if OpenEditPerson(personRec) then
   begin
     mGuests.Edit;
-    mGuests.FieldByName('name').AsString     :=  PersonRec.name;
-    mGuests.FieldByName('Address1').AsString :=  PersonRec.Address1;
-    mGuests.FieldByName('Address2').AsString :=  PersonRec.Address2;
-    mGuests.FieldByName('Address3').AsString :=  PersonRec.Address3;
-    mGuests.FieldByName('Address4').AsString :=  PersonRec.Address4;
+    try
+      mGuests.FieldByName('name').AsString     :=  PersonRec.name;
+      mGuests.FieldByName('Address1').AsString :=  PersonRec.Address1;
+      mGuests.FieldByName('Address2').AsString :=  PersonRec.Address2;
+      mGuests.FieldByName('Address3').AsString :=  PersonRec.Address3;
+      mGuests.FieldByName('Address4').AsString :=  PersonRec.Address4;
 
-    mGuests.FieldByName('title').AsString        :=  PersonRec.title;
-    mGuests.FieldByName('Nationality').AsString  := PersonRec.Nationality;
-    mGuests.FieldByName('DateOfBirth').AsDateTime:= PersonRec.DateOfBirth;
+      mGuests.FieldByName('title').AsString        :=  PersonRec.title;
+      mGuests.FieldByName('Nationality').AsString  := PersonRec.Nationality;
+      mGuests.FieldByName('DateOfBirth').AsDateTime:= PersonRec.DateOfBirth;
 
-    mGuests.FieldByName('PersonalIdentificationId').AsString  := PersonRec.PersonalIdentificationId;
-    mGuests.FieldByName('SocialSecurityNumber').AsString      := PersonRec.SocialSecurityNumber;
-    mGuests.FieldByName('Country').AsString                   := PersonRec.Country;
-    mGuests.FieldByName('nationality').AsString               := PersonRec.Nationality;
-    mGuests.FieldByName('tel1').AsString                      := PersonRec.Tel1;
-    mGuests.FieldByName('tel2').AsString                      := PersonRec.Tel2;
-    mGuests.FieldByName('fax').AsString                       := PersonRec.Fax;
-    mGuests.FieldByName('Email').AsString                     := PersonRec.Email;
+      mGuests.FieldByName('PersonalIdentificationId').AsString  := PersonRec.PersonalIdentificationId;
+      mGuests.FieldByName('SocialSecurityNumber').AsString      := PersonRec.SocialSecurityNumber;
+      mGuests.FieldByName('Country').AsString                   := PersonRec.Country;
+      mGuests.FieldByName('nationality').AsString               := PersonRec.Nationality;
+      mGuests.FieldByName('tel1').AsString                      := PersonRec.Tel1;
+      mGuests.FieldByName('tel2').AsString                      := PersonRec.Tel2;
+      mGuests.FieldByName('fax').AsString                       := PersonRec.Fax;
+      mGuests.FieldByName('Email').AsString                     := PersonRec.Email;
 
-    mGuests.FieldByName('CompanyName'  ).AsString    := PersonRec.CompanyName     ;
-    mGuests.FieldByName('CompVATNumber').AsString    := PersonRec.CompVATNumber   ;
-    mGuests.FieldByName('CompTel'      ).AsString    := PersonRec.CompTel         ;
-    mGuests.FieldByName('CompFax'      ).AsString    := PersonRec.CompFax         ;
-    mGuests.FieldByName('CompEmail'    ).AsString    := PersonRec.CompEmail       ;
-    mGuests.FieldByName('CompAddress1' ).AsString    := PersonRec.CompAddress1    ;
-    mGuests.FieldByName('CompAddress2' ).AsString    := PersonRec.CompAddress2    ;
-    mGuests.FieldByName('CompZip'      ).AsString    := PersonRec.CompZip         ;
-    mGuests.FieldByName('CompCity'     ).AsString    := PersonRec.CompCity        ;
-    mGuests.FieldByName('CompCountry'  ).AsString    := PersonRec.CompCountry     ;
-    mGuests.post;
+      mGuests.FieldByName('CompanyName'  ).AsString    := PersonRec.CompanyName     ;
+      mGuests.FieldByName('CompVATNumber').AsString    := PersonRec.CompVATNumber   ;
+      mGuests.FieldByName('CompTel'      ).AsString    := PersonRec.CompTel         ;
+      mGuests.FieldByName('CompFax'      ).AsString    := PersonRec.CompFax         ;
+      mGuests.FieldByName('CompEmail'    ).AsString    := PersonRec.CompEmail       ;
+      mGuests.FieldByName('CompAddress1' ).AsString    := PersonRec.CompAddress1    ;
+      mGuests.FieldByName('CompAddress2' ).AsString    := PersonRec.CompAddress2    ;
+      mGuests.FieldByName('CompZip'      ).AsString    := PersonRec.CompZip         ;
+      mGuests.FieldByName('CompCity'     ).AsString    := PersonRec.CompCity        ;
+      mGuests.FieldByName('CompCountry'  ).AsString    := PersonRec.CompCountry     ;
+      mGuests.Post;
+
+      grData.Refresh;
+    except
+      mGuests.Cancel;
+      raise;
+    end;
   end;
 end;
 
@@ -717,6 +715,12 @@ begin
   error := not countryValidate(DisplayValue);
 end;
 
+procedure TfrmGroupGuests.tvGuestsDblClick(Sender: TObject);
+begin
+  inherited;
+  btnEdit.CLick;
+end;
+
 procedure TfrmGroupGuests.tvGuestsNationalityPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var
   theData : recCountryHolder;
@@ -748,8 +752,6 @@ var
   s : string;
   diff : boolean;
   ExecutionPlan: TRoomerExecutionPlan;
-  lRoomResUpdateList: TDictionary<integer, string>;
-  lRoomresUpdate: TPair<integer, string>;
 begin
   if tvData.DataController.DataSet.State = dsInActive then
     Exit;
@@ -760,10 +762,10 @@ begin
   mRooms.CheckBrowseMode;
 
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
-  lRoomResUpdateList := TDictionary<integer, string>.Create;
   try
     try
       mGuests.DisableControls;
+      mRooms.DisableControls;
       try
         mGuests.First;
         mCompare.First;
@@ -771,33 +773,37 @@ begin
         while not mGuests.eof do
         begin
           diff := false;
-          if mGuests.FieldByName('title').AsString                    <> mCompare.FieldByName('title').AsString then diff := true;
-          if mGuests.FieldByName('Name').AsString                     <> mCompare.FieldByName('Name').AsString then diff := true;
-          if mGuests.FieldByName('Address1').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
-          if mGuests.FieldByName('Address2').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
-          if mGuests.FieldByName('Address3').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
-          if mGuests.FieldByName('Address4').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
-          if mGuests.FieldByName('Country').AsString                  <> mCompare.FieldByName('Country').AsString then diff := true;
-          if mGuests.FieldByName('Tel1').AsString                     <> mCompare.FieldByName('Tel1').AsString then diff := true;
-          if mGuests.FieldByName('Tel2').AsString                     <> mCompare.FieldByName('Tel2').AsString then diff := true;
-          if mGuests.FieldByName('Fax').AsString                      <> mCompare.FieldByName('Fax').AsString then diff := true;
-          if mGuests.FieldByName('Email').AsString                    <> mCompare.FieldByName('Email').AsString then diff := true;
-          if mGuests.FieldByName('Nationality').AsString              <> mCompare.FieldByName('Nationality').AsString then diff := true;
-          if mGuests.FieldByName('PersonalIdentificationId').AsString <> mCompare.FieldByName('PersonalIdentificationId').AsString then diff := true;
-          if mGuests.FieldByName('DateOfBirth').AsString              <> mCompare.FieldByName('DateOfBirth').AsString then diff := true;
-          if mGuests.FieldByName('SocialSecurityNumber').AsString     <> mCompare.FieldByName('SocialSecurityNumber').AsString then diff := true;
-          if mGuests.FieldByName('State').AsString                    <> mCompare.FieldByName('State').AsString then diff := true;
+          if mCompare.Locate('person', mGuestsPerson.AsInteger, []) then
+          begin
+            if mGuests.FieldByName('title').AsString                    <> mCompare.FieldByName('title').AsString then diff := true;
+            if mGuests.FieldByName('Name').AsString                     <> mCompare.FieldByName('Name').AsString then diff := true;
+            if mGuests.FieldByName('Address1').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
+            if mGuests.FieldByName('Address2').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
+            if mGuests.FieldByName('Address3').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
+            if mGuests.FieldByName('Address4').AsString                 <> mCompare.FieldByName('Address1').AsString then diff := true;
+            if mGuests.FieldByName('Country').AsString                  <> mCompare.FieldByName('Country').AsString then diff := true;
+            if mGuests.FieldByName('Tel1').AsString                     <> mCompare.FieldByName('Tel1').AsString then diff := true;
+            if mGuests.FieldByName('Tel2').AsString                     <> mCompare.FieldByName('Tel2').AsString then diff := true;
+            if mGuests.FieldByName('Fax').AsString                      <> mCompare.FieldByName('Fax').AsString then diff := true;
+            if mGuests.FieldByName('Email').AsString                    <> mCompare.FieldByName('Email').AsString then diff := true;
+            if mGuests.FieldByName('Nationality').AsString              <> mCompare.FieldByName('Nationality').AsString then diff := true;
+            if mGuests.FieldByName('PersonalIdentificationId').AsString <> mCompare.FieldByName('PersonalIdentificationId').AsString then diff := true;
+            if mGuests.FieldByName('DateOfBirth').AsString              <> mCompare.FieldByName('DateOfBirth').AsString then diff := true;
+            if mGuests.FieldByName('SocialSecurityNumber').AsString     <> mCompare.FieldByName('SocialSecurityNumber').AsString then diff := true;
+            if mGuests.FieldByName('State').AsString                    <> mCompare.FieldByName('State').AsString then diff := true;
 
-          if mGuests.FieldByName('CompanyName'  ).AsString      <> mCompare.FieldByName('CompanyName'  ).AsString then diff := true;
-          if mGuests.FieldByName('CompVATNumber').AsString      <> mCompare.FieldByName('CompVATNumber').AsString then diff := true;
-          if mGuests.FieldByName('CompTel'      ).AsString      <> mCompare.FieldByName('CompTel'      ).AsString then diff := true;
-          if mGuests.FieldByName('CompFax'      ).AsString      <> mCompare.FieldByName('CompFax'      ).AsString then diff := true;
-          if mGuests.FieldByName('CompEmail'    ).AsString      <> mCompare.FieldByName('CompEmail'    ).AsString then diff := true;
-          if mGuests.FieldByName('CompAddress1' ).AsString      <> mCompare.FieldByName('CompAddress1' ).AsString then diff := true;
-          if mGuests.FieldByName('CompAddress2' ).AsString      <> mCompare.FieldByName('CompAddress2' ).AsString then diff := true;
-          if mGuests.FieldByName('CompZip'      ).AsString      <> mCompare.FieldByName('CompZip'      ).AsString then diff := true;
-          if mGuests.FieldByName('CompCity'     ).AsString      <> mCompare.FieldByName('CompCity'     ).AsString then diff := true;
-          if mGuests.FieldByName('CompCountry'  ).AsString      <> mCompare.FieldByName('CompCountry'  ).AsString then diff := true;
+            if mGuests.FieldByName('CompanyName'  ).AsString      <> mCompare.FieldByName('CompanyName'  ).AsString then diff := true;
+            if mGuests.FieldByName('CompVATNumber').AsString      <> mCompare.FieldByName('CompVATNumber').AsString then diff := true;
+            if mGuests.FieldByName('CompTel'      ).AsString      <> mCompare.FieldByName('CompTel'      ).AsString then diff := true;
+            if mGuests.FieldByName('CompFax'      ).AsString      <> mCompare.FieldByName('CompFax'      ).AsString then diff := true;
+            if mGuests.FieldByName('CompEmail'    ).AsString      <> mCompare.FieldByName('CompEmail'    ).AsString then diff := true;
+            if mGuests.FieldByName('CompAddress1' ).AsString      <> mCompare.FieldByName('CompAddress1' ).AsString then diff := true;
+            if mGuests.FieldByName('CompAddress2' ).AsString      <> mCompare.FieldByName('CompAddress2' ).AsString then diff := true;
+            if mGuests.FieldByName('CompZip'      ).AsString      <> mCompare.FieldByName('CompZip'      ).AsString then diff := true;
+            if mGuests.FieldByName('CompCity'     ).AsString      <> mCompare.FieldByName('CompCity'     ).AsString then diff := true;
+            if mGuests.FieldByName('CompCountry'  ).AsString      <> mCompare.FieldByName('CompCountry'  ).AsString then diff := true;
+            if mGuests.FieldByName('CompCountry'  ).AsString      <> mCompare.FieldByName('CompCountry'  ).AsString then diff := true;
+          end;
 
           if diff then
           begin
@@ -809,13 +815,18 @@ begin
           mCompare.Next;
         end;
 
-          if not lRoomResUpdateList.ContainsKey(mGuestsRoomReservation.AsInteger) and (mRoomsRoomNotes.AsString <> mRoomsCompareRoomNotes.AsString) then
-            lRoomResUpdateList.Add(mRoomsRoomReservation.AsInteger, mRoomsRoomNotes.AsString);
-
         s := 'UPDATE roomreservations SET hiddeninfo = %s WHERE roomreservation = %d ';
+        mRooms.First;
+        while not mRooms.eof do
+        begin
+          if mRoomsCompare.Locate('roomreservation', mRoomsRoomReservation.AsInteger, []) and
+             not mRoomsRoomNotes.AsString.Equals(mRoomsCompareRoomNotes.AsString) then
+          begin
+            ExecutionPlan.AddExec(Format(s, [_db(mRoomsRoomNotes.AsString), mRoomsRoomreservation.AsInteger]));
+          end;
 
-        for lRoomresUpdate in lRoomResUpdateList do
-          ExecutionPlan.AddExec(Format(s, [_db(lRoomResUpdate.Value), lRoomResUpdate.Key]));
+          mRooms.Next;
+        end;
 
         if not ExecutionPlan.Execute(ptExec, True, True) then
           raise Exception.Create(ExecutionPlan.ExecException);
@@ -823,6 +834,7 @@ begin
         FHasUnsavedChanges := false;
       finally
         mGuests.EnableControls;
+        mRooms.EnableControls;
         tvGuests.applyBestFit;
       end;
     except
@@ -833,7 +845,6 @@ begin
     end;
   finally
     freeandNil(ExecutionPlan);
-    lRoomResUpdateList.Free;
   end;
 end;
 

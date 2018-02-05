@@ -16,13 +16,15 @@ type
     Vat : Double;
     CityTax : Double;
     Paid : Boolean;
+    Currency: string;
   public
     constructor Create(_ADate : TDate;
                       _RateExcl : Double;
                       _RateIncl : Double;
                       _Vat : Double;
                       _CityTax : Double;
-                      _Paid : Boolean);
+                      _Paid : Boolean;
+                      _Currency: string);
     function Clone : TDateRate;
   end;
 
@@ -160,7 +162,7 @@ begin
     if stayTaxPerRoom then
       Multiply := 1 / NumDays;
 
-    result := TDateRate.Create(ADate, RateExcl, RateIncl, VAT, CityTax * Multiply / CurrencyRate, False);
+    result := TDateRate.Create(ADate, RateExcl, RateIncl, VAT, CityTax * Multiply / CurrencyRate, False, _Currency);
   end
   else
     raise Exception.Create('CreateDateRate(): Invalid parameters');
@@ -275,7 +277,7 @@ begin
       Currency := rSet['Currency'];
     while NOT rSet.Eof do
     begin
-      FViewList.Add(TDateRate.Create(rSet['ADate'], rSet['RateExcl'], rSet['RateIncl'], rSet['VAT'], rSet['CityTaxPerDay'], rSet['Paid']));
+      FViewList.Add(TDateRate.Create(rSet['ADate'], rSet['RateExcl'], rSet['RateIncl'], rSet['VAT'], rSet['CityTaxPerDay'], rSet['Paid'], rSet['currency']));
       rSet.Next;
     end;
   finally
@@ -437,10 +439,10 @@ end;
 
 function TDateRate.Clone: TDateRate;
 begin
-  result := TDateRate.Create(ADate, RateExcl, RateIncl, Vat, CityTax, Paid)
+  result := TDateRate.Create(ADate, RateExcl, RateIncl, Vat, CityTax, Paid, Currency);
 end;
 
-constructor TDateRate.Create(_ADate: TDate; _RateExcl, _RateIncl, _Vat, _CityTax: Double; _Paid : Boolean);
+constructor TDateRate.Create(_ADate: TDate; _RateExcl, _RateIncl, _Vat, _CityTax: Double; _Paid : Boolean; _Currency: string);
 begin
     ADate := _ADate;
     RateExcl := _RateExcl;
@@ -448,6 +450,7 @@ begin
     Vat := _Vat;
     CityTax := _CityTax;
     Paid := _Paid;
+    Currency := _Currency;
 end;
 
 end.
