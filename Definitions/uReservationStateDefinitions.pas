@@ -70,7 +70,7 @@ type
       ///   Fill a TStrings with translated descriptions in order of enumeration. Can by used to populate a TCombobox.<br />
       ///  The objects list of aItemList will contain the ord() of the state cast to an TObject
       /// </summary>
-      class procedure AsStrings(aItemList: TStrings); static;
+      class procedure AsStrings(aItemList: TStrings; aUserSelectableOnly: boolean); static;
       /// <summary>
       ///   Return the itemindex of TReservationState as it would have in the itemlist created by AsStrings
       /// </summary>
@@ -187,13 +187,13 @@ begin
 end;
 
 
-class procedure TReservationStateHelper.AsStrings(aItemList: TStrings);
+class procedure TReservationStateHelper.AsStrings(aItemList: TStrings; aUserSelectableOnly: boolean);
 var
   s: TReservationState;
 begin
   aItemList.Clear;
-  for s := TReservationState(1) to high(s) do // dont use rsUnkown and rsMixed
-    if s <> rsMixed then
+  for s := low(s) to high(s) do // dont use rsUnkown and rsMixed
+    if (aUserSelectableOnly and s.IsUserSelectable) or (not aUserSelectableOnly and (s <> rsMixed)) then
       aItemList.AddObject(s.AsReadableString, TObject(ord(s)));
 end;
 

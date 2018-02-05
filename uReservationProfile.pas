@@ -1000,7 +1000,7 @@ begin
   _restoreForm(self);
   enabled := false;
 
-  TReservationState.AsStrings((tvRoomsStatusText.Properties AS TcxComboBoxProperties).Items);
+  TReservationState.AsStrings((tvRoomsStatusText.Properties AS TcxComboBoxProperties).Items, true);
   (tvRoomsStatusText.Properties AS TcxComboBoxProperties).DropDownRows := (tvRoomsStatusText.Properties AS TcxComboBoxProperties).Items.Count;
 
   TReservationMarketType.AsStrings(cbxMarket.Items);
@@ -3020,7 +3020,10 @@ begin
       Font.Color := clWindowtext;
 
     FillRect(aRect);
-    TextOut(aRect.Left, aRect.Top, lText);
+    if (odComboBoxEdit in aState) then // drawing in edit box
+      TextOut(aRect.Left, aRect.Top + 5, lText)
+    else
+      TextOut(aRect.Left, aRect.Top, lText)
   end;
 end;
 
