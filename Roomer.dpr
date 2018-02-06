@@ -200,7 +200,6 @@ uses
   uPersons in 'Persons\uPersons.pas',
   uRoomerContainerClasses in 'uRoomerContainerClasses.pas',
   uAvailabilityPerDay in 'AvailabilityManagement\uAvailabilityPerDay.pas',
-  uInvoiceController in 'Invoice\uInvoiceController.pas',
   uOfflineReportGenerator in 'OfflineReports\uOfflineReportGenerator.pas',
   uOffLineReport in 'OfflineReports\uOffLineReport.pas',
   uHotelStatusOfflineReport in 'OfflineReports\uHotelStatusOfflineReport.pas',
