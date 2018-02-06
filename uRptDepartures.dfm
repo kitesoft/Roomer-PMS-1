@@ -51,8 +51,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
-        Width = 50
-        Height = 20
+        Width = 58
+        Height = 19
         Caption = 'Today'
         Checked = True
         TabOrder = 0
@@ -62,8 +62,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbTomorrow: TsRadioButton
         Left = 4
         Top = 46
-        Width = 68
-        Height = 20
+        Width = 76
+        Height = 19
         Caption = 'Tomorrow'
         TabOrder = 1
         OnClick = rbRadioButtonClick
@@ -71,8 +71,8 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       object rbManualRange: TsRadioButton
         Left = 119
         Top = 21
-        Width = 114
-        Height = 20
+        Width = 122
+        Height = 19
         Caption = 'Manual date range:'
         TabOrder = 2
         OnClick = rbRadioButtonClick
@@ -565,7 +565,6 @@ inherited frmDeparturesReport: TfrmDeparturesReport
     object grdPrinterLink1: TdxGridReportLink
       Active = True
       Component = grDeparturesList
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -587,14 +586,13 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43129.553973379630000000
+      ReportDocument.CreationDate = 43137.521195289350000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11

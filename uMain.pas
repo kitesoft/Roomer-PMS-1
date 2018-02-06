@@ -205,7 +205,6 @@ type
     btnClosedInvoicesThisCustomer: TdxBarLargeButton;
     btnClosedInvoicesAllDetailedList: TdxBarLargeButton;
     btnClosedInvoicesAllSimpleList: TdxBarLargeButton;
-    btnDeleteReservation: TdxBarLargeButton;
     btnRemoveThisRoom: TdxBarLargeButton;
     btnCancelThisReservation: TdxBarLargeButton;
     btnSetNoRoomThis: TdxBarLargeButton;
@@ -755,7 +754,6 @@ type
     procedure btnModifyReservationClick(Sender: TObject);
     procedure btnCancelReservationBtnClick(Sender: TObject);
     procedure btnRoomGuestsClick(Sender: TObject);
-    procedure btnDeleteReservationClick(Sender: TObject);
     procedure btnRemoveThisRoomClick(Sender: TObject);
     procedure btnNextDayClick(Sender: TObject);
     procedure btnToDayClick(Sender: TObject);
@@ -2579,7 +2577,7 @@ end;
 procedure TfrmMain.tabsViewChange(Sender: TObject);
 begin
   SetViews(tabsView.TabIndex + 1);
-  EnableDisableFunctions(tabsView.TabIndex IN [0,1]);
+  EnableDisableFunctions(false);
 
   // TODO why do this for all tabs?
   PostMessage(handle, WM_REFRESH_PERIOD_VIEW_BOTTOM, 0, 0);
@@ -5909,17 +5907,19 @@ begin
     noRes := ActiveGrid.cells[11, ARow] = '';
   end;
 
-  EnableDisableFunctions(NOT noRes);
   if noRes then
-    aRoom := ActiveGrid.cells[roomCol, ARow]
-  else
-    aRoom := '';
-//  btnQuicReservation.Enabled := noRes AND (aRoom <> '');
-//  QuickReservation1.Enabled := btnQuicReservation.Enabled;
-  zEmptyRoomNumber := aRoom;
-  zOneDay_ResIndex := 0;
-  if noRes then
+  begin
     zOneDay_ResIndex := -1;
+    aRoom := ActiveGrid.cells[roomCol, ARow]
+  end
+  else
+  begin
+    zOneDay_ResIndex := 0;
+    aRoom := '';
+  end;
+
+  EnableDisableFunctions(NOT noRes);
+  zEmptyRoomNumber := aRoom;
 end;
 
 procedure TfrmMain.EnableDisableFunctions(Enable: boolean);
@@ -5951,10 +5951,12 @@ begin
   begin
     mnuCancelRoomFromRoomReservation.Enabled := d.RR_GetNumberOfRooms(_iReservation) > 1;
     mnuDeleteRoomFromReservation.Enabled := mnuCancelRoomFromRoomReservation.Enabled;
+    btnRemoveThisRoom.Enabled := mnuCancelRoomFromRoomReservation.Enabled;
   end else
   begin
     mnuCancelRoomFromRoomReservation.Enabled := false;
     mnuDeleteRoomFromReservation.Enabled := false;
+    btnRemoveThisRoom.Enabled := false;
   end;
 
   mnuRegistrationForm.Enabled := Enable AND (NOT OffLineMode);
@@ -5977,8 +5979,6 @@ begin
   pmnuReservationRoomList.Enabled := Enable AND (NOT OffLineMode);
   btnReservationNotes.Enabled := Enable AND (NOT OffLineMode);
   btnCancelThisReservation.Enabled := Enable AND (NOT OffLineMode);
-  btnDeleteReservation.Enabled := Enable AND (NOT OffLineMode);
-  btnRemoveThisRoom.Enabled := Enable AND (NOT OffLineMode);
   btnCheckInRoom.Enabled := Enable;
   btnCheckInGroup.Enabled := Enable;
   btnCheckOutRoom.Enabled := Enable;
@@ -10396,12 +10396,6 @@ begin
     RoomerLanguage.LoadLanguage(true);
     TranslateOpenForms;
   end;
-end;
-
-procedure TfrmMain.btnDeleteReservationClick(Sender: TObject);
-begin
-  LogUserClickedButton(Sender);
-  _RemoveAReservation;
 end;
 
 procedure TfrmMain.btnDownPaymentsClick(Sender: TObject);

@@ -166,8 +166,8 @@ begin
     s := s + ' GuestName, '#10;
     s := s + ' Reservation AS RoomerReservationId, '#10;
     s := s + ' CompanyName, '#10;
-    s := s + ' CAST(Arrival AS DATE) AS Arrival, '#10;
-    s := s + ' CAST(Departure AS DATE) AS Departure, '#10;
+    s := s + ' Arrival, '#10;
+    s := s + ' Departure, '#10;
     s := s + ' GroupAccount, '#10;
     s := s + ' IF(GroupAccount, GetGroupInvoiceBalance(Reservation), 0.00) AS GroupInvoiceBalance, '#10;
     s := s + ' RoomType, '#10;
@@ -184,8 +184,8 @@ begin
     s := s + '        yyy.RoomType, '#10;
     s := s + '        pe.Name AS GuestName, '#10;
     s := s + '        cu.Surname AS CompanyName, '#10;
-    s := s + '        rr.Arrival , '#10;
-    s := s + '        rr.Departure, '#10;
+    s := s + '        RR_Arrival(yyy.roomreservation, false) as Arrival, '#10;
+    s := s + '        RR_Departure(yyy.roomreservation, false) as Departure, '#10;
     s := s + '        rr.GroupAccount, '#10;
     s := s + '        if (Paid=1, 0, ROUND(SUM(RateWithDiscount + IFNULL(IF(CityTaxIncl, 0, CityTaxPerDay), 0.00)), 2) * CurrencyRate) AS TotalRent, '#10;
     s := s + '        IFNULL((SELECT '#10;
@@ -279,7 +279,7 @@ begin
     s := s + '            JOIN vatcodes vc ON vc.VATCode = it.VATCode, '#10;
     s := s + '            (SELECT '+_db(DateFrom, True)+' AS StartDate, '+_db(DateTo, True)+' AS EndDate) AS params '#10;
     s := s + '            WHERE '#10;
-    s := s + '                rr.departure between params.Startdate and params.EndDate '#10;
+    s := s + '                RR_Departure(rr.roomreservation, false) between params.Startdate and params.EndDate '#10;
     s := s + '                AND NOT ResFlag IN (''X'' , ''C'', ''D'') '#10;
     s := s + '            ) xxx '#10;
     s := s + '        ) yyy '#10;
