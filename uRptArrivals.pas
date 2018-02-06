@@ -170,8 +170,8 @@ const
           '  r.Customer AS CompanyCode, '#10 +
           '  r.Name AS CompanyName, '#10 +
           '  (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '#10 +
-          '  CAST(rr.Arrival AS DATE) as Arrival, '#10 +
-          '  CAST(rr.Departure AS DATE) as Departure,   '#10 +
+          '  RR_Arrival(rd.roomreservation, false) as Arrival, '#10 +
+          '  RR_Departure(rd.roomreservation, false) as Departure,   '#10 +
           '  ( SELECT COUNT(id) '#10 +
           '    FROM persons pe1 '#10 +
           '    WHERE pe1.RoomReservation=rd.RoomReservation) AS NumGuests, '#10 +
@@ -189,6 +189,13 @@ const
           '      %s '#10 +
           'GROUP BY rd.aDate, rd.RoomReservation '#10 +
           'ORDER BY rd.aDate, rd.Room ';
+
+          // can be optimized as follows:
+          //WHERE rd.aDate = '2018-02-06' and (rd.ResFlag = 'P')
+          //%s
+          //GROUP BY rd.aDate, rd.RoomReservation
+          //HAVING arrival = '2018-02-06'
+          //ORDER BY rd.aDate, rd.Room
 
   cSqlForSingleDate = '      AND rd.ADate = ''%s'' ';
   cSqlForDateRange = '      AND rd.ADate >= ''%s'' AND rd.ADate <= ''%s'' ';

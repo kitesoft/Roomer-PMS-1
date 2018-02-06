@@ -91,8 +91,8 @@ begin
   rSet := CreateNewDataset;
   sql := format(
            'SELECT r.Name, r.ContactName, ' +
-           'DATE(rr.Arrival) AS Arrival, ' +
-           'DATE(rr.Departure) AS Departure, ' +
+           'RV_Arrival(r.reservation, false) AS Arrival, ' +
+           'RV_Departure(r.reservation, false) AS Departure, ' +
            '(SELECT COUNT(RoomReservation) FROM roomreservations r1 WHERE r1.Reservation=r.Reservation) AS NumRooms, ' +
            '(SELECT COUNT(Person) FROM persons pe WHERE pe.Reservation=r.Reservation) AS NumGuests, ' +
            'channel ' +

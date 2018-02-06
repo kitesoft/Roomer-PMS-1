@@ -1621,7 +1621,6 @@ uses
 		, uGroupGuests
 		, uActivityLogs
 		, uFrmCheckOut
-		,uInvoiceController
 		,uCleaningNotes
 		,Math
     , uOfflineReportGrid

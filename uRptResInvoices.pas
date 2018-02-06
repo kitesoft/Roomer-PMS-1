@@ -732,8 +732,7 @@ begin
     s := s+'        INNER JOIN reservations rv ON rv.reservation = rr.reservation '#10;
     s := s+'        INNER JOIN customers cu ON cu.customer = rv.customer '#10;
     s := s+'      WHERE '#10;
-    s := s+'           (rr.arrival >= '+_db(zDateFrom)+') '#10;
-    s := s+'       AND (rr.arrival <= '+_db(zDateTO)+') '#10;
+    s := s+'           ( RR_Arrival(rr.roomreservation, false) BETWEEN '+_db(zDateFrom)+' AND '+_db(zDateTO)+') '#10;
     s := s+'       AND ((rd.resFlag) <> '+_db('C')+' and (rd.resFlag <> '+_db('X')+')) '#10;
     s := s+'       AND rd.paid = 0 '#10;
     s := s+'       AND cu.customer = '+_db(customer)+' '#10;
