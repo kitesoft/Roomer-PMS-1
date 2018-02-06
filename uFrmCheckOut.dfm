@@ -97,7 +97,6 @@ object FrmCheckOut: TFrmCheckOut
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'TRANSPARENT'
-    ExplicitTop = 269
     DesignSize = (
       626
       62)
@@ -157,8 +156,6 @@ object FrmCheckOut: TFrmCheckOut
     BevelEdges = [beRight, beBottom]
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 59
-    ExplicitHeight = 210
     object __lblRoomBalance: TsLabel
       Left = 16
       Top = 24
@@ -332,8 +329,6 @@ object FrmCheckOut: TFrmCheckOut
     BevelEdges = [beBottom]
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 59
-    ExplicitHeight = 210
     object __lblGroupBalance: TsLabel
       Left = 16
       Top = 24
