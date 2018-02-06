@@ -11,7 +11,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
     Top = 477
     Width = 925
     ExplicitTop = 477
-    ExplicitWidth = 732
+    ExplicitWidth = 925
   end
   object Panel1: TsPanel [1]
     Left = 0
@@ -22,7 +22,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
     BevelOuter = bvNone
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 732
     object gbxForAllDates: TsGroupBox
       AlignWithMargins = True
       Left = 3
@@ -39,6 +38,8 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitLeft = -21
+      ExplicitTop = -63
       DesignSize = (
         410
         130)
@@ -74,7 +75,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       end
       object clabDiscount: TsLabel
         Left = 4
-        Top = 70
+        Top = 71
         Width = 99
         Height = 13
         Alignment = taRightJustify
@@ -86,55 +87,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
-      end
-      object sSpeedButton2: TsSpeedButton
-        Left = 256
-        Top = 20
-        Width = 23
-        Height = 21
-        Caption = '...'
-        OnClick = btnSelectPriceCodeClick
-        SkinData.SkinSection = 'SPEEDBUTTON'
-      end
-      object edPcCode: TsEdit
-        Left = 109
-        Top = 20
-        Width = 141
-        Height = 21
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-        TextHint = 'dbl click to select from list'
-        OnDblClick = btnSelectPriceCodeClick
-        SkinData.SkinSection = 'EDIT'
-      end
-      object edRoomResDiscount: TsSpinEdit
-        Left = 109
-        Top = 68
-        Width = 109
-        Height = 21
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 4
-        SkinData.SkinSection = 'EDIT'
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -13
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
-        MaxValue = 999999
-        MinValue = 0
-        Value = 0
       end
       object cbxIsRoomResDiscountPrec: TsComboBox
         Left = 224
@@ -163,8 +115,8 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
           '%')
       end
       object ApplyDiscount: TsButton
-        Left = 286
-        Top = 67
+        Left = 295
+        Top = 68
         Width = 99
         Height = 21
         Anchors = [akTop, akRight]
@@ -192,7 +144,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         GlyphMode.Grayed = False
       end
       object btnApplyRate: TsButton
-        Left = 286
+        Left = 295
         Top = 43
         Width = 99
         Height = 21
@@ -203,7 +155,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         SkinData.SkinSection = 'BUTTON'
       end
       object btnApplyPriceCode: TsButton
-        Left = 286
+        Left = 295
         Top = 20
         Width = 99
         Height = 21
@@ -212,6 +164,43 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         TabOrder = 1
         OnClick = btnApplyPriceCodeClick
         SkinData.SkinSection = 'BUTTON'
+      end
+      object edRoomResDiscount: TsCalcEdit
+        Left = 109
+        Top = 68
+        Width = 109
+        Height = 21
+        AutoSize = False
+        Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 4
+        OnKeyPress = edRoomResDiscountKeyPress
+        GlyphMode.Blend = 0
+        GlyphMode.Grayed = False
+      end
+      inline fraPriceCodePanel: TfraPriceCodePanel
+        Left = 109
+        Top = 20
+        Width = 171
+        Height = 20
+        TabOrder = 0
+        ExplicitLeft = 109
+        ExplicitTop = 20
+        ExplicitWidth = 171
+        inherited pnlLookup: TsPanel
+          Width = 171
+          inherited lblDescription: TsLabel
+            Width = 78
+            Height = 20
+            ExplicitWidth = 101
+            ExplicitHeight = 20
+          end
+        end
       end
     end
     object sGroupBox1: TsGroupBox
@@ -224,7 +213,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       Caption = 'Room info'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitWidth = 310
       object clabRoom: TsLabel
         Left = 12
         Top = 16
@@ -403,7 +391,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 732
     object tvRoomRates: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = kbmRoomRatesDS
@@ -552,7 +539,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
     BevelOuter = bvNone
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 732
     object btnCancel: TsButton
       AlignWithMargins = True
       Left = 818
@@ -567,7 +553,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       ModalResult = 2
       TabOrder = 3
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 625
     end
     object btnOK: TsButton
       AlignWithMargins = True
@@ -577,7 +562,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       Height = 31
       Align = alLeft
       Caption = 'Apply to this room'
-      Default = True
       ImageIndex = 82
       Images = DImages.PngImageList1
       ModalResult = 1

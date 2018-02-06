@@ -60,7 +60,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dxmdaset, cxCheckBox, cxCurrencyEdit
   , uRoomerForm, dxPScxCommon, dxPScxGridLnk, cxPropertiesStore, Vcl.ComCtrls, sStatusBar
-  , uRoomerCurrencyDefinition
+  , uRoomerCurrencyDefinition, uFraLookupPanel, uFraPriceCodePanel
 
   ;
 
@@ -106,8 +106,6 @@ type
     clabRate: TsLabel;
     clabPriceCode: TsLabel;
     clabDiscount: TsLabel;
-    edPcCode: TsEdit;
-    edRoomResDiscount: TsSpinEdit;
     cbxIsRoomResDiscountPrec: TsComboBox;
     ApplyDiscount: TsButton;
     edRate: TsCalcEdit;
@@ -128,7 +126,6 @@ type
     labInfants: TsLabel;
     sButton1: TsButton;
     sButton2: TsButton;
-    sSpeedButton2: TsSpeedButton;
     mRoomRates: TdxMemData;
     mRoomRatesReservation: TIntegerField;
     mRoomRatesroomreservation: TIntegerField;
@@ -143,7 +140,8 @@ type
     mRoomRatesDiscountAmount: TFloatField;
     mRoomRatesRentAmount: TFloatField;
     mRoomRatesNativeAmount: TFloatField;
-    procedure edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+    edRoomResDiscount: TsCalcEdit;
+    fraPriceCodePanel: TfraPriceCodePanel;
     procedure btnApplyRateClick(Sender: TObject);
     procedure ApplyDiscountClick(Sender: TObject);
     procedure _kbmRoomRatesBeforePost(DataSet: TDataSet);
@@ -151,7 +149,6 @@ type
     procedure btnOKClick(Sender: TObject);
     procedure sButton1Click(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
-    procedure btnSelectPriceCodeClick(Sender: TObject);
     procedure mRoomRatesBeforePost(DataSet: TDataSet);
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
@@ -167,6 +164,7 @@ type
       const AValue: Variant; AIsFooter: Boolean; var AText: string);
     procedure tvRoomRatesFoooterSummaryCurrencyGetTextSum(Sender: TcxDataSummaryItem;
       const AValue: Variant; AIsFooter: Boolean; var AText: string);
+    procedure edRoomResDiscountKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     FCurrencyDefinition: TRoomerCurrencyDefinition;
@@ -255,40 +253,38 @@ var
 
 begin
 
+  Discount      := edRoomResDiscount.Value;
+  isPercentage  := cbxIsRoomResDiscountPrec.ItemIndex = 0;
+
   mRoomRates.First;
   while not mRoomRates.eof do
   begin
-    Discount      := edRoomResDiscount.Value;
-    isPercentage  := cbxIsRoomResDiscountPrec.ItemIndex = 0;
     Rate          := mRoomRates.FieldByName('Rate').AsFloat;
 
     DiscountAmount := 0;
 
-    if rate <> 0 then
+    if discount <> 0 then
     begin
-      if discount <> 0 then
+      if isPercentage then
       begin
-        if isPercentage then
-        begin
-          DiscountAmount :=  Rate*discount/100;
-        end else
-        begin
-          DiscountAmount := discount;
-        end;
+        DiscountAmount :=  Rate*discount/100;
+      end else
+      begin
+        DiscountAmount := discount;
       end;
-      RentAmount  := Rate-DiscountAmount;
-
-      NativeAmount := RentAmount*zData.CurrencyRate;
-
-      mRoomRates.Edit;
-      mRoomRates.FieldByName('Rate').AsFloat           := Rate;
-      mRoomRates.FieldByName('Discount').AsFloat       := Discount;
-      mRoomRates.FieldByName('isPercentage').AsBoolean := isPercentage;
-      mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
-      mRoomRates.FieldByName('RentAmount').AsFloat     := RentAmount;
-      mRoomRates.FieldByName('NativeAmount').AsFloat   := NativeAmount;
-      mRoomRates.post;
     end;
+    RentAmount  := Rate-DiscountAmount;
+
+    NativeAmount := RentAmount*zData.CurrencyRate;
+
+    mRoomRates.Edit;
+    mRoomRates.FieldByName('Rate').AsFloat           := Rate;
+    mRoomRates.FieldByName('Discount').AsFloat       := Discount;
+    mRoomRates.FieldByName('isPercentage').AsBoolean := isPercentage;
+    mRoomRates.FieldByName('DiscountAmount').AsFloat := DiscountAmount;
+    mRoomRates.FieldByName('RentAmount').AsFloat     := RentAmount;
+    mRoomRates.FieldByName('NativeAmount').AsFloat   := NativeAmount;
+    mRoomRates.post;
 
     mRoomRates.Next;
   end;
@@ -347,7 +343,10 @@ var
   aDate            : Tdate    ;
   priceID          : integer  ;
 begin
-  priceCode := edPcCode.Text;
+  if not fraPriceCodePanel.isValid then
+    Exit;
+
+  priceCode := fraPriceCodePanel.Code;
   priceID   := PriceCode_ID(priceCode);
   mRoomRates.First;
   while not mRoomRates.eof do
@@ -456,16 +455,6 @@ begin
   ApplyType := 1;
 end;
 
-procedure TfrmEditRoomPrice.btnSelectPriceCodeClick(Sender: TObject);
-var
-  theData : recPriceCodeHolder;
-begin
-  if priceCodes(TRoomerGridFormMode.SelectSingle,theData) then
-  begin
-    edPcCode.text := theData.pcCode;
-  end;
-end;
-
 procedure TfrmEditRoomPrice.DoUpdateControls;
 begin
   inherited;
@@ -478,19 +467,17 @@ begin
 
   if not mRoomRates.eof then
   begin
-    edPcCode.text := mRoomRates.FieldByName('PriceCode').AsString;
+    fraPriceCodePanel.Code := mRoomRates.FieldByName('PriceCode').AsString;
     if mRoomRates.FieldByName('isPercentage').AsBoolean = false then cbxIsRoomResDiscountPrec.ItemIndex := 1; //
   end;
 end;
 
-procedure TfrmEditRoomPrice.edPcCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
-var
-  theData : recPriceCodeHolder;
+procedure TfrmEditRoomPrice.edRoomResDiscountKeyPress(Sender: TObject; var Key: Char);
 begin
-  if priceCodes(TRoomerGridFormMode.SelectSingle, theData) then
-  begin
-    edPcCode.text := theData.pcCode;
-  end;
+  inherited;
+  if Key in [',', '.'] then
+    Key := FormatSettings.DecimalSeparator;
+
 end;
 
 procedure TfrmEditRoomPrice._kbmRoomRatesBeforePost(DataSet: TDataSet);
