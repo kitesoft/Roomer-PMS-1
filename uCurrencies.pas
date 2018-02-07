@@ -339,6 +339,7 @@ end;
 procedure TfrmCurrencies.FormCreate(Sender: TObject);
 begin
   zAct        := actNone;
+  ActiveFieldName := 'active';
 end;
 
 procedure TfrmCurrencies.FormShow(Sender: TObject);

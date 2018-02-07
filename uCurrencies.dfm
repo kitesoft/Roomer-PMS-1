@@ -76,13 +76,10 @@ inherited frmCurrencies: TfrmCurrencies
       ExplicitWidth = 847
       ExplicitHeight = 48
       inherited btnClear: TsSpeedButton
-        OnClick = nil
       end
       inherited chkActive: TsCheckBox
-        OnClick = nil
       end
       inherited edFilter: TsEdit
-        OnChange = nil
       end
     end
   end
