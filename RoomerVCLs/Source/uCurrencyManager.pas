@@ -245,6 +245,12 @@ begin
     begin
       Result := CurrencyDefinitionClass.Create(CurCode, aCurId);
       FDefinitions.Add(CurCode, Result);
+    end
+    else if Result.ID <> aCurId then
+    begin // ID has changed
+      FIDCache.Remove(Result.ID);
+      Result.ID := aCurId;
+      FIDCache.AddOrSetValue(Result.ID, Result);
     end;
   finally
     Unlock;
