@@ -5723,6 +5723,8 @@ begin
       Point := grOneDayRooms.ClientToScreen(Point);
       SetRoomCleanAndMaintenanceStatus(grOneDayRooms.cells[ACol, ARow], Point.X, Point.Y);
 
+      glb.TableList['rooms'].RefreshFromServer;
+      g.RefreshRoomList;
       FOneDay_bMouseDown := false;
       if grOneDayRooms.dragging then
         grOneDayRooms.EndDrag(false);
