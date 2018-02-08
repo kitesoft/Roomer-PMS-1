@@ -247,8 +247,8 @@ const
     ' ,rr.Discount as AverageDiscount '#10 +
     ' ,rr.Groupaccount '#10 +
     ' ,rr.Package '#10 +
-    ' ,CAST(rr.Arrival as DATE) as Arrival '#10 +
-    ' ,CAST(rr.Departure as Date) Departure '#10 +
+    ' ,RR_Arrival(rr.roomreservation, false) as Arrival '#10 +
+    ' ,RR_Departure(rr.roomreservation, false) as Departure '#10 +
     ' ,rr.PriceType as PriceCode '#10 +
     ' FROM roomreservations rr '#10 +
     ' JOIN (SELECT %d as Invoiceindex) params '#10+

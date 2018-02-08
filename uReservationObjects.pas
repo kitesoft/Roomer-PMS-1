@@ -50,7 +50,7 @@ type
     FCountry : string;
     FGuestType : string;
     FInformation : string;
-    FTag : integer;
+//    FTag : integer;
 
   public
     constructor Create;
@@ -72,7 +72,7 @@ type
     property Id : string read FId write FId;
     property GuestType : string read FGuestType write FGuestType;
     property Information : string read FInformation write FInformation;
-    property Tag : integer read FTag write FTag;
+//    property Tag : integer read FTag write FTag;
   end;
 
   { A single Room - can constist of persons rooms }
@@ -276,7 +276,7 @@ type
   TReservationsModel = class(TObject)
   private
     FReservationState : TReservationState;
-    FWebRequest : Boolean;
+//    FWebRequest : Boolean;
     FFromDate : TDate;
     FToDate : TDate;
     FReservationList : TList<TSingleReservations>;
@@ -296,7 +296,7 @@ type
   published
     property ReservationState : TReservationState read FReservationState write FReservationState;
 
-    property WebRequest : Boolean read FWebRequest write FWebRequest;
+//    property WebRequest : Boolean read FWebRequest write FWebRequest;
 
     property FromDate : TDate read FFromDate write FFromDate;
     property ToDate : TDate read FToDate write FToDate;
@@ -338,7 +338,7 @@ begin
 
   FInformation := '';
 
-  FTag := 0;
+//  FTag := 0;
 end;
 
 destructor TGuestObject.Destroy;
@@ -511,7 +511,7 @@ begin
   SingleReservations := nil;
   iReservation := 0;
   Screen.Cursor := crHourglass;
-  Application.processmessages;
+//  Application.processmessages;
   try
     Clear;
 
@@ -695,7 +695,7 @@ begin
     end;
   finally
     Screen.Cursor := crDefault;
-    Application.processmessages;
+//    Application.processmessages;
   end;
 end;
 

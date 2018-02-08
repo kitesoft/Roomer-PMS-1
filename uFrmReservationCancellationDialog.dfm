@@ -23,12 +23,10 @@ inherited FrmReservationCancellationDialog: TFrmReservationCancellationDialog
       Left = 373
       Default = False
       ExplicitLeft = 373
-      ExplicitTop = 4
     end
     inherited btnCancel: TsButton
       Left = 479
       ExplicitLeft = 479
-      ExplicitTop = 4
     end
   end
   object gbxResInfo: TsGroupBox [2]

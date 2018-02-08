@@ -1621,7 +1621,6 @@ uses
 		, uGroupGuests
 		, uActivityLogs
 		, uFrmCheckOut
-		,uInvoiceController
 		,uCleaningNotes
 		,Math
     , uOfflineReportGrid
@@ -4054,32 +4053,36 @@ begin
   end;
 
   BusyRefreshingTodaysGrid := true;
-  Screen.Cursor := crHourGlass;
   try
+    Screen.Cursor := crHourGlass;
+    try
 
-    UpdatePanelText;
+      UpdatePanelText;
 
-    case ViewMode of
-      vmOneDay:     RefreshOneDayGrid;
+      case ViewMode of
+        vmOneDay:     RefreshOneDayGrid;
 
-      vmGuestList:  refreshGuestList;
+        vmGuestList:  refreshGuestList;
 
-      vmPeriod:     RefreshPeriodView;
-      vmMeetings: ;
-      vmDashboard:  begin
-                      SetDateStatisticsDate;
-                    end;
-      vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
-      vmFrontDesk:  begin
-                      SetDateStatisticsDate;
-                      FrmFrontDeskPageButton.ShowFromDate := dtDate.Date;
-                    end;
+        vmPeriod:     RefreshPeriodView;
+        vmMeetings: ;
+        vmDashboard:  begin
+                        SetDateStatisticsDate;
+                      end;
+        vmRateQuery:  PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(dtDate.Date));
+        vmFrontDesk:  begin
+                        SetDateStatisticsDate;
+                        FrmFrontDeskPageButton.ShowFromDate := dtDate.Date;
+                      end;
 
+      end;
+
+    finally
+      Screen.Cursor := crDefault;
+      BusyRefreshingTodaysGrid := false;
     end;
-
-  finally
-    Screen.Cursor := crDefault;
-    BusyRefreshingTodaysGrid := false;
+  except on e: Exception do
+    ShowMessage('Error occured during refreshing data'#10 + 'Message: ' + e.Message);
   end;
 end;
 
@@ -5724,6 +5727,8 @@ begin
       Point := grOneDayRooms.ClientToScreen(Point);
       SetRoomCleanAndMaintenanceStatus(grOneDayRooms.cells[ACol, ARow], Point.X, Point.Y);
 
+      glb.TableList['rooms'].RefreshFromServer;
+      g.RefreshRoomList;
       FOneDay_bMouseDown := false;
       if grOneDayRooms.dragging then
         grOneDayRooms.EndDrag(false);

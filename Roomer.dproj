@@ -762,7 +762,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="Persons\uPersons.pas"/>
         <DCCReference Include="uRoomerContainerClasses.pas"/>
         <DCCReference Include="AvailabilityManagement\uAvailabilityPerDay.pas"/>
-        <DCCReference Include="Invoice\uInvoiceController.pas"/>
         <DCCReference Include="OfflineReports\uOfflineReportGenerator.pas"/>
         <DCCReference Include="OfflineReports\uOffLineReport.pas"/>
         <DCCReference Include="OfflineReports\uHotelStatusOfflineReport.pas"/>
@@ -1151,7 +1150,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat</PostBuildEvent>
+        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat
+</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
 </Project>

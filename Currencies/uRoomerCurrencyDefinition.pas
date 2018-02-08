@@ -5,8 +5,8 @@ interface
 uses
     uCurrencyDefinition
   , cxEdit
-  , cxCurrencyEdit
   , RoomerExceptionHandling
+  , cxCurrencyEdit
   ;
 
 type
@@ -38,6 +38,7 @@ uses
   , Types
   , PrjConst
   , uFloatUtils
+  , cxCalc
   ;
 
 { TRoomerCurrencyDefinition }
@@ -89,10 +90,16 @@ end;
 
 procedure TRoomerCurrencyDefinition.SetcxEditProperties(aProperties: TcxCustomEditProperties);
 begin
+  aProperties.Alignment.Horz := taRightJustify;
   if aProperties is TcxCurrencyEditProperties then
   with TcxCurrencyEditProperties(aProperties) do
   begin
-    Alignment.Horz := taRightJustify;
+    DecimalPlaces  := CurrencyFormatSettings.CurrencyDecimals;
+    DisplayFormat  := cxEditPropertiesCurrencyFormat(CurrencyFormatSettings);
+  end;
+  if aProperties is TcxCalcEditProperties then
+  with TcxCurrencyEditProperties(aProperties) do
+  begin
     DecimalPlaces  := CurrencyFormatSettings.CurrencyDecimals;
     DisplayFormat  := cxEditPropertiesCurrencyFormat(CurrencyFormatSettings);
   end;

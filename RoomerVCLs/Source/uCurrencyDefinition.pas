@@ -40,7 +40,7 @@ type
     constructor Create(const aCurrencyCode: TCurrencyCode); overload; virtual;
     constructor Create(const aCurrencyCode: string; aCurID: integer); overload; virtual;
 
-    property ID: integer read FId;
+    property ID: integer read FId write FId;
     property CurrencyCode: string read GetCurrencyCode;
     property Description: string read FDescription write FDescription;
     property Symbol: string read GetSymbol write SetSymbol;

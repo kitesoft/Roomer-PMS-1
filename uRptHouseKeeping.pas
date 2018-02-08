@@ -185,9 +185,9 @@ begin
         '     r.Room, '#10 +
         '     r.Status as CleanStatus, '#10 +
         '     rd.roomreservation, '#10 +
-        '     rr.arrival, '#10 +
-        '     rr.departure, '#10 +
-        '            DATEDIFF(rr.Departure, rr.Arrival) as numberOfDays, '#10 +
+        '     RR_arrival(rd.roomreservation, false) as Arrival, '#10 +
+        '     RR_Departure(rd.roomreservation, false) as Departure, '#10 +
+        '     (SELECT count(*) from roomsdate rd1 where rd1.roomreservation=rr.roomreservation and rd1.resflag not in (''X'', ''C'')) as numberOfDays, '#10 +
         '            DATEDIFF({probedate}, rr.Arrival) AS daysInHouse, '#10 +
         '            ({probedate} = rr.Departure) as IsDeparting, '#10 +
         '            (rr.Status=''D'') AS isDeparted '#10 +
