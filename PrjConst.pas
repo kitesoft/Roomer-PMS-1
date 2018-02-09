@@ -1864,7 +1864,7 @@ begin
   TfrmMaidActionsEdit.Create(nil).Free;
   frmRoomDateProblem := TfrmRoomDateProblem.Create(nil); frmRoomDateProblem.Free; frmRoomDateProblem := nil;
   TfrmResProblem.Create(nil).Free;
-  frmDayFinical := TfrmDayFinical.Create(nil); frmDayFinical.Free; frmDayFinical := nil;
+  TfrmDayFinical.Create(nil).Free;
   frmConvertGroups := TfrmConvertGroups.Create(nil); frmConvertGroups.Free; frmConvertGroups := nil;
   TfrmInvoiceList2.Create(nil).Free;
   frmChangeRRdates := TfrmChangeRRdates.Create(nil); frmChangeRRdates.Free; frmChangeRRdates := nil;

@@ -1279,7 +1279,6 @@ type
     procedure _GuestListView;
 
     // * Bar Reports
-    procedure _RptDayFinal;
     procedure _RptCustomersInvoiceAllPayTypes;
     procedure _RptMaidsList;
     procedure _RptNationality;
@@ -10833,7 +10832,7 @@ end;
 procedure TfrmMain.btnDayFinalClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  _RptDayFinal
+  ShowFinancialReport;
 end;
 
 procedure TfrmMain.btnRptCustInvoices2Click(Sender: TObject);
@@ -11826,16 +11825,6 @@ begin
 end;
 
 // ############################# Reports  ?###################################
-
-procedure TfrmMain._RptDayFinal;
-begin
-  Application.CreateForm(TfrmDayFinical, frmDayFinical);
-  try
-    frmDayFinical.ShowModal;
-  finally
-    frmDayFinical.Free;
-  end;
-end;
 
 procedure TfrmMain._RptCustomersInvoiceAllPayTypes;
 begin

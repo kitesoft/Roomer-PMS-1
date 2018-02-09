@@ -3,7 +3,7 @@ object frmDayFinical: TfrmDayFinical
   Top = 210
   Caption = 'Finance Report'
   ClientHeight = 710
-  ClientWidth = 1011
+  ClientWidth = 1122
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,19 +21,21 @@ object frmDayFinical: TfrmDayFinical
   object LMDStatusBar1: TStatusBar
     Left = 0
     Top = 691
-    Width = 1011
+    Width = 1122
     Height = 19
     Panels = <>
+    ExplicitWidth = 1011
   end
   object LMDSimplePanel1: TsPanel
     Left = 0
     Top = 0
-    Width = 1011
+    Width = 1122
     Height = 135
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1011
     object labLocations: TsLabel
       AlignWithMargins = True
       Left = 657
@@ -219,12 +221,13 @@ object frmDayFinical: TfrmDayFinical
     object pnlButtons: TsPanel
       Left = 0
       Top = 92
-      Width = 1011
+      Width = 1122
       Height = 43
       Align = alBottom
       FullRepaint = False
       TabOrder = 4
       SkinData.SkinSection = 'PANEL'
+      ExplicitWidth = 1011
       object cxButton3: TsButton
         AlignWithMargins = True
         Left = 4
@@ -252,6 +255,7 @@ object frmDayFinical: TfrmDayFinical
         TabOrder = 1
         OnClick = btnPrintClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitTop = 2
       end
       object btnShowReservation: TsButton
         AlignWithMargins = True
@@ -316,7 +320,7 @@ object frmDayFinical: TfrmDayFinical
   object mainPage: TsPageControl
     Left = 0
     Top = 135
-    Width = 1011
+    Width = 1122
     Height = 556
     ActivePage = sheetPayments
     Align = alClient
@@ -326,17 +330,14 @@ object frmDayFinical: TfrmDayFinical
     TabWidth = 120
     OnChange = mainPageChange
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitWidth = 1011
     object sheetSums: TsTabSheet
       Caption = 'Sums'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel9: TsPanel
         Left = 265
         Top = 0
-        Width = 738
+        Width = 849
         Height = 521
         Align = alClient
         Caption = 'Panel6'
@@ -345,7 +346,7 @@ object frmDayFinical: TfrmDayFinical
         object Panel10: TsPanel
           Left = 1
           Top = 1
-          Width = 736
+          Width = 847
           Height = 22
           Align = alTop
           BevelOuter = bvNone
@@ -355,22 +356,19 @@ object frmDayFinical: TfrmDayFinical
         object pageSums: TsPageControl
           Left = 1
           Top = 23
-          Width = 736
+          Width = 847
           Height = 497
           ActivePage = sheetSums2
           Align = alClient
           TabOrder = 1
           SkinData.SkinSection = 'PAGECONTROL'
+          ExplicitWidth = 736
           object sheetSums2: TsTabSheet
             Caption = 'Sale type / paymentgroup'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grSums2: TcxGrid
               Left = 0
               Top = 0
-              Width = 728
+              Width = 839
               Height = 469
               Align = alClient
               TabOrder = 0
@@ -503,14 +501,10 @@ object frmDayFinical: TfrmDayFinical
           object sheetSums3: TsTabSheet
             Caption = 'Sale item / payment type'
             ImageIndex = 1
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grSums: TcxGrid
               Left = 0
               Top = 0
-              Width = 728
+              Width = 839
               Height = 469
               Align = alClient
               TabOrder = 0
@@ -827,14 +821,10 @@ object frmDayFinical: TfrmDayFinical
     object SheetInvoicelist: TsTabSheet
       Caption = 'Sale - Invoice'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel4: TsPanel
         Left = 0
         Top = 0
-        Width = 1003
+        Width = 1114
         Height = 35
         Align = alTop
         TabOrder = 0
@@ -867,7 +857,7 @@ object frmDayFinical: TfrmDayFinical
       object grInvoicelist: TcxGrid
         Left = 0
         Top = 35
-        Width = 1003
+        Width = 1114
         Height = 486
         Align = alClient
         TabOrder = 1
@@ -1264,14 +1254,10 @@ object frmDayFinical: TfrmDayFinical
     object sheetItemSale: TsTabSheet
       Caption = 'Sale - Item'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TsPanel
         Left = 0
         Top = 0
-        Width = 1003
+        Width = 1114
         Height = 22
         Align = alTop
         TabOrder = 0
@@ -1280,7 +1266,7 @@ object frmDayFinical: TfrmDayFinical
       object grItemSale: TcxGrid
         Left = 0
         Top = 22
-        Width = 1003
+        Width = 1114
         Height = 499
         Align = alClient
         TabOrder = 1
@@ -1403,14 +1389,10 @@ object frmDayFinical: TfrmDayFinical
     object sheetItemTypeSale: TsTabSheet
       Caption = 'Sale - Itemtype'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel7: TsPanel
         Left = 0
         Top = 0
-        Width = 1003
+        Width = 1114
         Height = 22
         Align = alTop
         TabOrder = 0
@@ -1419,7 +1401,7 @@ object frmDayFinical: TfrmDayFinical
       object grItemTypeSale: TcxGrid
         Left = 0
         Top = 22
-        Width = 1003
+        Width = 1114
         Height = 499
         Align = alClient
         TabOrder = 1
@@ -1534,14 +1516,10 @@ object frmDayFinical: TfrmDayFinical
     object sheetItemVATsale: TsTabSheet
       Caption = 'Sale - VAT'
       ImageIndex = 7
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel13: TsPanel
         Left = 0
         Top = 0
-        Width = 1003
+        Width = 1114
         Height = 22
         Align = alTop
         TabOrder = 0
@@ -1550,7 +1528,7 @@ object frmDayFinical: TfrmDayFinical
       object grItemVATsale: TcxGrid
         Left = 0
         Top = 22
-        Width = 1003
+        Width = 1114
         Height = 499
         Align = alClient
         TabOrder = 1
@@ -1671,18 +1649,16 @@ object frmDayFinical: TfrmDayFinical
     object sheetPayments: TsTabSheet
       Caption = 'Payments - Invoice'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1003
       object Panel5: TsPanel
         Left = 0
         Top = 0
-        Width = 1003
+        Width = 1114
         Height = 41
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1003
         object btnPaymentReport: TsButton
           Left = 1
           Top = 4
@@ -1699,11 +1675,12 @@ object frmDayFinical: TfrmDayFinical
       object grPayments: TcxGrid
         Left = 0
         Top = 41
-        Width = 1003
+        Width = 1114
         Height = 480
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 39
         object tvPayments: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -1865,14 +1842,10 @@ object frmDayFinical: TfrmDayFinical
     object sheetPaymentType: TsTabSheet
       Caption = 'Payments - Paytype'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TsPanel
         Left = 0
         Top = 0
-        Width = 1003
+        Width = 1114
         Height = 22
         Align = alTop
         TabOrder = 0
@@ -1881,7 +1854,7 @@ object frmDayFinical: TfrmDayFinical
       object grPaymentType: TcxGrid
         Left = 0
         Top = 22
-        Width = 1003
+        Width = 1114
         Height = 499
         Align = alClient
         TabOrder = 1
@@ -1974,14 +1947,10 @@ object frmDayFinical: TfrmDayFinical
     object sheetPaymentGroups: TsTabSheet
       Caption = 'Payments - Paygroup'
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel8: TsPanel
         Left = 0
         Top = 0
-        Width = 1003
+        Width = 1114
         Height = 22
         Align = alTop
         TabOrder = 0
@@ -1990,7 +1959,7 @@ object frmDayFinical: TfrmDayFinical
       object grPaymentGroups: TcxGrid
         Left = 0
         Top = 22
-        Width = 1003
+        Width = 1114
         Height = 499
         Align = alClient
         TabOrder = 1
@@ -2341,13 +2310,14 @@ object frmDayFinical: TfrmDayFinical
     Top = 241
   end
   object grPrinter: TdxComponentPrinter
-    CurrentLink = grPrinterSums2
+    CurrentLink = grPrinterPayments
     Version = 0
     Left = 960
     Top = 237
     object grPrinterSums2: TdxGridReportLink
       Active = True
       Component = grSums2
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2369,13 +2339,15 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43133.558343263890000000
+      ReportDocument.CreationDate = 43140.459068587960000000
       ReportTitle.TextAlignX = taLeft
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterSums: TdxGridReportLink
       Active = True
       Component = grSums
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2388,11 +2360,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43133.558343287030000000
+      ReportDocument.CreationDate = 43140.459068611110000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterInvoicelist: TdxGridReportLink
       Component = grInvoicelist
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2406,11 +2380,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterItemSale: TdxGridReportLink
       Active = True
       Component = grItemSale
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2424,12 +2400,14 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43133.558343321760000000
+      ReportDocument.CreationDate = 43140.459068634260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterItemTypeSale: TdxGridReportLink
       Active = True
       Component = grItemTypeSale
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2443,12 +2421,14 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43133.558343356480000000
+      ReportDocument.CreationDate = 43140.459068668980000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterItemVATsale: TdxGridReportLink
       Active = True
       Component = grItemVATsale
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2462,12 +2442,14 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43133.558343379630000000
+      ReportDocument.CreationDate = 43140.459068692130000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterPaymentGroups: TdxGridReportLink
       Active = True
       Component = grPaymentGroups
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2481,11 +2463,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43133.558343414360000000
+      ReportDocument.CreationDate = 43140.459068703710000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterPayments: TdxGridReportLink
       Component = grPayments
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2499,11 +2483,13 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterPaymentType: TdxGridReportLink
       Active = True
       Component = grPaymentType
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -2517,7 +2503,8 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43133.558343460650000000
+      ReportDocument.CreationDate = 43140.459068726850000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
     object grPrinterLink1: TdxCompositionReportLink
@@ -2572,7 +2559,7 @@ object frmDayFinical: TfrmDayFinical
     Indexes = <>
     SortOptions = []
     Left = 284
-    Top = 210
+    Top = 194
     object mSumsid: TIntegerField
       FieldName = 'id'
     end
@@ -2889,6 +2876,7 @@ object frmDayFinical: TfrmDayFinical
     DataPipeline = ppPayments
     PrinterSetup.BinName = 'Default'
     PrinterSetup.DocumentName = 'Report'
+    PrinterSetup.Orientation = poLandscape
     PrinterSetup.PaperName = 'A4'
     PrinterSetup.PrinterName = 'Default'
     PrinterSetup.SaveDeviceSettings = False
@@ -2896,8 +2884,8 @@ object frmDayFinical: TfrmDayFinical
     PrinterSetup.mmMarginLeft = 6350
     PrinterSetup.mmMarginRight = 6350
     PrinterSetup.mmMarginTop = 6350
-    PrinterSetup.mmPaperHeight = 297000
-    PrinterSetup.mmPaperWidth = 210000
+    PrinterSetup.mmPaperHeight = 210000
+    PrinterSetup.mmPaperWidth = 297000
     PrinterSetup.PaperSize = 9
     ArchiveFileName = '($MyDocuments)\ReportArchive.raf'
     DeviceType = 'Screen'
@@ -2937,7 +2925,7 @@ object frmDayFinical: TfrmDayFinical
     object ppHeaderBand1: TppHeaderBand
       Background.Brush.Style = bsClear
       mmBottomOffset = 0
-      mmHeight = 16140
+      mmHeight = 16139
       mmPrintPosition = 0
       object ppLabel1: TppLabel
         UserName = 'Label1'
@@ -2976,7 +2964,7 @@ object frmDayFinical: TfrmDayFinical
       Background1.Brush.Style = bsClear
       Background2.Brush.Style = bsClear
       mmBottomOffset = 0
-      mmHeight = 3969
+      mmHeight = 4233
       mmPrintPosition = 0
       object ppDBText1: TppDBText
         UserName = 'DBText1'
@@ -2985,14 +2973,14 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3175
-        mmLeft = 2117
+        mmHeight = 3598
+        mmLeft = 10319
         mmTop = 529
-        mmWidth = 19050
+        mmWidth = 20638
         BandType = 4
         LayerName = Foreground
       end
@@ -3003,14 +2991,14 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3260
-        mmLeft = 24606
+        mmHeight = 3598
+        mmLeft = 33867
         mmTop = 529
-        mmWidth = 19844
+        mmWidth = 22225
         BandType = 4
         LayerName = Foreground
       end
@@ -3022,13 +3010,13 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         TextAlignment = taRightJustified
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3175
-        mmLeft = 46831
+        mmHeight = 3598
+        mmLeft = 61119
         mmTop = 529
         mmWidth = 20373
         BandType = 4
@@ -3041,14 +3029,14 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3175
-        mmLeft = 165894
+        mmHeight = 3598
+        mmLeft = 115623
         mmTop = 529
-        mmWidth = 8202
+        mmWidth = 10054
         BandType = 4
         LayerName = Foreground
       end
@@ -3059,14 +3047,14 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3175
-        mmLeft = 70644
+        mmHeight = 3598
+        mmLeft = 135467
         mmTop = 529
-        mmWidth = 16933
+        mmWidth = 19579
         BandType = 4
         LayerName = Foreground
       end
@@ -3077,14 +3065,14 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3175
-        mmLeft = 89429
+        mmHeight = 3598
+        mmLeft = 156634
         mmTop = 529
-        mmWidth = 36248
+        mmWidth = 41804
         BandType = 4
         LayerName = Foreground
       end
@@ -3095,14 +3083,14 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3175
-        mmLeft = 127794
+        mmHeight = 3598
+        mmLeft = 207169
         mmTop = 529
-        mmWidth = 36777
+        mmWidth = 45508
         BandType = 4
         LayerName = Foreground
       end
@@ -3113,14 +3101,34 @@ object frmDayFinical: TfrmDayFinical
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
-        Font.Size = 8
+        Font.Size = 9
         Font.Style = []
         Transparent = True
         DataPipelineName = 'ppPayments'
-        mmHeight = 3175
-        mmLeft = 177007
+        mmHeight = 3598
+        mmLeft = 256646
         mmTop = 529
-        mmWidth = 18521
+        mmWidth = 26723
+        BandType = 4
+        LayerName = Foreground
+      end
+      object ppDBText9: TppDBText
+        UserName = 'DBText11'
+        DataField = 'currencyAmount'
+        DataPipeline = ppPayments
+        DisplayFormat = '#,0.00;-#,0.00'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Name = 'Arial'
+        Font.Size = 9
+        Font.Style = []
+        TextAlignment = taRightJustified
+        Transparent = True
+        DataPipelineName = 'ppPayments'
+        mmHeight = 3598
+        mmLeft = 93134
+        mmTop = 529
+        mmWidth = 21431
         BandType = 4
         LayerName = Foreground
       end
@@ -3162,7 +3170,7 @@ object frmDayFinical: TfrmDayFinical
         mmHeight = 1058
         mmLeft = 0
         mmTop = 0
-        mmWidth = 197300
+        mmWidth = 284300
         BandType = 7
         LayerName = Foreground
       end
@@ -3178,7 +3186,7 @@ object frmDayFinical: TfrmDayFinical
         Transparent = True
         mmHeight = 4233
         mmLeft = 5292
-        mmTop = 1852
+        mmTop = 1588
         mmWidth = 8202
         BandType = 7
         LayerName = Foreground
@@ -3241,7 +3249,7 @@ object frmDayFinical: TfrmDayFinical
         Transparent = True
         mmHeight = 4498
         mmLeft = 14288
-        mmTop = 10848
+        mmTop = 12171
         mmWidth = 26988
         BandType = 7
         LayerName = Foreground
@@ -3257,8 +3265,8 @@ object frmDayFinical: TfrmDayFinical
         Transparent = True
         mmHeight = 4498
         mmLeft = 85990
-        mmTop = 11906
-        mmWidth = 29369
+        mmTop = 12171
+        mmWidth = 32808
         BandType = 7
         LayerName = Foreground
       end
@@ -3267,7 +3275,7 @@ object frmDayFinical: TfrmDayFinical
         Weight = 0.750000000000000000
         mmHeight = 1588
         mmLeft = 44715
-        mmTop = 14817
+        mmTop = 16669
         mmWidth = 37571
         BandType = 7
         LayerName = Foreground
@@ -3277,7 +3285,7 @@ object frmDayFinical: TfrmDayFinical
         Weight = 0.750000000000000000
         mmHeight = 1588
         mmLeft = 120121
-        mmTop = 14817
+        mmTop = 16669
         mmWidth = 37571
         BandType = 7
         LayerName = Foreground
@@ -3341,7 +3349,7 @@ object frmDayFinical: TfrmDayFinical
           Font.Style = []
           Transparent = True
           mmHeight = 4868
-          mmLeft = 3969
+          mmLeft = 2646
           mmTop = 1058
           mmWidth = 20743
           BandType = 3
@@ -3361,7 +3369,7 @@ object frmDayFinical: TfrmDayFinical
           Transparent = True
           DataPipelineName = 'ppPayments'
           mmHeight = 4868
-          mmLeft = 25665
+          mmLeft = 24342
           mmTop = 1058
           mmWidth = 37677
           BandType = 3
@@ -3375,11 +3383,11 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
           Transparent = True
-          mmHeight = 3387
-          mmLeft = 3969
+          mmHeight = 3810
+          mmLeft = 10848
           mmTop = 6615
           mmWidth = 17198
           BandType = 3
@@ -3393,12 +3401,12 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
           TextAlignment = taRightJustified
           Transparent = True
-          mmHeight = 3387
-          mmLeft = 48154
+          mmHeight = 3810
+          mmLeft = 62442
           mmTop = 6615
           mmWidth = 19050
           BandType = 3
@@ -3412,11 +3420,11 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
           Transparent = True
-          mmHeight = 3387
-          mmLeft = 24606
+          mmHeight = 3810
+          mmLeft = 33867
           mmTop = 6615
           mmWidth = 20373
           BandType = 3
@@ -3430,13 +3438,13 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
           Transparent = True
-          mmHeight = 3387
-          mmLeft = 177007
+          mmHeight = 3810
+          mmLeft = 256646
           mmTop = 6615
-          mmWidth = 18256
+          mmWidth = 26458
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -3448,13 +3456,13 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
           Transparent = True
-          mmHeight = 3440
-          mmLeft = 127529
+          mmHeight = 3810
+          mmLeft = 206905
           mmTop = 6615
-          mmWidth = 30163
+          mmWidth = 38894
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -3466,13 +3474,13 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
           Transparent = True
-          mmHeight = 3440
-          mmLeft = 69586
+          mmHeight = 3810
+          mmLeft = 135467
           mmTop = 6615
-          mmWidth = 16933
+          mmWidth = 19579
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -3484,13 +3492,13 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
           Transparent = True
-          mmHeight = 3440
-          mmLeft = 88371
+          mmHeight = 3810
+          mmLeft = 156634
           mmTop = 6615
-          mmWidth = 36248
+          mmWidth = 41804
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -3502,26 +3510,45 @@ object frmDayFinical: TfrmDayFinical
           mmHeight = 1058
           mmLeft = 0
           mmTop = 10319
-          mmWidth = 197300
+          mmWidth = 284300
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
         end
-        object ppDBText6: TppDBText
-          UserName = 'DBText6'
-          DataField = 'Paid in'
-          DataPipeline = ppPayments
+        object ppblbCurrencyAmount: TppLabel
+          UserName = 'lbCurrencyAmount'
+          AutoSize = False
+          Caption = 'Currency amount'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = [fsBold]
+          TextAlignment = taRightJustified
           Transparent = True
-          DataPipelineName = 'ppPayments'
-          mmHeight = 3440
-          mmLeft = 165894
+          mmHeight = 3704
+          mmLeft = 82021
           mmTop = 6615
-          mmWidth = 10054
+          mmWidth = 32544
+          BandType = 3
+          GroupNo = 0
+          LayerName = Foreground
+        end
+        object pplblPaidIn: TppLabel
+          UserName = 'lbPaidIn'
+          AutoSize = False
+          Caption = 'Paid in'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Name = 'Arial'
+          Font.Size = 9
+          Font.Style = [fsBold]
+          TextAlignment = taRightJustified
+          Transparent = True
+          mmHeight = 3704
+          mmLeft = 106627
+          mmTop = 6615
+          mmWidth = 19050
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -3541,16 +3568,16 @@ object frmDayFinical: TfrmDayFinical
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Name = 'Arial'
-          Font.Size = 8
+          Font.Size = 9
           Font.Style = []
           ResetGroup = ppGroup1
           TextAlignment = taRightJustified
           Transparent = True
           DataPipelineName = 'ppPayments'
-          mmHeight = 3175
-          mmLeft = 50006
+          mmHeight = 3598
+          mmLeft = 57944
           mmTop = 529
-          mmWidth = 17198
+          mmWidth = 23548
           BandType = 5
           GroupNo = 0
           LayerName = Foreground
@@ -3562,7 +3589,7 @@ object frmDayFinical: TfrmDayFinical
           mmHeight = 1058
           mmLeft = 0
           mmTop = 529
-          mmWidth = 197300
+          mmWidth = 284300
           BandType = 5
           GroupNo = 0
           LayerName = Foreground
@@ -3666,47 +3693,55 @@ object frmDayFinical: TfrmDayFinical
       DisplayWidth = 10
       Position = 8
     end
+    object ppCurrencyAmount: TppField
+      FieldAlias = 'currencyAmount'
+      FieldName = 'currencyAmount'
+      FieldLength = 10
+      DataType = dtDouble
+      DisplayWidth = 10
+      Position = 9
+    end
     object ppPaymentsppField10: TppField
       FieldAlias = 'PayType'
       FieldName = 'PayType'
       FieldLength = 15
       DisplayWidth = 15
-      Position = 9
+      Position = 10
     end
     object ppPaymentsppField11: TppField
       FieldAlias = 'InvoiceDate'
       FieldName = 'InvoiceDate'
       FieldLength = 10
       DisplayWidth = 10
-      Position = 10
+      Position = 11
     end
     object ppPaymentsppField12: TppField
       FieldAlias = 'PayTypeDescription'
       FieldName = 'PayTypeDescription'
       FieldLength = 30
       DisplayWidth = 30
-      Position = 11
+      Position = 12
     end
     object ppPaymentsppField13: TppField
       FieldAlias = 'payGroupDescription'
       FieldName = 'payGroupDescription'
       FieldLength = 30
       DisplayWidth = 30
-      Position = 12
+      Position = 13
     end
     object ppPaymentsppField14: TppField
       FieldAlias = 'PayGroup'
       FieldName = 'PayGroup'
       FieldLength = 5
       DisplayWidth = 5
-      Position = 13
+      Position = 14
     end
     object ppPaymentsppField15: TppField
       FieldAlias = 'NameOnInvoice'
       FieldName = 'NameOnInvoice'
       FieldLength = 100
       DisplayWidth = 100
-      Position = 14
+      Position = 15
     end
     object ppPaymentsppField16: TppField
       FieldAlias = 'ihConfirmDate'
@@ -3714,7 +3749,7 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtDateTime
       DisplayWidth = 18
-      Position = 15
+      Position = 16
     end
     object ppPaymentsppField17: TppField
       Alignment = taRightJustify
@@ -3723,21 +3758,21 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
-      Position = 16
+      Position = 17
     end
     object ppPaymentsppField18: TppField
       FieldAlias = 'RoomGuest'
       FieldName = 'RoomGuest'
       FieldLength = 100
       DisplayWidth = 100
-      Position = 17
+      Position = 18
     end
     object ppPaymentsppField19: TppField
       FieldAlias = 'CustomerName'
       FieldName = 'CustomerName'
       FieldLength = 100
       DisplayWidth = 100
-      Position = 18
+      Position = 19
     end
     object ppPaymentsppField20: TppField
       FieldAlias = 'isAgency'
@@ -3745,7 +3780,7 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtBoolean
       DisplayWidth = 5
-      Position = 19
+      Position = 20
     end
     object ppPaymentsppField21: TppField
       FieldAlias = 'isRoom'
@@ -3753,7 +3788,7 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtBoolean
       DisplayWidth = 5
-      Position = 20
+      Position = 21
     end
     object ppPaymentsppField22: TppField
       FieldAlias = 'isGroup'
@@ -3761,7 +3796,7 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtBoolean
       DisplayWidth = 5
-      Position = 21
+      Position = 22
     end
     object ppPaymentsppField23: TppField
       FieldAlias = 'isKredit'
@@ -3769,7 +3804,7 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtBoolean
       DisplayWidth = 5
-      Position = 22
+      Position = 23
     end
     object ppPaymentsppField24: TppField
       FieldAlias = 'isCash'
@@ -3777,7 +3812,7 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtBoolean
       DisplayWidth = 5
-      Position = 23
+      Position = 24
     end
     object ppPaymentsppField25: TppField
       FieldAlias = 'aDate'
@@ -3785,7 +3820,7 @@ object frmDayFinical: TfrmDayFinical
       FieldLength = 0
       DataType = dtDateTime
       DisplayWidth = 18
-      Position = 24
+      Position = 25
     end
   end
   object dxMemData1: TdxMemData

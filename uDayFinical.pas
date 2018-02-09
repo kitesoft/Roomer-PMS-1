@@ -529,7 +529,6 @@ type
     ppLabel19: TppLabel;
     ppDBCalc3: TppDBCalc;
     ppLabel20: TppLabel;
-    ppDBText6: TppDBText;
     ppShape1: TppShape;
     ppLabel21: TppLabel;
     ppLabel22: TppLabel;
@@ -552,7 +551,11 @@ type
     btnShowReservation: TsButton;
     btnShowGuests: TsButton;
     btnShowSelectedInvoice: TsButton;
-    btnShowInvoice: TsButton; // -96
+    btnShowInvoice: TsButton;
+    ppCurrencyAmount: TppField;
+    ppDBText9: TppDBText;
+    ppblbCurrencyAmount: TppLabel;
+    pplblPaidIn: TppLabel; // -96
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -640,8 +643,7 @@ type
 
   end;
 
-var
-  frmDayFinical: TfrmDayFinical;
+  procedure ShowFinancialReport();
 
 implementation
 
@@ -674,6 +676,18 @@ uses
 
 {$R *.dfm}
 
+procedure ShowFinancialReport();
+var
+  frm: TfrmDayFinical;
+begin
+  frm := TfrmDayFinical.Create(nil);
+  try
+    frm.ShowModal;
+  finally
+    frm.Free;
+  end;
+
+end;
 
 function TfrmDayFinical.CreateSQLInText(list: TstringList): string;
 begin
@@ -1263,7 +1277,7 @@ begin
   s := s + ' , payments.Amount '#10;
   s := s + ' , payments.Currency '#10;
   s := s + ' , payments.CurrencyRate '#10;
-  s := s + ' , (payments.Amount div payments.CurrencyRate) AS CurrencyAmount '#10;
+  s := s + ' , (payments.Amount / payments.CurrencyRate) AS CurrencyAmount '#10;
   s := s + ' , payments.PayType '#10;
   s := s + ' , invoiceheads.InvoiceDate '#10;
   s := s + ' , paytypes.Description AS PayTypeDescription '#10;
