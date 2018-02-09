@@ -9,22 +9,24 @@ uses
   ;
 
 type
+  {$SCOPEDENUM ON}
   ///	<summary>
   ///	  Possible states of a breakfast as part of a reservation
   ///	</summary>
   TBreakfastState= (
-    bsIncluded,
-    bsNotIncluded
+    None,
+    Included,
+    NotIncluded
   );
 
     TBreakfastStateHelper = record helper for TBreakfastState
     public
-      class function FromBool(const aBreakfast: boolean): TBreakfastState; overload; static;
+      class function FromBool(const aBreakfast: boolean): TBreakfastState; static; deprecated;
 
       /// <summary>
       ///   Return a TBreakfastState based in index.
       /// </summary>
-      class function FromItemIndex(aIndex: integer) : TBreakfastState; overload; static;
+      class function FromItemIndex(aIndex: integer) : TBreakfastState; static;
 
       /// <summary>
       ///   Fill a TStrings with translated descriptions in order of enumeration. Can by used to populate a TCombobox
@@ -38,7 +40,8 @@ type
       /// <summary>
       ///   Return a single character statusstring
       /// </summary>
-      function AsBoolean: boolean;
+      function AsBoolean: boolean; depracated;
+
       /// <summary>
       ///   Return the translated displaystring for a TBreakfastState
       /// </summary>
@@ -85,8 +88,9 @@ end;
 function TBreakfastStateHelper.AsReadableString : string;
 begin
   case Self of
-    bsIncluded:     Result := GetTranslatedText('shTx_ReservationProfile_Included');
-    bsnotIncluded:  Result := GetTranslatedText('shTx_ReservationProfile_NotIncluded');
+    None:         Result := GetTranslatedText('shTx_ReservationProfile_NoBreakfast');
+    Included:     Result := GetTranslatedText('shTx_ReservationProfile_Included');
+    notIncluded:  Result := GetTranslatedText('shTx_ReservationProfile_NotIncluded');
   else
     Result := '';
   end;
