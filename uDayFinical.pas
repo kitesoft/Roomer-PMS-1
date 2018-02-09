@@ -86,7 +86,7 @@ uses
   dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, Data.DB, Vcl.Menus,
-  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, Vcl.Controls, Vcl.ExtCtrls
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, Vcl.Controls, Vcl.ExtCtrls, cxCalendar, cxCalc
     ;
 
 type
@@ -585,6 +585,8 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GetNativeCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure tvPaymentscurrencyAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
     zIsOneDay: Boolean;
@@ -598,7 +600,6 @@ type
     zDoChkEvent: Boolean;
 
     zLocationInString: string;
-    FCurrencyProperties: TcxCustomEditProperties;
 
     procedure SwitchToDates;
 
@@ -672,7 +673,8 @@ uses
     , uInvoiceDefinitions
     , ufrmInvoiceEdit
     , uRoomerLanguage
-    ;
+    , uRoomerCurrencymanager
+    , Variants;
 
 {$R *.dfm}
 
@@ -721,7 +723,6 @@ begin
   zConfirmedDate := 0;
   zDoChkEvent := true;
 
-  FCurrencyProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
 procedure TfrmDayFinical.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -1259,7 +1260,13 @@ end;
 procedure TfrmDayFinical.GetNativeCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := FCurrencyProperties;
+  aProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
+end;
+
+procedure TfrmDayFinical.tvPaymentscurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  aProperties := RoomerCurrencyManager.CurrencyDefinition[VarToStr(aRecord.Values[tvPaymentsCurrency.Index])].GetcxEditProperties;
 end;
 
 procedure TfrmDayFinical.getPayments;
@@ -1272,7 +1279,7 @@ begin
   s := s + '   payments.Reservation '#10;
   s := s + ' , payments.RoomReservation '#10;
   s := s + ' , payments.InvoiceNumber '#10;
-  s := s + ' , payments.PayDate '#10;
+  s := s + ' , cast(payments.PayDate as Date) as Paydate '#10;
   s := s + ' , payments.Customer '#10;
   s := s + ' , payments.Amount '#10;
   s := s + ' , payments.Currency '#10;
@@ -2462,5 +2469,6 @@ begin
   btnConfirm.caption := GetTranslatedText('shTx_DayFinical_Confirm');
   GetAll(true);
 end;
+
 
 end.
