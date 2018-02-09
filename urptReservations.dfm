@@ -37,7 +37,7 @@ inherited frmRptReservations: TfrmRptReservations
       Top = 117
       Width = 1234
       Height = 489
-      ActivePage = tabReservation
+      ActivePage = tabRoom
       Align = alClient
       TabOrder = 0
       OnChange = pageMainChange
@@ -45,10 +45,6 @@ inherited frmRptReservations: TfrmRptReservations
       object tabReservation: TsTabSheet
         Caption = 'Reservations'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel5: TsPanel
           Left = 0
           Top = 0
@@ -575,10 +571,6 @@ inherited frmRptReservations: TfrmRptReservations
       end
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44
@@ -778,11 +770,11 @@ inherited frmRptReservations: TfrmRptReservations
             end
             object tvRoomsrrArrival: TcxGridDBColumn
               Caption = 'Arrival'#13#10'date'
-              DataBinding.FieldName = 'rrArrival'
+              DataBinding.FieldName = 'Arrival'
             end
             object tvRoomsrrDeparture: TcxGridDBColumn
               Caption = 'Departure date'
-              DataBinding.FieldName = 'rrDeparture'
+              DataBinding.FieldName = 'Departure'
             end
             object tvRoomsReservationName: TcxGridDBColumn
               Caption = 'Reservation Name'
@@ -1566,12 +1558,12 @@ inherited frmRptReservations: TfrmRptReservations
     SubLanguageID = 1
     LocaleID = 1024
     Left = 80
-    Top = 240
+    Top = 272
   end
   object kbmReservationsDS: TDataSource
     DataSet = kbmReservations_
     Left = 224
-    Top = 240
+    Top = 280
   end
   object kbmRoomReservations_: TkbmMemTable
     Active = True
@@ -1597,7 +1589,7 @@ inherited frmRptReservations: TfrmRptReservations
         DataType = ftDate
       end
       item
-        Name = '+'
+        Name = 'Departure'
         DataType = ftDate
       end
       item
