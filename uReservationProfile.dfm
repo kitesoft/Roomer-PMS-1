@@ -382,6 +382,7 @@ object frmReservationProfile: TfrmReservationProfile
         Alignment = taLeftJustify
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        TextHint = 'Mixed'
         Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
@@ -393,7 +394,7 @@ object frmReservationProfile: TfrmReservationProfile
         ParentFont = False
         TabOrder = 1
         Text = 'Mixed'
-        OnCloseUp = cbxBreakfastCloseUp
+        OnChange = cbxBreakfastChange
         Items.Strings = (
           'Mixed'
           'Included'
@@ -1875,8 +1876,9 @@ object frmReservationProfile: TfrmReservationProfile
                 BevelInner = bvNone
                 BevelOuter = bvNone
                 BorderStyle = bsNone
+                Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -1905,8 +1907,9 @@ object frmReservationProfile: TfrmReservationProfile
                 BevelInner = bvNone
                 BevelOuter = bvNone
                 BorderStyle = bsNone
+                Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clWindowText
+                Font.Color = clBlack
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -2611,6 +2614,7 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Avg. Package-rate'
             DataBinding.FieldName = 'RateOrPackagePerDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
             OnGetProperties = tvGetNativeCurrentProperties
             HeaderAlignmentHorz = taRightJustify
             HeaderHint = 'Average package-rate'
@@ -2669,11 +2673,11 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Breakfast'
             DataBinding.FieldName = 'breakfast'
             PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.Alignment.Horz = taLeftJustify
             Properties.DropDownListStyle = lsFixedList
-            Properties.Items.Strings = (
-              'Included'
-              'Not included')
-            Properties.OnCloseUp = tvRoomsbreakfastTextPropertiesChange
+            Properties.OnChange = tvRoomsbreakfastTextPropertiesChange
+            OnGetDisplayText = tvRoomsbreakfastTextGetDisplayText
+            FooterAlignmentHorz = taLeftJustify
             Width = 81
             Position.BandIndex = 0
             Position.ColIndex = 33
@@ -3205,6 +3209,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object tvGuestRoomsBreakfast: TcxGridDBColumn
               DataBinding.FieldName = 'Breakfast'
+              PropertiesClassName = 'TcxComboBoxProperties'
             end
             object tvGuestRoomsrrArrival: TcxGridDBColumn
               DataBinding.FieldName = 'Arrival'
@@ -3406,6 +3411,7 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object tvAllGuestsBreakfast: TcxGridDBColumn
               DataBinding.FieldName = 'Breakfast'
+              PropertiesClassName = 'TcxComboBoxProperties'
             end
             object tvAllGuestsrrArrival: TcxGridDBColumn
               DataBinding.FieldName = 'Arrival'
@@ -4088,7 +4094,7 @@ object frmReservationProfile: TfrmReservationProfile
       FieldName = 'dayCount'
       Calculated = True
     end
-    object mRoomsBreakFast: TBooleanField
+    object mRoomsBreakFast: TIntegerField
       FieldName = 'BreakFast'
       OnGetText = mRoomsBreakFastGetText
     end
@@ -4305,7 +4311,7 @@ object frmReservationProfile: TfrmReservationProfile
       DisplayLabel = 'Group'
       FieldName = 'isGroup'
     end
-    object mGuestRoomsBreakfast: TBooleanField
+    object mGuestRoomsBreakfast: TIntegerField
       FieldName = 'Breakfast'
     end
     object mGuestRoomsrrArrival: TDateTimeField
@@ -4388,7 +4394,7 @@ object frmReservationProfile: TfrmReservationProfile
       DisplayLabel = 'Group'
       FieldName = 'isGroup'
     end
-    object mAllGuestsBreakfast: TBooleanField
+    object mAllGuestsBreakfast: TIntegerField
       FieldName = 'Breakfast'
     end
     object mAllGuestsrrArrival: TDateTimeField
@@ -5087,7 +5093,6 @@ object frmReservationProfile: TfrmReservationProfile
   end
   object ppmHiddenMemo: TPopupMenu
     Left = 584
-    Top = 32
     object ShowHiddenMemo1: TMenuItem
       Action = acShowHiddenMemo
       Default = True

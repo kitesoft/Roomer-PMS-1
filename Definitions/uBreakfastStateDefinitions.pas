@@ -9,7 +9,7 @@ uses
   ;
 
 type
-  {$SCOPEDENUM ON}
+  {$SCOPEDENUMS ON}
   ///	<summary>
   ///	  Possible states of a breakfast as part of a reservation
   ///	</summary>
@@ -40,7 +40,7 @@ type
       /// <summary>
       ///   Return a single character statusstring
       /// </summary>
-      function AsBoolean: boolean; depracated;
+      function AsBoolean: boolean; deprecated;
 
       /// <summary>
       ///   Return the translated displaystring for a TBreakfastState
@@ -69,28 +69,28 @@ end;
 
 class function TBreakfastStateHelper.FromItemIndex(aIndex: integer): TBreakfastState;
 begin
-  Result := TBreakfastState.FromitemIndex(aIndex);
+  Result := TBreakfastState(aIndex);
 end;
 
 class function TBreakfastStateHelper.FromBool(const aBreakfast: boolean): TBreakfastState;
 begin
   if aBreakfast then
-    Result := bsIncluded
+    Result := TBreakfastState.Included
   else
-    Result := bsNotIncluded;
+    Result := TBreakfastState.None;
 end;
 
 function TBreakfastStateHelper.AsBoolean: boolean;
 begin
-  Result := Self = bsIncluded;
+  Result := Self = TBreakfastState.Included;
 end;
 
 function TBreakfastStateHelper.AsReadableString : string;
 begin
   case Self of
-    None:         Result := GetTranslatedText('shTx_ReservationProfile_NoBreakfast');
-    Included:     Result := GetTranslatedText('shTx_ReservationProfile_Included');
-    notIncluded:  Result := GetTranslatedText('shTx_ReservationProfile_NotIncluded');
+    TBreakfastState.None:         Result := GetTranslatedText('shTx_ReservationProfile_NoBreakfast');
+    TBreakfastState.Included:     Result := GetTranslatedText('shTx_ReservationProfile_Included');
+    TBreakfastState.notIncluded:  Result := GetTranslatedText('shTx_ReservationProfile_NotIncluded');
   else
     Result := '';
   end;

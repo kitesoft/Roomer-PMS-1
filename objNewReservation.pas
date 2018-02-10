@@ -360,7 +360,7 @@ uses
   , DateUtils
   , uDateUtils
   , Math
-  , uSQLUtils, uReservationEmailingDialog, uRoomerIDList;
+  , uSQLUtils, uReservationEmailingDialog, uRoomerIDList, uBreakfastStateDefinitions;
 
 const
   cSTOCKITEM_IMPORTREFERENCE = 'STOCKITEM';
@@ -1299,7 +1299,14 @@ begin
           roomReservationData.Reservation     := ReservationId;
           roomReservationData.status          := RoomStatus;
           roomReservationData.GroupAccount    := isGroupInvoice;
-          roomReservationData.invBreakfast    := lNewRoomRes.FBreakfast AND lNewRoomRes.FBreakfastIncluded;
+
+          if not lNewRoomRes.FBreakfast then
+            roomReservationData.Breakfast     := TBreakfastState.None
+          else if lNewRoomRes.FBreakfastIncluded then
+            roomReservationData.Breakfast     := TBreakfastState.Included
+          else
+            roomReservationData.Breakfast     := TBreakfastState.NotIncluded;
+
           roomReservationData.Currency        := Currency;
           roomReservationData.Discount        := Discount;
           roomReservationData.PriceType       := PriceCode;

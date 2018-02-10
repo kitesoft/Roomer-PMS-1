@@ -117,8 +117,8 @@
         object clabPaymentNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 280
-          Height = 15
+          Width = 86
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'Payment Notes'
@@ -128,8 +128,6 @@
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 86
-          ExplicitHeight = 13
         end
       end
       object memReservationPaymentInfo: TsMemo
@@ -175,8 +173,8 @@
         object clabGeneralNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 402
-          Height = 15
+          Width = 79
+          Height = 13
           Align = alClient
           Alignment = taCenter
           Caption = 'General Notes'
@@ -189,8 +187,6 @@
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 79
-          ExplicitHeight = 13
         end
       end
       object memReservationGeneralInfo: TsMemo
@@ -252,8 +248,6 @@
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
-          ExplicitWidth = 68
-          ExplicitHeight = 13
         end
       end
       object btnClearLog: TsButton
@@ -475,8 +469,6 @@
                 ExplicitWidth = 309
                 inherited lblDescription: TsLabel
                   Left = 181
-                  Width = 128
-                  Height = 20
                   ExplicitLeft = 181
                 end
                 inherited edCode: TsEdit
@@ -762,10 +754,6 @@
                 inherited pnlLookup: TsPanel
                   Width = 309
                   ExplicitWidth = 309
-                  inherited lblDescription: TsLabel
-                    Width = 216
-                    Height = 20
-                  end
                 end
               end
               inline fraLookupMarketSegment: TfraLookupMarketSegment
@@ -784,10 +772,6 @@
                 inherited pnlLookup: TsPanel
                   Width = 309
                   ExplicitWidth = 309
-                  inherited lblDescription: TsLabel
-                    Width = 216
-                    Height = 20
-                  end
                 end
               end
             end
@@ -899,7 +883,7 @@
                 Left = 156
                 Top = 0
                 Width = 4
-                Height = 21
+                Height = 13
                 Margins.Left = 6
                 Margins.Top = 0
                 Margins.Right = 0
@@ -912,7 +896,6 @@
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = []
-                ExplicitHeight = 13
               end
               object dtArrival: TsDateEdit
                 Left = 0
@@ -956,7 +939,7 @@
                 Left = 156
                 Top = 0
                 Width = 4
-                Height = 21
+                Height = 13
                 Margins.Left = 6
                 Margins.Top = 0
                 Margins.Right = 0
@@ -969,7 +952,6 @@
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = []
-                ExplicitHeight = 13
               end
               object dtDeparture: TsDateEdit
                 Left = 0
@@ -1080,10 +1062,6 @@
               inherited pnlLookup: TsPanel
                 Width = 309
                 ExplicitWidth = 309
-                inherited lblDescription: TsLabel
-                  Width = 216
-                  Height = 20
-                end
               end
             end
             object pnlDiscount: TPanel
@@ -1168,10 +1146,6 @@
               inherited pnlLookup: TsPanel
                 Width = 309
                 ExplicitWidth = 309
-                inherited lblDescription: TsLabel
-                  Width = 216
-                  Height = 20
-                end
               end
             end
           end
@@ -1516,7 +1490,7 @@
                     Left = 163
                     Top = 3
                     Width = 34
-                    Height = 15
+                    Height = 13
                     Align = alRight
                     Alignment = taRightJustify
                     Caption = 'Mobile:'
@@ -1642,7 +1616,6 @@
                   Margins.Bottom = 0
                   Align = alTop
                   Caption = 'Special Requests'
-                  ExplicitWidth = 81
                 end
                 object lblNotes: TsLabel
                   AlignWithMargins = True
@@ -1654,7 +1627,6 @@
                   Margins.Bottom = 0
                   Align = alTop
                   Caption = 'Notes'
-                  ExplicitWidth = 28
                 end
                 object edtSpecialRequests: TMemo
                   AlignWithMargins = True
@@ -2930,6 +2902,10 @@
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet1: TsTabSheet
             Caption = 'Extra'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object sPanel2: TsPanel
               Left = -2
               Top = 0
@@ -3040,6 +3016,10 @@
           end
           object Alerts: TsTabSheet
             Caption = 'Alerts'
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
           end
         end
       end

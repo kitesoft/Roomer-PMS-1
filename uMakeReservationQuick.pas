@@ -2517,8 +2517,6 @@ begin
 end;
 
 procedure TfrmMakeReservationQuick.SetOutOfOrderBlocking(const Value: boolean);
-var
-  i: integer;
 begin
   FOutOfOrderBlocking := Value;
 

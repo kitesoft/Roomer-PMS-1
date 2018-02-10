@@ -77,7 +77,7 @@ uses
   , ucxGridPopupMenuActivator
   , uGridColumnFieldValuePropagator
   , uTokenHelpers, ToolPanels, RoomerExceptionHandling, Vcl.Buttons, sSpeedButton, sSpinEdit, uActivityLogs, kbmMemTable,
-  uFraLookupPanel, uFraMarketSegmentPanel, uFraCustomerPanel
+  uFraLookupPanel, uFraMarketSegmentPanel, uFraCustomerPanel, cxDBExtLookupComboBox
   ;
 
 type
@@ -149,7 +149,7 @@ type
     mRoomsdayCount: TIntegerField;
     tvRoomsdayCount: TcxGridDBBandedColumn;
     tvRoomsStatusText: TcxGridDBBandedColumn;
-    mRoomsBreakFast: TBooleanField;
+    mRoomsBreakFast: TIntegerField;
     mRoomsGuestCount: TIntegerField;
     mRoomsdefGuestCount: TIntegerField;
     tvRoomsGuestCount: TcxGridDBBandedColumn;
@@ -192,7 +192,7 @@ type
     mGuestRoomsReservation: TIntegerField;
     mGuestRoomsRoomReservation: TIntegerField;
     mGuestRoomsisGroup: TBooleanField;
-    mGuestRoomsBreakfast: TBooleanField;
+    mGuestRoomsBreakfast: TIntegerField;
     mGuestRoomsrrArrival: TDateTimeField;
     mGuestRoomsrrDeparture: TDateTimeField;
     mGuestRoomsRoom: TWideStringField;
@@ -216,7 +216,7 @@ type
     mAllGuestsIntegerField1: TIntegerField;
     mAllGuestsIntegerField2: TIntegerField;
     mAllGuestsIsGroup: TBooleanField;
-    mAllGuestsBreakfast: TBooleanField;
+    mAllGuestsBreakfast: TIntegerField;
     mAllGuestsrrArrival: TDateTimeField;
     mAllGuestsDeparture: TDateTimeField;
     mAllGuestsRoom: TWideStringField;
@@ -621,7 +621,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure cbxBreakfastCloseUp(Sender: TObject);
     procedure cbxPaymentdetailsCloseUp(Sender: TObject);
     procedure memRoomNotesExit(Sender: TObject);
     procedure PageNotesChange(Sender: TObject);
@@ -723,7 +722,6 @@ type
       var AText: string);
     procedure mRoomsAfterPost(DataSet: TDataSet);
     procedure mRoomsCalcFields(DataSet: TDataSet);
-    procedure mRoomsBreakFastGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure mRoomsStatusGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure mRoomsisGroupAccountGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure tvRoomsStatusTextPropertiesDrawItem(AControl: TcxCustomComboBox; ACanvas: TcxCanvas; AIndex: Integer;
@@ -739,6 +737,10 @@ type
     procedure acCopyValueAllExecute(Sender: TObject);
     procedure acManagePaycardsExecute(Sender: TObject);
     procedure btnManagePayCardsClick(Sender: TObject);
+    procedure cbxBreakfastChange(Sender: TObject);
+    procedure tvRoomsbreakfastTextGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure mRoomsBreakFastGetText(Sender: TField; var Text: string; DisplayText: Boolean);
   private
     { Private declarations }
     vStartName: string;
@@ -780,7 +782,7 @@ type
     procedure doRRDateChange(startIn: Integer);
     procedure PlacePnlDataWait;
 
-    procedure SetBreakfastItemindex(sStatus: string);
+    procedure SetBreakfastItemindex;
     procedure SetPaymentDetailItemindex(sStatus: string);
     procedure SetOutOfOrderBlocking(const Value: Boolean);
     procedure SetProfileAlertVisibility;
@@ -1034,6 +1036,11 @@ begin
 
   fraCustomerPanel.OnChangedAndValid := evtCustomerChangedAndValid;
   fraCustomerPanel.btnLast.Visible := False;
+
+  TBreakfastState.AsStrings((tvRoomsbreakfastText.Properties as TcxComboBoxProperties).Items);
+  TBreakfastState.AsStrings((tvGuestRoomsBreakfast.Properties as TcxComboBoxProperties).Items);
+  TBreakfastState.AsStrings((tvAllGuestsBreakfast.Properties as TcxComboBoxProperties).Items);
+  TBreakfastState.AsStrings(cbxBreakfast.Items);
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);
@@ -1545,23 +1552,20 @@ var
   s: string;
   isBr: Boolean;
 begin
-  if cbxBreakfast.ItemIndex = 0 then // Mixed
-  begin
+  if cbxBreakfast.ItemIndex = -1 then // Mixed
     Exit;
-    Display_rGrid(zRoomReservation);
-  end;
 
   isBr := cbxBreakfast.ItemIndex = 1;
 
   s := GetTranslatedText('shTx_ReservationProfile_ChangeAllRooms');
-  if isBr then
+  if cbxBreakfast.ItemIndex = 1 then
     s := s + GetTranslatedText('shTx_ReservationProfile_BreakfastInc')
-  else
+  else if cbxBreakfast.ItemIndex = 2 then
     s := s + GetTranslatedText('shTx_ReservationProfile_BreakfastNotInc');
 
   if MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    d.UpdateBreakfastIncluted(zReservation, 0, isBr);
+    d.UpdateRoomResBreakfastState(zReservation, 0, TBreakfastState.FromItemIndex(cbxBreakFast.ItemIndex));
     Display_rGrid(zRoomReservation);
   end;
 end;
@@ -1600,28 +1604,38 @@ begin
   UpdateInfoLabels;
 end;
 
-procedure TfrmReservationProfile.SetBreakfastItemindex(sStatus: string);
+procedure TfrmReservationProfile.SetBreakfastItemindex;
 var
-  ch: Char;
+  lBreakfastAllTheSame: boolean;
+  lBreakFast: integer;
+  bm: TBookmark;
 begin
-  // **
-  if sStatus = '' then
-  begin
-    sStatus := d.isMixedBreakfast(zReservation);
+  lBreakfastAllTheSame := true;
+  lBreakFast := -1;
+  bm := mRooms.Bookmark;
+
+  mRooms.DisableControls;
+  try
+    mRooms.First;
+    while not mRooms.Eof do
+    begin
+      if lBreakfastAllTheSame then
+        if lBreakfast = -1 then
+          lBreakfast := mRoomsBreakFast.AsInteger
+        else
+          lBreakfastAllTheSame := lBreakFast = mRoomsBreakFast.AsInteger;
+      mRooms.Next;
+    end;
+  finally
+    mRooms.Bookmark := bm;
+    mRooms.EnableControls;
   end;
 
-  if strIsDiff(sStatus) then
-  begin
-    cbxBreakfast.ItemIndex := 0;
-    exit;
-  end;
-  ch := sStatus[1];
-  if ch = '0' then
-    cbxBreakfast.ItemIndex := 2
+  if lBreakfastAllTheSame then
+    cbxBreakfast.ItemIndex := lBreakFast
   else
-    cbxBreakfast.ItemIndex := 1;
-  cbxBreakfast.Update;
-  cbxBreakfast.Invalidate;
+    cbxBreakfast.ItemIndex := -1;
+
 end;
 
 procedure TfrmReservationProfile.SetPaymentDetailItemindex(sStatus: string);
@@ -1646,7 +1660,7 @@ begin
   cbxPaymentdetails.Invalidate;
 end;
 
-procedure TfrmReservationProfile.cbxBreakfastCloseUp(Sender: TObject);
+procedure TfrmReservationProfile.cbxBreakfastChange(Sender: TObject);
 begin
   UpdateBreakfast;
 end;
@@ -1899,7 +1913,7 @@ var
   useInNationalReport: Boolean;
 
   isGroupInvoice: Boolean;
-  isBreckfastIncluted: Boolean;
+  BreakfastState: TBreakfastState;
 
   RoomPMInfo: string;
   RoomHiddenInfo: string;
@@ -1969,7 +1983,7 @@ begin
 
       Currency := mRoomsCurrency.asstring;
       isGroupInvoice := mRoomsisGroupAccount.AsBoolean;
-      isBreckfastIncluted := mRoomsBreakFast.AsBoolean;
+      BreakfastState := TBreakfastState.FromItemIndex(mRoomsBreakFast.AsInteger);
       guestName := mRoomsGuestName.asstring;
 
       arrival := mRoomsArrival.AsDateTime;
@@ -2007,7 +2021,7 @@ begin
       // new reservation  always start as a rsReservation
       roomReservationData.status := rsReservation.AsStatusChar;
       roomReservationData.GroupAccount := isGroupInvoice;
-      roomReservationData.invBreakfast := isBreckfastIncluted;
+      roomReservationData.Breakfast := BreakfastState;
       roomReservationData.Currency := Currency;
       roomReservationData.PriceType := PriceCode;
       roomReservationData.arrival := arrival;
@@ -2356,7 +2370,7 @@ end;
 
 procedure TfrmReservationProfile.mRoomsBreakFastGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
-  Text := TBreakfastState.FromBool(mRoomsBreakFast.asBoolean).AsReadableString;
+  Text := TBreakfastState.FromItemIndex(Sender.AsInteger).AsReadableString;
 end;
 
 procedure TfrmReservationProfile.mRoomsCalcFields(DataSet: TDataSet);
@@ -2501,7 +2515,8 @@ var
   Room: string;
   s: string;
   sPaymentdetails: string;
-  sBreakfast: string;
+  lBreakfast: integer;
+  lBreakfastAllTheSame: boolean;
   sStatus: string;
   lSavedAfterScroll: TDataSetNotifyEvent;
   lSavedBeforePost: TDataSetNotifyEvent;
@@ -2646,7 +2661,6 @@ begin
     mRooms.First;
 
     sPaymentdetails := '';
-    sBreakfast := '';
     sStatus := '';
 
     while not mRooms.Eof do
@@ -2655,15 +2669,15 @@ begin
       Room := mRoomsRoom.asstring;
       RoomType := mRoomsRoomType.asstring;
       package := mRoomsPackage.asstring;
-      breakfastIncluted := mRoomsBreakFast.AsBoolean;
+
       isGroupAccount := mRoomsisGroupAccount.AsBoolean;
       sPaymentdetails := sPaymentdetails + _GLOB._Bool2Str(isGroupAccount, 0);
 
-      sBreakfast := sBreakfast + _GLOB._Bool2Str(breakfastIncluted, 0);
       mRooms.Next;
     end;
 
-    SetBreakfastItemindex(sBreakfast);
+    SetBreakfastItemindex;
+
     SetPaymentDetailItemindex(sPaymentdetails);
     if gotoRoomReservation <> 0 then
       mRooms.Locate('RoomReservation', gotoRoomReservation, [])
@@ -3105,13 +3119,24 @@ begin
     aText := '';
 end;
 
+procedure TfrmReservationProfile.tvRoomsbreakfastTextGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  aText := TBreakfastState(mRoomsBreakfast.AsInteger).AsReadableString
+end;
+
 procedure TfrmReservationProfile.tvRoomsbreakfastTextPropertiesChange(Sender: TObject);
 begin
+  if mRoomsBreakFast.AsInteger <> TcxComboBox(Sender).ItemIndex then
   try
-    mRoomsBreakFast.AsBoolean := (TcxComboBox(Sender).ItemIndex = 0);
-    d.UpdateBreakfastIncluted(zReservation, zRoomReservation, mRoomsBreakFast.Asboolean);
-    mRooms.Post;
-    SetBreakfastItemindex('');
+    mRoomsBreakFast.AsInteger := TcxComboBox(Sender).ItemIndex;
+    if d.UpdateRoomResBreakfastState(zReservation, zRoomReservation, TBreakfastState.FromItemIndex(mRoomsBreakFast.AsInteger)) then
+    begin
+      mRooms.Post;
+      SetBreakfastItemindex;
+    end
+    else
+      mRooms.Cancel;
   except
     mROoms.Cancel;
   end;
