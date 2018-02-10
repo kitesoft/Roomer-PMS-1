@@ -180,7 +180,7 @@ object FrmEmbeddedHtmlEditor: TFrmEmbeddedHtmlEditor
         UrlStyle.BkColor = clWhite
         UrlStyle.Style = [fsUnderline]
         UseStyler = True
-        Version = '3.4.6.2'
+        Version = '3.5.4.0'
         WordWrap = wwClientWidth
       end
     end

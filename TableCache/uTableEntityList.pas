@@ -32,6 +32,7 @@ type
     FCacheTimeStampHandler: ICachedTimestampHandler;
     FLastUpdateOnServerUTC: TDateTime;
     FCachedTableRefreshedEvent: TCachedTableRefreshedEvent;
+    FUpdating: boolean;
     function GetFilename: String;
     function ReadFromFile: String;
     procedure SaveToFile(const data: String);
@@ -208,20 +209,25 @@ end;
 
 procedure TCachedTableEntity.RefreshFromServer;
 begin
-  if NOT FRefreshEnabled then
+  if (NOT FRefreshEnabled) or FUpdating then
     exit;
 
-  FRSet.Close;
+  FUpdating := true;
   try
-    OutputDebugString(PChar(Format('Refreshing cachedtable [%s] from server', [FTableName])));
-    FRSet.Open(true, false, True); // Open(doLowerCase: Boolean = true; setLastAccess: Boolean = true; Threaded: Boolean = False);
-    SaveToFile(FRSet.SavedLastResult);
-    FRSet.First;
-    FCacheTimeStampHandler.RefreshTimeStampFromServer(Self);
-    if assigned(FCachedTableRefreshedEvent) then
-      FCachedTableRefreshedEvent(Self);
-  except
-    raise ERefreshTableException.CreateFmt('Error while refreshing cachedtable [%s] from server', [FTableName]);
+    FRSet.Close;
+    try
+      OutputDebugString(PChar(Format('Refreshing cachedtable [%s] from server', [FTableName])));
+      FRSet.Open(true, false, True); // Open(doLowerCase: Boolean = true; setLastAccess: Boolean = true; Threaded: Boolean = False);
+      SaveToFile(FRSet.SavedLastResult);
+      FRSet.First;
+      FCacheTimeStampHandler.RefreshTimeStampFromServer(Self);
+      if assigned(FCachedTableRefreshedEvent) then
+        FCachedTableRefreshedEvent(Self);
+    except
+      raise ERefreshTableException.CreateFmt('Error while refreshing cachedtable [%s] from server', [FTableName]);
+    end;
+  finally
+    FUpdating := false;
   end;
 end;
 
@@ -255,7 +261,8 @@ end;
 procedure TCachedTableEntity.SetLastUpdateOnServer(const Value: TDateTime);
 begin
   FLastUpdateOnServerUTC := Value;
-  RefreshIfNeeded;
+  if not FUpdating then
+    RefreshIfNeeded;
 end;
 
 function TCachedTableEntity.ReadFromFile : String;
@@ -265,7 +272,7 @@ end;
 
 function TCachedTableEntity.FileTimeStamp : TDateTime;
 begin
-  result := GetFileTimeStamp(GetFilename);
+  result := GetFileTimeStampUTC(GetFilename);
 end;
 
 function TCachedTableEntity.GetFilename : String;
@@ -275,7 +282,7 @@ end;
 
 function TCachedTableEntity.IsStale: boolean;
 begin
-  Result := TTimeZone.Local.ToUniversalTime(FileTimeStamp) < LastUpdateOnServerUTC;
+  Result := FileTimeStamp < LastUpdateOnServerUTC;
 end;
 
 procedure TCachedTableEntity.RefreshIfNeeded;
