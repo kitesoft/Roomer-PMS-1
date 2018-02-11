@@ -1141,7 +1141,10 @@ select_RoomReservation : string =
 
 //TESTED NOT
 select_ReservationProfile_Display : string =
-'SELECT * from reservations '+
+'SELECT *, '+
+' RV_Arrival(reservation, false) as ArrivalDate, '+
+' RV_Departure(reservation, false) as DepartureDate '+
+' from reservations '+
 'where Reservation = %d ';
 
 //TESTED NOT
@@ -2308,8 +2311,8 @@ select_telLog_refresh : string =
 
   select_ChangeResDates : string =
   ' SELECT '+
-  '   Arrival '+
-  ' , Departure '+
+  '   RV_Arrival(reservation, false) as Arrival '+
+  ' , RV_Departure(reservation, false) as Departure '+
   ' , ID '+
   ' FROM '+
   '   reservations '+
@@ -2318,7 +2321,10 @@ select_telLog_refresh : string =
   ///s := s + '   (Reservation = ' + inttostr(reservation) + ') '+#10;
 
   select_isAllDatesSameInRes : string =
-  ' SELECT Arrival, departure FROM roomreservations '+
+  ' SELECT '+
+  ' RR_Arrival(roomreservation, false) as Arrival, '+
+  ' RR_Departure(roomreservation, false) as Departure '+
+  ' FROM roomreservations '+
   ' WHERE Reservation = %d ';
 
   select_RemoveRoomReservation : string =
@@ -6260,12 +6266,16 @@ function select_ResGuestList_Refresh(ShowAllGuests : boolean) : string;
       s : string;
     begin
       s := '';
-      s := s+' SELECT * FROM roomreservations '#10;
+      s := s+' SELECT roomreservation, '#10;
+      s := s+'   groupaccount, '#10;
+      s := s+'   RR_Arrival(roomreservation, false) as arrival, '#10;
+      s := s+'   RR_Departure(roomreservation, false) as departure '#10;
+      s := s+' FROM roomreservations '#10;
       s := s+' WHERE Reservation = %d '#10;
       if not bAll then
       begin
-        S := S + '   AND Arrival = %s '#10;      //_db(zInitDateFrom, true)
-        S := S + '   AND Departure = %s '#10;   //_db(zInitDateTo, true);
+        s := s + ' HAVING arrival = %s '#10;      //_db(zInitDateFrom, true)
+        S := S + '   AND departure = %s '#10;   //_db(zInitDateTo, true);
       end;
       result := s;
     end;

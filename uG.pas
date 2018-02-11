@@ -469,10 +469,10 @@ type
     property qTimeFormat : string read FqTimeFormat write FqTimeFormat;
     property qNullDate : string read FqNullDate write FqNullDate;
 
-   procedure openResDates(reservation, roomReservation : longInt;
+   function openResDates(reservation, roomReservation : longInt;
                           room: string;
                           var Arrival, departure: Tdate;
-                          startIn: longInt);
+                          startIn: longInt): boolean;
 
     property qInvoiceFormFileISL : string read FqInvoiceFormFileISL write FqInvoiceFormFileISL;
     property qInvoiceFormFileERL : string read FqInvoiceFormFileERL write FqInvoiceFormFileERL;
@@ -1239,9 +1239,10 @@ begin
   PCIContractWildcards := SplitStringToTStrings(';', Value);
 end;
 
-procedure TGlobalApplication.openResDates(reservation, roomReservation
-  : longInt; room: string; var Arrival, departure: Tdate; startIn: longInt);
+function TGlobalApplication.openResDates(reservation, roomReservation
+  : longInt; room: string; var Arrival, departure: Tdate; startIn: longInt): boolean;
 begin
+  Result := false;
   Application.CreateForm(TfrmChangeRRdates, frmChangeRRdates);
   try
     frmChangeRRdates.zReservation := reservation;
@@ -1256,7 +1257,7 @@ begin
     begin
       Arrival := frmChangeRRdates.zArrival;
       departure := frmChangeRRdates.zDeparture;
-
+      result := true;
     end;
   finally
     frmChangeRRdates.free;
