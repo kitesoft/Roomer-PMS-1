@@ -985,7 +985,6 @@ type
     procedure grOneDayRoomsGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
     procedure btnFilterDropdownClick(Sender: TObject);
-    procedure grPeriodRooms_NOStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 
   protected
@@ -9336,7 +9335,6 @@ begin
       ApplicationCancelHint;
       if TReservationState.FromResStatus(rri.resFlag) <> TReservationState.rsCancelled then
       begin
-        OutputDebugString(PChar(Format('Mousemove - roomres: %d - Start drag!', [rri.RoomReservation])));
         Grid.BeginDrag(true);
       end;
     end;
@@ -9911,8 +9909,6 @@ begin
   grPeriodRooms_NO.MouseToCell(X, Y, ACol, ARow);
   cellContent := grPeriodRooms_NO.cells[ACol, ARow];
 
-  OutputDebugString(PChar(Format('MouseDown, %d, %d', [aCol, aRow])));
-
   zzSource := Sender;
   zzSourceCol := ACol;
 
@@ -9959,13 +9955,7 @@ end;
 
 procedure TfrmMain.grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  OutputDebugString(PChar('MouseUp'));
   FPeriodNO_MouseDown := false;
-end;
-
-procedure TfrmMain.grPeriodRooms_NOStartDrag(Sender: TObject; var DragObject: TDragObject);
-begin
-  OutputDebugString(PChar('StartDrag'));
 end;
 
 procedure TfrmMain.grPeriodRooms_NODragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
