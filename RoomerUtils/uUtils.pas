@@ -107,7 +107,7 @@ procedure SaveToUtf8TextFile(filename, data : String);
 procedure AddToTextFile(filename, data : String);
 function ReadFromTextFile(filename : String) : String;
 function SetFileDateTime(Const FileName : String; Const FileDate : TDateTime): Boolean;
-function GetFileTimeStamp(filename : String) : TDateTime;
+function GetFileTimeStampUTC(filename : String) : TDateTime;
 
 procedure DeleteRegistryLocation(location : String);
 function ReadStringValueFromAnyRegistry(location, key, defaultValue : String) : String;
@@ -1370,11 +1370,20 @@ begin
   end;
 end;
 
-function GetFileTimeStamp(filename : String) : TDateTime;
+function GetFileTimeStampUTC(filename : String) : TDateTime;
+var
+  fad: TWin32FileAttributeData;
+  SystemTime: TSystemTime;
 begin
   result := 0;
   if FileExists(filename) then
-    FileAge(filename, Result);
+  begin
+    if not GetFileAttributesEx(PChar(FileName), GetFileExInfoStandard, @fad) then
+      RaiseLastOSError;
+    if not FileTimeToSystemTime(fad.ftLastWriteTime, SystemTime) then
+      RaiseLastOSError;
+    Result := SystemTimeToDateTime(SystemTime);
+  end;
 end;
 
 function GetCursorPosForControl(AControl: TWinControl): TPoint;

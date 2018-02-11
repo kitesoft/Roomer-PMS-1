@@ -71,13 +71,13 @@ var
   tsWas, tsNew : String;
   sPath : String;
 begin
-  tsWas := uDateUtils.DateTimeToDBString(GetFileTimeStamp(filename));
+  tsWas := uDateUtils.DateTimeToDBString(GetFileTimeStampUTC(filename));
 
   sPath := FileDependencymanager.getHtmlEditorFilePath(false);
   if sPath <> '' then
      ExecuteFile(frmMain.handle, sPath, '"' + filename + '"', [eoWait]);
 
-  tsNew := uDateUtils.DateTimeToDBString(GetFileTimeStamp(filename));
+  tsNew := uDateUtils.DateTimeToDBString(GetFileTimeStampUTC(filename));
   result := tsNew <> tsWas;
 end;
 
@@ -87,7 +87,7 @@ var
   sPath : String;
   _FrmEmbeddedHtmlEditor : TFrmEmbeddedHtmlEditor;
 begin
-  tsWas := uDateUtils.DateTimeToDBString(GetFileTimeStamp(filename));
+  tsWas := uDateUtils.DateTimeToDBString(GetFileTimeStampUTC(filename));
 
   sPath := FileDependencyManager.getHtmlEditorFilePath(false);
   if sPath <> '' then
@@ -101,7 +101,7 @@ begin
       FreeAndNil(_FrmEmbeddedHtmlEditor)
     end;
   end;
-  tsNew := uDateUtils.DateTimeToDBString(GetFileTimeStamp(filename));
+  tsNew := uDateUtils.DateTimeToDBString(GetFileTimeStampUTC(filename));
   result := tsNew <> tsWas;
 end;
 
