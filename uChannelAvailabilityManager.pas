@@ -2980,11 +2980,27 @@ begin
   sFrom := uDateUtils.dateToSqlString(dateEdit.Date);
   sTo := uDateUtils.dateToSqlString(dateEdit.Date+ FCurrentNumDays); // ChannelMan.FNumDays);
 
-  sql := format('SELECT DISTINCT pdd.date, rtg.Code, rtg.searchCode, rtg.Description, getRoomClassAvailability(rtg.Code, pdd.date) AS freeRooms ' +
-    ' FROM (SELECT Active, Code, Description, TopClass AS searchCode FROM ' + '     roomtypegroups) rtg, ' + '     predefineddates pdd ' +
+//  sql := format('SELECT DISTINCT pdd.date, rtg.Code, rtg.searchCode, rtg.Description, getRoomClassAvailability(rtg.Code, pdd.date) AS freeRooms ' +
+//    ' FROM (SELECT Active, Code, Description, TopClass AS searchCode FROM ' + '     roomtypegroups) rtg, ' + '     predefineddates pdd ' +
+//
+//    'WHERE rtg.Active ' + 'AND rtg.Code=rtg.searchCode ' + 'AND pdd.date>=''%s'' AND pdd.date<=DATE_ADD(''%s'',INTERVAL %d DAY) ' +
+//    'GROUP BY pdd.date, rtg.code ' + 'ORDER BY pdd.date, rtg.code ', [sFrom, sFrom, FCurrentNumDays]);
 
-    'WHERE rtg.Active ' + 'AND rtg.Code=rtg.searchCode ' + 'AND pdd.date>=''%s'' AND pdd.date<=DATE_ADD(''%s'',INTERVAL %d DAY) ' +
-    'GROUP BY pdd.date, rtg.code ' + 'ORDER BY pdd.date, rtg.code ', [sFrom, sFrom, FCurrentNumDays]);
+  sql := format('SELECT xxx.date, rtg.Code, rtg.TopClass AS searchCode, rtg.Description, NumRooms - UsedRooms AS freeRooms ' +
+                'FROM ' +
+                '(SELECT DATE(pdd.date) AS date, rt.RoomType, rt.RoomTypeGroup, r.NumRooms, COUNT(rd.id) AS UsedRooms ' +
+                'FROM roomtypes rt ' +
+                '     JOIN  predefineddates pdd ' +
+                '     LEFT JOIN roomsdate rd ON pdd.date=rd.ADate AND rt.active AND rt.RoomType=rd.RoomType ' +
+                '     LEFT JOIN (SELECT r.RoomType, COUNT(r.id) AS NumRooms FROM rooms r WHERE r.Active AND NOT r.WildCard GROUP BY r.RoomType) AS r ON r.RoomType=rt.RoomType ' +
+                'WHERE pdd.date>=''%s'' AND pdd.date<=DATE_ADD(''%s'',INTERVAL %d DAY) ' +
+                'AND (NOT rd.ResFlag IN (''X'',''C'',''O'',''N'')) ' +
+                'GROUP BY pdd.date, rt.RoomType ' +
+                'ORDER BY pdd.date, rt.RoomType ' +
+                ') xxx ' +
+                'JOIN roomtypes rt ON rt.active AND rt.RoomType=xxx.RoomType ' +
+                'JOIN roomtypegroups rtg ON rtg.active AND rtg.Code=rtg.TopClass AND (rtg.Code=rt.RoomTypeGroup OR rtg.TopClass=rt.RoomTypeGroup) ' +
+                'GROUP BY xxx.date, xxx.RoomTypeGroup', [sFrom, sFrom, FCurrentNumDays]);
   ThreadedDataGetter.execute(sql, BackgroundAvailabilityFetchHandler);
 end;
 
