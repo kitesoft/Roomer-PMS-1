@@ -5238,7 +5238,7 @@ end;
 
 procedure TfrmInvoiceEdit.SetCustEdits;
 begin
-  fraCustomer.Enabled := not rgrInvoiceAddressType.itemIndex IN [0, 1, 2, 3, 4, 5];
+  fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
 
   if rgrInvoiceAddressType.itemIndex = 5 then
   begin

@@ -761,6 +761,7 @@ begin
         begin
           zArrival := 1;
           zDeparture := 1;
+          ModalResult := mrCancel;
         end;
       end
       else
@@ -770,6 +771,7 @@ begin
         begin
           zArrival := 1;
           zDeparture := 1;
+          ModalResult := mrCancel;
         end
         else
         begin
@@ -778,10 +780,6 @@ begin
           else
             rr := zRoomReservation;
           d.roomerMainDataSet.SystempackagesRecalcInvoice(rr, zRoomReservation);
-          if isPaid then
-          begin
-            //
-          end;
         end;
       end;
     end;
@@ -869,7 +867,7 @@ begin
       begin
         screen.Cursor := crHourglass;
         try
-          iCount := 0;
+          iCount := 0; // why not  iCount := Rset.recordcount
           Rset.First;
           while not Rset.eof do
           begin

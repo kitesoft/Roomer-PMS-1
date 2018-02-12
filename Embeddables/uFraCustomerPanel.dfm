@@ -1,8 +1,10 @@
 inherited fraCustomerPanel: TfraCustomerPanel
   inherited pnlLookup: TsPanel
+    Align = alClient
     inherited lblDescription: TsLabel
       Left = 126
       Width = 124
+      Height = 20
       ExplicitLeft = 126
     end
     object btnLast: TsButton

@@ -301,28 +301,40 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         inline fraCustomer: TfraCustomerPanel
           Left = 111
           Top = 13
-          Width = 250
-          Height = 21
+          Width = 253
+          Height = 22
           TabOrder = 7
           ExplicitLeft = 111
           ExplicitTop = 13
-          ExplicitHeight = 21
+          ExplicitWidth = 253
+          ExplicitHeight = 22
           inherited pnlLookup: TsPanel
+            Width = 253
+            Height = 22
+            ExplicitWidth = 253
+            ExplicitHeight = 21
             inherited lblDescription: TsLabel
               Left = 206
-              Width = 44
-              Height = 20
+              Width = 47
+              Height = 22
+              ExplicitLeft = 206
             end
             inherited edCode: TsEdit
               Width = 140
+              Height = 22
+              ExplicitTop = 1
               ExplicitWidth = 140
               ExplicitHeight = 20
             end
             inherited btnSelect: TsButton
               Left = 143
+              Height = 22
+              ExplicitLeft = 143
             end
             inherited btnLast: TsButton
               Left = 167
+              Height = 22
+              ExplicitLeft = 167
             end
           end
         end
@@ -557,9 +569,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 103
-          Width = 281
+          Width = 279
           Height = 20
           Margins.Left = 124
+          Margins.Right = 5
           Align = alTop
           AutoSize = True
           Font.Charset = DEFAULT_CHARSET
@@ -573,11 +586,10 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           ExplicitTop = 103
           ExplicitWidth = 281
           inherited pnlLookup: TsPanel
-            Width = 281
+            Width = 279
             ExplicitWidth = 281
             inherited lblDescription: TsLabel
-              Width = 188
-              Height = 20
+              Width = 186
             end
           end
         end

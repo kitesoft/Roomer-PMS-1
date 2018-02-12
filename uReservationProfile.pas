@@ -1166,8 +1166,8 @@ begin
         edtTel2.text := trim(fieldbyname('Tel2').asstring);
         edtFax.text := trim(fieldbyname('Fax').asstring);
 
-        dtArrival.Date := SQLToDate(trim(fieldbyname('Arrival').asstring));
-        dtDeparture.Date := SQLToDate(trim(fieldbyname('Departure').asstring));
+        dtArrival.Date := fieldbyname('ArrivalDate').asDateTime;
+        dtDeparture.Date := fieldbyname('DepartureDate').asDateTime;
 
         memInformation.Lines.text := trim(fieldbyname('Information').asstring);
         memPMInfo.Lines.text := trim(fieldbyname('PMInfo').asstring);
@@ -1698,29 +1698,28 @@ procedure TfrmReservationProfile.cxButton3Click(Sender: TObject);
 var
   arrival: TDate;
   departure: TDate;
-  s: string;
+//  s: string;
 
 begin
 
   arrival := dtArrival.Date;
   departure := dtDeparture.Date;
 
-  g.openResDates(zReservation, 0, '', arrival, departure, 1);
-  if dtArrival.Date <> 1 then
+  if g.openResDates(zReservation, 0, '', arrival, departure, 1) then
   begin
     dtArrival.Date := arrival;
     dtDeparture.Date := departure;
     Display_rGrid(0);
-    s := '';
-    s := s + 'UPDATE `reservations` '#10;
-    s := s + 'SET '#10;
-    s := s + '`Arrival` = %s, '#10;;
-    s := s + '`Departure` = %s '#10;
-    s := s + 'WHERE reservation = %d ';
-    s := format(s, [_db(arrival, true), _db(departure, true), zReservation]);
-    if not cmd_bySQL(s) then
-    begin
-    end;
+//    s := '';
+//    s := s + 'UPDATE `reservations` '#10;
+//    s := s + 'SET '#10;
+//    s := s + '`Arrival` = %s, '#10;;
+//    s := s + '`Departure` = %s '#10;
+//    s := s + 'WHERE reservation = %d ';
+//    s := format(s, [_db(arrival, true), _db(departure, true), zReservation]);
+//    if not cmd_bySQL(s) then
+//    begin
+//    end;
   end;
   BringToFront;
 end;
@@ -3226,14 +3225,18 @@ begin
       mRooms.Cancel;
       raise;
     end;
+
+    FReservationChangeStateHandler.UpdateRoomResStateChangeHandlers;
+    Display_rGrid(Roomreservation);
+
+    temp := format
+      ('(doRRDateChange 2) Availability made dirty for Reservation=%d, RoomReservation=%d, Room=%s, RoomType=%s, FOR ArrDate=%s, DepDate=%s',
+      [reservation, roomReservation, Room, RoomType, DateToSqlString(arrival), DateToSqlString(departure)]);
+    d.roomerMainDataSet.SystemMakeAvailabilityDirtyFromRoomReservation(roomReservation, temp);
+
   finally
     mRooms.EnableControls;
   end;
-
-  temp := format
-    ('(doRRDateChange 2) Availability made dirty for Reservation=%d, RoomReservation=%d, Room=%s, RoomType=%s, FOR ArrDate=%s, DepDate=%s',
-    [reservation, roomReservation, Room, RoomType, DateToSqlString(arrival), DateToSqlString(departure)]);
-  d.roomerMainDataSet.SystemMakeAvailabilityDirtyFromRoomReservation(roomReservation, temp);
 
 end;
 
@@ -3264,13 +3267,11 @@ end;
 procedure TfrmReservationProfile.tvRoomsArrivalPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   doRRDateChange(1); // Arrival
-  Display_rGrid(zRoomReservation);
 end;
 
 procedure TfrmReservationProfile.tvRoomsDeparturePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   doRRDateChange(2); // Departure
-  Display_rGrid(zRoomReservation);
 end;
 
 procedure TfrmReservationProfile.FormatTextToShortFormat(Sender: TcxCustomGridTableItem;
