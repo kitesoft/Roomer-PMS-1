@@ -189,8 +189,8 @@ object frmGuestSearch: TfrmGuestSearch
     object chkUseDates: TsCheckBox
       Left = 690
       Top = 2
-      Width = 76
-      Height = 17
+      Width = 68
+      Height = 20
       Caption = 'Use dates'
       TabOrder = 2
       OnClick = chkUseDatesClick
@@ -309,7 +309,6 @@ object frmGuestSearch: TfrmGuestSearch
     Images = DImages.PngImageList1
     TabOrder = 2
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 147
     object tvData: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = kbmDataDS
