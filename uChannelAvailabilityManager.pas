@@ -2996,7 +2996,7 @@ begin
                 '     LEFT JOIN roomsdate rd ON pdd.date=rd.ADate AND rt.active AND rt.RoomType=rd.RoomType ' +
                 '     LEFT JOIN (SELECT r.RoomType, COUNT(r.id) AS NumRooms FROM rooms r WHERE r.Active AND NOT r.WildCard GROUP BY r.RoomType) AS r ON r.RoomType=rt.RoomType ' +
                 'WHERE pdd.date>=''%s'' AND pdd.date<=DATE_ADD(''%s'',INTERVAL %d DAY) ' +
-                'AND (NOT rd.ResFlag IN (''X'',''C'',''O'',''N'')) ' +
+                'AND (ISNULL(rd.ResFlag) OR (NOT rd.ResFlag IN (''X'',''C'',''O'',''N''))) ' +
                 'GROUP BY pdd.date, rt.RoomType ' +
                 'ORDER BY pdd.date, rt.RoomType ' +
                 ') xxx ' +
