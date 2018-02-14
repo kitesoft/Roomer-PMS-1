@@ -49,7 +49,7 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_Define>_CONSOLE_TESTRUNNER;$(DCC_Define)</DCC_Define>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_UnitSearchPath>$(BDS)\Source\DUnit\src;..\..\Extras\Spring4D\Source\Base\Collections;..\..\Extras\Spring4D\Source;..\..\Extras\Spring4D\Source\Base;..\..\Extras\OXml\units;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(BDS)\Source\DUnit\src;..\..\Extras\Spring4D\Source\Base\Collections;..\..\Extras\Spring4D\Source;..\..\Extras\Spring4D\Source\Base;..\..\Extras\OXml\units;..\..\RoomerVcls\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1043</VerInfo_Locale>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
@@ -91,6 +91,7 @@
         <DCCReference Include="HotelStatisticsTest.pas"/>
         <DCCReference Include="..\..\HotelStatstics\uHotelStatistics.pas"/>
         <DCCReference Include="..\..\OpenAPI\schema\uRoomerSchema.pas"/>
+        <DCCReference Include="..\..\RoomerUtils\XmlUtils.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

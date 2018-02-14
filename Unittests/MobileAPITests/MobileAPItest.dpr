@@ -18,7 +18,8 @@ uses
   DUnitTestRunner,
   HotelStatisticsTest in 'HotelStatisticsTest.pas',
   uHotelStatistics in '..\..\HotelStatstics\uHotelStatistics.pas',
-  uRoomerSchema in '..\..\OpenAPI\schema\uRoomerSchema.pas';
+  uRoomerSchema in '..\..\OpenAPI\schema\uRoomerSchema.pas',
+  XmlUtils in '..\..\RoomerUtils\XmlUtils.pas';
 
 {$R *.RES}
 

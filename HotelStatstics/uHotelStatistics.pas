@@ -47,12 +47,14 @@ type
     FStatistics: IList<THotelStatistic>;
     FDate: TDate;
     function GetStatisticsList: TStatisticsList;
+    function GetStatistic(const aName: string): THotelStatistic;
   protected
     class function GetNodeName: string; override;
   public
     constructor Create;
     procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    property Statistic[const aName: string]: THotelStatistic read GetStatistic; default;
 
   published
     property Date: TDate read FDate;
@@ -66,6 +68,7 @@ type
   private
     FStatsPerDateList: IList<TSingleDateStatistics>;
     function GetStatisticsPerDateList: TStatisticsPerDateList;
+    function GetSingleDateStatistics(aDate: TDate): TSingleDateStatistics;
   protected
     class function GetNodeName: string; override;
   public
@@ -73,8 +76,9 @@ type
 
     procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
-   published
+
     property StatisticsPerDateList: TStatisticsPerDateList read GetStatisticsPerDateList;
+    property StatisticsForDate[aDate: TDate]: TSingleDateStatistics read GetSingleDateStatistics; default;
   end;
 
 
@@ -82,6 +86,7 @@ implementation
 
 uses
   SysUtils
+  , XMLUtils
   ;
 
 { THotelStatistic }
@@ -98,7 +103,7 @@ begin
   inherited;
 
   if aNode.FindChild('name', lNode) then FName := lNode.Text;
-  if aNode.FindChild('value', lNode) then FValue := StrToFloatDef(lNode.text, 0);
+  if aNode.FindChild('value', lNode) then FValue := XMLToFloat(lNode.text);
   if aNode.FindChild('unit', lNode) then FUOM := TUnitOfMeasurement.FromString(lNode.Text);
   if aNode.FindChild('description', lNode) then FDescription := lNode.Text;
 
@@ -123,6 +128,19 @@ end;
 class function TSingleDateStatistics.GetNodeName: string;
 begin
   result := 'item';
+end;
+
+function TSingleDateStatistics.GetStatistic(const aName: string): THotelStatistic;
+var
+  lStat: THotelStatistic;
+begin
+  Result := nil;
+  for lStat in FStatistics do
+    if SameText(lStat.Name, aName) then
+    begin
+      Result := lStat;
+      Break;
+    end;
 end;
 
 function TSingleDateStatistics.GetStatisticsList: TStatisticsList;
@@ -173,6 +191,19 @@ end;
 class function THotelStatisticsList.GetNodeName: string;
 begin
   Result := 'ArrayList';
+end;
+
+function THotelStatisticsList.GetSingleDateStatistics(aDate: TDate): TSingleDateStatistics;
+var
+  lItem: TSingleDateStatistics;
+begin
+  Result := nil;
+  for lItem in FStatsPerDateList do
+    if lItem.Date = aDate then
+    begin
+      Result := lItem;
+      Break;
+    end;
 end;
 
 function THotelStatisticsList.GetStatisticsPerDateList: TStatisticsPerDateList;
