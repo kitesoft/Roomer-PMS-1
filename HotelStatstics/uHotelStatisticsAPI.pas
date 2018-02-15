@@ -22,12 +22,11 @@ type
   THotelStatisticsMobileAPICaller = class(TBaseMobileAPICaller)
   private const
     cStatisticsURI = '/hotelstatistics';
-    procedure ParseStatisticsResponse(const aXML: string; aStatistics: THotelStatisticsList);
   public
     /// <summary>
     ///   Implementation of /service/hotelstatistics mobile api endpoint, returning a THotelStatisticsList
     /// </summary>
-    procedure GetHotelStatistics(aFromDate: TDate; aToDate: TDate; aStatistics: THotelStatisticsList);
+    procedure GetHotelStatistics(aFromDate: TDateTime; aToDate: TDateTime; aStatistics: THotelStatisticsList);
   end;
 
 implementation
@@ -37,20 +36,25 @@ uses
   , uDateUtils
    , XMLIntf
    , OXmlPDOM
-  ;
+  , uDateTimeHelper;
 
 { THotelStatisticsMobileAPICaller }
 
-procedure THotelStatisticsMobileAPICaller.GetHotelStatistics(aFromDate, aToDate: TDate; aStatistics: THotelStatisticsList);
+procedure THotelStatisticsMobileAPICaller.GetHotelStatistics(aFromDate, aToDate: TDateTime; aStatistics: THotelStatisticsList);
 var
   lResponse: string;
 begin
   Assert(assigned(aStatistics));
-  lResponse := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + cStatisticsURI +
-                '/' + dateToSqlString(aFromDate) +
-                '/' + dateToSqlString(aToDate));
+  try
+    lResponse := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + cStatisticsURI +
+                  '/' + dateToSqlString(aFromDate) +
+                  '/' + dateToSqlString(aToDate.AddDays(1)));
 
-  aStatistics.LoadFromXML(lResponse);
+    aStatistics.LoadFromXML(lResponse);
+  except
+    aStatistics.Clear;
+    raise;
+  end;
 end;
 
 
@@ -127,150 +131,5 @@ end;
 //         </statistics>
 //      </statistics>
 //   </item>
-//   <item>
-//      <date>
-//         <year>2018</year>
-//         <month>MARCH</month>
-//         <monthValue>3</monthValue>
-//         <era>CE</era>
-//         <dayOfMonth>6</dayOfMonth>
-//         <dayOfWeek>TUESDAY</dayOfWeek>
-//         <dayOfYear>65</dayOfYear>
-//         <leapYear>false</leapYear>
-//         <chronology>
-//            <id>ISO</id>
-//            <calendarType>iso8601</calendarType>
-//         </chronology>
-//      </date>
-//      <statistics>
-//         <statistics>
-//            <name>ADR</name>
-//            <value>0.0</value>
-//            <unit>NATIVE_CURRENCY</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>REVPAR</name>
-//            <value>0.0</value>
-//            <unit>NATIVE_CURRENCY</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>IN_HOUSE</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>BAR</name>
-//            <value>110.0</value>
-//            <unit>NATIVE_CURRENCY</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>EXPECTED_DEPARTURES</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>ROOMS_SOLD</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>OCCUPANCY</name>
-//            <value>0</value>
-//            <unit>PERCENT</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>EXPECTED_ARRIVALS</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>LEFT_TO_SELL</name>
-//            <value>29</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//      </statistics>
-//   </item>
-//   <item>
-//      <date>
-//         <year>2018</year>
-//         <month>MARCH</month>
-//         <monthValue>3</monthValue>
-//         <era>CE</era>
-//         <dayOfMonth>7</dayOfMonth>
-//         <dayOfWeek>WEDNESDAY</dayOfWeek>
-//         <dayOfYear>66</dayOfYear>
-//         <leapYear>false</leapYear>
-//         <chronology>
-//            <id>ISO</id>
-//            <calendarType>iso8601</calendarType>
-//         </chronology>
-//      </date>
-//      <statistics>
-//         <statistics>
-//            <name>ADR</name>
-//            <value>0.0</value>
-//            <unit>NATIVE_CURRENCY</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>REVPAR</name>
-//            <value>0.0</value>
-//            <unit>NATIVE_CURRENCY</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>IN_HOUSE</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>BAR</name>
-//            <value>110.0</value>
-//            <unit>NATIVE_CURRENCY</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>EXPECTED_DEPARTURES</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>ROOMS_SOLD</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>OCCUPANCY</name>
-//            <value>0</value>
-//            <unit>PERCENT</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>EXPECTED_ARRIVALS</name>
-//            <value>0</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//         <statistics>
-//            <name>LEFT_TO_SELL</name>
-//            <value>29</value>
-//            <unit>NO_DIMENSION</unit>
-//            <description/>
-//         </statistics>
-//      </statistics>
-//   </item>
-//</ArrayList>
 
 end.

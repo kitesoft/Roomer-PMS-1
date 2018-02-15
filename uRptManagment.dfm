@@ -1,9 +1,9 @@
 object frmRptManagment: TfrmRptManagment
   Left = 0
   Top = 0
-  Caption = 'Statistics'
+  Caption = 'Room/Rent Statistics'
   ClientHeight = 643
-  ClientWidth = 1167
+  ClientWidth = 1281
   Color = clBtnFace
   Constraints.MinWidth = 570
   Font.Charset = DEFAULT_CHARSET
@@ -23,11 +23,12 @@ object frmRptManagment: TfrmRptManagment
   object Panel3: TsPanel
     Left = 0
     Top = 0
-    Width = 1167
+    Width = 1281
     Height = 89
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
+    ExplicitWidth = 1167
     object cxGroupBox2: TsGroupBox
       Left = 148
       Top = 3
@@ -193,8 +194,8 @@ object frmRptManagment: TfrmRptManagment
     object chkCompareLasYear: TsCheckBox
       Left = 306
       Top = 56
-      Width = 108
-      Height = 20
+      Width = 116
+      Height = 17
       Caption = 'Compare last year'
       TabOrder = 3
       Visible = False
@@ -206,35 +207,35 @@ object frmRptManagment: TfrmRptManagment
   object sStatusBar1: TsStatusBar
     Left = 0
     Top = 624
-    Width = 1167
+    Width = 1281
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
+    ExplicitWidth = 1167
   end
   object pageMain: TsPageControl
     Left = 0
     Top = 89
-    Width = 1167
+    Width = 1281
     Height = 535
     ActivePage = tabStatGrid
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitWidth = 1167
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1159
       object sPanel1: TsPanel
         Left = 0
         Top = 0
-        Width = 1159
+        Width = 1273
         Height = 43
         Align = alTop
         FullRepaint = False
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitWidth = 1159
         object btnGuestsExcel: TsButton
           AlignWithMargins = True
           Left = 11
@@ -252,7 +253,7 @@ object frmRptManagment: TfrmRptManagment
         end
         object btnReport: TsButton
           AlignWithMargins = True
-          Left = 1027
+          Left = 1141
           Top = 4
           Width = 128
           Height = 35
@@ -264,16 +265,18 @@ object frmRptManagment: TfrmRptManagment
           TabOrder = 1
           OnClick = btnReportClick
           SkinData.SkinSection = 'BUTTON'
+          ExplicitLeft = 1027
         end
       end
       object grStat: TcxGrid
         Left = 0
         Top = 43
-        Width = 1159
+        Width = 1273
         Height = 464
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitWidth = 1159
         object tvStat: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = StatDS
@@ -596,6 +599,15 @@ object frmRptManagment: TfrmRptManagment
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
+          object tvStatsooo: TcxGridDBBandedColumn
+            Caption = 'Out Of Order'
+            DataBinding.FieldName = 'oooRooms'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.'
+            Position.BandIndex = 2
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
         end
         object lvStat: TcxGridLevel
           GridView = tvStats
@@ -604,14 +616,10 @@ object frmRptManagment: TfrmRptManagment
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0
-        Width = 1159
+        Width = 1273
         Height = 507
         ActivePage = tabOcc
         Align = alClient
@@ -619,14 +627,10 @@ object frmRptManagment: TfrmRptManagment
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
-            Width = 1151
+            Width = 1265
             Height = 33
             Align = alTop
             TabOrder = 0
@@ -651,7 +655,7 @@ object frmRptManagment: TfrmRptManagment
           object Chart1: TChart
             Left = 0
             Top = 33
-            Width = 1151
+            Width = 1265
             Height = 446
             Legend.Visible = False
             SubTitle.Font.Color = clBlack
@@ -769,7 +773,7 @@ object frmRptManagment: TfrmRptManagment
         DataType = ftInteger
       end
       item
-        Name = 'ooo'
+        Name = 'oooRooms'
         DataType = ftFloat
       end
       item
@@ -910,6 +914,10 @@ object frmRptManagment: TfrmRptManagment
       item
         Name = 'revPar'
         DataType = ftFloat
+      end
+      item
+        Name = 'oooRooms'
+        DataType = ftInteger
       end>
     IndexDefs = <>
     SortOptions = []

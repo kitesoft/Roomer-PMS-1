@@ -1042,6 +1042,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </DCCReference>
         <DCCReference Include="HotelStatstics\uHotelStatisticsAPI.pas"/>
         <DCCReference Include="HotelStatstics\uHotelStatistics.pas"/>
+        <DCCReference Include="mainEmbeddables\uFraHotelStatisticsFooter.pas">
+            <Form>fraHotelStatisticsFooter</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

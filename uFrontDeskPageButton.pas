@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, acImage, Vcl.StdCtrls, sLabel, sPanel, Vcl.ImgList, PngImageList, AdvUtil, Vcl.Grids, AdvObj, BaseGrid,
-  AdvGrid, cmpRoomerDataSet, uRoomerThreadedRequest;
+  AdvGrid, cmpRoomerDataSet, uRoomerThreadedRequest
+  , uHotelStatistics
+  ;
 
 type
   TFrmFrontDeskPageButton = class(TForm)
@@ -79,6 +81,7 @@ type
     procedure panelOnPaint(Sender: TObject; Canvas: TCanvas);
   private
     FShowFromDate: TDate;
+    FStats: THotelStatisticsList;
     procedure SetShowFromDate(const Value: TDate);
     { Private declarations }
   private
@@ -91,7 +94,11 @@ type
     procedure ShowGridData(SetOfData: TRoomerDataSet);
     procedure DrawDateRow;
     procedure PrepareGridText;
+    procedure RefreshHotelStatsData;
+    procedure UpdateGridFromStats;
   public
+    constructor Create(aOwner: TComponent); override;
+    destructor Destroy; override;
     { Public declarations }
     procedure RefreshDisplay;
 
@@ -122,19 +129,18 @@ uses uD,
      uRptInHouse,
      uMain,
      PrjConst
-    ;
+    , uHotelStatisticsAPI, uDateTimeHelper;
 
 const
 
    ROW_DAY          = 0;
    ROW_DATE         = 1;
-   ROW_SPEC_DAY     = 2;
 
-   ROW_ARRIVALS     = 3;
-   ROW_DEPARTURES   = 4;
-   ROW_LEFT_TO_SELL = 5;
-   ROW_OCCUPANCY    = 6;
-   ROW_BAR          = 7;
+   ROW_ARRIVALS     = 2;
+   ROW_DEPARTURES   = 3;
+   ROW_LEFT_TO_SELL = 4;
+   ROW_OCCUPANCY    = 5;
+   ROW_BAR          = 6;
 
    COL_START        = 1;
 
@@ -195,11 +201,11 @@ begin
     res.First;
     if NOT res.Eof then
     begin
-      lblArrivals.Caption := inttostr(res['NumArrivals']);
-      lblDepartures.Caption := inttostr(res['NumDepartures']);
+//      lblArrivals.Caption := inttostr(res['NumArrivals']);
+//      lblDepartures.Caption := inttostr(res['NumDepartures']);
       lblTomArrivals.Caption := inttostr(res['NumArrivalsTomorrow']);
       lblTomDepartures.Caption := inttostr(res['NumDeparturesTomorrow']);
-      lblInHouse.Caption := inttostr(res['NumInHouse']);
+//      lblInHouse.Caption := inttostr(res['NumInHouse']);
     end;
   finally
     FreeAndNil(res);
@@ -209,7 +215,22 @@ end;
 procedure TFrmFrontDeskPageButton.RefreshDisplay;
 begin
   RefreshButtons;
-  RefreshGrid;
+//  RefreshGrid;
+  RefreshHotelStatsData;
+end;
+
+procedure TFrmFrontDeskPageButton.RefreshHotelStatsData;
+var
+  lMobileAPI: THotelStatisticsMobileAPICaller;
+begin
+
+  lMobileAPI := THotelStatisticsMobileAPICaller.Create;
+  try
+    lMobileAPI.GetHotelStatistics(ShowFromDate, TDateTime(ShowFromDate).AddDays(6), FStats);
+    UpdateGridFromStats;
+  finally
+    lMobileAPI.Free;
+  end;
 end;
 
 procedure TFrmFrontDeskPageButton.RefreshGrid;
@@ -288,6 +309,38 @@ procedure TFrmFrontDeskPageButton.Shape7MouseUp(Sender: TObject; Button: TMouseB
 begin
   frmMain.tabsView.TabIndex := 1;
   frmMain.tabsViewChange(nil);
+end;
+
+procedure TFrmFrontDeskPageButton.UpdateGridFromStats;
+var
+  lDate: TDate;
+  i: integer;
+  lStats: TSingleDateStatistics;
+begin
+  DrawDateRow;
+  for i := 0 to StatGrid.ColCount-2 do
+  begin
+    lDate := TDateTime(FShowFromDate).AddDays(i);
+    lStats := FStats.StatisticsForDate[lDate];
+    if assigned(lStats) then
+    begin
+
+      if (lDate = FSHowFromDate) then
+      begin
+        lblArrivals.Caption := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
+        lblDepartures.Caption := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
+        lblInHouse.Caption := lStats.Statistic['IN_HOUSE'].FormattedValue;
+      end;
+
+      StatGrid.Cells[i+1, ROW_ARRIVALS]     := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_DEPARTURES]   := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_LEFT_TO_SELL] := lStats.Statistic['LEFT_TO_SELL'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_OCCUPANCY]    := lStats.Statistic['OCCUPANCY'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_BAR]          := lStats.Statistic['BAR'].FormattedValue;
+    end;
+  end;
+
+
 end;
 
 procedure TFrmFrontDeskPageButton.ShowGridData(SetOfData : TRoomerDataSet);
@@ -379,7 +432,7 @@ begin
   if ARow < 1 then
     ABrush.Color := $00FFBF3C
   else
-  if (ARow < 3) OR (ACol < 1) then
+  if (ARow < 2) OR (ACol < 1) then
     ABrush.Color := $00FFDD95
   else
     ABrush.Color := clWhite;
@@ -429,6 +482,18 @@ begin
 end;
 
 /////////////////////////////  HELPERS   //////////////////////////////////////
+
+constructor TFrmFrontDeskPageButton.Create(aOwner: TComponent);
+begin
+  inherited;
+  FStats := THotelStatisticsList.Create;
+end;
+
+destructor TFrmFrontDeskPageButton.Destroy;
+begin
+  FStats.Free;
+  inherited;
+end;
 
 procedure TFrmFrontDeskPageButton.DrawDateRow;
 var

@@ -23,7 +23,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
     Left = 56
     Top = 32
     Width = 833
-    Height = 625
+    Height = 593
     BevelOuter = bvNone
     Color = 16760636
     ParentBackground = False
@@ -865,7 +865,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
     end
     object StatGrid: TAdvStringGrid
       Left = 24
-      Top = 360
+      Top = 326
       Width = 802
       Height = 257
       Cursor = crDefault
@@ -879,7 +879,7 @@ object FrmFrontDeskPageButton: TFrmFrontDeskPageButton
       DoubleBuffered = True
       DrawingStyle = gdsClassic
       FixedCols = 0
-      RowCount = 8
+      RowCount = 7
       FixedRows = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText

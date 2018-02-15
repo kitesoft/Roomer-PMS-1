@@ -96,7 +96,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 305
-        ActivePage = tabOneDayView
+        ActivePage = tabFrontDesk
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -830,10 +830,6 @@ object frmMain: TfrmMain
         object tabPeriod: TsTabSheet
           Caption = 'tabPeriod'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sLabel2: TsLabel
             Left = 224
             Top = 400
@@ -1297,7 +1293,6 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 160
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1616,10 +1611,6 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
@@ -1650,10 +1641,7 @@ object frmMain: TfrmMain
                 end
               end
               inherited pnlLeftRooms: TsPanel
-                ExplicitTop = 302
-                ExplicitHeight = 276
                 inherited RoomsChart: TChart
-                  ExplicitHeight = 274
                   PrintMargins = (
                     15
                     19
@@ -1665,7 +1653,6 @@ object frmMain: TfrmMain
             inherited pnlRight: TsPanel
               Width = 804
               Height = 277
-              ExplicitLeft = 407
               ExplicitWidth = 804
               ExplicitHeight = 277
               inherited splRight: TsSplitter
@@ -1674,14 +1661,11 @@ object frmMain: TfrmMain
               end
               inherited pnlRightPropertyStatus: TsPanel
                 Width = 802
-                ExplicitLeft = 1
-                ExplicitTop = 1
                 ExplicitWidth = 802
               end
               inherited pnlRightTodayRates: TsPanel
                 Width = 802
                 Height = 29
-                ExplicitTop = 247
                 ExplicitWidth = 802
                 ExplicitHeight = 29
                 inherited sPanel8: TsPanel
@@ -1691,11 +1675,9 @@ object frmMain: TfrmMain
                 inherited sPanel9: TsPanel
                   Width = 800
                   ExplicitWidth = 800
-                  ExplicitHeight = 297
                   inherited sbRates: TsScrollBox
                     Width = 800
                     ExplicitWidth = 800
-                    ExplicitHeight = 297
                   end
                 end
               end
@@ -1704,17 +1686,9 @@ object frmMain: TfrmMain
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -2936,215 +2910,95 @@ object frmMain: TfrmMain
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
-    Color = clWhite
+    Color = clBackground
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clInfoBk
+    Font.Height = -15
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     ParentBackground = False
+    ParentFont = False
     TabOrder = 10
     StyleElements = [seFont, seClient]
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
-    object lblOccupancy: TsLabel
-      AlignWithMargins = True
-      Left = 184
-      Top = 5
-      Width = 87
-      Height = 22
-      Margins.Left = 40
-      Margins.Top = 5
-      Align = alLeft
-      Caption = 'OCCUPANCY:'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
-    object __OCCUPANCY: TsLabel
-      AlignWithMargins = True
-      Left = 277
-      Top = 5
-      Width = 9
-      Height = 22
-      Margins.Top = 5
-      Align = alLeft
-      Caption = '0'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
-    object lblStatAdr: TsLabel
-      AlignWithMargins = True
-      Left = 329
-      Top = 5
-      Width = 33
-      Height = 22
-      Margins.Left = 40
-      Margins.Top = 5
-      Align = alLeft
-      Caption = 'ADR:'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
-    object __ADR: TsLabel
-      AlignWithMargins = True
-      Left = 368
-      Top = 5
-      Width = 9
-      Height = 22
-      Margins.Top = 5
-      Align = alLeft
-      Caption = '0'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
-    object lblStatRevPar: TsLabel
-      AlignWithMargins = True
-      Left = 420
-      Top = 5
-      Width = 55
-      Height = 22
-      Margins.Left = 40
-      Margins.Top = 5
-      Align = alLeft
-      Caption = 'REVPAR:'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
-    object __REVPAR: TsLabel
-      AlignWithMargins = True
-      Left = 481
-      Top = 5
-      Width = 9
-      Height = 22
-      Margins.Top = 5
-      Align = alLeft
-      Caption = '0'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
-    object lblStatRoomsSold: TsLabel
-      AlignWithMargins = True
-      Left = 533
-      Top = 5
-      Width = 96
-      Height = 22
-      Margins.Left = 40
-      Margins.Top = 5
-      Align = alLeft
-      Caption = 'ROOMS SOLD:'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
-    object __ROOMSSOLD: TsLabel
-      AlignWithMargins = True
-      Left = 635
-      Top = 5
-      Width = 9
-      Height = 22
-      Margins.Top = 5
-      Align = alLeft
-      Caption = '0'
-      ParentFont = False
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
-      UseSkinColor = False
-      ExplicitHeight = 20
-    end
     object __VER: TsLabel
-      AlignWithMargins = True
-      Left = 1355
-      Top = 5
-      Width = 174
-      Height = 22
+      Left = 1380
+      Top = 0
+      Width = 152
+      Height = 30
       Margins.Left = 40
       Margins.Top = 5
       Align = alRight
-      Caption = 'VERSION: 1.2.3210.12345'
+      Caption = 'Version: 1.2.3210.12345'
+      Color = clBackground
+      ParentColor = False
       ParentFont = False
+      Transparent = False
+      Layout = tlCenter
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
+      Font.Color = clInfoBk
       Font.Height = -15
-      Font.Name = 'Tahoma'
+      Font.Name = 'Segoe UI'
       Font.Style = []
       UseSkinColor = False
-      ExplicitHeight = 18
+      ExplicitLeft = 1388
+      ExplicitHeight = 20
     end
-    object cbxStatDay: TsComboBox
-      AlignWithMargins = True
-      Left = 3
-      Top = 3
-      Width = 138
-      Height = 28
-      Margins.Bottom = 5
-      Align = alLeft
-      Alignment = taRightJustify
-      BoundLabel.Font.Charset = DEFAULT_CHARSET
-      BoundLabel.Font.Color = clWindowText
-      BoundLabel.Font.Height = -13
-      BoundLabel.Font.Name = 'Tahoma'
-      BoundLabel.Font.Style = []
-      SkinData.CustomColor = True
-      SkinData.CustomFont = True
-      SkinData.SkinSection = 'TRANSPARENT'
-      VerticalAlignment = taAlignTop
-      Style = csDropDownList
-      Color = clWhite
-      Ctl3D = False
+    inline fraHotelStats: TfraHotelStatisticsFooter
+      Left = 0
+      Top = 0
+      Width = 1380
+      Height = 30
+      Align = alClient
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -15
       Font.Name = 'Segoe UI'
       Font.Style = []
-      ItemIndex = 0
-      ParentCtl3D = False
+      ParentColor = False
       ParentFont = False
       TabOrder = 0
-      Text = 'TODAY'
-      OnChange = cbxStatDayChange
-      Items.Strings = (
-        'TODAY'
-        'TOMORROW')
+      ExplicitWidth = 1137
+      ExplicitHeight = 30
+      inherited pnlStatistics: TsPanel
+        Width = 1380
+        Height = 30
+        SkinData.CustomColor = False
+        SkinData.CustomFont = False
+        ExplicitWidth = 1137
+        ExplicitHeight = 30
+        inherited lblOccupancy: TsLabel
+          Height = 22
+        end
+        inherited lblStatAdr: TsLabel
+          Height = 22
+        end
+        inherited lblStatRevPar: TsLabel
+          Height = 22
+        end
+        inherited lblStatRoomsSold: TsLabel
+          Height = 22
+        end
+        inherited edtOccupancy: TsCalcEdit
+          Height = 22
+          ExplicitHeight = 22
+        end
+        inherited edtADR: TsCurrencyEdit
+          Height = 22
+          ExplicitHeight = 22
+        end
+        inherited edtRevPar: TsCurrencyEdit
+          Height = 22
+          ExplicitHeight = 22
+        end
+        inherited edtRoomsSold: TsCalcEdit
+          Height = 22
+          ExplicitHeight = 22
+        end
+      end
     end
   end
   object mmnuOneDayGrid: TPopupMenu
@@ -7173,13 +7027,13 @@ object frmMain: TfrmMain
     Interval = 50
     OnTimer = timKillDragTimer
     Left = 23
-    Top = 608
+    Top = 576
   end
   object timBlink: TTimer
     Enabled = False
     OnTimer = timBlinkTimer
     Left = 110
-    Top = 613
+    Top = 589
   end
   object pmnuRemoveRooms: TdxBarPopupMenu
     BarManager = barinn
@@ -8669,8 +8523,8 @@ object frmMain: TfrmMain
   end
   object mDS: TDataSource
     DataSet = m
-    Left = 232
-    Top = 627
+    Left = 240
+    Top = 595
   end
   object m: TkbmMemTable
     Active = True
@@ -8854,8 +8708,8 @@ object frmMain: TfrmMain
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    Left = 160
-    Top = 609
+    Left = 168
+    Top = 537
   end
   object StoreMain: TcxPropertiesStore
     Active = False
@@ -23831,7 +23685,7 @@ object frmMain: TfrmMain
       'tn'#13#10'TAdvMoneyEdit'#13#10'TDBAdvMoneyEdit'#13#10'THTMListBox'#13#10'THTMLCheckList'#13 +
       #10'TParamListBox'#13#10'TParamCheckList'#13#10'TfrxPreviewWorkspace'#13#10'TfrxScrol' +
       'lBox'#13#10'TQRPreview'#13#10'TDBListBox'#13#10'TDBMemo'#13#10'TDBLookupListBox'#13#10'TDBRich' +
-      'Edit'#13#10'TDBCtrlGrid'#13#10'TDBEdit'#13#10
+      'Edit'#13#10'TDBCtrlGrid'#13#10'TDBEdit'#13#10'TsLabel'#13#10
     ThirdParty.ThirdButtons = 'TButton'#13#10'TcxButton'#13#10
     ThirdParty.ThirdBitBtns = 'TBitBtn'#13#10
     ThirdParty.ThirdCheckBoxes = 'TCheckBox'#13#10'TRadioButton'#13#10'TGroupButton'#13#10'TDBCheckBox'#13#10

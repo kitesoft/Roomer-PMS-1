@@ -238,11 +238,15 @@ end;
 
 class function TRoomerVersionInfo.LongVersionString: string;
 begin
-  Result := Format('Ver %s [%s]', [FileVersion, ExtraBuild]);
-  if IsPreRelease then
-    Result := Result + ' [pre-release]';
-  if IsDebug then
-    Result := Result + ' [debug]';
+  try
+    Result := Format('Ver %s [%s]', [FileVersion, ExtraBuild]);
+    if IsPreRelease then
+      Result := Result + ' [pre-release]';
+    if IsDebug then
+      Result := Result + ' [debug]';
+  except
+    Result := 'Version unknown';
+  end;
 end;
 
 end.

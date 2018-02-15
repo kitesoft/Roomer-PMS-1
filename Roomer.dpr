@@ -341,7 +341,8 @@ uses
   uFraStaffMemberPanel in 'Embeddables\uFraStaffMemberPanel.pas' {fraStaffMemberPanel: TFrame},
   uFraDayStatistics in 'mainEmbeddables\uFraDayStatistics.pas' {fraDayStatistics: TFrame},
   uHotelStatisticsAPI in 'HotelStatstics\uHotelStatisticsAPI.pas',
-  uHotelStatistics in 'HotelStatstics\uHotelStatistics.pas';
+  uHotelStatistics in 'HotelStatstics\uHotelStatistics.pas',
+  uFraHotelStatisticsFooter in 'mainEmbeddables\uFraHotelStatisticsFooter.pas' {fraHotelStatisticsFooter: TFrame};
 
 {$R *.RES}
 
