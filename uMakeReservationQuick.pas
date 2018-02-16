@@ -1082,7 +1082,7 @@ begin
     edContactFax.Text := '';
     edContactEmail.Text := '';
 
-    cbxAddToGuestProfiles.Visible := true;
+    cbxAddToGuestProfiles.Enabled := true;
     edtPortfolio.Tag := 0;
   end
   else if message.Msg = WM_SET_COMBO_TEXT then
@@ -1392,7 +1392,7 @@ begin
     memRoomNotes.Enabled := false;
     clabRoomNotes.Visible := false;
     chkSendConfirmation.Enabled := false;
-    cbxAddToGuestProfiles.Visible := false;
+    cbxAddToGuestProfiles.Enabled := false;
     FrmAlertPanel := TFrmAlertPanel.Create(self);
     FrmAlertPanel.PlaceEditPanel(Alerts, FNewReservation.AlertList);
     gbxProfileAlert.Visible := False;
@@ -4430,7 +4430,7 @@ begin
     begin
       edContactPerson1.Properties.OnCloseUp := NIL;
       EmptyQuickFind;
-      cbxAddToGuestProfiles.Visible := true;
+      cbxAddToGuestProfiles.Enabled := true;
       lblNew.Visible := False;
     end else
     begin

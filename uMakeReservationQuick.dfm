@@ -1,4 +1,4 @@
-object frmMakeReservationQuick: TfrmMakeReservationQuick
+﻿object frmMakeReservationQuick: TfrmMakeReservationQuick
   Left = 549
   Top = 309
   Caption = 'New reservation'
@@ -351,10 +351,11 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           Left = 1
           Top = 1
           Width = 503
-          Height = 538
+          Height = 547
           Align = alLeft
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
+          ExplicitHeight = 538
           object gbxGetCustomer: TsGroupBox
             AlignWithMargins = True
             Left = 6
@@ -623,6 +624,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
+                  ExplicitLeft = 200
                 end
               end
             end
@@ -1001,7 +1003,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Left = 6
             Top = 373
             Width = 491
-            Height = 162
+            Height = 171
             Margins.Left = 5
             Margins.Top = 2
             Margins.Right = 5
@@ -1010,6 +1012,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Caption = 'Room Rate'
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
+            ExplicitHeight = 162
             object clabCurrency: TsLabel
               Left = 107
               Top = 18
@@ -1200,7 +1203,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               object AdvSplitter1: TAdvSplitter
                 Left = 257
                 Top = 292
-                Height = 235
+                Height = 244
                 Appearance.BorderColor = clNone
                 Appearance.BorderColorHot = clNone
                 Appearance.Color = clWhite
@@ -1476,7 +1479,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   Caption = 'Add to guest profiles'
                   Align = alTop
                   TabOrder = 6
-                  Visible = False
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
@@ -1597,6 +1599,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                     TabOrder = 0
                     OnChange = edContactEmailChange
                     SkinData.SkinSection = 'EDIT'
+                    ExplicitLeft = -3
                   end
                   object chkSendConfirmation: TsCheckBox
                     AlignWithMargins = True
@@ -1774,7 +1777,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Left = 6
                 Top = 294
                 Width = 246
-                Height = 231
+                Height = 240
                 Margins.Left = 5
                 Margins.Top = 2
                 Margins.Right = 5
@@ -1783,12 +1786,13 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Caption = 'Customer Alert'
                 TabOrder = 2
                 SkinData.SkinSection = 'GROUPBOX'
+                ExplicitHeight = 231
                 object memCustomerAlert: TMemo
                   AlignWithMargins = True
                   Left = 2
                   Top = 20
                   Width = 242
-                  Height = 209
+                  Height = 218
                   Margins.Left = 0
                   Margins.Top = 5
                   Margins.Right = 0
@@ -1798,6 +1802,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ReadOnly = True
                   ScrollBars = ssVertical
                   TabOrder = 0
+                  ExplicitHeight = 209
                 end
               end
             end
@@ -2245,10 +2250,11 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         Left = 0
         Top = 72
         Width = 609
-        Height = 468
+        Height = 477
         Align = alLeft
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 468
         object tvSelectType: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = mSelectTypesDS

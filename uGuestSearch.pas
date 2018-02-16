@@ -410,8 +410,8 @@ begin
     s := s+' ,  `persons`.Reservation '#10;
     s := s+' ,  `persons`.Country '#10;
     s := s+' ,  `roomreservations`.Room '#10;
-    s := s+' ,   RR_Arrival(roomreservations.roomreservation, false) as Arrival '#10;
-    s := s+' ,   RR_Departure(roomreservations.roomreservation, false) as Departure '#10;
+    s := s+' ,   RR_Arrival(roomreservations.roomreservation, true) as Arrival '#10;
+    s := s+' ,   RR_Departure(roomreservations.roomreservation, true) as Departure '#10;
     s := s+' ,  `roomreservations`.`Status` '#10;
     s := s+' ,  `reservations`.`invrefrence` AS reference '#10;
     s := s+' ,  `reservations`.Customer '#10;
