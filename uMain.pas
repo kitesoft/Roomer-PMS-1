@@ -689,6 +689,12 @@ type
     mnuFilterLocation: TMenuItem;
     mnuFilterRoomType: TMenuItem;
     fraDayStatistics: TfraDayStatistics;
+    dxRibbonQuickAccessGroupButton2: TdxRibbonQuickAccessGroupButton;
+    dxBarSubItem10: TdxBarSubItem;
+    dxRibbonQuickAccessGroupButton3: TdxRibbonQuickAccessGroupButton;
+    dxBarSubItem11: TdxBarSubItem;
+    dxBarButton8: TdxBarButton;
+    btnNationalStatistics: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
