@@ -92,7 +92,7 @@ uses
   dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
   dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin,
   dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDropDownEdit
 
   ;
 
@@ -154,6 +154,8 @@ type
     pnlHolder: TsPanel;
     m_location: TStringField;
     tvDatalocation: TcxGridDBColumn;
+    m_AccommodationType: TStringField;
+    tvDataAccommodationType: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -341,6 +343,7 @@ begin
         m_.fieldbyname('Active').AsBoolean := rSet.fieldbyname('Active').AsBoolean;
         m_.fieldbyname('PriorityRule').AsString := rSet.fieldbyname('PriorityRule').AsString;
         m_.fieldbyname('location').AsString := rSet.fieldbyname('location').AsString;
+        m_.fieldbyname('AccommodationType').AsString := rSet.fieldbyname('AccommodationType').AsString;
         m_.post;
         rSet.Next;
       end;
@@ -377,6 +380,7 @@ begin
   zData.color        := m_['color'];
   zData.PriorityRule := m_['PriorityRule'];
   zData.location     := m_['Location'];
+  zData.AccommodationType := m_['AccommodationType'];
 end;
 
 
@@ -597,6 +601,7 @@ begin
   zData.color        := dataset['color'];
   zData.PriorityRule := dataset['PriorityRule'];
   zData.location     := dataset['Location'];
+  zData.AccommodationType := dataset['AccommodationType'];
   end;
 end;
 
@@ -659,6 +664,7 @@ begin
   zData.color        := dataset['color'];
   zData.PriorityRule := dataset['PriorityRule'];
   zData.location     := dataset['Location'];
+  zData.AccommodationType := dataset['AccommodationType'];
 
 
   if tvData.DataController.DataSource.State = dsEdit then
@@ -764,6 +770,7 @@ begin
   dataset['color']         := '';
   dataset['PriorityRule']  := '';
   dataset['Location']  := '';
+  dataset['AccommodationType'] := 'ROOM';
 end;
 
 ////////////////////////////////////////////////////////////////////////////////////////

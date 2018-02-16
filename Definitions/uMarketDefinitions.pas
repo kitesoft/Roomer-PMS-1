@@ -15,7 +15,8 @@ type
   TReservationMarketType= (
     mtUnknown = -1,
     mtLeisure = 0,
-    mtBusiness = 1
+    mtBusiness = 1,
+    mtConference = 2
   );
 
     TReservationMarketTypeHelper = record helper for TReservationMarketType
@@ -23,7 +24,8 @@ type
       MARKETTYPE_NAMES : Array[low(TReservationMarketType)..high(TReservationMarketType)] of String =
         ( '',
           'LEISURE',
-          'BUSINESS'
+          'BUSINESS',
+          'CONFERENCE'
         );
     public
       /// <summary>
@@ -80,6 +82,7 @@ begin
     mtUnknown:    Result := '';
     mtBusiness:   Result := GetTranslatedText('shTx_MarketType_Business');
     mtLeisure:    Result := GetTranslatedText('shTx_MarketType_Leisure');
+    mtConference: Result := GetTranslatedText('shTx_MarketType_Conference');
   else
     Result := '';
   end;

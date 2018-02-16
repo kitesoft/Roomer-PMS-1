@@ -7,6 +7,7 @@ uses
   , SysUtils
   , Classes
   , uD
+  , uDateUtils
   , Generics.Collections;
 
 
@@ -23,6 +24,7 @@ type
     function GetSettings : String;
     function SaveSettings(const settingsAsXml : String): String;
     procedure forceExport(ExportType : TExportType);
+    procedure sendToHagstofa(fromDate, toDate : TDate; location : String);
   end;
 
 implementation
@@ -40,6 +42,21 @@ begin
     d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'statisticsConnect/force/FULL')
   else
     d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + 'statisticsConnect/force/INCREMENTAL');
+end;
+
+procedure TConnectionsStatisticsService.sendToHagstofa(fromDate, toDate : TDate; location : String);
+var result : String;
+begin
+  result := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri +
+            format('statisticsConnect/hagstofa?fromDate=%s&toDate=%s&location=%s',
+            [
+              uDateUtils.dateToSqlString(fromDate),
+              uDateUtils.dateToSqlString(toDate),
+              location
+            ])
+            );
+  if LowerCase(result) <> 'success' then
+    raise Exception.Create('Error message from Hagstofa: ' + #10#10 + result);
 end;
 
 function TConnectionsStatisticsService.GetSettings: String;

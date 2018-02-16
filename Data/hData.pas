@@ -1150,6 +1150,7 @@ type
     color: string;
     PriorityRule: string;
     location : string;
+    AccommodationType : String;
   end;
 
   recRoomTypeGroupHolder = record
@@ -10048,7 +10049,8 @@ begin
     RoomTypeGroup := '';
     color := '';
     PriorityRule := '';
-    Roomtype := '';
+    location := '';
+    AccommodationType := 'ROOM';
   end;
 end;
 
@@ -10081,6 +10083,7 @@ begin
   s := s + '   ,color =' + _db(theData.color) + ' ' + #10;
   s := s + '   ,PriorityRule =' + _db(theData.PriorityRule) + ' ' + #10;
   s := s + '   ,location =' + _db(theData.location) + ' ' + #10;
+  s := s + '   ,AccommodationType =' + _db(theData.AccommodationType) + ' ' + #10;
   s := s + ' WHERE ' + #10;
   s := s + '   (ID = ' + _db(theData.id) + ') ';
   result := cmd_bySQL(s);
@@ -10103,6 +10106,7 @@ begin
   s := s + '  ,color ' + #10;
   s := s + '  ,PriorityRule ' + #10;
   s := s + '  ,location ' + #10;
+  s := s + '  ,AccommodationType ' + #10;
   s := s + '   ) ' + #10;
   s := s + '    VALUES ' + #10;
   s := s + '   ( ' + #10;
@@ -10116,6 +10120,7 @@ begin
   s := s + '   ,' + _db(theData.color) + ' ' + #10;
   s := s + '   ,' + _db(theData.PriorityRule) + ' ' + #10;
   s := s + '   ,' + _db(theData.location) + ' ' + #10;
+  s := s + '   ,' + _db(theData.AccommodationType) + ' ' + #10;
   s := s + '   )';
   result := cmd_bySQL(s);
   if result then

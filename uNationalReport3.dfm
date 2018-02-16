@@ -32,7 +32,7 @@ object frmNationalReport3: TfrmNationalReport3
     Top = 117
     Width = 1079
     Height = 479
-    ActivePage = sheetNationalStatistics1
+    ActivePage = cxTabSheet1
     Align = alClient
     Style = tsButtons
     TabHeight = 25
@@ -42,10 +42,6 @@ object frmNationalReport3: TfrmNationalReport3
     object sheetNationalStatistics1: TsTabSheet
       Caption = 'Room Nights'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel2: TsPanel
         Left = 0
         Top = 0
@@ -92,6 +88,7 @@ object frmNationalReport3: TfrmNationalReport3
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 41
         object tvNationalStatistics1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -198,6 +195,17 @@ object frmNationalReport3: TfrmNationalReport3
             Caption = 'Rooms'
             DataBinding.FieldName = 'RoomReservationCount'
           end
+          object tvNationalStatistics1LeisureCount: TcxGridDBColumn
+            Caption = 'Leisure'
+            DataBinding.FieldName = 'LeisureCount'
+          end
+          object tvNationalStatistics1BusinessCount: TcxGridDBColumn
+            Caption = 'Business'
+            DataBinding.FieldName = 'BusinessCount'
+          end
+          object tvNationalStatistics1ConferenceCount: TcxGridDBColumn
+            DataBinding.FieldName = 'ConferenceCount'
+          end
         end
         object levNationalStatistics1: TcxGridLevel
           GridView = tvNationalStatistics1
@@ -207,10 +215,6 @@ object frmNationalReport3: TfrmNationalReport3
     object cxTabSheet1: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel5: TsPanel
         Left = 0
         Top = 0
@@ -287,6 +291,32 @@ object frmNationalReport3: TfrmNationalReport3
           OnClick = cxButton1Click
           SkinData.SkinSection = 'BUTTON'
         end
+        object cbxMarket: TsComboBox
+          AlignWithMargins = True
+          Left = 406
+          Top = 4
+          Width = 163
+          Height = 37
+          Align = alLeft
+          Alignment = taLeftJustify
+          VerticalAlignment = taAlignTop
+          Style = csDropDownList
+          Color = 16250871
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -24
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = 0
+          ParentFont = False
+          TabOrder = 5
+          Text = 'Leisure'
+          OnCloseUp = cbxMarketCloseUp
+          Items.Strings = (
+            'Leisure'
+            'Business'
+            'Conference')
+        end
       end
       object grAllGuests: TcxGrid
         Left = 0
@@ -296,6 +326,8 @@ object frmNationalReport3: TfrmNationalReport3
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = 1
+        ExplicitTop = 41
         object tvAllGuests: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -433,6 +465,9 @@ object frmNationalReport3: TfrmNationalReport3
           object tvAllGuestsNoRoom: TcxGridDBColumn
             DataBinding.FieldName = 'NoRoom'
           end
+          object tvAllGuestsMarket: TcxGridDBColumn
+            DataBinding.FieldName = 'Market'
+          end
         end
         object lvAllGuests: TcxGridLevel
           GridView = tvAllGuests
@@ -476,12 +511,12 @@ object frmNationalReport3: TfrmNationalReport3
       Height = 13
       Caption = 'All'
     end
-    object cxGroupBox1: TsGroupBox
-      Left = 10
+    object gbDates: TsGroupBox
+      Left = 5
       Top = 3
       Width = 148
       Height = 78
-      Caption = 'Select dates'
+      Caption = 'Dates'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -508,6 +543,7 @@ object frmNationalReport3: TfrmNationalReport3
         Font.Style = []
         MaxLength = 10
         ParentFont = False
+        ReadOnly = True
         TabOrder = 0
         Text = '  -  -    '
         OnChange = dtDateFromChange
@@ -533,6 +569,7 @@ object frmNationalReport3: TfrmNationalReport3
         Font.Style = []
         MaxLength = 10
         ParentFont = False
+        ReadOnly = True
         TabOrder = 1
         Text = '  -  -    '
         OnChange = dtDateFromChange
@@ -542,10 +579,10 @@ object frmNationalReport3: TfrmNationalReport3
       end
     end
     object cxGroupBox2: TsGroupBox
-      Left = 165
+      Left = 158
       Top = 3
       Width = 151
-      Height = 76
+      Height = 78
       Caption = '.. or select month'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -637,9 +674,9 @@ object frmNationalReport3: TfrmNationalReport3
       end
     end
     object btnRefresh: TsButton
-      Left = 322
+      Left = 315
       Top = 10
-      Width = 122
+      Width = 134
       Height = 37
       Caption = 'Refresh'
       Default = True
@@ -963,7 +1000,7 @@ object frmNationalReport3: TfrmNationalReport3
           Width = 63
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Conferance :'
+          Caption = 'Conference :'
           ParentFont = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -973,7 +1010,7 @@ object frmNationalReport3: TfrmNationalReport3
         end
         object sLabel3: TsLabel
           Left = 485
-          Top = 69
+          Top = 68
           Width = 48
           Height = 13
           Alignment = taRightJustify
@@ -1031,67 +1068,76 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object edPrivate: TsSpinEdit
-          Left = 535
+        object edPrivate: TsEdit
+          Left = 537
           Top = 21
-          Width = 63
+          Width = 51
           Height = 21
+          Alignment = taRightJustify
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          NumbersOnly = True
           ParentFont = False
+          ReadOnly = True
           TabOrder = 0
-          OnChange = edPrivateChange
-          SkinData.SkinSection = 'EDIT'
-          MaxValue = 999999999
-          MinValue = 0
-          Value = 0
+          Text = '0'
+          OnChange = edBusinessChange
         end
-        object edConfress: TsSpinEdit
-          Left = 535
+        object edConference: TsEdit
+          Left = 537
           Top = 43
-          Width = 63
+          Width = 51
           Height = 21
+          Alignment = taRightJustify
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          NumbersOnly = True
           ParentFont = False
+          ReadOnly = True
           TabOrder = 1
-          OnChange = edPrivateChange
-          SkinData.SkinSection = 'EDIT'
-          MaxValue = 999999999
-          MinValue = 0
-          Value = 0
+          Text = '0'
+          OnChange = edBusinessChange
         end
-        object edBuisiness: TsSpinEdit
-          Left = 535
+        object edBusiness: TsEdit
+          Left = 537
           Top = 65
-          Width = 63
+          Width = 51
           Height = 21
+          Alignment = taRightJustify
           Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          NumbersOnly = True
           ParentFont = False
+          ReadOnly = True
           TabOrder = 2
-          OnChange = edPrivateChange
-          SkinData.SkinSection = 'EDIT'
-          MaxValue = 999999999
-          MinValue = 0
-          Value = 0
+          Text = '0'
+          OnChange = edBusinessChange
         end
       end
+    end
+    object PostToHagstofa: TsButton
+      Left = 315
+      Top = 75
+      Width = 134
+      Height = 37
+      Caption = 'Senda til Hagstofu'
+      Enabled = False
+      ImageIndex = 28
+      Images = DImages.PngImageList1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+      OnClick = PostToHagstofaClick
+      SkinData.SkinSection = 'BUTTON'
     end
   end
   object mHagstofa1: TdxMemData
@@ -1140,6 +1186,15 @@ object frmNationalReport3: TfrmNationalReport3
     object mHagstofa1RoomReservationCount: TIntegerField
       FieldName = 'RoomReservationCount'
     end
+    object mHagstofa1LeisureCount: TIntegerField
+      FieldName = 'LeisureCount'
+    end
+    object mHagstofa1BusinessCount: TIntegerField
+      FieldName = 'BusinessCount'
+    end
+    object mHagstofa1ConferenceCount: TIntegerField
+      FieldName = 'ConferenceCount'
+    end
   end
   object mHagstofaDS: TDataSource
     DataSet = mHagstofa1
@@ -1180,8 +1235,8 @@ object frmNationalReport3: TfrmNationalReport3
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 424
-    Top = 200
+    Left = 400
+    Top = 176
     object mnuThisRoom: TMenuItem
       Caption = 'Closed this Room'
     end
@@ -1202,6 +1257,7 @@ object frmNationalReport3: TfrmNationalReport3
         SortOptions = []
       end>
     SortOptions = []
+    AfterScroll = mAllGuestsAfterScroll
     Left = 208
     Top = 456
     object mAllGuestsReservation: TIntegerField
@@ -1264,6 +1320,10 @@ object frmNationalReport3: TfrmNationalReport3
     object mAllGuestsRoomType: TWideStringField
       FieldName = 'RoomType'
       Size = 10
+    end
+    object mAllGuestsMarket: TWideStringField
+      FieldName = 'Market'
+      Size = 25
     end
   end
   object mAllGuests2DS: TDataSource

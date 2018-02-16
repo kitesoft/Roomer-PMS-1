@@ -1,44 +1,46 @@
 inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
+  BorderStyle = bsSizeable
   Caption = 'Statistical connections'
-  ClientHeight = 458
-  ClientWidth = 781
+  ClientHeight = 516
+  ClientWidth = 771
   ParentFont = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   ExplicitWidth = 787
-  ExplicitHeight = 487
+  ExplicitHeight = 555
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 438
-    Width = 781
-    ExplicitTop = 438
-    ExplicitWidth = 781
+    Top = 496
+    Width = 771
+    ExplicitTop = 496
+    ExplicitWidth = 771
   end
   inherited pnlButtons: TsPanel
-    Top = 395
-    Width = 781
+    Top = 453
+    Width = 771
     ParentFont = False
-    ExplicitTop = 395
-    ExplicitWidth = 781
+    ExplicitTop = 453
+    ExplicitWidth = 771
     inherited btnOK: TsButton
-      Left = 465
+      Left = 455
       OnClick = btnOKClick
-      ExplicitLeft = 465
+      ExplicitLeft = 455
     end
     inherited btnCancel: TsButton
-      Left = 571
-      ExplicitLeft = 571
+      Left = 561
+      ExplicitLeft = 561
     end
     inherited btnClose: TsButton
-      Left = 677
-      ExplicitLeft = 677
+      Left = 667
+      ExplicitLeft = 667
     end
   end
-  object sPageControl1: TsPageControl [2]
+  object pcPages: TsPageControl [2]
     Left = 0
     Top = 0
-    Width = 781
-    Height = 395
+    Width = 771
+    Height = 453
     ActivePage = tsSnapshot
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
@@ -54,7 +56,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 767
+        Width = 757
         Height = 199
         Align = alTop
         Caption = 'Connection settings'
@@ -222,7 +224,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         AlignWithMargins = True
         Left = 3
         Top = 208
-        Width = 767
+        Width = 757
         Height = 121
         Align = alTop
         Caption = 'Actions'
@@ -255,6 +257,314 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
           Enabled = False
           TabOrder = 1
           OnClick = btnForceIncrementalClick
+        end
+      end
+    end
+    object tsHagstofan: TsTabSheet
+      Caption = 'Hagstofan'
+      object sGroupBox1: TsGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 757
+        Height = 416
+        Align = alClient
+        Caption = 'Connection settings'
+        Color = clBtnFace
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 0
+        SkinData.SkinSection = 'PANEL'
+        object lbHsId: TsLabel
+          Left = 105
+          Top = 163
+          Width = 81
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'ID at Hagstofan:'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lbHsKennitala: TsLabel
+          Left = 94
+          Top = 190
+          Width = 92
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Civil ID (Kennitala):'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lbHsName: TsLabel
+          Left = 155
+          Top = 219
+          Width = 31
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Name:'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lbHsEmail: TsLabel
+          Left = 158
+          Top = 249
+          Width = 28
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Email:'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lbHsAddress: TsLabel
+          Left = 143
+          Top = 280
+          Width = 43
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Address:'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lbHsPostCode: TsLabel
+          Left = 135
+          Top = 340
+          Width = 51
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Post code:'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lbHsTelephone: TsLabel
+          Left = 132
+          Top = 370
+          Width = 54
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Telephone:'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lbHsHomepage: TsLabel
+          Left = 131
+          Top = 400
+          Width = 55
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Homepage:'
+          Enabled = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object sLabel1: TsLabel
+          Left = 32
+          Top = 32
+          Width = 449
+          Height = 73
+          AutoSize = False
+          Caption = 
+            'This allows you to connect your hotel to the Icelandic "Bureau O' +
+            'f Statistics, BOS" (Hagstofa '#205'slands).'#13#10'Please make sure to prov' +
+            'ide the correct information. '#13#10'All information will be validated' +
+            ' by the BOS.'
+          WordWrap = True
+        end
+        object cbxHsActive: TsCheckBox
+          Left = 198
+          Top = 124
+          Width = 58
+          Height = 17
+          Caption = 'Active'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnClick = cbxHsActiveClick
+          ImgChecked = 0
+          ImgUnchecked = 0
+        end
+        object edHsId: TsEdit
+          Left = 200
+          Top = 160
+          Width = 505
+          Height = 21
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+        end
+        object edHsKennitala: TsEdit
+          Left = 200
+          Top = 187
+          Width = 505
+          Height = 21
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 2
+        end
+        object edHsName: TsEdit
+          Left = 200
+          Top = 214
+          Width = 505
+          Height = 24
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 3
+        end
+        object edHsEmail: TsEdit
+          Left = 200
+          Top = 244
+          Width = 505
+          Height = 24
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 4
+        end
+        object edHsAddress1: TsEdit
+          Left = 200
+          Top = 274
+          Width = 505
+          Height = 24
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 5
+        end
+        object edHsAddress2: TsEdit
+          Left = 200
+          Top = 304
+          Width = 505
+          Height = 24
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 6
+        end
+        object edHsPostCode: TsEdit
+          Left = 200
+          Top = 334
+          Width = 53
+          Height = 24
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxLength = 3
+          ParentFont = False
+          TabOrder = 7
+        end
+        object edHsTelephone: TsEdit
+          Left = 200
+          Top = 364
+          Width = 505
+          Height = 24
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 8
+        end
+        object edHsHomepage: TsEdit
+          Left = 200
+          Top = 394
+          Width = 505
+          Height = 24
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 9
         end
       end
     end

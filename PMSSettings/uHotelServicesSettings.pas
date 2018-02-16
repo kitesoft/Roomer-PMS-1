@@ -26,6 +26,59 @@ type
     destructor Destroy; override;
   end;
 
+
+  THagstofaSettings = class(TBaseHotelServicesSettings)
+  private const
+    cHagstofaService = 'NATIONSTAT';
+    cHagstofaServiceType = 'HAGSTOFAN';
+
+    cHAGSTOFA_ID = 'HAGSTOFA_ID';
+    cCIVIL_ID = 'CIVIL_ID';
+    cLOCATION = 'LOCATION';
+    cNAME = 'NAME';
+    cEMAIL = 'EMAIL';
+    cTELEPHONE = 'TELEPHONE';
+    cPOSTCODE = 'POSTCODE';
+    cHOMEPAGE = 'HOMEPAGE';
+    cADDRESS01 = 'ADDRESS01';
+    cADDRESS02 = 'ADDRESS02';
+  private
+    function GetAddress01: string;
+    function GetAddress02: string;
+    function GetCivilId: string;
+    function GetEmail: string;
+    function GetHagstofaEnabled: boolean;
+    function GetHagstofaId: String;
+    function GetHomepage: string;
+    function GetLocation: string;
+    function GetName: string;
+    function GetPostcode: string;
+    function GetTelephone: string;
+    procedure SetAddress01(const Value: string);
+    procedure SetAddress02(const Value: string);
+    procedure SetCivilId(const Value: string);
+    procedure SetEmail(const Value: string);
+    procedure SetHagstofaEnabled(const Value: boolean);
+    procedure SetHagstofaId(const Value: String);
+    procedure SetHomepage(const Value: string);
+    procedure SetLocation(const Value: string);
+    procedure SetName(const Value: string);
+    procedure SetPostcode(const Value: string);
+    procedure SetTelephone(const Value: string);
+  public
+    property HagstofaEnabled: boolean read GetHagstofaEnabled write SetHagstofaEnabled;
+    property HagstofaId: String read GetHagstofaId write SetHagstofaId;
+    property CivilId: string read GetCivilId write SetCivilId;
+    property Location: string read GetLocation write SetLocation;
+    property Name: string read GetName write SetName;
+    property Email: string read GetEmail write SetEmail;
+    property Telephone: string read GetTelephone write SetTelephone;
+    property Postcode: string read GetPostcode write SetPostcode;
+    property Homepage: string read GetHomepage write SetHomepage;
+    property Address01: string read GetAddress01 write SetAddress01;
+    property Address02: string read GetAddress02 write SetAddress02;
+  end;
+
   TPreArrivalLCMailSettings = class(TBaseHotelServicesSettings)
   private const
     cLifeCycleMailerService = 'LCMAIL';
@@ -138,11 +191,13 @@ type
   private
     FLifeCycleMailerSettings: TLifeCycleMailerSettings;
     FSmtpServiceSetting: TSmtpServiceSettings;
+    FHagstofaServiceSettings: THagstofaSettings;
   public
     constructor Create;
     destructor Destroy; override;
     property LifeCycleMailerSettings: TLifeCycleMailerSettings read FLifeCycleMailerSettings;
     property SmtpServiceSettings: TSmtpServiceSettings read FSmtpServiceSetting;
+    property HagstofaServiceSettings: THagstofaSettings read FHagstofaServiceSettings;
   end;
 
 
@@ -263,12 +318,15 @@ constructor THotelServicesSettings.Create;
 begin
   FLifeCycleMailerSettings := TLifeCycleMailerSettings.Create;
   FSmtpServiceSetting := TSmtpServiceSettings.Create;
+  FHagstofaServiceSettings := THagstofaSettings.Create;
 end;
 
 destructor THotelServicesSettings.Destroy;
 begin
   FLifeCycleMailerSettings.Free;
   FSmtpServiceSetting.Free;
+  FHagstofaServiceSettings.Free;
+
   inherited;
 end;
 
@@ -378,6 +436,118 @@ end;
 procedure TSmtpServiceSettings.SetSmtpUsername(const Value: String);
 begin
   FHotelServicesAccessor.SetServiceSettingAsString(cSmtpService, cSmtpServiceType, cSmtpUsername, Value);
+end;
+
+{ THagstofaSettings }
+
+function THagstofaSettings.GetAddress01: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cADDRESS01);
+end;
+
+function THagstofaSettings.GetAddress02: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cADDRESS02);
+end;
+
+function THagstofaSettings.GetCivilId: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cCIVIL_ID);
+end;
+
+function THagstofaSettings.GetEmail: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cEMAIL);
+end;
+
+function THagstofaSettings.GetHagstofaEnabled: boolean;
+begin
+  Result := FHotelServicesAccessor.GetServiceEnabled(cHagstofaService, cHagstofaServiceType);
+end;
+
+function THagstofaSettings.GetHagstofaId: String;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cHAGSTOFA_ID);
+end;
+
+function THagstofaSettings.GetHomepage: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cHOMEPAGE);
+end;
+
+function THagstofaSettings.GetLocation: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cLOCATION);
+end;
+
+function THagstofaSettings.GetName: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cNAME);
+end;
+
+function THagstofaSettings.GetPostcode: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cPOSTCODE);
+end;
+
+function THagstofaSettings.GetTelephone: string;
+begin
+  Result := FHotelServicesAccessor.GetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cTELEPHONE);
+end;
+
+procedure THagstofaSettings.SetAddress01(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cADDRESS01, value);
+end;
+
+procedure THagstofaSettings.SetAddress02(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cADDRESS02, value);
+end;
+
+procedure THagstofaSettings.SetCivilId(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cCIVIL_ID, value);
+end;
+
+procedure THagstofaSettings.SetEmail(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cEMAIL, value);
+end;
+
+procedure THagstofaSettings.SetHagstofaEnabled(const Value: boolean);
+begin
+  FHotelServicesAccessor.SetServiceEnabled(cHagstofaService, cHagstofaServiceType, Value);
+end;
+
+procedure THagstofaSettings.SetHagstofaId(const Value: String);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cHAGSTOFA_ID, value);
+end;
+
+procedure THagstofaSettings.SetHomepage(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cHOMEPAGE, value);
+end;
+
+procedure THagstofaSettings.SetLocation(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cLOCATION, value);
+end;
+
+procedure THagstofaSettings.SetName(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cNAME, value);
+end;
+
+procedure THagstofaSettings.SetPostcode(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cPOSTCODE, value);
+end;
+
+procedure THagstofaSettings.SetTelephone(const Value: string);
+begin
+  FHotelServicesAccessor.SetServiceSettingAsString(cHagstofaService, cHagstofaServiceType, cTELEPHONE, value);
 end;
 
 end.

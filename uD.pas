@@ -674,6 +674,7 @@ type
     procedure TurnoverAndPayemnetsClearAllData(justClose: boolean);
 
     function ChangeNationality(newCountry: string; reservation, RoomReservation, Person, Medhod: Integer): boolean;
+    function ChangeMarketType(newMarketType: string; reservation: Integer): boolean;
     function getCurrencyProperties(Currency: String): TcxCustomEditProperties;
     procedure AddOrCreateToPackage(pckTotalsList: TRoomPackageLineEntryList;
       Code: String;
@@ -5562,6 +5563,25 @@ begin
     begin
       result := False;
     end;
+  end;
+end;
+
+function Td.ChangeMarketType(newMarketType: string; reservation: Integer): boolean;
+var
+  s: string;
+begin
+  result := False;
+
+  if reservation < 1 then
+    exit;
+  result := True;
+  s := '';
+  s := s + ' UPDATE reservations ' + chr(10);
+  s := s + ' Set Market=' + _db(newMarketType) + ' ' + chr(10);
+  s := s + ' WHERE (Reservation = ' + inttostr(reservation) + ') ' + chr(10);
+  if not cmd_bySQL(s) then
+  begin
+    result := False;
   end;
 end;
 

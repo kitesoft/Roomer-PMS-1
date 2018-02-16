@@ -59,7 +59,7 @@ type
     pageMain: TsPageControl;
     dxStatusBar1 : TdxStatusBar;
     Panel3: TsPanel;
-    cxGroupBox1: TsGroupBox;
+    gbDates: TsGroupBox;
     dtDateFrom: TsDateEdit;
     dtDateTo: TsDateEdit;
     cxGroupBox2: TsGroupBox;
@@ -241,12 +241,9 @@ type
     tvNationalStatistics1ReservationCount: TcxGridDBColumn;
     mHagstofa1RoomReservationCount: TIntegerField;
     tvNationalStatistics1RoomReservationCount: TcxGridDBColumn;
-    edPrivate: TsSpinEdit;
     sLabel1: TsLabel;
     sLabel2: TsLabel;
-    edConfress: TsSpinEdit;
     sLabel3: TsLabel;
-    edBuisiness: TsSpinEdit;
     sLabel4: TsLabel;
     LabTotalVisitType: TsLabel;
     sLabel6: TsLabel;
@@ -261,6 +258,19 @@ type
     FormStore: TcxPropertiesStore;
     labLocations: TsLabel;
     labLocationsList: TsLabel;
+    mHagstofa1LeisureCount: TIntegerField;
+    tvNationalStatistics1LeisureCount: TcxGridDBColumn;
+    tvNationalStatistics1BusinessCount: TcxGridDBColumn;
+    tvNationalStatistics1ConferenceCount: TcxGridDBColumn;
+    mHagstofa1BusinessCount: TIntegerField;
+    mHagstofa1ConferenceCount: TIntegerField;
+    cbxMarket: TsComboBox;
+    mAllGuestsMarket: TWideStringField;
+    tvAllGuestsMarket: TcxGridDBColumn;
+    edPrivate: TsEdit;
+    edConference: TsEdit;
+    edBusiness: TsEdit;
+    PostToHagstofa: TsButton;
     procedure FormShow(Sender : TObject);
     procedure cbxMonthPropertiesCloseUp(Sender : TObject);
     procedure btnRefreshClick(Sender : TObject);
@@ -277,8 +287,11 @@ type
     procedure ppHeaderBand1BeforePrint(Sender: TObject);
     procedure ppSummaryBand1BeforePrint(Sender: TObject);
     procedure cxButton1Click(Sender: TObject);
-    procedure edPrivateChange(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure mAllGuestsAfterScroll(DataSet: TDataSet);
+    procedure cbxMarketCloseUp(Sender: TObject);
+    procedure edBusinessChange(Sender: TObject);
+    procedure PostToHagstofaClick(Sender: TObject);
   private
     { Private declarations }
     zDateFrom : Tdate;
@@ -324,6 +337,7 @@ uses
     UITypes
   , uD
   , uReservationProfile
+  , uMarketDefinitions
   , uFinishedInvoices2
   , uRptbViewer
   , uStringUtils
@@ -336,6 +350,7 @@ uses
   , uMain
   , uSQLUtils
   , uRoomerLanguage
+  , uConnectionsStatisticsService
   ;
 
 {$R *.dfm}
@@ -356,6 +371,33 @@ begin
     updateSums;
   finally
     freeandNil(rrList);
+  end;
+end;
+
+procedure TfrmNationalReport3.mAllGuestsAfterScroll(DataSet: TDataSet);
+begin
+  cbxMarket.ItemIndex := -1;
+  if NOT (DataSet.Eof OR DataSet.Bof) then
+  begin
+    if DataSet['Market'] = 'LEISURE' then
+       cbxMarket.ItemIndex := 0
+    else
+    if DataSet['Market'] = 'BUSINESS' then
+       cbxMarket.ItemIndex := 1
+    else
+    if DataSet['Market'] = 'CONFERENCE' then
+       cbxMarket.ItemIndex := 2
+  end;
+end;
+
+procedure TfrmNationalReport3.PostToHagstofaClick(Sender: TObject);
+var ConnectionsStatisticsService : TConnectionsStatisticsService;
+begin
+  ConnectionsStatisticsService := TConnectionsStatisticsService.Create('');
+  try
+    ConnectionsStatisticsService.sendToHagstofa(zDateFrom, zDateTo, '');
+  finally
+    ConnectionsStatisticsService.Free;
   end;
 end;
 
@@ -405,15 +447,9 @@ begin
   labTotalBedCount.Caption := inttostr(totalBedCount);
   labTotalRoomCount.Caption := inttostr(totalRoomCount);
 
-  try
-    rLabPrivate.caption := inttostr(edPrivate.Value);
-    rLabConfress.caption := inttostr(edConfress.Value);
-    rLabBusiness.caption := inttostr(edBuisiness.Value);
-  Except
-    rLabBusiness.caption := '0';
-    rLabConfress.caption := '0';
-    rLabPrivate.caption  := '0';
-  end;
+  rLabPrivate.caption := edPrivate.Text;
+  rLabConfress.caption := edConference.Text;
+  rLabBusiness.caption := edBusiness.Text;
 end;
 
 procedure TfrmNationalReport3.getRoomInfo;
@@ -486,6 +522,7 @@ end;
 
 procedure TfrmNationalReport3.btnRefreshClick(Sender : TObject);
 begin
+  cbxMarket.ItemIndex := -1;
   getGuests;
   getAllGuests;
 end;
@@ -509,7 +546,10 @@ var
   GuestNights   : integer;
   CountryGroup  : string;
   GroupName     : string;
-  GuestCount        : integer;
+  GuestCount      : integer;
+  LeisureCount    : integer;
+  BusinessCount   : integer;
+  ConferenceCount : integer;
 
   ReservationCount : integer;
   RoomReservationCount : integer;
@@ -517,6 +557,10 @@ var
   OrderIndex : integer;
 
 begin
+  edPrivate.Text := '0';
+  edConference.Text := '0';
+  edBusiness.Text := '0';
+
   zDayCount := (trunc(zDateTo)-trunc(zDateFrom))+1;
   updateSums;
   zRoomReservationsList := getRoomReservationsList;
@@ -537,7 +581,10 @@ begin
   'COUNT(DISTINCT persons.RoomReservation) AS RoomReservationCount, '#10+
   'COUNT(persons.ID) AS GuestNights, '#10+
   'COUNT(DISTINCT persons.ID) AS GuestCount, '#10+
-  'COUNT(DISTINCT persons.Reservation) AS ReservationCount '#10+
+  'COUNT(DISTINCT persons.Reservation) AS ReservationCount, '#10+
+  'SUM(IF(ISNULL(reservations.market) OR reservations.market=''LEISURE'', 1, 0)) AS LeisureCount, '#10+
+  'SUM(IF(reservations.market=''BUSINESS'', 1, 0)) AS BusinessCount, '#10+
+  'SUM(IF(reservations.market=''CONFERENCE'', 1, 0)) AS ConferenceCount '#10+
   'FROM '#10+
   '  countries '#10+
   '    INNER JOIN countrygroups ON countries.countrygroup = countrygroups.CountryGroup '#10+
@@ -564,6 +611,14 @@ begin
       s := format(s, [_db(zDateFrom, True), _db(zDateTo, True), zRoomReservationsList]);
       CopyToCLipboard(s);
       hData.rSet_bySQL(rSet,s);
+      While NOT rSet.Eof do
+      begin
+        edPrivate.Text := IntToStr(StrToInt(edPrivate.Text) + rSet.FieldByName('LeisureCount').AsInteger);
+        edConference.Text := IntToStr(StrToInt(edConference.Text) + rSet.FieldByName('ConferenceCount').AsInteger);
+        edBusiness.Text := IntToStr(StrToInt(edBusiness.Text) + rSet.FieldByName('BusinessCount').AsInteger);
+        rSet.Next;
+      end;
+      rSet.First;
       if mNationalStatistics.Active then mNationalStatistics.Close;
       mNationalStatistics.open;
       mNationalStatistics.LoadFromDataSet(rSet);
@@ -575,6 +630,9 @@ begin
 
       totalnights := 0;
       totalGuests := 0;
+
+      PostToHagstofa.Hint := '';
+      PostToHagstofa.Enabled := NOT rSet.Eof;
       while not rSet.Eof do
       begin
         country              := rSet.FieldByName('Country').AsString;
@@ -586,6 +644,16 @@ begin
         GuestCount           := rSEt.FieldByName('GuestCount').AsInteger;;
         GuestNights          := rSEt.FieldByName('GuestNights').AsInteger;
         Orderindex           := rSEt.FieldByName('orderIndex').AsInteger;
+        LeisureCount         := rSEt.FieldByName('LeisureCount').AsInteger;
+        BusinessCount        := rSEt.FieldByName('BusinessCount').AsInteger;
+        ConferenceCount      := rSEt.FieldByName('ConferenceCount').AsInteger;
+
+        if country = '00' then
+        begin
+          PostToHagstofa.Hint := GetTranslatedText('shTx_NationalReport_InknownCountries');
+          PostToHagstofa.Enabled := False;
+        end;
+
 
         totalNights := TotalNights+Guestnights;
         totalGuests := TotalGuests+guestCount;
@@ -600,6 +668,9 @@ begin
         mHagstofa1.fieldbyname('Guests').AsInteger               :=  GuestCount;
         mHagstofa1.fieldbyname('Nights').AsInteger               :=  GuestNights;
         mHagstofa1.FieldByName('OrderIndex').AsInteger           :=  OrderIndex;
+        mHagstofa1.FieldByName('LeisureCount').AsInteger         :=  LeisureCount;
+        mHagstofa1.FieldByName('BusinessCount').AsInteger        :=  BusinessCount;
+        mHagstofa1.FieldByName('ConferenceCount').AsInteger      :=  ConferenceCount;
         mHagstofa1.post;
         rSet.Next;
       end;
@@ -670,6 +741,7 @@ begin
     '   , roomreservations.rrIsNoRoom as NoRoom'#10+
     '   , reservations.Name AS ReservationsName '#10+
     '   , reservations.Country AS ReservationCountry '#10+
+    '   , reservations.Market AS Market '#10+
     ' FROM '#10+
     '   countries '#10+
     '     RIGHT OUTER JOIN '#10+
@@ -755,6 +827,52 @@ begin
   end;
 end;
 
+
+procedure TfrmNationalReport3.cbxMarketCloseUp(Sender: TObject);
+var s : String;
+    newMarket,
+    oldMarket : String;
+    iReservation : Integer;
+begin
+  if NOT (mAllGuests.Eof OR mAllGuests.Bof) then
+
+    oldMarket := mAllGuests['Market'];
+    newMarket := TReservationMarketType.fromItemIndex(cbxMarket.ItemIndex).ToDBString;
+	  S := format(GetTranslatedText('shTx_NationalReport_ChangeMarketFromTo'),
+              [
+                mAllGuests.FieldByName('GuestGroupName').AsString,
+                TReservationMarketType.FromDBString(oldMarket, TReservationMarketType.mtLeisure).AsReadableString,
+                cbxMarket.Text
+              ]
+              );
+
+    if MessageDlg(S, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      iReservation := mAllGuests.FieldByName('Reservation').AsInteger;
+      if not d.ChangeMarketType(newMarket, iReservation) then
+      begin
+        showmessage(GetTranslatedText('shTx_NationalReport_NoChangeMarket'));
+      end else
+      begin
+        mAllGuests.AfterScroll := nil;
+        mAllGuests.DisableControls;
+        mHagstofa1.DisableControls;
+        mNationalStatistics.DisableControls;
+        try
+          getGuests;
+          getAllGuests;
+          if mAllGuests.Locate('Reservation',iReservation,[]) then
+          begin
+          end;
+        finally
+          mAllGuests.AfterScroll := mAllGuestsAfterScroll;
+          mAllGuests.EnableControls;
+          mHagstofa1.EnableControls;
+          mNationalStatistics.EnableControls;
+        end;
+      end;
+    end;
+end;
 
 procedure TfrmNationalReport3.cbxMonthPropertiesCloseUp(Sender : TObject);
 var
@@ -873,12 +991,13 @@ begin
   end;
 end;
 
-procedure TfrmNationalReport3.edPrivateChange(Sender: TObject);
-var
-  i : integer;
+procedure TfrmNationalReport3.edBusinessChange(Sender: TObject);
 begin
-  i := edPrivate.Value+edBuisiness.value+edConfress.value;
-  LabTotalVisitType.caption := inttostr(i);
+  LabTotalVisitType.Caption := IntToStr(
+                                StrToInt(edPrivate.Text) +
+                                StrToInt(edConference.Text) +
+                                StrToInt(edBusiness.Text)
+                                );
 end;
 
 procedure TfrmNationalReport3.FormClose(Sender : TObject; var Action : TCloseAction);
@@ -941,6 +1060,7 @@ end;
 
 procedure TfrmNationalReport3.FormShow(Sender : TObject);
 begin
+  TReservationMarketType.AsStrings(cbxMarket.Items);
   ShowData;
 end;
 
@@ -1024,13 +1144,24 @@ begin
       if not d.ChangeNationality(newCountry, iReservation, 0, 0, 2) then
       begin
         showmessage(GetTranslatedText('shTx_NationalReport_NoChangeCountry'));
-      end;
-    end else
-    begin
-      getGuests;
-      getAllGuests;
-      if mAllGuests.Locate('Reservation',iReservation,[]) then
+      end else
       begin
+        mAllGuests.AfterScroll := nil;
+        mAllGuests.DisableControls;
+        mHagstofa1.DisableControls;
+        mNationalStatistics.DisableControls;
+        try
+          getGuests;
+          getAllGuests;
+          if mAllGuests.Locate('Reservation',iReservation,[]) then
+          begin
+          end;
+        finally
+          mAllGuests.AfterScroll := mAllGuestsAfterScroll;
+          mAllGuests.EnableControls;
+          mHagstofa1.EnableControls;
+          mNationalStatistics.EnableControls;
+        end;
       end;
     end;
   end;

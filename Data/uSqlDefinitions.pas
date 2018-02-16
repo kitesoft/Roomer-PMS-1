@@ -5033,6 +5033,7 @@ select_roomTypes : string =
 ' ,Active '#10+
 ' ,PriorityRule '#10+
 ' ,location '#10+
+' ,AccommodationType '#10+
 ' FROM '#10+
 '  roomtypes '#10+
 ' ORDER BY '#10+

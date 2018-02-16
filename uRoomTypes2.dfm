@@ -231,6 +231,7 @@ object frmRoomTypes2: TfrmRoomTypes2
         Align = alClient
         TabOrder = 3
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 73
         object tvData: TcxGridDBTableView
           OnDblClick = tvDataDblClick
           Navigator.Buttons.CustomButtons = <>
@@ -353,6 +354,7 @@ object frmRoomTypes2: TfrmRoomTypes2
             Width = 54
           end
           object tvDatalocation: TcxGridDBColumn
+            Caption = 'Location'
             DataBinding.FieldName = 'location'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -362,6 +364,17 @@ object frmRoomTypes2: TfrmRoomTypes2
               end>
             Properties.OnButtonClick = tvDatalocationPropertiesButtonClick
             Width = 70
+          end
+          object tvDataAccommodationType: TcxGridDBColumn
+            Caption = 'Accommodation Type'
+            DataBinding.FieldName = 'AccommodationType'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'ROOM'
+              'APARTMENT'
+              'COTTAGE'
+              'BED')
           end
         end
         object lvData: TcxGridLevel
@@ -428,7 +441,6 @@ object frmRoomTypes2: TfrmRoomTypes2
     Left = 28
     Top = 208
     object prLink_grData: TdxGridReportLink
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -442,7 +454,6 @@ object frmRoomTypes2: TfrmRoomTypes2
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
@@ -495,6 +506,10 @@ object frmRoomTypes2: TfrmRoomTypes2
     object m_location: TStringField
       FieldName = 'location'
       Size = 10
+    end
+    object m_AccommodationType: TStringField
+      FieldName = 'AccommodationType'
+      Size = 25
     end
   end
   object FormStore: TcxPropertiesStore

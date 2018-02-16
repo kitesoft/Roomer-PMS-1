@@ -900,10 +900,15 @@ begin
 //  constants.Add('shTx_ManageFiles_RetrieveList', 'Please first retrieve the list of files to be worked with (ReadFileList)');
   constants.Add('shTx_NationalReport_Created', 'Created : ');
   constants.Add('shTx_NationalReport_User', 'User : ');
+  constants.Add('shTx_NationalReport_InknownCountries', 'There still are unknown nationlities and therefore' + #10 +
+                                                        'Hagstofa will not accept any data.');
   constants.Add('shTx_NationalReport_ChangeNationalityFromTo', 'Change nationality of all guests ' + #10 +
                                       ' from %s to %s ' + #10 +
                                       'Confirm ?');
+  constants.Add('shTx_NationalReport_ChangeMarketFromTo', 'Change the type of market for the selected reservation (%s)' + #10#10 +
+                                      'From %s to %s? ');
   constants.Add('shTx_NationalReport_NoChangeCountry', 'Not able to change country');
+  constants.Add('shTx_NationalReport_NoChangeMarket', 'Not able to change market type');
   constants.Add('shTx_OpenInvoiceNew_NotValidNumber', 'Not Valid Reservation Number');
   constants.Add('shTx_OpenInvoiceNew_Group', 'Group');
   constants.Add('shTx_OpenInvoiceNew_CashInvoice', 'This is a cash invoice');
@@ -1769,6 +1774,7 @@ begin
 
   constants.Add('shTx_MarketType_Business', 'Business');
   constants.Add('shTx_MarketType_Leisure', 'Leisure');
+  constants.Add('shTx_MarketType_Conference', 'Conference');
 
   constants.Add('shExportMenuCaption', 'Export grid to');
   constants.Add('shInvoiceAlreadyCredited', 'Creditinvoice for this invoice already exist with number %d');
