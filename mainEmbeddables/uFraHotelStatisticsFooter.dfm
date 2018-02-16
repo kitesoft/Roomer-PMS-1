@@ -117,7 +117,6 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
       Font.Name = 'Segoe UI'
       Font.Style = []
       UseSkinColor = False
-      ExplicitLeft = 718
       ExplicitHeight = 20
     end
     object edtOccupancy: TsCalcEdit

@@ -1641,7 +1641,10 @@ object frmMain: TfrmMain
                 end
               end
               inherited pnlLeftRooms: TsPanel
+                ExplicitTop = 302
+                ExplicitHeight = 276
                 inherited RoomsChart: TChart
+                  ExplicitHeight = 274
                   PrintMargins = (
                     15
                     19
@@ -1653,6 +1656,7 @@ object frmMain: TfrmMain
             inherited pnlRight: TsPanel
               Width = 804
               Height = 277
+              ExplicitLeft = 407
               ExplicitWidth = 804
               ExplicitHeight = 277
               inherited splRight: TsSplitter
@@ -1661,11 +1665,14 @@ object frmMain: TfrmMain
               end
               inherited pnlRightPropertyStatus: TsPanel
                 Width = 802
+                ExplicitLeft = 1
+                ExplicitTop = 1
                 ExplicitWidth = 802
               end
               inherited pnlRightTodayRates: TsPanel
                 Width = 802
                 Height = 29
+                ExplicitTop = 247
                 ExplicitWidth = 802
                 ExplicitHeight = 29
                 inherited sPanel8: TsPanel
@@ -1675,9 +1682,11 @@ object frmMain: TfrmMain
                 inherited sPanel9: TsPanel
                   Width = 800
                   ExplicitWidth = 800
+                  ExplicitHeight = 297
                   inherited sbRates: TsScrollBox
                     Width = 800
                     ExplicitWidth = 800
+                    ExplicitHeight = 297
                   end
                 end
               end
@@ -2053,6 +2062,8 @@ object frmMain: TfrmMain
             DirectInput = False
             ShowWeeks = True
             PopupWidth = 250
+            ExplicitLeft = 38
+            ExplicitTop = 5
           end
           object pnlStaffComm: TsPanel
             AlignWithMargins = True
@@ -2943,7 +2954,6 @@ object frmMain: TfrmMain
       Font.Name = 'Segoe UI'
       Font.Style = []
       UseSkinColor = False
-      ExplicitLeft = 1388
       ExplicitHeight = 20
     end
     inline fraHotelStats: TfraHotelStatisticsFooter
@@ -2961,14 +2971,14 @@ object frmMain: TfrmMain
       ParentColor = False
       ParentFont = False
       TabOrder = 0
-      ExplicitWidth = 1137
+      ExplicitWidth = 1380
       ExplicitHeight = 30
       inherited pnlStatistics: TsPanel
         Width = 1380
         Height = 30
         SkinData.CustomColor = False
         SkinData.CustomFont = False
-        ExplicitWidth = 1137
+        ExplicitWidth = 1380
         ExplicitHeight = 30
         inherited lblOccupancy: TsLabel
           Height = 22

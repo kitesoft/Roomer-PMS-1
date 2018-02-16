@@ -5,18 +5,13 @@ uses
     cmpRoomerDataset
   , SysUtils
   , uHotelStatistics
+  , Classes
   ;
 
 type
   EMobileAPICallerException = class(Exception);
 
   TBaseMobileAPICaller = class abstract(TObject)
-  const
-    cBaseURI = '/services';
-  protected
-    FLastErrorResponse: string;
-  public
-    property LastErrorResponse: string read FLastErrorResponse;
   end;
 
   THotelStatisticsMobileAPICaller = class(TBaseMobileAPICaller)
@@ -29,14 +24,29 @@ type
     procedure GetHotelStatistics(aFromDate: TDateTime; aToDate: TDateTime; aStatistics: THotelStatisticsList);
   end;
 
+
+  THotelStatisticsNotifyEvent = procedure(aStatistics: THotelStatisticsList) of object;
+  THotelStatisticsMobileAPICallerThreaded = class(THotelStatisticsMobileAPICaller)
+  public
+    /// <summary>
+    ///   Calls GetHotelStatistics in an anonymous thread, on return the aOnCompletionHandler is called in the mainthread with
+    ///   the resulting THotelStatisticsList.
+    ///   Note that the provided List will be destroyed after returning from the call to aOnCompletionHandler
+    /// </summary>
+    class procedure GetHotelStatistics(aFromDate: TDateTime; aToDate: TDateTime; aOnCompletionHandler: THotelStatisticsNotifyEvent);
+  end;
+
 implementation
 
 uses
   uD
   , uDateUtils
-   , XMLIntf
-   , OXmlPDOM
-  , uDateTimeHelper;
+  , XMLIntf
+  , OXmlPDOM
+  , DateUtils
+  , uDateTimeHelper
+  , WinAPI.Windows
+  ;
 
 { THotelStatisticsMobileAPICaller }
 
@@ -57,6 +67,38 @@ begin
   end;
 end;
 
+
+{ THotelStatisticsMobileAPICallerThreaded }
+
+class procedure THotelStatisticsMobileAPICallerThreaded.GetHotelStatistics(aFromDate, aToDate: TDateTime; aOnCompletionHandler: THotelStatisticsNotifyEvent);
+begin
+  TThread.CreateAnonymousThread(
+    procedure ()
+    var
+      lAPI: THotelStatisticsMobileAPICaller;
+      lStatistics: THotelStatisticsList;
+    begin
+      lStatistics := nil;
+      lAPI := THotelStatisticsMobileAPICaller.Create;
+      try
+        lStatistics := THotelStatisticsList.Create;
+        lAPI.GetHotelStatistics(aFromDate, aToDate, lStatistics);
+        if assigned(aOnCompletionHandler) then
+        begin
+          TTHread.Synchronize(TThread.CurrentThread,
+            procedure()
+            begin
+              aOnCompletionHandler(lStatistics);
+            end
+            );
+        end;
+      finally
+        lAPI.Free;
+        lStatistics.Free;
+      end;
+    end
+  ).Start;
+end;
 
 //<ArrayList>
 //   <item>
@@ -131,5 +173,7 @@ end;
 //         </statistics>
 //      </statistics>
 //   </item>
+
+
 
 end.

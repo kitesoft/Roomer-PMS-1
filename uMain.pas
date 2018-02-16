@@ -3954,9 +3954,9 @@ begin
     end;
     frmDateStatistics.Date:= trunc(dtDate.Date);
     frmDateStatistics.RefreshData;
+    fraHotelStats.Date := dtDate.Date;
   finally
     grOneDayRooms.endUpdate;
-    RefreshFooterStats;
   end;
 end;
 

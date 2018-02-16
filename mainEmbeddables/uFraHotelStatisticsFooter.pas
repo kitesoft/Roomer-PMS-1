@@ -24,11 +24,10 @@ type
     lblStatRoomsSold: TsLabel;
     procedure cbxStatDayChange(Sender: TObject);
   private
-    FStats: THotelStatisticsList;
     FDate: TDateTime;
     function GetDate: TDate;
     procedure SetDate(const Value: TDate);
-    procedure UpdateControls;
+    procedure UpdateControlsFromStats(aStats: THotelStatisticsList);
   public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
@@ -51,18 +50,16 @@ uses
 
 procedure TfraHotelStatisticsFooter.cbxStatDayChange(Sender: TObject);
 begin
-  UpdateControls;
+  RefreshStats;
 end;
 
 constructor TfraHotelStatisticsFooter.Create(aOwner: TComponent);
 begin
   inherited;
-  FStats := THotelStatisticsList.Create;
 end;
 
 destructor TfraHotelStatisticsFooter.Destroy;
 begin
-  FStats.Free;
   inherited;
 end;
 
@@ -71,11 +68,11 @@ begin
   Result := FDate;
 end;
 
-procedure TfraHotelStatisticsFooter.UpdateControls;
+procedure TfraHotelStatisticsFooter.UpdateControlsFromStats(aStats: THotelStatisticsList);
 var
   lDayStats: TSingleDateStatistics;
 begin
-  lDayStats := FStats.StatisticsForDate[FDate + cbxStatDay.ItemIndex];
+  lDayStats := aStats.StatisticsForDate[FDate + cbxStatDay.ItemIndex];
   if assigned(lDayStats) then
   begin
     edtOccupancy.Value := lDayStats.Statistic['OCCUPANCY'].Value;
@@ -95,18 +92,9 @@ begin
 end;
 
 procedure TfraHotelStatisticsFooter.RefreshStats;
-var
-  lMobileApi: THotelStatisticsMobileAPICaller;
 begin
-  lMobileApi := THotelStatisticsMobileAPICaller.Create();
-  try
-    lMobileApi.GetHotelStatistics(FDate, FDate.AddDays(1), FStats);
-    UpdateControls;
-  finally
-    lMobileApi.Free;
-  end;
+  THotelStatisticsMobileAPICallerThreaded.GetHotelStatistics(FDate, FDate.AddDays(1), UpdateControlsFromStats);
 end;
-
 
 procedure TfraHotelStatisticsFooter.SetBackgroundColor(aColor: TColor);
 begin
