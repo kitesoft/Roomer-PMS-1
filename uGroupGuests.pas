@@ -72,7 +72,8 @@ uses
   dxmdaset, cxMemo, cxDropDownEdit, sMemo
 
   , Generics.Collections, cxGridDBTableView, uReservationStateDefinitions
-  , uRoomerGridForm, System.Actions, Vcl.ActnList, sStatusBar, sSplitter, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids
+  , uRoomerGridForm, System.Actions, Vcl.ActnList, sStatusBar, sSplitter, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids,
+  cxTextEdit
   ;
 
 type
@@ -232,6 +233,8 @@ type
     mGuestsReservation: TIntegerField;
     cxMasterBackground: TcxStyle;
     tvGuestsRecId: TcxGridDBBandedColumn;
+    mRoomsGuestName: TWideStringField;
+    tvRoomsGuestName: TcxGridDBBandedColumn;
     procedure chkCompactViewClick(Sender: TObject);
     procedure rgrShowClick(Sender: TObject);
     procedure btnExcelClick(Sender: TObject);
@@ -255,6 +258,7 @@ type
   private
     { Private declarations }
     FHasUnsavedChanges: boolean;
+    FUpdatingMainName: boolean;
     function  updateSQL(id : integer) : string;
     procedure SaveChanges;
     function CountryValidate(country : string) : boolean;
@@ -335,8 +339,30 @@ procedure TfrmGroupGuests.mRoomsBeforePost(DataSet: TDataSet);
 begin
   inherited;
 
-  if LoadingData then
+  if LoadingData or FUpdatingMainName then
     Exit;
+
+  if mRoomsGuestName.OldValue <> mRoomsGuestName.AsString then
+  begin
+    mGuests.DisableControls;
+    try
+      FUpdatingMainName := True;
+      if mGuests.Locate('roomreservation;mainname', VarArrayOf([mRoomsRoomReservation.AsInteger, True]), []) then
+      begin
+        mGuests.Edit;
+        try
+          mGuestsName.AsString := mRoomsGuestName.AsString;
+          mGuests.Post;
+        except
+          mGuests.Cancel;
+          raise;
+        end;
+      end;
+    finally
+      mGuests.EnableControls;
+      FUpdatingMainName := False;
+    end;
+  end;
 
   if mRoomsNumGuests.OldValue <> mRoomsNumGuests.AsInteger then
   begin
@@ -442,6 +468,7 @@ begin
     s := s+'  ,rooms.description as RoomDescription '#10;
     s := s+'  ,concat(rr.room," - ", rooms.description," - ",rr.numGuests,". Guests") as roomDetails '#10;
     s := s+'  ,rr.HiddenInfo as roomNotes'#10;
+    s := s+'  ,(SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rr.roomreservation LIMIT 1) AS GuestName'#10;
     s := s+' FROM '#10;
     s := s+'  roomreservations rr '#10;
     s := s+' LEFT JOIN rooms on rooms.room = rr.room'#10;
@@ -573,7 +600,7 @@ end;
 
 procedure TfrmGroupGuests.btnCollapseClick(Sender: TObject);
 begin
-  tvData.ViewData.Expand(false);
+  tvData.ViewData.Collapse(false);
 end;
 
 procedure TfrmGroupGuests.btnEditClick(Sender: TObject);
