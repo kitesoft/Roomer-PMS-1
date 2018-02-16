@@ -241,26 +241,26 @@ begin
 
       s := '   SELECT '#10 +
            '     pd.date AS dtDate, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, 1, 0)) AS roomsArrival, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND rr.arrival = rd.ADate AND rr.arrival = pd.date, p.numGuests, 0)) AS paxArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rr.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rr.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
            '     IFNULL(dep.numRooms, 0) AS roomsDeparture, '#10 +
            '     IFNULL(dep.numGuests, 0) AS paxDeparture, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsInHouse, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival <= pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxInHouse, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), 1, 0)) AS roomsStay, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND (rr.arrival < pd.date) AND (rr.departure > pd.date), p.numGuests, 0)) AS paxStay, '#10 +
-           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , 1, 0)) AS roomsWaitinglist, '#10 +
-           '     SUM(IF(rr.status IN (''O'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''O'') , p.numGuests, 0)) AS paxWaitinglist, '#10 +
-           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
-           '     SUM(IF(rr.status IN (''L'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''L'') , p.numGuests, 0)) AS paxWaitinglistNonOptional, '#10 +
-           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , 1, 0)) AS roomsAllotment, '#10 +
-           '     SUM(IF(rr.status IN (''A'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''A'') , p.numGuests, 0)) AS paxAllotment, '#10 +
-           '     SUM(IF(rr.status IN (''N'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''N'') , 1, 0)) AS roomsNoShow, '#10 +
-           '     SUM(IF(rr.status IN (''N'') AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''N'') , p.numGuests, 0)) AS paxNoShow, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date), 1, 0)) AS roomsTotal, '#10 +
-           '     SUM(IF(rr.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'') AND (rr.arrival <= pd.date) AND (rr.departure >= pd.date) , p.numGuests, 0)) AS paxTotal, '#10 +
-           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , 1, 0)) AS roomsOutOfOrder, '#10 +
-           '     SUM(IF(rr.status IN (''B'') AND r.outOfOrderBlocking=1 AND DATE(rd.Adate) = pd.Date AND rd.resflag IN (''B'') , p.numGuests, 0)) AS paxOutOfOrder '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsInHouse, '#10 +
+           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q''), p.numGuests, 0)) AS paxInHouse, '#10 +
+           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsStay, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q''), p.numGuests, 0)) AS paxStay, '#10 +
+           '     SUM(IF(rd.resFlag IN (''O''), 1, 0)) AS roomsWaitinglist, '#10 +
+           '     SUM(IF(rd.resFlag IN (''O''), p.numGuests, 0)) AS paxWaitinglist, '#10 +
+           '     SUM(IF(rd.resFlag IN (''L''), 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
+           '     SUM(IF(rd.resFlag IN (''L''), p.numGuests, 0)) AS paxWaitinglistNonOptional, '#10 +
+           '     SUM(IF(rd.resFlag IN (''A''), 1, 0)) AS roomsAllotmennt, '#10 +
+           '     SUM(IF(rd.resFlag IN (''A''), p.numGuests, 0)) AS paxAllotment, '#10 +
+           '     SUM(IF(rd.resFlag IN (''N''), 1, 0)) AS roomsNoShow, '#10 +
+           '     SUM(IF(rd.resFlag IN (''N''), p.numGuests, 0)) AS paxNoShow, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N''), 1, 0)) AS roomsTotal, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N''), p.numGuests, 0)) AS paxTotal, '#10 +
+           '     SUM(IF(rd.resFlag IN (''B'') AND r.outOfOrderBlocking=1, 1, 0)) AS roomsOutOfOrder, '#10 +
+           '     SUM(IF(rd.resFlag IN (''B'') AND r.outOfOrderBlocking=1, p.numGuests, 0)) AS paxOutOfOrder '#10 +
            'FROM '#10 +
            '    predefineddates pd '#10 +
            '    LEFT JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') '#10 +
