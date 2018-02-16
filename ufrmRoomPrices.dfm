@@ -89,7 +89,7 @@ inherited frmRoomPrices: TfrmRoomPrices
         Left = 5
         Top = 18
         Width = 258
-        Height = 20
+        Height = 17
         Caption = 'Auto update Null Price'
         Align = alTop
         Checked = True
@@ -154,11 +154,12 @@ inherited frmRoomPrices: TfrmRoomPrices
         AlignWithMargins = True
         Left = 5
         Top = 18
-        Width = 60
+        Width = 175
         Height = 13
         Align = alTop
         Alignment = taCenter
         Caption = '<autofilled>'
+        ExplicitWidth = 60
       end
     end
   end
@@ -214,7 +215,6 @@ inherited frmRoomPrices: TfrmRoomPrices
       OptionsBehavior.FocusCellOnTab = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
@@ -262,6 +262,7 @@ inherited frmRoomPrices: TfrmRoomPrices
       object tvRoomResGuestName: TcxGridDBColumn
         Caption = 'Guest name'
         DataBinding.FieldName = 'GuestName'
+        Options.Editing = False
         Width = 172
       end
       object tvRoomResArrival: TcxGridDBColumn
