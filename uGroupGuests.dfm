@@ -1,47 +1,48 @@
 inherited frmGroupGuests: TfrmGroupGuests
   Caption = 'Group Guests'
   ClientHeight = 654
-  ClientWidth = 1121
+  ClientWidth = 1128
   ParentFont = False
-  ExplicitWidth = 1137
+  ExplicitWidth = 1144
   ExplicitHeight = 693
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
     Top = 634
-    Width = 1121
+    Width = 1128
     ExplicitTop = 634
-    ExplicitWidth = 1121
+    ExplicitWidth = 1128
   end
   inherited pnlButtons: TsPanel
     Top = 591
-    Width = 1121
+    Width = 1128
     ExplicitTop = 591
-    ExplicitWidth = 1121
+    ExplicitWidth = 1128
     inherited btnOK: TsButton
-      Left = 805
+      Left = 812
+      Default = False
       OnClick = btnOKClick
-      ExplicitLeft = 805
+      ExplicitLeft = 812
     end
     inherited btnCancel: TsButton
-      Left = 911
-      ExplicitLeft = 911
+      Left = 918
+      ExplicitLeft = 918
     end
     inherited btnClose: TsButton
-      Left = 1017
-      ExplicitLeft = 1017
+      Left = 1024
+      ExplicitLeft = 1024
     end
   end
   inherited pnlTop: TsPanel
-    Width = 1121
+    Width = 1128
     Height = 154
     TabOrder = 3
-    ExplicitWidth = 1121
+    ExplicitWidth = 1128
     ExplicitHeight = 154
     object pnlSelection: TsPanel
       Left = 0
       Top = 0
-      Width = 1121
+      Width = 1128
       Height = 113
       Align = alTop
       TabOrder = 0
@@ -63,8 +64,8 @@ inherited frmGroupGuests: TfrmGroupGuests
       object chkCompactView: TsCheckBox
         Left = 14
         Top = 80
-        Width = 87
-        Height = 20
+        Width = 95
+        Height = 17
         Caption = 'Compact view'
         Checked = True
         State = cbChecked
@@ -78,7 +79,7 @@ inherited frmGroupGuests: TfrmGroupGuests
     object pnlGridButtons: TsPanel
       Left = 0
       Top = 113
-      Width = 1121
+      Width = 1128
       Height = 41
       Align = alTop
       TabOrder = 1
@@ -191,16 +192,16 @@ inherited frmGroupGuests: TfrmGroupGuests
   end
   inherited pnlClient: TsPanel
     Top = 154
-    Width = 1121
+    Width = 1128
     Height = 437
     TabOrder = 2
     ExplicitTop = 154
-    ExplicitWidth = 1121
+    ExplicitWidth = 1128
     ExplicitHeight = 437
     object splClient: TsSplitter [0]
       Left = 1
       Top = 330
-      Width = 1119
+      Width = 1126
       Height = 6
       Cursor = crVSplit
       Align = alBottom
@@ -210,9 +211,9 @@ inherited frmGroupGuests: TfrmGroupGuests
       ExplicitWidth = 335
     end
     inherited grData: TcxGrid
-      Width = 1119
+      Width = 1126
       Height = 329
-      ExplicitWidth = 1119
+      ExplicitWidth = 1126
       ExplicitHeight = 329
       inherited tvData: TcxGridDBBandedTableView
         DataController.KeyFieldNames = 'RoomReservation'
@@ -249,7 +250,7 @@ inherited frmGroupGuests: TfrmGroupGuests
         object tvRoomsRoom: TcxGridDBBandedColumn
           DataBinding.FieldName = 'Room'
           Options.Editing = False
-          Width = 62
+          Width = 50
           Position.BandIndex = 0
           Position.ColIndex = 2
           Position.RowIndex = 0
@@ -257,15 +258,15 @@ inherited frmGroupGuests: TfrmGroupGuests
         object tvRoomsBreakfast: TcxGridDBBandedColumn
           DataBinding.FieldName = 'Breakfast'
           Options.Editing = False
-          Width = 88
+          Width = 87
           Position.BandIndex = 0
-          Position.ColIndex = 8
+          Position.ColIndex = 9
           Position.RowIndex = 0
         end
         object tvRoomsrrArrival: TcxGridDBBandedColumn
           DataBinding.FieldName = 'Arrival'
           Options.Editing = False
-          Width = 72
+          Width = 61
           Position.BandIndex = 0
           Position.ColIndex = 3
           Position.RowIndex = 0
@@ -273,9 +274,17 @@ inherited frmGroupGuests: TfrmGroupGuests
         object tvRoomsrrDeparture: TcxGridDBBandedColumn
           DataBinding.FieldName = 'Departure'
           Options.Editing = False
-          Width = 72
+          Width = 61
           Position.BandIndex = 0
           Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object tvRoomsGuestName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'GuestName'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Width = 145
+          Position.BandIndex = 0
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object tvRoomsnumGuests: TcxGridDBBandedColumn
@@ -283,15 +292,15 @@ inherited frmGroupGuests: TfrmGroupGuests
           DataBinding.FieldName = 'numGuests'
           Width = 95
           Position.BandIndex = 0
-          Position.ColIndex = 5
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object tvRoomsRoomDescription: TcxGridDBBandedColumn
           DataBinding.FieldName = 'RoomDescription'
           Options.Editing = False
-          Width = 109
+          Width = 108
           Position.BandIndex = 0
-          Position.ColIndex = 6
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object tvRoomsStatusText: TcxGridDBBandedColumn
@@ -299,18 +308,18 @@ inherited frmGroupGuests: TfrmGroupGuests
           DataBinding.FieldName = 'status'
           OnGetDisplayText = tvRoomsStatusTextGetDisplayText
           Options.Editing = False
-          Width = 121
+          Width = 120
           Position.BandIndex = 0
-          Position.ColIndex = 7
+          Position.ColIndex = 8
           Position.RowIndex = 0
         end
         object tvRoomsroomDetails: TcxGridDBBandedColumn
           Caption = 'Room Details'
           DataBinding.FieldName = 'roomDetails'
           Options.Editing = False
-          Width = 203
+          Width = 202
           Position.BandIndex = 0
-          Position.ColIndex = 9
+          Position.ColIndex = 10
           Position.RowIndex = 0
         end
         object tvRoomsRoomType: TcxGridDBBandedColumn
@@ -318,7 +327,7 @@ inherited frmGroupGuests: TfrmGroupGuests
           Options.Editing = False
           Width = 105
           Position.BandIndex = 0
-          Position.ColIndex = 10
+          Position.ColIndex = 11
           Position.RowIndex = 0
         end
       end
@@ -331,6 +340,7 @@ inherited frmGroupGuests: TfrmGroupGuests
         DataController.DetailKeyFieldNames = 'RoomReservation'
         DataController.KeyFieldNames = 'Id'
         DataController.MasterKeyFieldNames = 'RoomReservation'
+        DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -576,7 +586,7 @@ inherited frmGroupGuests: TfrmGroupGuests
     object pnlNotes: TsPanel
       Left = 1
       Top = 336
-      Width = 1119
+      Width = 1126
       Height = 100
       Align = alBottom
       TabOrder = 1
@@ -616,7 +626,7 @@ inherited frmGroupGuests: TfrmGroupGuests
         AlignWithMargins = True
         Left = 506
         Top = 21
-        Width = 609
+        Width = 616
         Height = 75
         Margins.Top = 20
         Align = alClient
@@ -1037,6 +1047,10 @@ inherited frmGroupGuests: TfrmGroupGuests
     object mRoomsRoomNotes: TWideMemoField
       FieldName = 'RoomNotes'
       BlobType = ftWideMemo
+    end
+    object mRoomsGuestName: TWideStringField
+      FieldName = 'GuestName'
+      Size = 100
     end
   end
   object mRoomsCompare: TdxMemData

@@ -5275,7 +5275,7 @@ begin
   try
     s := s + ' SELECT Status,RoomType, '#10;
     s := s + ' RR_Arrival(roomreservation, false) as Arrival, '#10;
-    s := s + ' RR_Departure(roomreservaiton, false) as Departure'#10;
+    s := s + ' RR_Departure(roomreservation, false) as Departure'#10;
     s := s + ' FROM roomreservations ' + chr(10);
     s := s + ' WHERE  ' + chr(10);
     s := s + ' (RoomReservation = ' + inttostr(RR) + ' ) ' + chr(10);

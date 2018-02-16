@@ -339,7 +339,9 @@ uses
   uFraChannelPanel in 'Embeddables\uFraChannelPanel.pas' {fraChannelPanel: TFrame},
   uFraCustomerPanel in 'Embeddables\uFraCustomerPanel.pas' {fraCustomerPanel: TFrame},
   uFraStaffMemberPanel in 'Embeddables\uFraStaffMemberPanel.pas' {fraStaffMemberPanel: TFrame},
-  uFraDayStatistics in 'mainEmbeddables\uFraDayStatistics.pas' {fraDayStatistics: TFrame};
+  uFraDayStatistics in 'mainEmbeddables\uFraDayStatistics.pas' {fraDayStatistics: TFrame},
+  uHotelStatisticsAPI in 'HotelStatstics\uHotelStatisticsAPI.pas',
+  uHotelStatistics in 'HotelStatstics\uHotelStatistics.pas';
 
 {$R *.RES}
 
@@ -370,7 +372,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     TSplashFormManager.UpdateProgress('Loading forms...');
 
