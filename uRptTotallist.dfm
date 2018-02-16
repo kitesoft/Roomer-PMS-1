@@ -4,7 +4,6 @@ inherited frmRptTotallist: TfrmRptTotallist
   ClientWidth = 1347
   Constraints.MinWidth = 570
   Font.Height = -11
-  Position = poDesigned
   OnCreate = FormCreate
   OnShow = FormShow
   ExplicitWidth = 1363
@@ -329,6 +328,28 @@ inherited frmRptTotallist: TfrmRptTotallist
           Kind = skSum
           FieldName = 'paxOutOfOrder'
           Column = lvTotallistpaxOutOfOrder
+        end
+        item
+          Format = '0'
+          FieldName = 'roomsWaitinglistNonOptional'
+          Column = lvTotallistroomsWaitinglistNonOptional
+        end
+        item
+          Format = '0'
+          Kind = skSum
+          FieldName = 'paxWaitinglistNonOptional'
+          Column = lvTotallistpaxWaitinglistNonOptional
+        end
+        item
+          Format = '0'
+          FieldName = 'roomsNoShow'
+          Column = lvTotallistroomsNoShow
+        end
+        item
+          Format = '0'
+          Kind = skSum
+          FieldName = 'paxNoShow'
+          Column = lvTotallistpaxNoShow
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.CancelOnExit = False
@@ -371,6 +392,9 @@ inherited frmRptTotallist: TfrmRptTotallist
         end
         item
           Caption = 'Waiting list'
+        end
+        item
+          Caption = 'No Show'
         end>
       object lvTotallistdtDate: TcxGridDBBandedColumn
         Caption = 'Date'
@@ -389,6 +413,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistroomsArrival: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsArrival'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 2
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -396,6 +422,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxArrival: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxArrival'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 2
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -403,6 +431,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistroomsInhouse: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsInhouse'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 3
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -410,6 +440,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxInhouse: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxInhouse'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 3
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -417,6 +449,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistroomsDeparture: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsDeparture'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 4
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -424,6 +458,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxDeparture: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxDeparture'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 4
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -431,6 +467,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistroomsStay: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsStay'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 5
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -438,6 +476,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxStay: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxStay'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 5
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -445,6 +485,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistroomsWaitinglist: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsWaitinglist'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 6
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -452,6 +494,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxWaitinglist: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxWaitinglist'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 6
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -459,6 +503,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistRoomsAllotment: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'RoomsAllotment'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 7
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -466,6 +512,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxAllotment: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxAllotment'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 7
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -487,6 +535,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistroomsOutOfOrder: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsOutOfOrder'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 8
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -494,6 +544,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxOutOfOrder: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxOutOfOrder'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 8
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -501,6 +553,8 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistroomsWaitinglistNonOptional: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsWaitinglistNonOptional'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 9
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -508,7 +562,27 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistpaxWaitinglistNonOptional: TcxGridDBBandedColumn
         Caption = 'Guests'
         DataBinding.FieldName = 'paxWaitinglistNonOptional'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 9
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object lvTotallistroomsNoShow: TcxGridDBBandedColumn
+        Caption = 'Rooms'
+        DataBinding.FieldName = 'roomsNoShow'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
+        Position.BandIndex = 10
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object lvTotallistpaxNoShow: TcxGridDBBandedColumn
+        Caption = 'Guests'
+        DataBinding.FieldName = 'paxNoShow'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        OnGetDisplayText = lvTotallistHideZeroValue
+        Position.BandIndex = 10
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
@@ -610,6 +684,14 @@ inherited frmRptTotallist: TfrmRptTotallist
       end
       item
         Name = 'paxWaitinglistNonOptional'
+        DataType = ftInteger
+      end
+      item
+        Name = 'roomsNoShow'
+        DataType = ftInteger
+      end
+      item
+        Name = 'paxNoShow'
         DataType = ftInteger
       end>
     IndexDefs = <>
