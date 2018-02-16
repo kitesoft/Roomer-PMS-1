@@ -555,7 +555,8 @@ type
     ppCurrencyAmount: TppField;
     ppDBText9: TppDBText;
     ppblbCurrencyAmount: TppLabel;
-    pplblPaidIn: TppLabel; // -96
+    pplblPaidIn: TppLabel;
+    tvPaymentscusomterPersonalId: TcxGridDBColumn; // -96
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -1296,6 +1297,7 @@ begin
   s := s + ' , invoiceheads.RoomGuest '#10;
   s := s + ' , customers.Surname AS CustomerName '#10;
   s := s + ' , customers.TravelAgency AS isAgency '#10;
+  s := s + ' , customers.PID AS cusomterPersonalId '#10;
   s := s + ' FROM '#10;
   s := s + '   payments '#10;
   s := s + '      LEFT OUTER JOIN customers ON payments.Customer = customers.Customer '#10;
