@@ -33,6 +33,7 @@ type
     class function GetNodeName: string; override;
   public
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
+    function FormattedValue: string;
   published
     property Name: string read FName write FName;
     property Value: double read FValue write FValue;
@@ -87,9 +88,19 @@ implementation
 uses
   SysUtils
   , XMLUtils
+  , uRoomerCurrencymanager
   ;
 
 { THotelStatistic }
+
+function THotelStatistic.FormattedValue: string;
+begin
+  case FUOM of
+    TUnitOfMeasurement.NativeCurrency: Result := RoomerCurrencyManager.DefaultCurrencyDefinition.FormattedValueWithCode(Value);
+    TUnitOfMeasurement.Percent:        Result := FloatToStrF(Value, ffFixed, 12, 2) + '%';
+    TUnitOfMeasurement.NoDimension:    Result := intToStr(Round(Value));
+  end;
+end;
 
 class function THotelStatistic.GetNodeName: string;
 begin

@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, acImage, Vcl.StdCtrls, sLabel, sPanel, Vcl.ImgList, PngImageList, AdvUtil, Vcl.Grids, AdvObj, BaseGrid,
-  AdvGrid, cmpRoomerDataSet, uRoomerThreadedRequest;
+  AdvGrid, cmpRoomerDataSet, uRoomerThreadedRequest
+  , uHotelStatistics
+  ;
 
 type
   TFrmFrontDeskPageButton = class(TForm)
@@ -84,17 +86,15 @@ type
   private
     ThreadedDataGetter : TGetSQLDataThreaded;
     procedure RefreshButtons;
-    procedure RefreshGrid;
     function GetSenderAsPanel(Sender: TObject): TsPanel;
     function GetShapeComponentOfButton(Sender: TObject): TShape;
-    procedure BackgroundDataFetchHandler(Sender: TObject);
-    procedure ShowGridData(SetOfData: TRoomerDataSet);
     procedure DrawDateRow;
     procedure PrepareGridText;
+    procedure RefreshHotelStatsData;
+    procedure UpdateGridFromStats(aStatsList: THotelStatisticsList);
   public
     { Public declarations }
     procedure RefreshDisplay;
-
     property ShowFromDate : TDate read FShowFromDate write SetShowFromDate;
   end;
 
@@ -122,19 +122,20 @@ uses uD,
      uRptInHouse,
      uMain,
      PrjConst
-    ;
+    , uHotelStatisticsAPI
+    , DateUtils
+    , uDateTimeHelper;
 
 const
 
    ROW_DAY          = 0;
    ROW_DATE         = 1;
-   ROW_SPEC_DAY     = 2;
 
-   ROW_ARRIVALS     = 3;
-   ROW_DEPARTURES   = 4;
-   ROW_LEFT_TO_SELL = 5;
-   ROW_OCCUPANCY    = 6;
-   ROW_BAR          = 7;
+   ROW_ARRIVALS     = 2;
+   ROW_DEPARTURES   = 3;
+   ROW_LEFT_TO_SELL = 4;
+   ROW_OCCUPANCY    = 5;
+   ROW_BAR          = 6;
 
    COL_START        = 1;
 
@@ -164,42 +165,42 @@ begin
     sDate := dateToSqlString(now);
     sYesterday := dateToSqlString(now-1);
     sql := format('SELECT ' +
-                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-                  'WHERE ADate=''%s'' ' +
-                  'AND rd.ResFlag IN (''P'') ' +
-                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivals, ' +
+//                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
+//                  'WHERE ADate=''%s'' ' +
+//                  'AND rd.ResFlag IN (''P'') ' +
+//                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivals, ' +
 
-                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-                  'WHERE ADate=DATE_ADD(''%s'', INTERVAL -1 DAY) ' +
-                  'AND rd.ResFlag IN (''G'',''P'') ' +
-                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDepartures, ' +
+//                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
+//                  'WHERE ADate=DATE_ADD(''%s'', INTERVAL -1 DAY) ' +
+//                  'AND rd.ResFlag IN (''G'',''P'') ' +
+//                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDepartures, ' +
 
                   '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
                   'WHERE ADate=DATE_ADD(''%s'', INTERVAL 1 DAY) ' +
                   'AND rd.ResFlag IN (''P'') ' +
-                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivalsTomorrow, ' +
+                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivalsTomorrow ' +
 
-                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
+                  ',(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
                   'WHERE ADate=''%s'' ' +
                   'AND rd.ResFlag IN (''G'',''P'') ' +
-                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDeparturesTomorrow, ' +
+                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDeparturesTomorrow '
 
-                  '(SELECT COUNT(id) NumEntries FROM ' +
-                  '(SELECT ID FROM roomsdate rd ' +
-                  'WHERE ADate IN (''%s'', ''%s'') ' +
-                  'AND rd.ResFlag IN (''G'') ' +
-                  'GROUP BY RoomReservation) xxx) AS NumInHouse',
-                  [sDate, sDate, sDate, sDate, sDate, sYesterday]
+//                  '(SELECT COUNT(id) NumEntries FROM ' +
+//                  '(SELECT ID FROM roomsdate rd ' +
+//                  'WHERE ADate IN (''%s'', ''%s'') ' +
+//                  'AND rd.ResFlag IN (''G'') ' +
+//                  'GROUP BY RoomReservation) xxx) AS NumInHouse'
+                  ,[sDate, sDate, sDate, sDate, sDate, sYesterday]
             );
     rSet_bySQL(res, sql, False);
     res.First;
     if NOT res.Eof then
     begin
-      lblArrivals.Caption := inttostr(res['NumArrivals']);
-      lblDepartures.Caption := inttostr(res['NumDepartures']);
+//      lblArrivals.Caption := inttostr(res['NumArrivals']);
+//      lblDepartures.Caption := inttostr(res['NumDepartures']);
       lblTomArrivals.Caption := inttostr(res['NumArrivalsTomorrow']);
       lblTomDepartures.Caption := inttostr(res['NumDeparturesTomorrow']);
-      lblInHouse.Caption := inttostr(res['NumInHouse']);
+//      lblInHouse.Caption := inttostr(res['NumInHouse']);
     end;
   finally
     FreeAndNil(res);
@@ -209,50 +210,14 @@ end;
 procedure TFrmFrontDeskPageButton.RefreshDisplay;
 begin
   RefreshButtons;
-  RefreshGrid;
+  RefreshHotelStatsData;
 end;
 
-procedure TFrmFrontDeskPageButton.RefreshGrid;
-var sql : String;
-    sDate : String;
+procedure TFrmFrontDeskPageButton.RefreshHotelStatsData;
 begin
-  sDate := dateToSqlString(ShowFromDate);
-  sql := 'SELECT ' +
-         'DATE(pdd.date) AS date, ' +
-         '(SELECT MIN(Price*cu.aValue) FROM channelrates cr ' +
-         'JOIN channels ch ON ch.Id=cr.channelId ' +
-         'JOIN roomtypegroups rtg ON rtg.Id=cr.roomClassId AND rtg.Active=1 ' +
-         'JOIN currencies cu ON cu.Id=ch.currencyId ' +
-         'JOIN roomtypes rt ON rt.RoomTypeGroup=rtg.Code AND rt.Active=1 ' +
-         'WHERE date=pdd.date ' +
-         'AND Price > 0) AS BAR, ' +
-         ' ' +
-         '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-         'WHERE ADate=pdd.date ' +
-         'AND rd.ResFlag IN (''P'',''G'',''B'',''A'',''L'')) AS NumOccupied, ' +
-         ' ' +
-         '(SELECT COUNT(id) AS NumEntries FROM rooms r ' +
-         'WHERE r.Active=1 ' +
-         'AND r.WildCard=0 ' +
-         'AND r.Statistics=1 ' +
-         'AND r.Hidden=0) AS NumRooms, ' +
-         ' ' +
-         '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-         'WHERE ADate=pdd.date ' +
-         'AND rd.ResFlag IN (''P'',''A'') ' +
-         'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivals, ' +
-         ' ' +
-         '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-         'WHERE ADate=DATE_ADD(pdd.date, INTERVAL -1 DAY) ' +
-         'AND rd.ResFlag IN (''G'',''P'',''A'') ' +
-         'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDepartures ' +
-         ' ' +
-         'FROM predefineddates pdd ' +
-         'WHERE pdd.date >= ''%s'' ANd pdd.date <= DATE_ADD(''%s'', INTERVAL 6 DAY)';
-  sql := format(sql, [sDate, sDate]);
-  CopyToClipboard(sql);
-  ThreadedDataGetter.execute(sql, BackgroundDataFetchHandler);
+  THotelStatisticsMobileAPICallerThreaded.GetHotelStatistics(ShowFromDate, TDateTime(ShowFromDate).AddDays(6), UpdateGridFromStats);
 end;
+
 
 procedure TFrmFrontDeskPageButton.Shape2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -290,41 +255,36 @@ begin
   frmMain.tabsViewChange(nil);
 end;
 
-procedure TFrmFrontDeskPageButton.ShowGridData(SetOfData : TRoomerDataSet);
-var col : Integer;
-    NumOccupied,
-    NumRooms : Integer;
+procedure TFrmFrontDeskPageButton.UpdateGridFromStats(aStatsList: THotelStatisticsList);
+var
+  lDate: TDate;
+  i: integer;
+  lStats: TSingleDateStatistics;
 begin
   DrawDateRow;
-  col := 1;
-  SetOfData.First;
-  while NOT SetOfData.Eof do
+  for i := 0 to StatGrid.ColCount-2 do
   begin
-    NumRooms := SetOfData.FieldByName('NumRooms').AsInteger;;
-    NumOccupied := SetOfData.FieldByName('NumOccupied').AsInteger;
-    StatGrid.Cells[col, ROW_ARRIVALS]     := inttostr(SetOfData['NumArrivals']);
-    StatGrid.Cells[col, ROW_DEPARTURES]   := inttostr(SetOfData['NumDepartures']);
-    StatGrid.Cells[col, ROW_LEFT_TO_SELL] := inttostr(SetOfData.FieldByName('NumRooms').AsInteger - SetOfData.FieldByName('NumOccupied').AsInteger);
-    StatGrid.Cells[col, ROW_OCCUPANCY]    := trim(_floattostr((SetOfData.FieldByName('NumOccupied').AsInteger / SetOfData.FieldByName('NumRooms').AsInteger) * 100, 6, 0)) + '%';
+    lDate := TDateTime(FShowFromDate).AddDays(i);
+    lStats := aStatsList.StatisticsForDate[lDate];
+    if assigned(lStats) then
+    begin
 
-    if (NumRooms - NumOccupied) > 0 then
-      StatGrid.Cells[col, ROW_BAR]        := g.qNativeCurrency + ' ' + trim(_floattostr(SetOfData['BAR'], 12,2))
-    else
-      StatGrid.Cells[col, ROW_BAR]        := 'N/A';
+      if (lDate = FSHowFromDate) then
+      begin
+        lblArrivals.Caption := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
+        lblDepartures.Caption := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
+        lblInHouse.Caption := lStats.Statistic['IN_HOUSE'].FormattedValue;
+      end;
 
-    SetOfData.Next;
-    inc(col);
+      StatGrid.Cells[i+1, ROW_ARRIVALS]     := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_DEPARTURES]   := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_LEFT_TO_SELL] := lStats.Statistic['LEFT_TO_SELL'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_OCCUPANCY]    := lStats.Statistic['OCCUPANCY'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_BAR]          := lStats.Statistic['BAR'].FormattedValue;
+    end;
   end;
-end;
 
-procedure TFrmFrontDeskPageButton.BackgroundDataFetchHandler(Sender : TObject);
-begin
-  try
-    ShowGridData(ThreadedDataGetter.RoomerDataSet);
-    ThreadedDataGetter.RoomerDataSet.Close;
-    ThreadedDataGetter.RoomerDataSet.Recordset := nil;
-  except
-  end;
+
 end;
 
 procedure TFrmFrontDeskPageButton.SetShowFromDate(const Value: TDate);
@@ -379,7 +339,7 @@ begin
   if ARow < 1 then
     ABrush.Color := $00FFBF3C
   else
-  if (ARow < 3) OR (ACol < 1) then
+  if (ARow < 2) OR (ACol < 1) then
     ABrush.Color := $00FFDD95
   else
     ABrush.Color := clWhite;
@@ -402,7 +362,6 @@ begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self);
 
-  ThreadedDataGetter := TGetSQLDataThreaded.Create;
   PrepareGridText;
 end;
 
@@ -429,6 +388,7 @@ begin
 end;
 
 /////////////////////////////  HELPERS   //////////////////////////////////////
+
 
 procedure TFrmFrontDeskPageButton.DrawDateRow;
 var

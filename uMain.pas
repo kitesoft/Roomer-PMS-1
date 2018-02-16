@@ -71,6 +71,7 @@ uses
   , uReservationStateChangeHandler
   , uFraDayStatistics
   , uFrmRateQuery
+  , uFraHotelStatisticsFooter
     ;
 
 type
@@ -540,15 +541,6 @@ type
     btnLostAndFound: TdxBarLargeButton;
     btnRptNotes: TdxBarLargeButton;
     pnlDayStatus: TsPanel;
-    lblOccupancy: TsLabel;
-    cbxStatDay: TsComboBox;
-    __OCCUPANCY: TsLabel;
-    lblStatAdr: TsLabel;
-    __ADR: TsLabel;
-    lblStatRevPar: TsLabel;
-    __REVPAR: TsLabel;
-    lblStatRoomsSold: TsLabel;
-    __ROOMSSOLD: TsLabel;
     __VER: TsLabel;
     btnGuests: TdxBarLargeButton;
     pnlViewType: TsPanel;
@@ -689,6 +681,7 @@ type
     mnuFilterLocation: TMenuItem;
     mnuFilterRoomType: TMenuItem;
     fraDayStatistics: TfraDayStatistics;
+    fraHotelStats: TfraHotelStatisticsFooter;
     dxRibbonQuickAccessGroupButton2: TdxRibbonQuickAccessGroupButton;
     dxBarSubItem10: TdxBarSubItem;
     dxRibbonQuickAccessGroupButton3: TdxRibbonQuickAccessGroupButton;
@@ -913,7 +906,6 @@ type
     procedure __dxBarCombo1CloseUp(Sender: TObject);
     procedure btnLostAndFoundClick(Sender: TObject);
     procedure btnRptNotesClick(Sender: TObject);
-    procedure cbxStatDayChange(Sender: TObject);
     procedure btnGuestsClick(Sender: TObject);
     procedure cbxViewTypesCloseUp(Sender: TObject);
     procedure pnlNoRoomButtonsMouseEnter(Sender: TObject);
@@ -1442,7 +1434,6 @@ type
     procedure MyRoundedRect(Canvas: TCanvas; X1, Y1, X2, Y2: integer; DoRoundCorners: boolean = true);
     function GetActivePeriodGrid: TAdvStringGrid;
     procedure HandleSkinManagerChange;
-    procedure RefreshStats(force: boolean = false);
     function LongestColText(Grid: TAdvStringGrid; col: integer; startAtRow: integer = 1): integer;
     procedure GetPriceInfo(rri: RecRDInfo; var PricePerDay, DiscountPerDay, PriceTotal, DiscountTotal: Double);
     function GetCaptText(Canvas: TCanvas; const OriginalText: String; MaxWidth: integer): String;
@@ -1487,6 +1478,7 @@ type
     procedure FillRoomTypesMenu(mnu: TMenuItem; event: TNotifyEvent);
     function FilteredRoomTypes: TSet_Of_Integer;
     function RoomtypeFilterActive: boolean;
+    procedure RefreshFooterStats;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -2063,27 +2055,33 @@ begin
   grPeriodRooms.FixedColor := sSkinManager1.GetGlobalColor;
 
   // --
-  pnlDayStatus.Color := sSkinManager1.gd[btnGoOnline.SkinData.SkinIndex].HotGlowColor;
-  cbxStatDay.Color := pnlDayStatus.Color;
-  panMainTop.Color := sSkinManager1.GetGlobalColor; // pnlDayStatus.Color;
-  cbxStatDay.Font.Color := sSkinManager1.GetGlobalColor;
+//  pnlDayStatus.Color := sSkinManager1.gd[btnGoOnline.SkinData.SkinIndex].HotGlowColor;
+//  pnlDayStatus.Font.Color := sSkinManager1.GetGlobalColor;
+//  fraHotelStats.Color := pnlDayStatus.Color;
+//  fraHotelStats.Font.Color := sSkinManager1.GetGlobalColor;
 
-  // Colors are to be found in cxLookAndFeelPainterscxLookAndFeelPainters
+  //  cbxStatDay.Color := pnlDayStatus.Color;
+//  cbxStatDay.Font.Color := sSkinManager1.GetGlobalColor;
+
+  // Colors are to be found in cxLookAndFeelPainters
+  panMainTop.Color := sSkinManager1.GetGlobalColor; // pnlDayStatus.Color;
   Color := sSkinManager1.GetGlobalColor;
 
-  __VER.Font.Color := cbxStatDay.Font.Color;
+//  pnlDayStatus.Color := sSkinManager1.Palette[pcSelectionBG];
+//  pnlDayStatus.Font.Color := sSkinManager1.Palette[pcSelectionText];
+//  fraHotelStats.SetBackgroundColor(sSkinManager1.Palette[pcSelectionBG]);
+//  fraHotelStats.SetFontColor( sSkinManager1.Palette[pcSelectionText]);
+//  __VER.Color := sSkinManager1.Palette[pcSelectionBG];
+//  __VER.Font.Color := sSkinManager1.Palette[pcSelectionText];
 
-  lblOccupancy.Font.Color := cbxStatDay.Font.Color;
-  __OCCUPANCY.Font.Color := cbxStatDay.Font.Color;
-  lblStatAdr.Font.Color := cbxStatDay.Font.Color;
-  __ADR.Font.Color := cbxStatDay.Font.Color;
-  lblStatRevPar.Font.Color := cbxStatDay.Font.Color;
-  __REVPAR.Font.Color := cbxStatDay.Font.Color;
-  lblStatRoomsSold.Font.Color := cbxStatDay.Font.Color;
-  __ROOMSSOLD.Font.Color := cbxStatDay.Font.Color;
-  if cbxStatDay.ItemIndex < 0 then
-    cbxStatDay.ItemIndex := 0;
-  cbxStatDay.Update;
+//  lblOccupancy.Font.Color := cbxStatDay.Font.Color;
+//  __OCCUPANCY.Font.Color := cbxStatDay.Font.Color;
+//  lblStatAdr.Font.Color := cbxStatDay.Font.Color;
+//  __ADR.Font.Color := cbxStatDay.Font.Color;
+//  lblStatRevPar.Font.Color := cbxStatDay.Font.Color;
+//  __REVPAR.Font.Color := cbxStatDay.Font.Color;
+//  lblStatRoomsSold.Font.Color := cbxStatDay.Font.Color;
+//  __ROOMSSOLD.Font.Color := cbxStatDay.Font.Color;
 end;
 
 procedure TfrmMain.GetLeavingGuestIndexes(var idxRoom: integer; var idxReservation: integer; ACol, ARow: integer);
@@ -2318,7 +2316,7 @@ begin
   else
     dxRibbon1.ColorSchemeName := 'Office2013White'; // 'DarkRoom';
 
-  AssignSkinColorsToComponents;
+//  AssignSkinColorsToComponents;
 
   WriteStringValueToAnyRegistry('Software\Roomer\FormStatus\StoreMainV2\sSkinManager1', 'SkinName',
     sSkinManager1.skinName);
@@ -2403,6 +2401,7 @@ begin
   end
   else if Message.Msg = WM_REFRESH_DATE then
   begin
+    fraHotelStats.Date := dtDate.Date;
     RefreshGrid;
   end
   else if Message.Msg = WM_SET_DATE_FROM_MAIN then
@@ -2811,10 +2810,8 @@ begin
   StoreMain.StorageName := 'Software\Roomer\FormStatus\StoreMainV2';
   StoreMain.RestoreFrom;
   PlaceFormOnVisibleMonitor(self);
-  try
-    __VER.Caption := TRoomerVersionInfo.LongVersionString;
-  except
-  end;
+
+  __VER.Caption := TRoomerVersionInfo.LongVersionString;
 
   PrepareSkinSelections;
 
@@ -2907,9 +2904,6 @@ begin
   SetDateWithoutEvents(trunc(now));
 
   StaffComm := TStaffCommunication.Create(pnlStaffComm);
-
-  if cbxStatDay.ItemIndex < 0 then
-    cbxStatDay.ItemIndex := 0;
 
   FrmMessagesTemplates := TFrmMessagesTemplates.Create(nil);
   FrmMessagesTemplates.pnlContainer.Parent := pnlNotifications;
@@ -3226,8 +3220,8 @@ begin
     except
     end;
 
-    TSplashFormManager.UpdateProgress('Refreshing main grid...');
-    RefreshOneDayGrid;
+//    TSplashFormManager.UpdateProgress('Refreshing main grid...');
+//    RefreshOneDayGrid;
     panelHide.Hide;
 
     ViewMode := vmNone;
@@ -3767,8 +3761,9 @@ procedure TfrmMain.FormKeyPress(Sender: TObject; var Key: Char);
 var
   s: string;
 begin
+
   if (ActiveControl <> grOneDayRooms) AND (ActiveControl <> grPeriodRooms) AND (pageMainGrids.ActivePage <>  tabDashboard) AND
-    (NOT FrmRateQuery.BeingViewed) AND (tabsView.TabIndex <> 7) then
+    (NOT FrmRateQuery.BeingViewed) AND (tabsView.TabIndex <> 5) then
     exit;
 
   s := Key;
@@ -3965,9 +3960,9 @@ begin
     end;
     frmDateStatistics.Date:= trunc(dtDate.Date);
     frmDateStatistics.RefreshData;
+    fraHotelStats.Date := dtDate.Date;
   finally
     grOneDayRooms.endUpdate;
-    RefreshStats;
   end;
 end;
 
@@ -3984,65 +3979,11 @@ begin
     end;
 end;
 
-
-procedure TfrmMain.RefreshStats(force: boolean = false);
-var
-  OCC, ADR, REVPAR: Double;
-  RoomsSold: integer;
-  s: String;
-  rSet: TRoomerDataSet;
+procedure TfrmMain.RefreshFooterStats;
 begin
-  if OffLineMode then
-    exit;
-
-  if force OR (trunc(dtDate.Date) = trunc(now + cbxStatDay.ItemIndex)) OR
-    (trunc(dtDate.Date + cbxStatDay.ItemIndex) = trunc(now + cbxStatDay.ItemIndex)) then
-  begin
-    OCC := 0;
-    ADR := 0;
-    REVPAR := 0;
-    RoomsSold := 0;
-
-    s := Format(HOTEL_PERFORMANCE_QUERY_BETWEEN_DATES,
-      [
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-
-      dateToSqlString(now + cbxStatDay.ItemIndex),
-      dateToSqlString(now + cbxStatDay.ItemIndex)
-      ]);
-    // CopyToClipboard(s);
-    rSet := CreateNewDataSet;
-    try
-      hData.rSet_bySQL(rSet, s);
-      rSet.first;
-      if NOT rSet.eof then
-      begin
-        OCC := rSet['OCC'];
-        ADR := rSet['ADR'];
-        REVPAR := rSet['RevPar'];
-        RoomsSold := rSet['RoomsSold'];
-      end;
-    finally
-      freeandNil(rSet);
-    end;
-
-    __OCCUPANCY.Caption := formatFloat('#,##0.00 %', OCC);
-    __ADR.Caption := formatFloat('#,##0.00', ADR);
-    __REVPAR.Caption := formatFloat('#,##0.00', REVPAR);
-    __ROOMSSOLD.Caption := inttostr(RoomsSold);
-  end;
-
+  fraHotelStats.RefreshStats;
 end;
+
 
 CONST
   BusyRefreshingTodaysGrid: boolean = false;
@@ -4128,7 +4069,7 @@ begin
     grPeriodRooms_NO.endUpdate;
     grPeriodRooms.Invalidate;
   end;
-  RefreshStats;
+  RefreshFooterStats;
 end;
 
 procedure TfrmMain.dtMainHeaderPropertiesChange(Sender: TObject);
@@ -7702,7 +7643,7 @@ begin
         fraDayStatistics.BeingViewed := false;
         FrmRateQuery.BeingViewed := false;
         EnterDayView;
-        RefreshStats;
+//        RefreshFooterStats;
       end;
     2:
       begin
@@ -7718,7 +7659,7 @@ begin
         finally
           lblLoading.Hide;
         end;
-        RefreshStats;
+//        RefreshFooterStats;
       end;
     3:
       begin
@@ -11790,11 +11731,6 @@ begin
   begin
     zDoRefreshPeriod := true;
   end;
-end;
-
-procedure TfrmMain.cbxStatDayChange(Sender: TObject);
-begin
-  RefreshStats(true);
 end;
 
 procedure TfrmMain.cbxViewTypesCloseUp(Sender: TObject);

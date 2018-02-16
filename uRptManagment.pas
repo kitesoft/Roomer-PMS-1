@@ -193,6 +193,7 @@ type
     ppDBCalc15: TppDBCalc;
     ppDBCalc16: TppDBCalc;
     ppDBCalc17: TppDBCalc;
+    tvStatsooo: TcxGridDBBandedColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -300,16 +301,40 @@ begin
   ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
   try
 
-  s := 'SELECT id, pd.date, DATE(IFNULL(ADate, pd.date)) AS ADate, soldRooms, revenue, occ, adr, revPar, totalDiscount, maxRate, minRate, averageRate, '#10 +
-       '  checkedInToday, arrivingRooms, noShow, departingRooms, departedRooms, occupiedRooms, totalRooms, totalGuests, '#10 +
+  s := 'SELECT id, pd.date '#10+
+       '  , DATE(IFNULL(ADate, pd.date)) AS ADate '#10+
+       '  , soldRooms - OOORooms as soldRooms '#10+
+       '  , revenue '#10+
+       '  , occ '#10+
+       '  , adr '#10+
+       '  , revPar '#10+
+       '  , totalDiscount '#10+
+       '  , maxRate '#10+
+       '  , minRate '#10+
+       '  , averageRate '#10 +
+       '  , checkedInToday '#10+
+       '  , arrivingRooms '#10+
+       '  , noShow '#10+
+       '  , departingRooms '#10+
+       '  , departedRooms '#10+
+       '  , occupiedRooms '#10+
+       '  , totalRooms - OOORooms as totalRooms '#10+
+       '  , OOORooms '#10+
+       '  , totalGuests, '#10 +
        '  (SELECT NativeCurrency FROM control LIMIT 1) AS localCurrency '#10 +
        'FROM predefineddates pd '#10 +
        'LEFT OUTER JOIN '#10 +
        ' ( '#10 +
        '	 SELECT baseData1.*, '#10 +
-       '			soldRooms/totalRooms*100 AS occ, '#10 +
+       '     CASE WHEN (totalrooms - OOORooms) <> 0 '#10 +
+       '			 THEN soldRooms/(totalRooms - OOORooms)*100 '#10 +
+       '       ELSE 0 '#10 +
+       '     END AS occ, '#10 +
        '			revenue/soldRooms AS adr, '#10 +
-       '			revenue/totalRooms as RevPar '#10 +
+       '     CASE WHEN (totalrooms - OOORooms) <> 0 '#10 +
+       '			 THEN revenue/(totalRooms - OOORooms) '#10+
+       '       ELSE 0 '#10+
+       '     END as RevPar '#10 +
        ' '#10 +
        '	 FROM ( '#10 +
        '		 SELECT DATE(pdd.date) AS ADate, '#10 +
@@ -335,9 +360,14 @@ begin
        '					JOIN rooms r on r.room=rd2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
        '					WHERE ADate=pdd.date AND ResFlag=''G'') AS occupiedRooms, '#10 +
        '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 +
-       '				SUM((SELECT COUNT(id) FROM persons WHERE RoomReservation=rd.RoomReservation)) AS totalGuests '#10 +
+       '				SUM((SELECT COUNT(id) FROM persons WHERE RoomReservation=rd.RoomReservation)) AS totalGuests, '#10 +
+       '				(SELECT COUNT(rd2.room) '#10 +
+       '				  FROM roomsdate rd2 '#10 +
+       '				  JOIN rooms rm2 on rm2.room = rd2.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden '#10 +
+       '				  where rd2.aDate = rd.aDate and rd2.resflag = ''B'' '#10 +
+       '				 ) AS OOORooms '#10 +
        '		 FROM predefineddates pdd '#10 +
-       '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'')) '#10 +
+       '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'', ''B'')) '#10 +
        '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 '#10 +
        '         JOIN control c '#10 +
        '         LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=rd.InvoiceNumber '#10 +
@@ -373,7 +403,8 @@ begin
        '                    WHERE rr2.Departure=pdd.date AND rr2.Status=''D'') AS departedRooms, '#10 +
        '				CAST(0 AS SIGNED) AS occupiedRooms, '#10 +
        '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 +
-       '				CAST(0 AS SIGNED) AS totalGuests '#10 +
+       '				CAST(0 AS SIGNED) AS totalGuests, '#10 +
+       '				CAST(0 AS SIGNED) AS oooRooms '#10 +
        '		 FROM predefineddates pdd '#10 +
        '		 WHERE '#10 +
        '				((pdd.date>=%s AND pdd.date<=%s)) '#10 +
