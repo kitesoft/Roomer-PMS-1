@@ -72,6 +72,7 @@ uses
   , uFraDayStatistics
   , uFrmRateQuery
   , uFraHotelStatisticsFooter
+
     ;
 
 type

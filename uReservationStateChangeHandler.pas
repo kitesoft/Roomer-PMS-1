@@ -81,6 +81,7 @@ type
   public
     constructor Create(aReservation, aRoomReservation: integer); overload;
     constructor Create(aRoomresObj: TRoomReservationBasicObj); overload;
+    destructor Destroy;
     function ChangeIsAllowed(aNewState: TReservationState; aRaiseExceptionOnFail: boolean=false): boolean; override;
 
     property Room: string read FRoom;
@@ -115,7 +116,6 @@ type
     function ChangeIsAllowed(aNewState: TReservationState; aRaiseExceptionOnFail: boolean=false): boolean; override;
     property RoomStateChangeHandler[aRoomRes: integer]: TRoomReservationStateChangeHandler read GetRoomstateChangeHandler;
   end;
-
 
 implementation
 
@@ -375,6 +375,7 @@ begin
       exit;
 
   if ctrlGetBoolean('CheckinWithDetailsDialog') OR
+     d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled OR
     (MessageDlg(Format(GetTranslatedText('shCheckRoom'), [FRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
   begin
     ShowAlertsForReservation(aReservationId, aRoomReservationId, atCHECK_IN);
@@ -423,6 +424,10 @@ begin
   CurrentStateDirty := False;
 end;
 
+
+destructor TRoomReservationStateChangeHandler.Destroy;
+begin
+end;
 
 procedure TRoomReservationStateChangeHandler.UpdateCurrentState;
 begin

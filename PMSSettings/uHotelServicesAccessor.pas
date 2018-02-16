@@ -154,12 +154,11 @@ end;
 
 constructor THotelServicesAccessor.Create;
 begin
-  FDataset := d.roomerMainDataSet.CreateNewDataset;
+  FDataset := d.roomerMainDataSet;
 end;
 
 destructor THotelServicesAccessor.Destroy;
 begin
-  FDataset.Free;
   inherited;
 end;
 

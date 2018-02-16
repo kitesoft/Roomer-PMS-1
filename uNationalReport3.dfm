@@ -88,7 +88,6 @@ object frmNationalReport3: TfrmNationalReport3
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 41
         object tvNationalStatistics1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -291,31 +290,21 @@ object frmNationalReport3: TfrmNationalReport3
           OnClick = cxButton1Click
           SkinData.SkinSection = 'BUTTON'
         end
-        object cbxMarket: TsComboBox
+        object btnChangeMarket: TsButton
           AlignWithMargins = True
           Left = 406
           Top = 4
-          Width = 163
-          Height = 37
+          Width = 128
+          Height = 35
           Align = alLeft
-          Alignment = taLeftJustify
-          VerticalAlignment = taAlignTop
-          Style = csDropDownList
-          Color = 16250871
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -24
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ItemIndex = 0
-          ParentFont = False
+          Caption = 'Market'
+          DropDownMenu = pupMarket
+          ImageIndex = 75
+          Images = DImages.PngImageList1
+          Style = bsSplitButton
           TabOrder = 5
-          Text = 'Leisure'
-          OnCloseUp = cbxMarketCloseUp
-          Items.Strings = (
-            'Leisure'
-            'Business'
-            'Conference')
+          OnClick = cxButton1Click
+          SkinData.SkinSection = 'BUTTON'
         end
       end
       object grAllGuests: TcxGrid
@@ -326,8 +315,6 @@ object frmNationalReport3: TfrmNationalReport3
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = 1
-        ExplicitTop = 41
         object tvAllGuests: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -1124,7 +1111,7 @@ object frmNationalReport3: TfrmNationalReport3
         end
       end
     end
-    object PostToHagstofa: TsButton
+    object btnPostToHagstofa: TsButton
       Left = 315
       Top = 75
       Width = 134
@@ -1136,7 +1123,7 @@ object frmNationalReport3: TfrmNationalReport3
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
-      OnClick = PostToHagstofaClick
+      OnClick = btnPostToHagstofaClick
       SkinData.SkinSection = 'BUTTON'
     end
   end
@@ -2506,5 +2493,23 @@ object frmNationalReport3: TfrmNationalReport3
     StorageType = stRegistry
     Left = 310
     Top = 312
+  end
+  object pupMarket: TPopupMenu
+    Left = 464
+    Top = 120
+    object mnuLeisure: TMenuItem
+      Caption = 'Leisure'
+      OnClick = mnuConferenceClick
+    end
+    object mnuBusiness: TMenuItem
+      Tag = 1
+      Caption = 'Business'
+      OnClick = mnuConferenceClick
+    end
+    object mnuConference: TMenuItem
+      Tag = 2
+      Caption = 'Conference'
+      OnClick = mnuConferenceClick
+    end
   end
 end

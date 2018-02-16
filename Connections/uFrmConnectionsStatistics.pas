@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uRoomerDialogForm, cxGridTableView, cxStyles, dxPScxCommon, dxPScxGridLnk, cxClasses, cxPropertiesStore, Vcl.StdCtrls,
   sButton, Vcl.ExtCtrls, sPanel, Vcl.ComCtrls, sStatusBar, sEdit, sCheckBox, sLabel, sGroupBox, sPageControl,
-  uConnectionsStatisticsService, uDImages, uHotelServicesSettings;
+  uConnectionsStatisticsService, uDImages;
 
 type
   TFrmConnectionsStatistics = class(TfrmBaseRoomerDialogForm)
@@ -59,7 +59,6 @@ type
   private
     { Private declarations }
     ConnectionsStatisticsService : TConnectionsStatisticsService;
-    FHotelServicesSettings : THotelServicesSettings;
     procedure SaveSnapshotSettings;
     procedure UpdateControlsHagstofa;
     procedure SaveHagstofaSettings;
@@ -77,7 +76,7 @@ procedure ShowStatisticsSettings;
 implementation
 
 {$R *.dfm}
-uses uSnapshotService
+uses uSnapshotService, uD
      ;
 
 
@@ -124,7 +123,7 @@ end;
 
 procedure TFrmConnectionsStatistics.SaveHagstofaSettings;
 begin
-  with FHotelServicesSettings.HagstofaServiceSettings do
+  with d.HotelServicesSettings.HagstofaServiceSettings do
   begin
     HagstofaEnabled := cbxHsActive.Checked;
     HagstofaId := edHsId.Text;
@@ -197,7 +196,7 @@ begin
     cbxActive.Checked := active;
   end;
 
-  with FHotelServicesSettings.HagstofaServiceSettings do
+  with d.HotelServicesSettings.HagstofaServiceSettings do
   begin
     cbxHsActive.Checked := HagstofaEnabled;
     edHsId.Text := HagstofaId;
@@ -217,12 +216,10 @@ begin
   inherited;
   pcPages.ActivePageIndex := 0;
   ConnectionsStatisticsService := TConnectionsStatisticsService.Create(SYSTEM_CODE);
-  FHotelServicesSettings := THotelServicesSettings.Create;
 end;
 
 procedure TFrmConnectionsStatistics.FormDestroy(Sender: TObject);
 begin
-  FHotelServicesSettings.Free;
   ConnectionsStatisticsService.Free;
   inherited;
 end;

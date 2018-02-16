@@ -60,6 +60,8 @@ uses
     , cmpRoomerDataSet
     , cmpRoomerConnection
     , cxEditRepositoryItems, ALHttpClient, ALWininetHttpClient, uMarketDefinitions
+
+    , uHotelServicesSettings
     ;
 
 type
@@ -197,6 +199,7 @@ type
     procedure mInvoicelines_afterNewRecord(DataSet: TDataSet);
 
   private
+    FHotelServicesSettings: THotelServicesSettings;
     { Private declarations }
     procedure SetMainRoomerDataSet(ds: TRoomerDataSet; ConnectAllDatasets: boolean = True);
     function LocateWRoom(Room: String): boolean;
@@ -695,6 +698,9 @@ type
 
     procedure CheckAndCorrectCredentials(const aHotelCode: string);
     property ApplicationId: string read GetApplicationId write SetApplicationid;
+
+    property HotelServicesSettings : THotelServicesSettings read FHotelServicesSettings;
+
   end;
 
 function CreateNewDataSet: TRoomerDataSet;
@@ -891,6 +897,7 @@ end;
 
 procedure Td.DataModuleCreate(Sender: TObject);
 begin
+  FHotelServicesSettings := THotelServicesSettings.Create;
   qRes := -1;
   qRres := -1;
 
@@ -957,6 +964,7 @@ end;
 
 procedure Td.DataModuleDestroy(Sender: TObject);
 begin
+  FHotelServicesSettings.Free;
   roomerMainDataSet.Logout;
 end;
 

@@ -264,13 +264,17 @@ type
     tvNationalStatistics1ConferenceCount: TcxGridDBColumn;
     mHagstofa1BusinessCount: TIntegerField;
     mHagstofa1ConferenceCount: TIntegerField;
-    cbxMarket: TsComboBox;
     mAllGuestsMarket: TWideStringField;
     tvAllGuestsMarket: TcxGridDBColumn;
     edPrivate: TsEdit;
     edConference: TsEdit;
     edBusiness: TsEdit;
-    PostToHagstofa: TsButton;
+    btnPostToHagstofa: TsButton;
+    btnChangeMarket: TsButton;
+    pupMarket: TPopupMenu;
+    mnuLeisure: TMenuItem;
+    mnuBusiness: TMenuItem;
+    mnuConference: TMenuItem;
     procedure FormShow(Sender : TObject);
     procedure cbxMonthPropertiesCloseUp(Sender : TObject);
     procedure btnRefreshClick(Sender : TObject);
@@ -289,9 +293,9 @@ type
     procedure cxButton1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mAllGuestsAfterScroll(DataSet: TDataSet);
-    procedure cbxMarketCloseUp(Sender: TObject);
     procedure edBusinessChange(Sender: TObject);
-    procedure PostToHagstofaClick(Sender: TObject);
+    procedure btnPostToHagstofaClick(Sender: TObject);
+    procedure mnuConferenceClick(Sender: TObject);
   private
     { Private declarations }
     zDateFrom : Tdate;
@@ -326,6 +330,7 @@ type
     function getRoomReservationsList : string;
     procedure getRoomInfo;
     procedure ShowData;
+    procedure SetMarketButtonMenuCaptions;
 
   public
     { Public declarations }
@@ -376,21 +381,71 @@ end;
 
 procedure TfrmNationalReport3.mAllGuestsAfterScroll(DataSet: TDataSet);
 begin
-  cbxMarket.ItemIndex := -1;
+  btnChangeMarket.Caption := TReservationMarketType.mtUnknown.AsReadableString;
   if NOT (DataSet.Eof OR DataSet.Bof) then
   begin
     if DataSet['Market'] = 'LEISURE' then
-       cbxMarket.ItemIndex := 0
+       btnChangeMarket.Caption := TReservationMarketType.mtLeisure.AsReadableString
     else
     if DataSet['Market'] = 'BUSINESS' then
-       cbxMarket.ItemIndex := 1
+       btnChangeMarket.Caption := TReservationMarketType.mtBusiness.AsReadableString
     else
     if DataSet['Market'] = 'CONFERENCE' then
-       cbxMarket.ItemIndex := 2
+       btnChangeMarket.Caption := TReservationMarketType.mtConference.AsReadableString
   end;
 end;
 
-procedure TfrmNationalReport3.PostToHagstofaClick(Sender: TObject);
+procedure TfrmNationalReport3.mnuConferenceClick(Sender: TObject);
+var s : String;
+    newMarket,
+    oldMarket : String;
+    iReservation : Integer;
+    oldType,
+    newType : TReservationMarketType;
+begin
+  if NOT (mAllGuests.Eof OR mAllGuests.Bof) then
+
+    oldMarket := mAllGuests['Market'];
+    oldType := TReservationMarketType.FromDBString(oldMarket, TReservationMarketType.mtLeisure);
+    newType := TReservationMarketType.fromItemIndex(TMenuItem(Sender).Tag);
+    newMarket := newType.ToDBString;
+	  S := format(GetTranslatedText('shTx_NationalReport_ChangeMarketFromTo'),
+              [
+                mAllGuests.FieldByName('GuestGroupName').AsString,
+                oldType.AsReadableString,
+                TMenuItem(Sender).Caption
+              ]
+              );
+
+    if MessageDlg(S, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      iReservation := mAllGuests.FieldByName('Reservation').AsInteger;
+      if not d.ChangeMarketType(newMarket, iReservation) then
+      begin
+        showmessage(GetTranslatedText('shTx_NationalReport_NoChangeMarket'));
+      end else
+      begin
+        mAllGuests.AfterScroll := nil;
+        mAllGuests.DisableControls;
+        mHagstofa1.DisableControls;
+        mNationalStatistics.DisableControls;
+        try
+          getGuests;
+          getAllGuests;
+          if mAllGuests.Locate('Reservation',iReservation,[]) then
+          begin
+          end;
+        finally
+          mAllGuests.AfterScroll := mAllGuestsAfterScroll;
+          mAllGuests.EnableControls;
+          mHagstofa1.EnableControls;
+          mNationalStatistics.EnableControls;
+        end;
+      end;
+    end;
+end;
+
+procedure TfrmNationalReport3.btnPostToHagstofaClick(Sender: TObject);
 var ConnectionsStatisticsService : TConnectionsStatisticsService;
 begin
   ConnectionsStatisticsService := TConnectionsStatisticsService.Create('');
@@ -522,7 +577,7 @@ end;
 
 procedure TfrmNationalReport3.btnRefreshClick(Sender : TObject);
 begin
-  cbxMarket.ItemIndex := -1;
+  btnChangeMarket.Caption := TReservationMarketType.mtUnknown.AsReadableString;
   getGuests;
   getAllGuests;
 end;
@@ -631,8 +686,8 @@ begin
       totalnights := 0;
       totalGuests := 0;
 
-      PostToHagstofa.Hint := '';
-      PostToHagstofa.Enabled := NOT rSet.Eof;
+      btnPostToHagstofa.Hint := '';
+      btnPostToHagstofa.Enabled := NOT rSet.Eof;
       while not rSet.Eof do
       begin
         country              := rSet.FieldByName('Country').AsString;
@@ -650,8 +705,8 @@ begin
 
         if country = '00' then
         begin
-          PostToHagstofa.Hint := GetTranslatedText('shTx_NationalReport_InknownCountries');
-          PostToHagstofa.Enabled := False;
+          btnPostToHagstofa.Hint := GetTranslatedText('shTx_NationalReport_InknownCountries');
+          btnPostToHagstofa.Enabled := False;
         end;
 
 
@@ -827,52 +882,6 @@ begin
   end;
 end;
 
-
-procedure TfrmNationalReport3.cbxMarketCloseUp(Sender: TObject);
-var s : String;
-    newMarket,
-    oldMarket : String;
-    iReservation : Integer;
-begin
-  if NOT (mAllGuests.Eof OR mAllGuests.Bof) then
-
-    oldMarket := mAllGuests['Market'];
-    newMarket := TReservationMarketType.fromItemIndex(cbxMarket.ItemIndex).ToDBString;
-	  S := format(GetTranslatedText('shTx_NationalReport_ChangeMarketFromTo'),
-              [
-                mAllGuests.FieldByName('GuestGroupName').AsString,
-                TReservationMarketType.FromDBString(oldMarket, TReservationMarketType.mtLeisure).AsReadableString,
-                cbxMarket.Text
-              ]
-              );
-
-    if MessageDlg(S, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
-      iReservation := mAllGuests.FieldByName('Reservation').AsInteger;
-      if not d.ChangeMarketType(newMarket, iReservation) then
-      begin
-        showmessage(GetTranslatedText('shTx_NationalReport_NoChangeMarket'));
-      end else
-      begin
-        mAllGuests.AfterScroll := nil;
-        mAllGuests.DisableControls;
-        mHagstofa1.DisableControls;
-        mNationalStatistics.DisableControls;
-        try
-          getGuests;
-          getAllGuests;
-          if mAllGuests.Locate('Reservation',iReservation,[]) then
-          begin
-          end;
-        finally
-          mAllGuests.AfterScroll := mAllGuestsAfterScroll;
-          mAllGuests.EnableControls;
-          mHagstofa1.EnableControls;
-          mNationalStatistics.EnableControls;
-        end;
-      end;
-    end;
-end;
 
 procedure TfrmNationalReport3.cbxMonthPropertiesCloseUp(Sender : TObject);
 var
@@ -1060,8 +1069,17 @@ end;
 
 procedure TfrmNationalReport3.FormShow(Sender : TObject);
 begin
-  TReservationMarketType.AsStrings(cbxMarket.Items);
+  SetMarketButtonMenuCaptions;
   ShowData;
+  btnPostToHagstofa.Visible := d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled;
+end;
+
+procedure TfrmNationalReport3.SetMarketButtonMenuCaptions;
+begin
+  btnPostToHagstofa.Enabled := False;
+  mnuLeisure.Caption := TReservationMarketType.mtLeisure.AsReadableString;
+  mnuBusiness.Caption := TReservationMarketType.mtBusiness.AsReadableString;
+  mnuConference.Caption := TReservationMarketType.mtConference.AsReadableString;
 end;
 
 procedure TfrmNationalReport3.ShowData;

@@ -1197,7 +1197,8 @@ begin
   begin
     if Components[i] IS TShape then
       if TShape(Components[i]).Tag = Tag then
-        TShape(Components[i]).Visible :=  VisibleStatus;
+        TShape(Components[i]).Visible :=  VisibleStatus OR
+        ((Tag = TMandatoryCheckinField.mfNationality.AsTagid) AND d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled);
   end;
 end;
 

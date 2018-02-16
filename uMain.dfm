@@ -2061,8 +2061,6 @@ object frmMain: TfrmMain
             DirectInput = False
             ShowWeeks = True
             PopupWidth = 250
-            ExplicitLeft = 38
-            ExplicitTop = 5
           end
           object pnlStaffComm: TsPanel
             AlignWithMargins = True
