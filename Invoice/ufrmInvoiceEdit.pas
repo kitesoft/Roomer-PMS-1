@@ -530,7 +530,8 @@ type
       aUnpaidNightCount: integer; const aDescription: string; aRoomReservation: integer;
       aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
       aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
-      aBeakfastIncluded: boolean; aIsGenerated: boolean);
+      aBreakfastType: string; aBreakfastprice: double;
+      aIsGenerated: boolean);
 
     Procedure AddRoomTaxToInvoiceLines(totalTax: Double; TaxUnits: Double; taxItem: string; aPurchaseDate: TDate;
       iAddAt: integer = 0; aParentInvoice: TInvoiceLine = nil; aIsIncludedInParent: boolean = false);
@@ -614,8 +615,6 @@ type
     procedure TransferRoomToAnyRoomsClick(Sender: TObject);
     procedure UpdatePaidByOfRoomsdate(FromRoomReservation, RoomReservation, RealRoomReservation,
       reservation: integer);
-    procedure AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer; aPurchaseDate: TDate;
-      iAddAt: integer = 0; aParent: TInvoiceLine = nil);
     procedure ClearGrid;
     procedure UpdateTaxinvoiceLinesForRoomItem(aInvLine: TInvoiceLine);
     procedure AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParent: TInvoiceLine);
@@ -728,7 +727,7 @@ uses
   , uPMSSettings
   , uRoomerCurrencymanager
   , uAddAccommodation
-  , uCurrencyDefinition;
+  , uCurrencyDefinition, uBreakfastTypeDefinitions;
 
 {$R *.DFM}
 
@@ -1461,7 +1460,7 @@ begin
           Persons := rSet.FieldByName('Persons').asinteger;
           Nights := rSet.FieldByName('Nights').asinteger;
           isPackage := rSet.FieldByName('isPackage').asBoolean;
-          BreakfastPrice := rSet.FieldByName('isPackage').AsFloat;
+          BreakfastPrice := rSet.FieldByName('BreakfastPrice').AsFloat;
 
           vTotal := vTotal + Total;
           vTotalWOVat := vTotalWOVat + TotalWOVat;
@@ -1684,7 +1683,7 @@ procedure TfrmInvoiceEdit.AddRoom(const aRoom: String; aRoomPrice: Double; aCurr
   aToDate: TDate; aUnpaidNightCount: integer; const aDescription: string; aRoomReservation: integer;
   aDiscountAmount: Double; aDiscountIsPercentage: boolean; const aDiscountText: string; const aGuestName: String;
   aNumGuests: integer; aNumChildren: integer; const aPackageName: string; aRRAlias: integer;
-  aBeakfastIncluded: boolean; aIsGenerated: boolean);
+  aBreakfastType: string; aBreakfastprice: double; aIsGenerated: boolean);
 var
   lRmRntItem: string;
   lDiscountItem: string;
@@ -1720,7 +1719,8 @@ begin
   lRoomInfo.Room := aRoom;
   lRoomInfo.NumGuests := aNumGuests;
   lRoomInfo.NumChildren := aNumChildren;
-  lRoomInfo.BreakFastIncluded := aBeakfastIncluded;
+  lRoomInfo.Breakfast := TBreakfastType.fromDBString(aBreakfastType);
+  lRoomINfo.BreakfastPrice := aBreakfastprice;
   FRoomInfoList.Add(lRoomInfo);
 
   // add a TInvoiceline object for the RoomRent to InvoiceLineList
@@ -1756,10 +1756,44 @@ begin
   UpdateGrid;
 end;
 
+
 procedure TfrmInvoiceEdit.AddBreakfastInvoicelinesForRoomItem(aRoomEntity: TInvoiceRoomEntity; aParent: TInvoiceLine);
+var
+  lText: string;
+  lInvoiceLine: TInvoiceLine;
+  lItem: string;
+  lItemInfo: TItemTypeInfo;
+
+  lCount: integer;
+  lPrice: TAmount;
+  lVisible: boolean;
 begin
-  if aRoomEntity.BreakFastIncluded then
-    AddIncludedBreakfastToLinesAndGrid(aRoomEntity.NumGuests * aRoomEntity.UnpaidNights, aRoomEntity.Arrival, 0, aParent);
+  lItem := g.qBreakFastItem;
+
+  lCount := aRoomEntity.NumGuests * aRoomEntity.UnpaidNights;
+  if (lCount = 0) then
+    exit;
+
+
+  case aRoomEntity.Breakfast of
+    TBreakfastType.None:      Exit;
+    TBreakfastType.Included:  begin
+                                lText := Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included') + ')';
+                                lPrice := Item_GetPrice(lItem);
+                                lVisible := false;
+                              end;
+    TBreakfastType.Excluded:  begin
+                                lText := Item_GetDescription(lItem);
+                                lPrice := aRoomEntity.BreakFastPrice;
+                                lVisible := True;
+                              end;
+  end;
+  lItemInfo := d.Item_Get_ItemTypeInfo(lItem);
+
+  lInvoiceLine := AddLine(0, aParent, '', lItem, lText, lCount, lPrice, RoomerCurrencyManager.DefaultCurrency,
+    lItemInfo.VATCode, aRoomEntity.Arrival, True, '', '', false, 0, 2, 0, -1, _GetCurrentTick, 0, lVisible);
+
+  lInvoiceLine.IsTotalIncludedInParent := not lVisible;
 
 end;
 
@@ -1994,7 +2028,7 @@ begin
     ItemPrice := iMultiplier * InvoiceCurrencyRate * ItemPrice;
     TotalPrice := ItemCount * ItemPrice * iMultiplier;
 
-    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, trunc(ItemCount), TotalPrice, g.qNativeCurrency, 1.0, 0, 0, false);
+    lInvRoom := TInvoiceRoomEntity.Create(lineItem, 1, 0, trunc(ItemCount), TotalPrice, g.qNativeCurrency, 1.0, 0, 0, TBreakfastType.None);
     try
       fVat := GetVATForItem(lineItem, TotalPrice, ItemCount, lInvRoom, tempInvoiceItemList, ItemTypeInfo,
         fraCustomer.Code);
@@ -2634,7 +2668,7 @@ begin
       itemVAT := 0.00;
       if ItemPrice <> 0 then
       begin
-        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, InvoiceCurrencyCode, InvoiceCurrencyRate, 0, 0, false);
+        lInvRoom := TInvoiceRoomEntity.Create(Item, taxGuests, 0, taxNights, ItemPrice, InvoiceCurrencyCode, InvoiceCurrencyRate, 0, 0, TBreakfastType.None);
         try
           itemVAT := GetVATForItem(Item, ItemPrice, 1, lInvRoom, tempInvoiceItemList, ItemTypeInfo, fraCustomer.Code);
           // BHG
@@ -2648,27 +2682,6 @@ begin
   end;
 end;
 
-
-procedure TfrmInvoiceEdit.AddIncludedBreakfastToLinesAndGrid(aIncludedBreakfastCount: integer;
-  aPurchaseDate: TDate; iAddAt: integer = 0; aParent: TInvoiceLine = nil);
-var
-  lText: string;
-  lInvoiceLine: TInvoiceLine;
-  lItem: string;
-  lItemInfo: TItemTypeInfo;
-begin
-  if (aIncludedBreakfastCount = 0) then
-    exit;
-
-  lItem := g.qBreakFastItem;
-  lText := Item_GetDescription(lItem) + ' (' + GetTranslatedText('shTx_ReservationProfile_Included') + ')';
-  lItemInfo := d.Item_Get_ItemTypeInfo(lItem);
-  lInvoiceLine := AddLine(0, aParent, '', lItem, lText, aIncludedBreakfastCount, Item_GetPrice(lItem),
-    g.qNativeCurrency, lItemInfo.VATCode, aPurchaseDate, True, '', '', false, 0, 0, 0, -1, _GetCurrentTick, 0, False);
-
-  lInvoiceLine.IsTotalIncludedInParent := True;
-
-end;
 
 function TfrmInvoiceEdit.GetInvoiceLineVisibility(aReservation: integer; aRoomReservation:integer; aInvoiceIndex: integer;
                                                      aPurchaseDate: TDate; const aItem: string; aDefault: boolean): boolean;
@@ -4597,7 +4610,9 @@ begin
           AddRoom(Room, AverageRate, InvoiceCurrencyCode, Arrival, Departure, UnpaidDays, zRoomRSet.FieldByName('rrDescription').asString,
                   lRoomReservation,
                   AverageDiscountAmount, AllisPercentage, DiscountText,
-                  GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean, true);
+                  GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation,
+                  zRoomRSet.FieldByName('BreakFast').AsString,
+                  zRoomRSet.fieldbyName('BreakfastPrice').AsFloat, true);
 
 //          end
 
@@ -4833,7 +4848,7 @@ begin
       AddRoom(Room, Rate, lCurrency, RateDate, RateDate + 1, 1, lRoomsDateSet.FieldByName('rrDescription').asString,
               lRoomReservation,
               DiscountAmount, isPercentage, DiscountText, GuestName, NumberGuests, ChildrenCount, package,
-              lRoomReservation, lRoomsDateSet.FieldByName('invBreakFast').asBoolean, true);
+              lRoomReservation, lRoomsDateSet.FieldByName('BreakFast').asString, lROomsDateSet.FieldByname('BreakfastPrice').AsFloat, true);
 
       lRoomsDateSet.Next;
     end; // while not roomdateSet.eof()
@@ -6242,12 +6257,12 @@ begin
             lDate := lIntDate * 1.0;
             for iRoomCount := 0 to iRooms -1 do
               AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, TDate(lDate), TDate(lDate) + 1, 1, '',  -1, 0, false, '', edtName.Text,
-                iPersons, 0, '', -1, false, false);
+                iPersons, 0, '', -1, TBreakfastType.None.ToDBString, 0, false);
           end
         else
           for iRoomCount := 0 to iRooms -1 do
             AddRoom('', dRoomPrice, dRoomPrice.CurrencyCode, trunc(now), trunc(now) + iNights, iNights, '', -1, 0, false, '', edtName.Text,
-              iPersons, 0, '', -1, false, false);
+              iPersons, 0, '', -1, TBreakfastType.None.ToDBString, 0, false);
       end;
     finally
       agrLines.EndUpdate;

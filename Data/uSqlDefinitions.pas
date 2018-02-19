@@ -5781,6 +5781,8 @@ begin
   s := s+' rr.Status, '+#10;
   s := s+' rr.GroupAccount, '+#10;
   s := s+' rr.invBreakfast, '+#10;
+  s := s+' rr.Breakfast, '+#10;
+  s := s+' rr.BreakfastPrice, '+#10;
   s := s+' rr.RoomPrice1, '+#10;
   s := s+' rr.Price1From, '+#10;
   s := s+' rr.Price1To, '+#10;
@@ -5885,6 +5887,8 @@ begin
   s := s+' rr.Status, '+#10; //
   s := s+' rr.GroupAccount, '+#10; //
   s := s+' rr.invBreakfast, '+#10;
+  s := s+' rr.Breakfast, '+#10;
+  s := s+' rr.BreakfastPrice, '+#10;
   s := s+' rr.Discount, '+#10; //
   s := s+' rr.PriceType, '+#10; //
   s := s+' rr.RoomType, '+#10; //
@@ -5974,6 +5978,8 @@ begin
   s := s+' rr.Status, '+#10;
   s := s+' rr.GroupAccount, '+#10;
   s := s+' rr.invBreakfast, '+#10;
+  s := s+' rr.Breakfast, '+#10;
+  s := s+' rr.BreakfastPrice, '+#10;
   s := s+' rr.PriceType, '+#10;
   s := s+' rr.RoomType, '+#10;
   s := s+' rr.rrDescription, '+#10;

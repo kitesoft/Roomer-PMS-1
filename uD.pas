@@ -59,7 +59,8 @@ uses
     , uReservationStateDefinitions
     , cmpRoomerDataSet
     , cmpRoomerConnection
-    , cxEditRepositoryItems, ALHttpClient, ALWininetHttpClient, uMarketDefinitions, uBreakfastStateDefinitions
+    , cxEditRepositoryItems, ALHttpClient, ALWininetHttpClient, uMarketDefinitions
+    , uBreakfastTypeDefinitions, uAmount
     ;
 
 type
@@ -335,7 +336,7 @@ type
     function InvoiceLinesTmp_exists(iRoomReservation: Integer): boolean;
     function del_InvoiceLinesTmp(iRoomReservation: Integer): boolean;
 
-    function UpdateRoomResBreakfastState(reservation, RoomReservation: Integer; aBreakfast: TBreakfastState): boolean;
+    function UpdateRoomResBreakfastState(reservation, RoomReservation: Integer; aBreakfast: TBreakfastType; aPrice: TAmount): boolean;
     procedure UpdateGroupAccountAll(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean);
     function UpdateGroupAccountOne(reservation, RoomReservation, RoomReservationAlias: Integer; GroupAccount: boolean;
       InvoiceIndex: Integer = -1): boolean;
@@ -3487,14 +3488,16 @@ begin
   end;
 end;
 
-function Td.UpdateRoomResBreakfastState(reservation, RoomReservation: Integer; aBreakfast: TBreakfastState): boolean;
+function Td.UpdateRoomResBreakfastState(reservation, RoomReservation: Integer; aBreakfast: TBreakfastType; aPrice: TAmount): boolean;
 var
   s: string;
 begin
   s := '';
   s := s + 'UPDATE roomreservations ' + chr(10);
   s := s + 'Set' + chr(10);
-  s := s + '  InvBreakfast = ' + _db(ord(aBreakfast)) + chr(10);
+//  s := s + '  InvBreakfast = ' + _db(ord(aBreakfast)) + chr(10);
+  s := s + '  Breakfast = ' + _db(aBreakfast.ToDBString) + chr(10);
+  s := s + '  ,BreakfastPrice = ' + _db(aPrice) + chr(10);
   s := s + 'WHERE Reservation = ' + _db(reservation) + chr(10);
   if RoomReservation > 0 then
     s := s + '  AND RoomReservation = ' + inttostr(RoomReservation) + chr(10);

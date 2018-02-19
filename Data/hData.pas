@@ -23,8 +23,9 @@ uses
   , uReservationStateDefinitions
   , uRoomReservationOBJ
   , uRoomerThreadedRequest
-  , uStaffCommunicationDefinitions, uDateTimeHelper, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions,
-  uMarketDefinitions, uBreakfastStateDefinitions
+  , uStaffCommunicationDefinitions, uDateTimeHelper, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions
+  , uMarketDefinitions
+  , uBreakfastTypeDefinitions, uAmount
   ;
 
 const
@@ -463,7 +464,8 @@ type
     Reservation: integer;
     Status: string;
     GroupAccount: boolean;
-    Breakfast: TBreakfastState;
+    Breakfast: TBreakfastType;
+    BreakfastPrice: TAMount;
     RoomPrice1: double;
     Price1From: string;
     Price1To: string;
@@ -2873,7 +2875,7 @@ begin
     Reservation := -1;
     Status := 'P';
     GroupAccount := false;
-    Breakfast := TBreakfastState.None;
+    Breakfast := TBreakfastType.None;
     Currency := g.qNativeCurrency;
     // ctrlGetString('NativeCurrency', Connection,loglevel,logPath);
     Discount := 0.00;
@@ -3920,7 +3922,9 @@ begin
     b.Append('   ,Reservation = ' + _db(theData.Reservation) + #10);
     b.Append('   ,Status = ' + _db(theData.Status) + #10);
     b.Append('   ,GroupAccount = ' + _db(theData.GroupAccount) + #10);
-    b.Append('   ,invBreakfast = ' + _db(ord(theData.Breakfast)) + #10);
+    b.Append('   ,invBreakfast = ' + _db(theData.Breakfast = TBreakfastType.Included) + #10);
+    b.Append('   ,Breakfast = ' + _db(theData.Breakfast.ToDBString) + #10);
+    b.Append('   ,BreakfastPrice = ' + _db(theData.BreakfastPrice.ToNative) + #10);
     b.Append('   ,RoomPrice1 = ' + _db(theData.RoomPrice1) + #10);
     b.Append('   ,Price1From = ' + _db(theData.Price1From) + #10);
     b.Append('   ,Price1To = ' + _db(theData.Price1To) + #10);
@@ -4295,7 +4299,7 @@ begin
       result.Reservation := rSet.fieldbyname('Reservation').asInteger;
       result.Status := rSet.fieldbyname('Status').asString;
       result.GroupAccount := rSet['GroupAccount'];
-      result.Breakfast := TBreakfastState.FromItemIndex(rSet['invBreakfast']);
+      result.Breakfast := TBreakfastType.FromItemIndex(rSet['invBreakfast']);
       result.RoomPrice1 := rSet.fieldbyname('RoomPrice1').AsFloat;
       result.Price1From := rSet.fieldbyname('Price1From').asString;
       result.Price1To := rSet.fieldbyname('Price1To').asString;

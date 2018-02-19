@@ -1,4 +1,4 @@
-﻿object frmMakeReservationQuick: TfrmMakeReservationQuick
+object frmMakeReservationQuick: TfrmMakeReservationQuick
   Left = 549
   Top = 309
   Caption = 'New reservation'
@@ -26,7 +26,6 @@
     Align = alBottom
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 640
     DesignSize = (
       1117
       33)
@@ -43,7 +42,6 @@
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 881
     end
     object btnNext: TsButton
       Left = 121
@@ -85,7 +83,6 @@
       TabOrder = 1
       OnClick = btnFinishClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 998
     end
   end
   object pnlNotes: TsPanel
@@ -97,7 +94,6 @@
     Constraints.MinHeight = 50
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 568
     object panNotesPayment: TsPanel
       Left = 407
       Top = 1
@@ -117,8 +113,8 @@
         object clabPaymentNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 86
-          Height = 13
+          Width = 280
+          Height = 15
           Align = alClient
           Alignment = taCenter
           Caption = 'Payment Notes'
@@ -128,6 +124,8 @@
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ExplicitWidth = 86
+          ExplicitHeight = 13
         end
       end
       object memReservationPaymentInfo: TsMemo
@@ -173,8 +171,8 @@
         object clabGeneralNotes: TsLabel
           Left = 1
           Top = 1
-          Width = 79
-          Height = 13
+          Width = 402
+          Height = 15
           Align = alClient
           Alignment = taCenter
           Caption = 'General Notes'
@@ -187,6 +185,8 @@
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ExplicitWidth = 79
+          ExplicitHeight = 13
         end
       end
       object memReservationGeneralInfo: TsMemo
@@ -221,7 +221,6 @@
       Align = alClient
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 424
       object sPanel6: TsPanel
         Left = 1
         Top = 1
@@ -230,7 +229,6 @@
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 422
         object clabRoomNotes: TsLabel
           Left = 1
           Top = 1
@@ -248,6 +246,8 @@
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          ExplicitWidth = 68
+          ExplicitHeight = 13
         end
       end
       object btnClearLog: TsButton
@@ -314,7 +314,6 @@
         DataField = 'roomNotes'
         DataSource = mRoomResDS
         TabOrder = 6
-        ExplicitWidth = 422
       end
     end
   end
@@ -323,15 +322,13 @@
     Top = 0
     Width = 1117
     Height = 577
-    ActivePage = taReservation
+    ActivePage = tabRoomRates
     Align = alClient
     TabOrder = 2
     OnChange = pgcMainChange
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitHeight = 568
     object taReservation: TsTabSheet
       Caption = 'Reservation'
-      ExplicitHeight = 540
       object panTop: TsPanel
         Left = 0
         Top = 0
@@ -340,7 +337,6 @@
         Align = alClient
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 540
         object Panel2: TsPanel
           Left = 1
           Top = 1
@@ -349,7 +345,6 @@
           Align = alLeft
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitHeight = 538
           object gbxGetCustomer: TsGroupBox
             AlignWithMargins = True
             Left = 6
@@ -469,6 +464,8 @@
                 ExplicitWidth = 309
                 inherited lblDescription: TsLabel
                   Left = 181
+                  Width = 128
+                  Height = 20
                   ExplicitLeft = 181
                 end
                 inherited edCode: TsEdit
@@ -616,7 +613,6 @@
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
-                  ExplicitLeft = 208
                 end
               end
             end
@@ -754,6 +750,10 @@
                 inherited pnlLookup: TsPanel
                   Width = 309
                   ExplicitWidth = 309
+                  inherited lblDescription: TsLabel
+                    Width = 216
+                    Height = 20
+                  end
                 end
               end
               inline fraLookupMarketSegment: TfraLookupMarketSegment
@@ -772,6 +772,10 @@
                 inherited pnlLookup: TsPanel
                   Width = 309
                   ExplicitWidth = 309
+                  inherited lblDescription: TsLabel
+                    Width = 216
+                    Height = 20
+                  end
                 end
               end
             end
@@ -883,7 +887,7 @@
                 Left = 156
                 Top = 0
                 Width = 4
-                Height = 13
+                Height = 21
                 Margins.Left = 6
                 Margins.Top = 0
                 Margins.Right = 0
@@ -896,6 +900,7 @@
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = []
+                ExplicitHeight = 13
               end
               object dtArrival: TsDateEdit
                 Left = 0
@@ -939,7 +944,7 @@
                 Left = 156
                 Top = 0
                 Width = 4
-                Height = 13
+                Height = 21
                 Margins.Left = 6
                 Margins.Top = 0
                 Margins.Right = 0
@@ -952,6 +957,7 @@
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = []
+                ExplicitHeight = 13
               end
               object dtDeparture: TsDateEdit
                 Left = 0
@@ -994,7 +1000,6 @@
             Caption = 'Room Rate'
             TabOrder = 3
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitHeight = 162
             object clabCurrency: TsLabel
               Left = 107
               Top = 18
@@ -1062,6 +1067,10 @@
               inherited pnlLookup: TsPanel
                 Width = 309
                 ExplicitWidth = 309
+                inherited lblDescription: TsLabel
+                  Width = 216
+                  Height = 20
+                end
               end
             end
             object pnlDiscount: TPanel
@@ -1146,6 +1155,10 @@
               inherited pnlLookup: TsPanel
                 Width = 309
                 ExplicitWidth = 309
+                inherited lblDescription: TsLabel
+                  Width = 216
+                  Height = 20
+                end
               end
             end
           end
@@ -1159,12 +1172,10 @@
           Align = alClient
           TabOrder = 1
           SkinData.SkinSection = 'PAGECONTROL'
-          ExplicitHeight = 538
           object tabContactDetails: TsTabSheet
             Caption = 'Contact Details'
             ImageIndex = 2
             TabVisible = False
-            ExplicitHeight = 528
             object sPanel3: TsPanel
               Left = 0
               Top = 0
@@ -1173,7 +1184,6 @@
               Align = alClient
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
-              ExplicitHeight = 528
               object AdvSplitter1: TAdvSplitter
                 Left = 257
                 Top = 292
@@ -1205,7 +1215,6 @@
                 ParentColor = False
                 TabOrder = 0
                 SkinData.SkinSection = 'GROUPBOX'
-                ExplicitWidth = 583
                 object clabContactPerson: TsLabel
                   Left = 68
                   Top = 44
@@ -1334,7 +1343,6 @@
                   ShowHint = False
                   TabOrder = 0
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 91
                 end
                 object edContactAddress2: TsEdit
                   AlignWithMargins = True
@@ -1356,7 +1364,6 @@
                   ShowHint = False
                   TabOrder = 1
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 118
                 end
                 object edContactAddress3: TsEdit
                   AlignWithMargins = True
@@ -1378,7 +1385,6 @@
                   ShowHint = False
                   TabOrder = 2
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 145
                 end
                 object edContactAddress4: TsEdit
                   AlignWithMargins = True
@@ -1400,7 +1406,6 @@
                   ShowHint = False
                   TabOrder = 3
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 172
                 end
                 object chkContactIsGuest: TsCheckBox
                   AlignWithMargins = True
@@ -1418,7 +1423,6 @@
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
-                  ExplicitWidth = 566
                 end
                 object edContactFax: TsEdit
                   AlignWithMargins = True
@@ -1440,7 +1444,6 @@
                   ShowHint = False
                   TabOrder = 4
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 226
                 end
                 object cbxAddToGuestProfiles: TsCheckBox
                   AlignWithMargins = True
@@ -1456,7 +1459,6 @@
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
-                  ExplicitWidth = 426
                 end
                 object edContactPerson1: TcxComboBox
                   AlignWithMargins = True
@@ -1484,13 +1486,12 @@
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 8
-                  ExplicitWidth = 349
                   object lblContactMobile: TsLabel
                     AlignWithMargins = True
                     Left = 163
                     Top = 3
                     Width = 34
-                    Height = 13
+                    Height = 15
                     Align = alRight
                     Alignment = taRightJustify
                     Caption = 'Mobile:'
@@ -1501,7 +1502,6 @@
                     Font.Height = -11
                     Font.Name = 'Tahoma'
                     Font.Style = []
-                    ExplicitLeft = 162
                     ExplicitHeight = 13
                   end
                   object edContactPhone: TsEdit
@@ -1539,7 +1539,6 @@
                     ShowHint = False
                     TabOrder = 1
                     SkinData.SkinSection = 'EDIT'
-                    ExplicitLeft = 199
                   end
                 end
                 object pnlEmail: TsPanel
@@ -1553,7 +1552,6 @@
                   Align = alTop
                   BevelOuter = bvNone
                   TabOrder = 9
-                  ExplicitWidth = 379
                   object edContactEmail: TsEdit
                     Left = 0
                     Top = 0
@@ -1572,7 +1570,6 @@
                     TabOrder = 0
                     OnChange = edContactEmailChange
                     SkinData.SkinSection = 'EDIT'
-                    ExplicitLeft = -3
                   end
                   object chkSendConfirmation: TsCheckBox
                     AlignWithMargins = True
@@ -1605,7 +1602,6 @@
                 Caption = 'Guest profile notes and preferences'
                 TabOrder = 1
                 SkinData.SkinSection = 'GROUPBOX'
-                ExplicitHeight = 231
                 object lblSpecialRequests: TsLabel
                   AlignWithMargins = True
                   Left = 7
@@ -1616,6 +1612,7 @@
                   Margins.Bottom = 0
                   Align = alTop
                   Caption = 'Special Requests'
+                  ExplicitWidth = 81
                 end
                 object lblNotes: TsLabel
                   AlignWithMargins = True
@@ -1627,6 +1624,7 @@
                   Margins.Bottom = 0
                   Align = alTop
                   Caption = 'Notes'
+                  ExplicitWidth = 28
                 end
                 object edtSpecialRequests: TMemo
                   AlignWithMargins = True
@@ -1649,7 +1647,6 @@
                   ReadOnly = True
                   ScrollBars = ssVertical
                   TabOrder = 0
-                  ExplicitWidth = 310
                 end
                 object edtNotes: TMemo
                   AlignWithMargins = True
@@ -1672,7 +1669,6 @@
                   ReadOnly = True
                   ScrollBars = ssVertical
                   TabOrder = 1
-                  ExplicitWidth = 310
                 end
                 object gbxRoomAlert: TsGroupBox
                   Left = 2
@@ -1681,7 +1677,6 @@
                   Height = 105
                   Align = alTop
                   TabOrder = 2
-                  ExplicitWidth = 320
                   object lblRoomType: TsLabel
                     Left = 13
                     Top = 45
@@ -1718,7 +1713,6 @@
                     ReadOnly = True
                     TabOrder = 0
                     SkinData.CustomFont = True
-                    ExplicitWidth = 222
                   end
                   object edtRoomType: TsEdit
                     AlignWithMargins = True
@@ -1739,7 +1733,6 @@
                     ReadOnly = True
                     TabOrder = 1
                     SkinData.CustomFont = True
-                    ExplicitWidth = 222
                   end
                 end
               end
@@ -1757,7 +1750,6 @@
                 Caption = 'Customer Alert'
                 TabOrder = 2
                 SkinData.SkinSection = 'GROUPBOX'
-                ExplicitHeight = 231
                 object memCustomerAlert: TMemo
                   AlignWithMargins = True
                   Left = 2
@@ -1773,7 +1765,6 @@
                   ReadOnly = True
                   ScrollBars = ssVertical
                   TabOrder = 0
-                  ExplicitHeight = 209
                 end
               end
             end
@@ -1782,7 +1773,6 @@
             Caption = 'Customer Details'
             ImageIndex = 1
             TabVisible = False
-            ExplicitHeight = 528
             object clabTel2: TsLabel
               Left = 204
               Top = 125
@@ -1805,7 +1795,6 @@
               Align = alClient
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
-              ExplicitHeight = 528
               object clabPID: TsLabel
                 Left = 50
                 Top = 13
@@ -2072,7 +2061,6 @@
     object tabSelectType: TsTabSheet
       Caption = 'Select Types'
       ImageIndex = 1
-      ExplicitHeight = 540
       object panSelectTypesTop: TsPanel
         Left = 0
         Top = 0
@@ -2082,7 +2070,6 @@
         BevelOuter = bvNone
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1108
         object gbxSelStatus: TsGroupBox
           AlignWithMargins = True
           Left = 145
@@ -2225,7 +2212,6 @@
         Align = alLeft
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 468
         object tvSelectType: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = mSelectTypesDS
@@ -2341,13 +2327,11 @@
         Align = alClient
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 468
       end
     end
     object tabSelectRooms: TsTabSheet
       Caption = 'Select Rooms'
       ImageIndex = 2
-      ExplicitHeight = 540
       object panSelectRoomsTop: TsPanel
         Left = 0
         Top = 0
@@ -2356,7 +2340,6 @@
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1108
         object sLabel2: TsLabel
           Left = 257
           Top = 7
@@ -2487,7 +2470,6 @@
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 443
         object tvSelectRooms: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = mSelectRoomsDS
@@ -2753,7 +2735,6 @@
     object tabRoomRates: TsTabSheet
       Caption = 'Room Rates'
       ImageIndex = 3
-      ExplicitHeight = 540
       object panTopRoomRates: TsPanel
         Left = 0
         Top = 0
@@ -2762,7 +2743,6 @@
         Align = alTop
         TabOrder = 1
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1108
         object gbxSelectedRoom: TsGroupBox
           AlignWithMargins = True
           Left = 214
@@ -2902,10 +2882,6 @@
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet1: TsTabSheet
             Caption = 'Extra'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sPanel2: TsPanel
               Left = -2
               Top = 0
@@ -2916,20 +2892,12 @@
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
               object lblExtraCurrency: TsLabel
-                Left = 261
+                Left = 263
                 Top = 32
                 Width = 16
                 Height = 13
                 Alignment = taRightJustify
                 Caption = 'ISK'
-              end
-              object lblExtraIncludedInRate: TsLabel
-                Left = 104
-                Top = 5
-                Width = 75
-                Height = 13
-                Alignment = taRightJustify
-                Caption = 'Included in rate'
               end
               object Shape1: TShape
                 Left = 17
@@ -2954,42 +2922,19 @@
                 Caption = 'On group invoice'
               end
               object lblPrice: TsLabel
-                Left = 232
+                Left = 204
                 Top = 5
                 Width = 23
                 Height = 13
                 Alignment = taRightJustify
                 Caption = 'Price'
               end
-              object cbxBreakfast: TsCheckBox
-                Left = 29
-                Top = 30
-                Width = 74
-                Height = 17
-                Caption = 'Breakfast'
-                TabOrder = 0
-                OnClick = cbxBreakfastClick
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
-              end
-              object cbxBreakfastIncl: TsCheckBox
-                Left = 129
-                Top = 32
-                Width = 20
-                Height = 16
-                TabOrder = 1
-                OnClick = cbxBreakfastClick
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
-              end
-              object edtBreakfast: TsEdit
-                Left = 190
+              object edtBreakfast: TsCurrencyEdit
+                Left = 176
                 Top = 29
-                Width = 65
+                Width = 79
                 Height = 21
-                Alignment = taRightJustify
+                AutoSize = False
                 Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
                 Font.Color = clBlack
@@ -2997,29 +2942,44 @@
                 Font.Name = 'Tahoma'
                 Font.Style = []
                 ParentFont = False
-                TabOrder = 2
-                Text = '0'
+                TabOrder = 1
                 SkinData.SkinSection = 'EDIT'
+                GlyphMode.Blend = 0
+                GlyphMode.Grayed = False
               end
               object cbxBreakfastGrp: TsCheckBox
                 Left = 351
                 Top = 32
                 Width = 20
                 Height = 16
-                TabOrder = 3
-                OnClick = cbxBreakfastClick
+                TabOrder = 2
                 SkinData.SkinSection = 'CHECKBOX'
                 ImgChecked = 0
                 ImgUnchecked = 0
+              end
+              object cbxBreakfast: TsComboBox
+                Left = 16
+                Top = 29
+                Width = 145
+                Height = 21
+                Alignment = taLeftJustify
+                VerticalAlignment = taAlignTop
+                Style = csDropDownList
+                Color = clWhite
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clBlack
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ItemIndex = -1
+                ParentFont = False
+                TabOrder = 0
+                OnChange = cbxBreakfastChange
               end
             end
           end
           object Alerts: TsTabSheet
             Caption = 'Alerts'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
         end
       end
@@ -3031,7 +2991,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 400
         object tvRoomRes: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.InfoPanel.Visible = True

@@ -18,7 +18,9 @@ uses
   , ug
   , uAlerts
   , uRoomerDefinitions
-  , RoomerExceptionHandling, uMarketDefinitions
+  , RoomerExceptionHandling
+  , uMarketDefinitions
+  , uBreakfastTypeDefinitions, uAmount
   ;
 
 TYPE
@@ -113,9 +115,8 @@ TYPE
     FMainGuestName : string;
     FNotes         : string;
     FRates: TRates;
-    FBreakfast: Boolean;
-    FBreakfastCost: Double;
-    FBreakfastIncluded: Boolean;
+    FBreakfast: TBreakfastType;
+    FBreakfastCost: TAmount;
     FExtraBedCost: Double;
     FExtraBedIncluded: Boolean;
     FExtraBed: Boolean;
@@ -203,9 +204,8 @@ TYPE
     property MainGuestName  : string    read getMainGuestName   write SetMainGuestName      ;
     property Notes          : string    read getNotes           write SetNotes              ;
 
-    property Breakfast  : Boolean    read FBreakfast   write FBreakfast;
-    property BreakfastIncluded  : Boolean    read FBreakfastIncluded   write FBreakfastIncluded;
-    property BreakfastCost  : Double    read FBreakfastCost   write FBreakfastCost      ;
+    property Breakfast  : TBreakfastType read FBreakfast   write FBreakfast;
+    property BreakfastCost  : TAmount read FBreakfastCost   write FBreakfastCost      ;
     property BreakfastCostGroupAccount : Boolean    read FBreakfastCostGroupAccount   write FBreakfastCostGroupAccount      ;
     property ExtraBed  : Boolean    read FExtraBed   write FExtraBed      ;
     property ExtraBedIncluded  : Boolean    read FExtraBedIncluded   write FExtraBedIncluded      ;
@@ -360,7 +360,8 @@ uses
   , DateUtils
   , uDateUtils
   , Math
-  , uSQLUtils, uReservationEmailingDialog, uRoomerIDList, uBreakfastStateDefinitions;
+  , uSQLUtils, uReservationEmailingDialog, uRoomerIDList
+  ;
 
 const
   cSTOCKITEM_IMPORTREFERENCE = 'STOCKITEM';
@@ -406,8 +407,7 @@ begin
   setNotes(notes);
   FRates := TRates.Create('');
 
-  FBreakfast := False;
-  FBreakfastIncluded := False;
+  FBreakfast := TBreakfastType.None;
   FBreakfastCost := 0.00;
   FExtraBed := False;
   FExtraBedIncluded := False;
@@ -902,7 +902,7 @@ var
 
   Currency: string;
 
-  isBreckfastIncluted: Boolean;
+  lBreakfast: TBreakfastType;
   isGroupInvoice: Boolean;
   RoomStatus: string;
 
@@ -1000,7 +1000,8 @@ var
     HiddenInfo := '';
     ContactIsMainGuest := FhomeCustomer.contactIsMainGuest;
 
-    isBreckfastIncluted := hData.ctrlGetBoolean('BreakfastInclDefault');
+    if hData.ctrlGetBoolean('BreakfastInclDefault') then
+      lBreakFast := TBreakfastType.Included;
 
     isGroupInvoice := FHomeCustomer.isGroupInvoice;
     RoomStatus := FHomeCustomer.RoomStatus;
@@ -1300,12 +1301,8 @@ begin
           roomReservationData.status          := RoomStatus;
           roomReservationData.GroupAccount    := isGroupInvoice;
 
-          if not lNewRoomRes.FBreakfast then
-            roomReservationData.Breakfast     := TBreakfastState.None
-          else if lNewRoomRes.FBreakfastIncluded then
-            roomReservationData.Breakfast     := TBreakfastState.Included
-          else
-            roomReservationData.Breakfast     := TBreakfastState.NotIncluded;
+          roomReservationData.Breakfast       :=  lNewRoomRes.Breakfast;
+          roomReservationData.BreakfastPrice  := lNewROomRes.BreakfastCost;
 
           roomReservationData.Currency        := Currency;
           roomReservationData.Discount        := Discount;
@@ -1511,73 +1508,74 @@ begin
             end;
           end;
 
-          if lNewRoomRes.Breakfast AND (NOT lNewRoomRes.FBreakfastIncluded) then
-          begin
-            initInvoiceLineHolderRec(InvoicelineData);
-            Item := ctrlGetString('BreakFastItem');
-            ItemInfo := d.Item_Get_Data(Item);
-
-            numItems     := numGuests * iDayCount;
-            Price                 := lNewRoomRes.FBreakfastCost;
-            itemDescription       := ItemInfo.Description;
-
-            Total        := price*numItems;
-            lRevenue     := Total;
-
-            fTmp           := Total / (1 + (ItemInfo.VATPercentage / 100));
-            Vat            := Total - ftmp;
-            TotalWOVat     := Total - VAT;
-
-            decodedate(now, AYear, AMon, ADay);
-            invoiceLineData.ItemID          := Item;
-            invoiceLineData.AutoGen         := _GetCurrentTick;
-            invoiceLineData.Reservation     := FReservationId;
-            if lNewRoomRes.FBreakfastCostGroupAccount then
-              invoiceLineData.RoomReservation := 0
-            else
-              invoiceLineData.RoomReservation := lNewRoomRes.RoomReservation;
-            invoiceLineData.PurchaseDate    := date;
-            invoiceLineData.InvoiceNumber   := -1;
-            invoiceLineData.Description     := itemDescription;
-            invoiceLineData.Price           := Price;
-            invoiceLineData.Number          := numItems;
-            invoiceLineData.VATType         := ItemInfo.VATCode;
-            invoiceLineData.Total           := Total;
-            invoiceLineData.TotalWOVAT      := totalWOVat;
-            invoiceLineData.Vat             := VAT;
-            invoiceLineData.CurrencyRate    := 1;
-            invoiceLineData.Currency        := g.qNativeCurrency;
-            invoiceLineData.ReportDate      := now;
-            invoiceLineData.ReportTime      := '00:00';
-            invoiceLineData.Persons         := 0;
-            invoiceLineData.Nights          := 0;
-            invoiceLineData.AYear           := aYear;
-            invoiceLineData.AMon            := aMon;
-            invoiceLineData.ADay            := aDay;
-            invoiceLineData.ItemCurrency     := g.qNativeCurrency;
-            invoiceLineData.ItemCurrencyRate := 1.00;
-            invoiceLineData.Discount           := 0.00;
-            invoiceLineData.Discount_isPrecent := true;
-            invoiceLineData.ImportRefrence     := '';
-            invoiceLineData.ImportSource       := '';
-            invoiceLineData.Ispackage          := false;
-            invoiceLineData.InvoiceIndex          := 0;
-            invoiceLineData.Revenue           := lRevenue;
-            invoiceLineData.VisibleOnInvoice  := True;
-            invoicelineData.ilAccountKey      := ItemInfo.AccountKey;
-            ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
-            //***Add invoice log here
-               lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
-                                     ,invoiceLineData.Reservation
-                                     ,invoiceLineData.RoomReservation
-                                     ,invoiceLineData.SplitNumber
-                                     ,ADD_LINE
-                                     ,invoiceLineData.ItemID
-                                     ,invoiceLineData.Total
-                                     ,-1
-                                     ,invoiceLineData.Description));
-
-          end;
+          // no more automatic invoicelines for excluded breakfasts
+//          if lNewRoomRes.hasBreakfast AND (NOT lNewRoomRes.FBreakfastIncluded) then
+//          begin
+//            initInvoiceLineHolderRec(InvoicelineData);
+//            Item := ctrlGetString('BreakFastItem');
+//            ItemInfo := d.Item_Get_Data(Item);
+//
+//            numItems     := numGuests * iDayCount;
+//            Price                 := lNewRoomRes.FBreakfastCost;
+//            itemDescription       := ItemInfo.Description;
+//
+//            Total        := price*numItems;
+//            lRevenue     := Total;
+//
+//            fTmp           := Total / (1 + (ItemInfo.VATPercentage / 100));
+//            Vat            := Total - ftmp;
+//            TotalWOVat     := Total - VAT;
+//
+//            decodedate(now, AYear, AMon, ADay);
+//            invoiceLineData.ItemID          := Item;
+//            invoiceLineData.AutoGen         := _GetCurrentTick;
+//            invoiceLineData.Reservation     := FReservationId;
+//            if lNewRoomRes.FBreakfastCostGroupAccount then
+//              invoiceLineData.RoomReservation := 0
+//            else
+//              invoiceLineData.RoomReservation := lNewRoomRes.RoomReservation;
+//            invoiceLineData.PurchaseDate    := date;
+//            invoiceLineData.InvoiceNumber   := -1;
+//            invoiceLineData.Description     := itemDescription;
+//            invoiceLineData.Price           := Price;
+//            invoiceLineData.Number          := numItems;
+//            invoiceLineData.VATType         := ItemInfo.VATCode;
+//            invoiceLineData.Total           := Total;
+//            invoiceLineData.TotalWOVAT      := totalWOVat;
+//            invoiceLineData.Vat             := VAT;
+//            invoiceLineData.CurrencyRate    := 1;
+//            invoiceLineData.Currency        := g.qNativeCurrency;
+//            invoiceLineData.ReportDate      := now;
+//            invoiceLineData.ReportTime      := '00:00';
+//            invoiceLineData.Persons         := 0;
+//            invoiceLineData.Nights          := 0;
+//            invoiceLineData.AYear           := aYear;
+//            invoiceLineData.AMon            := aMon;
+//            invoiceLineData.ADay            := aDay;
+//            invoiceLineData.ItemCurrency     := g.qNativeCurrency;
+//            invoiceLineData.ItemCurrencyRate := 1.00;
+//            invoiceLineData.Discount           := 0.00;
+//            invoiceLineData.Discount_isPrecent := true;
+//            invoiceLineData.ImportRefrence     := '';
+//            invoiceLineData.ImportSource       := '';
+//            invoiceLineData.Ispackage          := false;
+//            invoiceLineData.InvoiceIndex          := 0;
+//            invoiceLineData.Revenue           := lRevenue;
+//            invoiceLineData.VisibleOnInvoice  := True;
+//            invoicelineData.ilAccountKey      := ItemInfo.AccountKey;
+//            ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
+//            //***Add invoice log here
+//               lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
+//                                     ,invoiceLineData.Reservation
+//                                     ,invoiceLineData.RoomReservation
+//                                     ,invoiceLineData.SplitNumber
+//                                     ,ADD_LINE
+//                                     ,invoiceLineData.ItemID
+//                                     ,invoiceLineData.Total
+//                                     ,-1
+//                                     ,invoiceLineData.Description));
+//
+//          end;
 
           if lNewRoomRes.FExtraBed AND (NOT lNewRoomRes.FExtraBedIncluded) then
           begin

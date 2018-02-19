@@ -814,7 +814,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="RoomerForm\uRoomerForm.pas">
             <Form>frmBaseRoomerForm</Form>
         </DCCReference>
-        <DCCReference Include="Definitions\uBreakfastStateDefinitions.pas"/>
+        <DCCReference Include="Definitions\uBreakfastTypeDefinitions.pas"/>
         <DCCReference Include="Definitions\uAccountTypeDefinitions.pas"/>
         <DCCReference Include="OpenAPI\uFinancialReportsAPICaller.pas"/>
         <DCCReference Include="Financials\uRptDailyRevenues.pas">

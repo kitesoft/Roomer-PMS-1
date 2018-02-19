@@ -312,7 +312,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             Width = 253
             Height = 22
             ExplicitWidth = 253
-            ExplicitHeight = 21
+            ExplicitHeight = 22
             inherited lblDescription: TsLabel
               Left = 206
               Width = 47
@@ -322,19 +322,19 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
             inherited edCode: TsEdit
               Width = 140
               Height = 22
-              ExplicitTop = 1
               ExplicitWidth = 140
-              ExplicitHeight = 20
             end
             inherited btnSelect: TsButton
               Left = 143
               Height = 22
               ExplicitLeft = 143
+              ExplicitHeight = 22
             end
             inherited btnLast: TsButton
               Left = 167
               Height = 22
               ExplicitLeft = 167
+              ExplicitHeight = 22
             end
           end
         end
@@ -584,12 +584,13 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           TabOrder = 1
           ExplicitLeft = 125
           ExplicitTop = 103
-          ExplicitWidth = 281
+          ExplicitWidth = 279
           inherited pnlLookup: TsPanel
             Width = 279
-            ExplicitWidth = 281
+            ExplicitWidth = 279
             inherited lblDescription: TsLabel
               Width = 186
+              Height = 20
             end
           end
         end

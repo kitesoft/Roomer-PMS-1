@@ -227,7 +227,7 @@ uses
   uRptHouseKeeping in 'uRptHouseKeeping.pas',
   uReservationStateChangeHandler in 'uReservationStateChangeHandler.pas',
   uRoomerForm in 'RoomerForm\uRoomerForm.pas' {frmBaseRoomerForm},
-  uBreakfastStateDefinitions in 'Definitions\uBreakfastStateDefinitions.pas',
+  uBreakfastTypeDefinitions in 'Definitions\uBreakfastTypeDefinitions.pas',
   uAccountTypeDefinitions in 'Definitions\uAccountTypeDefinitions.pas',
   uFinancialReportsAPICaller in 'OpenAPI\uFinancialReportsAPICaller.pas',
   uRptDailyRevenues in 'Financials\uRptDailyRevenues.pas' {frmRptDailyRevenues},
