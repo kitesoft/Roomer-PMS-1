@@ -29,7 +29,6 @@ object frmReservationProfile: TfrmReservationProfile
     Align = alTop
     TabOrder = 5
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = -2
     object btnCheckIn: TsButton
       AlignWithMargins = True
       Left = 4
@@ -342,6 +341,7 @@ object frmReservationProfile: TfrmReservationProfile
       Margins.Left = 5
       Align = alLeft
       TabOrder = 2
+      OnExit = cbxStatusPanelExit
       SkinData.SkinSection = 'GROUPBOX'
       object Label25: TsLabel
         Left = 27
@@ -364,34 +364,6 @@ object frmReservationProfile: TfrmReservationProfile
         Height = 11
         Alignment = taRightJustify
         Caption = 'Breakfast:'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -9
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
-      object lblAllBreakfastPrice: TsLabel
-        Left = 33
-        Top = 63
-        Width = 64
-        Height = 11
-        Alignment = taRightJustify
-        Caption = 'Breakfast price:'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -9
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
-      object lblAllBreakfastPriceCurrency: TsLabel
-        Left = 191
-        Top = 63
-        Width = 19
-        Height = 11
-        Alignment = taRightJustify
-        Caption = 'EUR'
         ParentFont = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -457,23 +429,60 @@ object frmReservationProfile: TfrmReservationProfile
           'Room Account'
           'Group Account')
       end
-      object edtAllBreakfastPrice: TsCurrencyEdit
-        Left = 102
-        Top = 60
-        Width = 80
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -9
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
+      object pnlBreakfastPrice: TsPanel
+        Left = 2
+        Top = 57
+        Width = 301
+        Height = 27
+        Align = alTop
+        BevelOuter = bvNone
         TabOrder = 2
-        OnExit = edtAllBreakfastPriceExit
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
+        object lblAllBreakfastPrice: TsLabel
+          Left = 31
+          Top = 6
+          Width = 64
+          Height = 11
+          Alignment = taRightJustify
+          Caption = 'Breakfast price:'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object lblAllBreakfastPriceCurrency: TsLabel
+          Left = 189
+          Top = 6
+          Width = 19
+          Height = 11
+          Alignment = taRightJustify
+          Caption = 'EUR'
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
+        end
+        object edtAllBreakfastPrice: TsCurrencyEdit
+          Left = 100
+          Top = 3
+          Width = 80
+          Height = 21
+          AutoSize = False
+          Color = clWhite
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnChange = edtAllBreakfastPriceChange
+          GlyphMode.Blend = 0
+          GlyphMode.Grayed = False
+        end
       end
     end
     object gbxInfo: TsGroupBox
@@ -4099,6 +4108,7 @@ object frmReservationProfile: TfrmReservationProfile
       ParentShowHint = False
       ShowHint = False
       TabOrder = 0
+      OnClick = sButton2Click
       SkinData.SkinSection = 'BUTTON'
     end
   end

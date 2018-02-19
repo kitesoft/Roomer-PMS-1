@@ -2892,7 +2892,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
               object lblExtraCurrency: TsLabel
-                Left = 263
+                Left = 308
                 Top = 32
                 Width = 16
                 Height = 13
@@ -2906,7 +2906,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Height = 2
               end
               object lblPerPerson: TsLabel
-                Left = 286
+                Left = 331
                 Top = 32
                 Width = 12
                 Height = 13
@@ -2914,7 +2914,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Caption = 'PP'
               end
               object lblOnGroupInvoice: TsLabel
-                Left = 314
+                Left = 334
                 Top = 5
                 Width = 81
                 Height = 13
@@ -2922,17 +2922,25 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Caption = 'On group invoice'
               end
               object lblPrice: TsLabel
-                Left = 204
+                Left = 253
                 Top = 5
                 Width = 23
                 Height = 13
                 Alignment = taRightJustify
                 Caption = 'Price'
               end
+              object lblBreakfast: TsLabel
+                Left = 21
+                Top = 32
+                Width = 50
+                Height = 13
+                Alignment = taRightJustify
+                Caption = 'Breakfast:'
+              end
               object edtBreakfast: TsCurrencyEdit
-                Left = 176
+                Left = 234
                 Top = 29
-                Width = 79
+                Width = 65
                 Height = 21
                 AutoSize = False
                 Color = clWhite
@@ -2948,7 +2956,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 GlyphMode.Grayed = False
               end
               object cbxBreakfastGrp: TsCheckBox
-                Left = 351
+                Left = 367
                 Top = 32
                 Width = 20
                 Height = 16
@@ -2958,7 +2966,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ImgUnchecked = 0
               end
               object cbxBreakfast: TsComboBox
-                Left = 16
+                Left = 84
                 Top = 29
                 Width = 145
                 Height = 21

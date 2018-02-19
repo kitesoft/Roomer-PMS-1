@@ -626,6 +626,7 @@ type
     clabReservationName: TsLabel;
     pnlReservationDetaildata: TsPanel;
     cbxBreakfast: TsComboBox;
+    lblBreakfast: TsLabel;
     procedure FormShow(Sender: TObject);
     procedure btnFinishClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
