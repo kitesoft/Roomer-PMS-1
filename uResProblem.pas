@@ -46,6 +46,7 @@ type
     procedure grGetCellColor(Sender: TObject; ARow, ACol: Integer;
       AState: TGridDrawState; ABrush: TBrush; AFont: TFont);
   private
+    FBLockedPresent: boolean;
     { Private declarations }
     procedure GridInit;
     procedure GridFill;
@@ -232,6 +233,8 @@ begin
     if length(rrList) = 0 then exit;
     delete(rrList,length(rrList),1);
 
+    FBLockedPresent := false;
+
     s := format(select_ResProblem_GridFill, [rrList]);
     hData.rSet_bySQL(rSet,s);
 
@@ -257,7 +260,14 @@ begin
       gr.cells[0,gr.RowCount-1] := sRoom;
       gr.cells[1,gr.RowCount-1] := sRoomType;
       gr.cells[2,gr.RowCount-1] := sCustomerName+' / '+sGuest;
-      gr.cells[3,gr.RowCount-1] := sStatusText;
+
+      if rSet.FieldByName('blockmove').asBoolean then
+      begin
+        gr.cells[3,gr.RowCount-1] := GetTranslatedText('shTx_ResProblem_Blocked') + ': ' + rSet.FieldByName('blockmoveReason').AsString;
+        FBLockedPresent := true;
+      end else
+        gr.cells[3,gr.RowCount-1] := sStatusText;
+
       gr.cells[4,gr.RowCount-1] := sArrival;
       gr.cells[5,gr.RowCount-1] := sDeparture;
       gr.cells[6,gr.RowCount-1] := sStatus;
@@ -266,6 +276,10 @@ begin
       rSet.next;
       if not rSet.eof then gr.AddRow;
     end;
+
+    if FBLockedPresent then rgrOption2.ItemIndex := 2;
+    rgrOption2.Enabled := not FBLockedPresent;
+    btnOK.Enabled := not FBLockedPresent;
 
   finally
     freeandnil(rSet);
