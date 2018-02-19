@@ -985,7 +985,6 @@ type
     procedure grOneDayRoomsGetAlignment(Sender: TObject; ARow, ACol: Integer; var HAlign: TAlignment;
       var VAlign: TVAlignment);
     procedure btnFilterDropdownClick(Sender: TObject);
-    procedure grPeriodRooms_NOStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 
   protected
@@ -3784,6 +3783,12 @@ begin
   begin
     dtDate.Date := ShowHomeDateForm(dtDate.Date, Key);
     Key := #0;
+  end;
+
+  if Key = #27 then
+  begin
+    FPeriod_bMouseDown := false;
+    FPeriodNO_MouseDown := false;
   end;
 end;
 
@@ -9337,7 +9342,7 @@ begin
       ApplicationCancelHint;
       if TReservationState.FromResStatus(rri.resFlag) <> TReservationState.rsCancelled then
       begin
-        OutputDebugString(PChar(Format('Mousemove - roomres: %d - Start drag!', [rri.RoomReservation])));
+//        OutputDebugString(PChar(Format('Mousemove - roomres: %d - Start drag!', [rri.RoomReservation])));
         Grid.BeginDrag(true);
       end;
     end;
@@ -9348,6 +9353,7 @@ end;
 procedure TfrmMain.grPeriodRoomsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   FPeriod_bMouseDown := false;
+  FPeriodNO_MouseDown := false;
 end;
 
 procedure TfrmMain.grPeriodRoomsDragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
@@ -9842,8 +9848,7 @@ begin
   allow := false;
 
   if ACol <> zzSourceCol then
-
-    exit;
+     exit;
 
   if (ACol >= grPeriodRooms.FixedCols) and (ARow >= grPeriodRooms.FixedRows) and
     ((ARow <> grPeriodRooms.RowCount - 1) OR grPeriodViewFilterOn) and
@@ -9879,6 +9884,8 @@ begin
 
     finally
       grPeriodRooms.endUpdate;
+      FPeriod_bMouseDown := false;
+      FPeriodNO_MouseDown := false;
     end;
   end;
 end;
@@ -9911,8 +9918,6 @@ begin
     exit;
   grPeriodRooms_NO.MouseToCell(X, Y, ACol, ARow);
   cellContent := grPeriodRooms_NO.cells[ACol, ARow];
-
-  OutputDebugString(PChar(Format('MouseDown, %d, %d', [aCol, aRow])));
 
   zzSource := Sender;
   zzSourceCol := ACol;
@@ -9960,13 +9965,8 @@ end;
 
 procedure TfrmMain.grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  OutputDebugString(PChar('MouseUp'));
+  FPeriod_bMouseDown := false;
   FPeriodNO_MouseDown := false;
-end;
-
-procedure TfrmMain.grPeriodRooms_NOStartDrag(Sender: TObject; var DragObject: TDragObject);
-begin
-  OutputDebugString(PChar('StartDrag'));
 end;
 
 procedure TfrmMain.grPeriodRooms_NODragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
@@ -9991,6 +9991,8 @@ begin
     RefreshGrid;
     grPeriodRooms_NO.GotoCell(ACol, ARow);
     NullGlobals;
+    FPeriod_bMouseDown := false;
+    FPeriodNO_MouseDown := false;
   end;
 end;
 
