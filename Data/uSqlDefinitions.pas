@@ -1318,6 +1318,8 @@ select_ResProblem_GridFill : string =
 '     , roomreservations.Status '+
 '     , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
 '     , RR_Departure(roomreservations.roomreservation, true) as Departure '+
+'     , blockMove '+
+'     , blockMoveReason '+
 '     , reservations.Customer '+
 '     , reservations.Name As CustomerName '+
 ' FROM '+

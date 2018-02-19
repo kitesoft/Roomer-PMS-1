@@ -82,7 +82,7 @@ object frmResProblem: TfrmResProblem
       Alignment = taCenter
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2302755
+      Font.Color = clBlack
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
