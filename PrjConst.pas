@@ -900,6 +900,10 @@ begin
 //  constants.Add('shTx_ManageFiles_RetrieveList', 'Please first retrieve the list of files to be worked with (ReadFileList)');
   constants.Add('shTx_NationalReport_Created', 'Created : ');
   constants.Add('shTx_NationalReport_User', 'User : ');
+  constants.Add('shTx_NationalReport_NationalReportWasSuccessfullySentToHagstofan', 'National report was successfully sent to Hagstofan');
+  constants.Add('shTx_NationalReport_NationalReportToSentToHagstofanError', 'Hagstofan was unable to process the report.' + #10 +
+                'The following problem was reported:' + #10#10 +
+                '%s');
   constants.Add('shTx_NationalReport_InknownCountries', 'There still are unknown nationlities and therefore' + #10 +
                                                         'Hagstofa will not accept any data.');
   constants.Add('shTx_NationalReport_ChangeNationalityFromTo', 'Change nationality of all guests ' + #10 +
