@@ -94,8 +94,8 @@ inherited frmBreakfastList: TfrmBreakfastList
       object rbToday: TsRadioButton
         Left = 4
         Top = 21
-        Width = 50
-        Height = 20
+        Width = 58
+        Height = 19
         Caption = 'Today'
         Checked = True
         TabOrder = 0
@@ -105,8 +105,8 @@ inherited frmBreakfastList: TfrmBreakfastList
       object rbTomorrow: TsRadioButton
         Left = 4
         Top = 46
-        Width = 68
-        Height = 20
+        Width = 76
+        Height = 19
         Caption = 'Tomorrow'
         TabOrder = 1
         OnClick = rbRadioButtonClick
@@ -114,8 +114,8 @@ inherited frmBreakfastList: TfrmBreakfastList
       object rbManualRange: TsRadioButton
         Left = 119
         Top = 21
-        Width = 83
-        Height = 20
+        Width = 91
+        Height = 19
         Caption = 'Manual date:'
         TabOrder = 2
         OnClick = rbRadioButtonClick
@@ -284,6 +284,7 @@ inherited frmBreakfastList: TfrmBreakfastList
           Caption = 'Children'
           DataBinding.FieldName = 'numChildren'
           PropertiesClassName = 'TcxCalcEditProperties'
+          OnGetDisplayText = tvDataGetDisplayTextHideZeroes
           HeaderAlignmentHorz = taRightJustify
           Position.BandIndex = 1
           Position.ColIndex = 1
@@ -293,6 +294,7 @@ inherited frmBreakfastList: TfrmBreakfastList
           Caption = 'Infants'
           DataBinding.FieldName = 'numInfants'
           PropertiesClassName = 'TcxCalcEditProperties'
+          OnGetDisplayText = tvDataGetDisplayTextHideZeroes
           HeaderAlignmentHorz = taRightJustify
           Position.BandIndex = 1
           Position.ColIndex = 2

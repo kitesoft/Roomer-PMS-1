@@ -58,6 +58,8 @@ type
     procedure btnProfileClick(Sender: TObject);
     procedure tvDataCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
       AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
+    procedure tvDataGetDisplayTextHideZeroes(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     function ConstructSQL: string;
   protected
@@ -157,6 +159,13 @@ procedure TfrmBreakfastList.tvDataCellDblClick(Sender: TcxCustomGridTableView;
 begin
   inherited;
   btnProfile.Click;
+end;
+
+procedure TfrmBreakfastList.tvDataGetDisplayTextHideZeroes(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  inherited;
+  if aText = '0' then aText := '';
 end;
 
 procedure TfrmBreakfastList.kbmBreakfastListAfterScroll(DataSet: TDataSet);
