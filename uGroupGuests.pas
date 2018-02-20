@@ -188,7 +188,7 @@ type
     mRooms: TdxMemData;
     mRoomsRoomReservation: TIntegerField;
     mRoomsRoom: TWideStringField;
-    mRomsBreakfast: TBooleanField;
+    mRomsBreakfast: TWideStringField;
     mRoomsArrival: TDateTimeField;
     mRoomsDeparture: TDateTimeField;
     mRoomsNumGuests: TIntegerField;
@@ -212,7 +212,7 @@ type
     IntegerField7: TIntegerField;
     WideStringField31: TWideStringField;
     WideStringField32: TWideStringField;
-    BooleanField3: TBooleanField;
+    BooleanField3: TWideStringField;
     DateTimeField4: TDateTimeField;
     DateTimeField5: TDateTimeField;
     IntegerField8: TIntegerField;
@@ -255,6 +255,8 @@ type
     procedure mGuestsAfterPost(DataSet: TDataSet);
     procedure tvGuestsCompCountryPropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure tvGuestsDblClick(Sender: TObject);
+    procedure tvRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
     FHasUnsavedChanges: boolean;
@@ -288,7 +290,7 @@ uses
    ,uCountries
    , uSQLUtils
    , PrjConst
-   , UITypes;
+   , UITypes, uBreakfastTypeDefinitions;
 
 
 function TfrmGroupGuests.CountryValidate(country : string) : boolean;
@@ -460,7 +462,7 @@ begin
     s := s+'  ,rr.roomreservation '#10;
     s := s+'  ,rr.room '#10;
     s := s+'  ,rr.roomType '#10;
-    s := s+'  ,rr.invBreakfast AS Breakfast'#10;
+    s := s+'  ,rr.Breakfast AS Breakfast'#10;
     s := s+'  ,RR_Arrival(rr.roomreservation, false) as Arrival '#10;
     s := s+'  ,RR_Departure(rr.roomreservation, false) as Departure '#10;
     s := s+'  ,(SELECT count(*) from persons p where p.roomreservation = rr.roomreservation) as numGuests '#10;
@@ -766,6 +768,13 @@ procedure TfrmGroupGuests.tvGuestsNationalityPropertiesValidate(Sender: TObject;
   var Error: Boolean);
 begin
   error := not countryValidate(DisplayValue);
+end;
+
+procedure TfrmGroupGuests.tvRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  inherited;
+  aText := TBreakfastType.FromDBString(aRecord.values[sender.Index]).AsReadableString;
 end;
 
 procedure TfrmGroupGuests.tvRoomsStatusTextGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;

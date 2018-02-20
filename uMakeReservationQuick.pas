@@ -538,14 +538,11 @@ type
     sTabSheet1: TsTabSheet;
     sPanel2: TsPanel;
     lblExtraCurrency: TsLabel;
-    lblExtraIncludedInRate: TsLabel;
     Shape1: TShape;
     lblPerPerson: TsLabel;
     lblOnGroupInvoice: TsLabel;
     lblPrice: TsLabel;
-    cbxBreakfast: TsCheckBox;
-    cbxBreakfastIncl: TsCheckBox;
-    edtBreakfast: TsEdit;
+    edtBreakfastPrice: TsCurrencyEdit;
     cbxBreakfastGrp: TsCheckBox;
     Alerts: TsTabSheet;
     grRoomRes: TcxGrid;
@@ -628,6 +625,8 @@ type
     edReservationName: TsEdit;
     clabReservationName: TsLabel;
     pnlReservationDetaildata: TsPanel;
+    cbxBreakfast: TsComboBox;
+    lblBreakfast: TsLabel;
     procedure FormShow(Sender: TObject);
     procedure btnFinishClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -682,7 +681,6 @@ type
     procedure timNewTimer(Sender: TObject);
     procedure edContactPersonEnter(Sender: TObject);
     procedure edContactPersonExit(Sender: TObject);
-    procedure cbxBreakfastClick(Sender: TObject);
     procedure cbxChannelsCloseUp(Sender: TObject);
     procedure tvRoomResRatePlanCodePropertiesCloseUp(Sender: TObject);
     procedure tvRoomResRatePlanCodePropertiesEditValueChanged(Sender: TObject);
@@ -703,6 +701,7 @@ type
     procedure tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure edContactPerson1PropertiesCloseUp(Sender: TObject);
+    procedure cbxBreakfastChange(Sender: TObject);
   private
     { Private declarations }
     zCustomerChanged: boolean;
@@ -756,7 +755,6 @@ type
 
     procedure SetOutOfOrderBlocking(const Value: boolean);
     procedure FillQuickFind;
-    procedure ShowhideExtraInputs;
     procedure ShowChannels;
     procedure PopulateRatePlanCombo(clearAll : Boolean = True);
     function SetOnePrice(RoomReservation: Integer; rateId: String): boolean;
@@ -767,7 +765,7 @@ type
     function OkToActivateNextButton: Boolean;
     procedure evtLookupOnChange(Sender: TObject);
     procedure evtCustomerChangedAndValid(Sender: TObject);
-
+    procedure UpdateControls;
   protected
     const
       WM_LOADPREVIOUS_GUESTS = WM_User + 53;
@@ -821,7 +819,7 @@ uses
  , uMarketDefinitions
  , uRoomerGridForm
   , uRoomerLanguage
- ;
+ , uBreakfastTypeDefinitions;
 
 {$R *.dfm}
 
@@ -1326,16 +1324,6 @@ begin
   EmptyQuickFind;
 end;
 
-procedure TfrmMakeReservationQuick.ShowhideExtraInputs;
-begin
-  cbxBreakfastIncl.Visible := cbxBreakfast.Checked;
-  edtBreakfast.Visible := cbxBreakfast.Checked AND (NOT cbxBreakfastIncl.Checked);
-  lblExtraCurrency.Visible := edtBreakfast.Visible;
-  lblPerPerson.Visible := edtBreakfast.Visible;
-  cbxBreakfastGrp.Visible := edtBreakfast.Visible AND chkGroupInvoice.Checked;
-  lblOnGroupInvoice.Visible := edtBreakfast.Visible AND chkGroupInvoice.Checked;
-end;
-
 procedure TfrmMakeReservationQuick.ShowChannels;
 var
   res: TRoomerDataSet;
@@ -1359,11 +1347,13 @@ begin
   try
     cbxIsRoomResDiscountPrec.ItemIndex := 0;
 
-    cbxBreakfast.Checked := ctrlGetBoolean('BreakfastInclDefault');
-    cbxBreakfastIncl.Checked := cbxBreakfast.Checked;
-    lblExtraCurrency.Caption := g.qNativeCurrency;
+    TBreakFastType.AsStrings(cbxBreakfast.Items);
+    if ctrlGetBoolean('BreakfastInclDefault') then
+      cbxBreakfast.ItemIndex := 1
+    else
+      cbxBreakfast.ItemIndex := 0;
 
-    ShowhideExtraInputs;
+    lblExtraCurrency.Caption := g.qNativeCurrency;
 
     chkExcluteWaitingList.Checked := g.qExcluteWaitingList;
     chkExcluteAllotment.Checked := g.qExcluteAllotment;
@@ -1402,6 +1392,9 @@ begin
     FrmAlertPanel := TFrmAlertPanel.Create(self);
     FrmAlertPanel.PlaceEditPanel(Alerts, FNewReservation.AlertList);
     gbxProfileAlert.Visible := False;
+
+    edtBreakfastPrice.Value := Item_GetPrice(g.qBreakFastItem);
+    UpdateControls;
 
   finally
     screen.Cursor := crDefault;
@@ -1866,6 +1859,12 @@ begin
     end;
   end;
 
+end;
+
+procedure TfrmMakeReservationQuick.UpdateControls;
+begin
+  edtBreakfastPrice.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) = TBreakFastType.Excluded;
+  cbxBreakfastGrp.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) <> TBreakFastType.None;
 end;
 
 procedure TfrmMakeReservationQuick.initCustomer;
@@ -2517,8 +2516,6 @@ begin
 end;
 
 procedure TfrmMakeReservationQuick.SetOutOfOrderBlocking(const Value: boolean);
-var
-  i: integer;
 begin
   FOutOfOrderBlocking := Value;
 
@@ -4249,9 +4246,8 @@ begin
 
         oSelectedRoomItem.Rates.RateItemsList.Add(rateItem);
 
-        oSelectedRoomItem.Breakfast := cbxBreakfast.Checked;
-        oSelectedRoomItem.BreakfastIncluded := cbxBreakfastIncl.Checked;
-        oSelectedRoomItem.BreakfastCost := StrToFloat(edtBreakfast.Text);
+        oSelectedRoomItem.Breakfast := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex);
+        oSelectedRoomItem.BreakfastCost := edtBreakfastPrice.Value;
         oSelectedRoomItem.BreakfastCostGroupAccount := cbxBreakfastGrp.Checked;
       end;
 
@@ -4479,9 +4475,9 @@ end;
 /// ////////////////////////////
 //
 
-procedure TfrmMakeReservationQuick.cbxBreakfastClick(Sender: TObject);
+procedure TfrmMakeReservationQuick.cbxBreakfastChange(Sender: TObject);
 begin
-  ShowhideExtraInputs;
+  UpdateControls;
 end;
 
 procedure TfrmMakeReservationQuick.cbxIsRoomResDiscountPrecChange(Sender: TObject);

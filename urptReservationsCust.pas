@@ -151,7 +151,7 @@ type
     tvRoomsGuestCount: TcxGridDBBandedColumn;
     tvRoomsStatus: TcxGridDBBandedColumn;
     tvRoomsGroupAccount: TcxGridDBBandedColumn;
-    tvRoomsinvBreakfast: TcxGridDBBandedColumn;
+    tvRoomsBreakfast: TcxGridDBBandedColumn;
     tvRoomsCurrency: TcxGridDBBandedColumn;
     tvRoomsDiscount: TcxGridDBBandedColumn;
     tvRoomsPercentage: TcxGridDBBandedColumn;
@@ -195,6 +195,8 @@ type
     procedure btnRoomsTabRoomClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure tvRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
     zDateFrom : Tdate;
@@ -257,7 +259,7 @@ uses
   , PrjConst
   , uSQLUtils
   , uRoomerLanguage
-  ;
+  , uBreakfastTypeDefinitions;
 {$R *.dfm}
 
 
@@ -450,6 +452,12 @@ begin
 end;
 
 
+procedure TfrmRptReservationsCust.tvRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  aText := TBreakfastType.FromDBString(aRecord.values[sender.Index]).AsReadableString;
+end;
+
 function TfrmRptReservationsCust.GetRVinList : string;
 var
   s      : string;
@@ -579,7 +587,7 @@ begin
     s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
     s := s+' ,rr.Status '#10;
     s := s+' ,rr.GroupAccount '#10;
-    s := s+' ,rr.invBreakfast '#10;
+    s := s+' ,rr.Breakfast '#10;
     s := s+' ,rr.Currency '#10;
     s := s+' ,rr.Discount '#10;
     s := s+' ,rr.PriceType '#10;

@@ -131,7 +131,7 @@ type
     tvRoomReservationsGuestCount: TcxGridDBColumn;
     tvRoomReservationsStatus: TcxGridDBColumn;
     tvRoomReservationsGroupAccount: TcxGridDBColumn;
-    tvRoomReservationsinvBreakfast: TcxGridDBColumn;
+    tvRoomReservationsBreakfast: TcxGridDBColumn;
     tvRoomReservationsCurrency: TcxGridDBColumn;
     tvRoomReservationsPriceType: TcxGridDBColumn;
     tvRoomReservationsRoomType: TcxGridDBColumn;
@@ -240,7 +240,7 @@ type
     tvRoomsGuestCount: TcxGridDBColumn;
     tvRoomsStatus: TcxGridDBColumn;
     tvRoomsGroupAccount: TcxGridDBColumn;
-    tvRoomsinvBreakfast: TcxGridDBColumn;
+    tvRoomsBreakfast: TcxGridDBColumn;
     tvRoomsCurrency: TcxGridDBColumn;
     tvRoomsDiscount: TcxGridDBColumn;
     tvRoomsPercentage: TcxGridDBColumn;
@@ -308,6 +308,8 @@ type
     procedure pageMainChange(Sender: TObject);
     procedure tvRoomsDateRoomRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
+    procedure tvRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
     zDateFrom : Tdate;
@@ -371,7 +373,7 @@ uses
   , uSqlDefinitions
   , uGuestProfile2
   , PrjConst
-  ;
+  , uBreakfastTypeDefinitions;
 {$R *.dfm}
 
 
@@ -684,6 +686,13 @@ begin
   AProperties := d.getCurrencyProperties(kbmRoomsDate_.FieldByName('Currency').AsString);
 end;
 
+procedure TfrmRptReservations.tvRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  inherited;
+  aText := TBreakfastType.FromDBString(aRecord.Values[Sender.Index]).AsReadableString;
+end;
+
 function TfrmRptReservations.GetRVinList : string;
 var
   rvList : TstringList;
@@ -819,7 +828,7 @@ begin
     s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
     s := s+' ,rr.Status '#10;
     s := s+' ,rr.GroupAccount '#10;
-    s := s+' ,rr.invBreakfast '#10;
+    s := s+' ,rr.Breakfast '#10;
     s := s+' ,rr.Currency '#10;
     s := s+' ,rr.Discount '#10;
     s := s+' ,rr.PriceType '#10;
@@ -1019,7 +1028,7 @@ begin
     s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
     s := s+' ,rr.Status '#10;
     s := s+' ,rr.GroupAccount '#10;
-    s := s+' ,rr.invBreakfast '#10;
+    s := s+' ,rr.Breakfast '#10;
     s := s+' ,rr.Currency '#10;
     s := s+' ,rr.Discount '#10;
     s := s+' ,rr.PriceType '#10;

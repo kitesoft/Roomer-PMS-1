@@ -1095,7 +1095,8 @@ select_RoomReservation : string =
 '    ,Reservation '#10+
 '    ,Status '#10+
 '    ,GroupAccount '#10+
-'    ,invBreakfast '#10+
+'    ,Breakfast '#10+
+'    ,BreakfastPrice '#10+
 '    ,RoomPrice1 '#10+
 '    ,Price1From '#10+
 '    ,Price1To '#10+
@@ -1159,7 +1160,7 @@ select_ReservationProfile_guestRoomsSQL : string =
 '     roomreservations.Reservation '+
 '   , roomreservations.RoomReservation '+
 '   , roomreservations.GroupAccount AS isGroup '+
-'   , roomreservations.invBreakfast AS Breakfast '+
+'   , roomreservations.Breakfast AS Breakfast '+
 '   , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
 '   , RR_Departure(roomreservations.roomreservation, true) as Departure '+
 '   , roomreservations.Room '+
@@ -1218,7 +1219,7 @@ select_ReservationProfile_guestsSQL : string =
 select_ReservationProfile_allGuestsSQL : string =
 ' SELECT '+
 '     roomreservations.GroupAccount AS isGroup '+
-'   , roomreservations.invBreakfast AS Breakfast '+
+'   , roomreservations.Breakfast AS Breakfast '+
 '   , RR_Arrival(roomreservations.roomreservation, true) as Arrival '+
 '   , RR_Departure(roomreservations.roomreservation, true) as Departure '+
 '   , roomreservations.status '+
@@ -2293,11 +2294,6 @@ select_telLog_refresh : string =
   ' FROM roomreservations '+
   ' WHERE Reservation = %d ';
 
-  select_GetBreakfastIncluted : string =
-  ' SELECT InvBreakfast FROM roomreservations '+
-  ' WHERE Reservation = %d '+
-  ' AND RoomReservation = %d ';
-
   select_GetGroupAccount : string =
   ' SELECT GroupAccount FROM roomreservations '+
   ' WHERE Reservation = %d '+
@@ -3077,15 +3073,6 @@ select_getRoomTypeFromRR : string =
       '    invoiceheads'+
       ' WHERE'+
       '   (Total > 0) AND (InvoiceNumber = - 1) AND (RoomReservation =  %s )';
-
-    select_BreakFastInclutedCount : string =
-    ' SELECT '+
-    '   COUNT(invBreakfast) AS cnt '+
-    ' FROM '+
-    '   roomreservations '+
-    ' WHERE '+
-    '   (Reservation = %d) AND (invBreakfast <> 0) ';
-    ///s := s+'   (Reservation = '+_db(Reservation)+') AND (invBreakfast = 1) '+#10;
 
     select_GroupAccountCount : string =
     ' SELECT '+
@@ -4652,7 +4639,7 @@ select_GuestsInfoByRoomReservation : string =
 '    , roomreservations.Reservation '#10+
 '    , roomreservations.Status '#10+
 '    , roomreservations.GroupAccount '#10+
-'    , roomreservations.invBreakfast '#10+
+'    , roomreservations.Breakfast '#10+
 '    , Reservations.Customer '#10+
 '    , Reservations.Name AS ReservationName '#10+
 '    , roomreservations.RoomType '#10+
@@ -5780,7 +5767,9 @@ begin
   s := s+' rr.Reservation, '+#10;
   s := s+' rr.Status, '+#10;
   s := s+' rr.GroupAccount, '+#10;
-  s := s+' rr.invBreakfast, '+#10;
+//  s := s+' rr.invBreakfast, '+#10;
+  s := s+' rr.Breakfast, '+#10;
+  s := s+' rr.BreakfastPrice, '+#10;
   s := s+' rr.RoomPrice1, '+#10;
   s := s+' rr.Price1From, '+#10;
   s := s+' rr.Price1To, '+#10;
@@ -5884,7 +5873,9 @@ begin
   s := s+' rr.Room, '+#10; //
   s := s+' rr.Status, '+#10; //
   s := s+' rr.GroupAccount, '+#10; //
-  s := s+' rr.invBreakfast, '+#10;
+//  s := s+' rr.invBreakfast, '+#10;
+  s := s+' rr.Breakfast, '+#10;
+  s := s+' rr.BreakfastPrice, '+#10;
   s := s+' rr.Discount, '+#10; //
   s := s+' rr.PriceType, '+#10; //
   s := s+' rr.RoomType, '+#10; //
@@ -5973,7 +5964,9 @@ begin
   s := s+' rr.RoomReservation, '+#10;
   s := s+' rr.Status, '+#10;
   s := s+' rr.GroupAccount, '+#10;
-  s := s+' rr.invBreakfast, '+#10;
+//  s := s+' rr.invBreakfast, '+#10;
+  s := s+' rr.Breakfast, '+#10;
+  s := s+' rr.BreakfastPrice, '+#10;
   s := s+' rr.PriceType, '+#10;
   s := s+' rr.RoomType, '+#10;
   s := s+' rr.rrDescription, '+#10;
@@ -6084,7 +6077,7 @@ end;
     s := s+'   , RR_Departure(roomreservations.RoomReservation, false) as DepartureDate '#10;
     s := s+'   , roomreservations.Room '#10;
     s := s+'   , roomreservations.Status '#10;
-    s := s+'   , roomreservations.invBreakfast AS Breakfast '#10;
+    s := s+'   , roomreservations.Breakfast AS Breakfast '#10;
     s := s+'   , roomreservations.rrIsNoRoom As NoRoom '#10;
     s := s+'   , roomreservations.GroupAccount '#10;
     s := s+'   , (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=roomreservations.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;

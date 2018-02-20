@@ -3,7 +3,7 @@ unit uInvoiceEntities;
 interface
 
 uses
-  Generics.Collections
+  Generics.Collections, uBreakfastTypeDefinitions, uAmount
   ;
 
 type
@@ -22,15 +22,16 @@ type
     FNumChildren: integer;
     FPrice: Double;
     FDiscount: Double;
-    FBreakfastIncluded: boolean;
     FCurrency: string;
     FCurrencyRate: double;
   private
+    FBreakfast: TBreakfastType;
+    FBreakfastPrice: TAmount;
     function GetNumberOfNights: integer;
   public
     constructor Create; overload;
     constructor Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: integer; _Price: Double; _Currency: string;
-      _CurrencyRate: double; _Vat: Double; _Discount: Double; _BreakfastIncluded: boolean); overload;
+      _CurrencyRate: double; _Vat: Double; _Discount: Double; _BreakFast: TBreakfastType); overload;
 
     property Reservation: integer read FReservation write FReservation;
     property RoomReservation: integer read FRoomReservation write FRoomreservation;
@@ -44,7 +45,8 @@ type
     property CurrencyRate: double read FCurrencyRate write FCurrencyRate;
     property Discount: double read FDiscount write FDiscount;
     property VatPerNight: double read FVatPerNight write FVatPerNight;
-    property BreakfastIncluded: boolean read FBreakfastIncluded write FBreakfastIncluded;
+    property Breakfast: TBreakfastType read FBreakfast write FBreakfast;
+    property BreakfastPrice: TAmount read FBreakfastPrice write FBreakfastPrice;
     property NumGuests: integer read FNumPersons write FNumPersons;
     property NumChildren: integer read FNumChildren write FNUmChildren;
     /// <summary>
@@ -133,7 +135,7 @@ uses
   , Math, uD;
 
 constructor TInvoiceRoomEntity.Create(_RoomItem: String; _Guests: Integer; _Children: Integer; _Nights: integer;
-  _Price: double; _Currency: string; _CurrencyRate: double; _Vat, _Discount: Double; _BreakFastIncluded: boolean);
+  _Price: double; _Currency: string; _CurrencyRate: double; _Vat, _Discount: Double; _BreakFast: TBreakfastType);
 begin
   FRoomItem := _RoomItem;
   FNumPersons:= _Guests;
@@ -144,7 +146,7 @@ begin
   FCUrrencyRate := _CurrencyRate;
   FDiscount := _Discount;
   FVatPerNight := _Vat;
-  FBreakFastIncluded := _BreakFastIncluded;
+  FBreakfast := _BreakFast;
 end;
 
 function TInvoiceRoomEntity.GetNumberOfNights: integer;
@@ -205,7 +207,7 @@ var
 begin
   Result := 0;
   for lRoomEnt in Self do
-    if lRoomEnt.BreakfastIncluded then
+    if lRoomEnt.Breakfast = TBreakfastType.Included then
       inc(Result, lRoomEnt.NumGuests * trunc(lRoomEnt.UnpaidNights));
 end;
 

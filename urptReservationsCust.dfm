@@ -42,10 +42,6 @@ object frmRptReservationsCust: TfrmRptReservationsCust
       SkinData.SkinSection = 'PAGECONTROL'
       object tabRoom: TsTabSheet
         Caption = 'Rooms'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object grRooms: TcxGrid
           Left = 0
           Top = 44
@@ -305,8 +301,9 @@ object frmRptReservationsCust: TfrmRptReservationsCust
               Position.ColIndex = 1
               Position.RowIndex = 0
             end
-            object tvRoomsinvBreakfast: TcxGridDBBandedColumn
-              DataBinding.FieldName = 'invBreakfast'
+            object tvRoomsBreakfast: TcxGridDBBandedColumn
+              DataBinding.FieldName = 'Breakfast'
+              OnGetDisplayText = tvRoomsBreakfastGetDisplayText
               Position.BandIndex = 3
               Position.ColIndex = 2
               Position.RowIndex = 0
@@ -906,8 +903,9 @@ object frmRptReservationsCust: TfrmRptReservationsCust
         DataType = ftBoolean
       end
       item
-        Name = 'invBreakfast'
-        DataType = ftBoolean
+        Name = 'Breakfast'
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'Currency'

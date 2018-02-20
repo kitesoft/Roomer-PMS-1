@@ -177,7 +177,9 @@ function GetGridsIniFilename : String;
 implementation
 
 uses uDateUtils, uRegistryServices, uUtils, uG, uStringUtils, uAppGlobal, uRoomerDefinitions, PrjConst, uFloatUtils,
-  uReservationStateDefinitions, uBreakfastStateDefinitions, uAccountTypeDefinitions;
+  uReservationStateDefinitions
+  , uBreakfastTypeDefinitions
+  , uAccountTypeDefinitions;
 
 function GetRoomerIniFilename : String;
 begin

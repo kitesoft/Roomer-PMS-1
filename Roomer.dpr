@@ -8,6 +8,8 @@
 //  FastMM4Messages in 'FastMM\FastMM4Messages.pas',
 //  {$endif}
 
+
+
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -153,7 +155,6 @@ uses
   uRoomClassEdit in 'uRoomClassEdit.pas' {FrmRoomClassEdit},
   urptReservations in 'urptReservations.pas' {frmRptReservations},
   uRoomerMessageDialog in 'uRoomerMessageDialog.pas',
-  uRptBreakfastGuests in 'uRptBreakfastGuests.pas' {frmRptBreakfastGuests},
   uGuestCheckInForm in 'uGuestCheckInForm.pas' {FrmGuestCheckInForm},
   uLostAndFound in 'uLostAndFound.pas' {frmLostAndFound},
   uRptGuests in 'uRptGuests.pas' {frmRptGuests},
@@ -227,7 +228,7 @@ uses
   uRptHouseKeeping in 'uRptHouseKeeping.pas',
   uReservationStateChangeHandler in 'uReservationStateChangeHandler.pas',
   uRoomerForm in 'RoomerForm\uRoomerForm.pas' {frmBaseRoomerForm},
-  uBreakfastStateDefinitions in 'Definitions\uBreakfastStateDefinitions.pas',
+  uBreakfastTypeDefinitions in 'Definitions\uBreakfastTypeDefinitions.pas',
   uAccountTypeDefinitions in 'Definitions\uAccountTypeDefinitions.pas',
   uFinancialReportsAPICaller in 'OpenAPI\uFinancialReportsAPICaller.pas',
   uRptDailyRevenues in 'Financials\uRptDailyRevenues.pas' {frmRptDailyRevenues},
@@ -342,7 +343,8 @@ uses
   uFraDayStatistics in 'mainEmbeddables\uFraDayStatistics.pas' {fraDayStatistics: TFrame},
   uHotelStatisticsAPI in 'HotelStatstics\uHotelStatisticsAPI.pas',
   uHotelStatistics in 'HotelStatstics\uHotelStatistics.pas',
-  uFraHotelStatisticsFooter in 'mainEmbeddables\uFraHotelStatisticsFooter.pas' {fraHotelStatisticsFooter: TFrame};
+  uFraHotelStatisticsFooter in 'mainEmbeddables\uFraHotelStatisticsFooter.pas' {fraHotelStatisticsFooter: TFrame},
+  uRptBreakfastList in 'uRptBreakfastList.pas';
 
 {$R *.RES}
 

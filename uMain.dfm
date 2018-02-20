@@ -2,7 +2,7 @@
   Left = 685
   Top = 134
   ActiveControl = pageMainGrids
-  ClientHeight = 665
+  ClientHeight = 672
   ClientWidth = 1532
   Color = clWhite
   DoubleBuffered = True
@@ -27,7 +27,7 @@
   OnShow = FormShow
   DesignSize = (
     1532
-    665)
+    672)
   PixelsPerInch = 96
   TextHeight = 13
   object sLabel1: TsLabel
@@ -60,7 +60,7 @@
     Left = 0
     Top = 158
     Width = 1532
-    Height = 477
+    Height = 484
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -71,18 +71,20 @@
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitHeight = 477
     object pnlBottom: TsPanel
       Left = 0
       Top = 170
       Width = 1532
-      Height = 307
+      Height = 314
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 307
       object splStatistics: TsSplitter
         Left = 1220
         Top = 1
         Width = 7
-        Height = 305
+        Height = 312
         Align = alRight
         Color = clGradientActiveCaption
         ParentColor = False
@@ -94,12 +96,13 @@
         Left = 1
         Top = 1
         Width = 1219
-        Height = 305
-        ActivePage = tabFrontDesk
+        Height = 312
+        ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitHeight = 305
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
@@ -111,7 +114,7 @@
             Left = 0
             Top = 0
             Width = 1211
-            Height = 277
+            Height = 284
             Cursor = crDefault
             Align = alClient
             BevelEdges = []
@@ -288,7 +291,7 @@
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -432,6 +435,7 @@
         object tabGuestList: TsTabSheet
           Caption = 'tabGuestList'
           ImageIndex = 9
+          ExplicitHeight = 277
           object Panel3: TsPanel
             Left = 0
             Top = 0
@@ -460,7 +464,6 @@
                 'Arrival'
                 'Departure'
                 'All')
-              OnChanging = rgrGroupreportStayTypeChanging
             end
             object btnGroupReportExpandAll: TsButton
               Left = 136
@@ -547,22 +550,12 @@
                 OnClick = btnGroupReportShowClick
               end
             end
-            object btnBreakfastGuests: TsButton
-              Left = 394
-              Top = 11
-              Width = 110
-              Height = 21
-              Caption = 'Breakfast guests'
-              TabOrder = 5
-              Visible = False
-              OnClick = btnBreakfastGuestsClick
-            end
           end
           object gAllReservations: TcxGrid
             Left = 0
             Top = 100
             Width = 1211
-            Height = 177
+            Height = 184
             Align = alClient
             BevelInner = bvNone
             BevelOuter = bvRaised
@@ -576,6 +569,7 @@
             PopupMenu = pupGroups
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitHeight = 177
             object tvAllReservations: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               Navigator.Buttons.First.Visible = True
@@ -701,8 +695,9 @@
                 OnGetProperties = tvAllReservationsTotalStayRateGetProperties
               end
               object tvAllReservationsBreakfast: TcxGridDBColumn
-                Caption = 'Breakfast.'
                 DataBinding.FieldName = 'Breakfast'
+                PropertiesClassName = 'TcxTextEditProperties'
+                OnGetDisplayText = tvAllReservationsBreakfastGetDisplayText
               end
               object tvAllReservationsbreakfastGuests: TcxGridDBColumn
                 Caption = 'Brkf. Guests'
@@ -847,7 +842,7 @@
             Left = 0
             Top = 0
             Width = 1211
-            Height = 127
+            Height = 134
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
@@ -896,7 +891,7 @@
               Left = 0
               Top = 28
               Width = 1211
-              Height = 77
+              Height = 84
               Cursor = crDefault
               Align = alClient
               BevelInner = bvNone
@@ -1079,7 +1074,7 @@
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1123,7 +1118,7 @@
             end
             object pnlLegends: TsPanel
               Left = 0
-              Top = 105
+              Top = 112
               Width = 1211
               Height = 22
               Align = alBottom
@@ -1282,7 +1277,7 @@
           end
           object splitPeriod: TcxSplitter
             Left = 0
-            Top = 127
+            Top = 134
             Width = 1211
             Height = 8
             Hint = 'No Rooms'
@@ -1303,7 +1298,7 @@
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
-            Top = 168
+            Top = 175
             Width = 1211
             Height = 109
             Hint = 'Test Hint'
@@ -1438,7 +1433,7 @@
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -1449,7 +1444,7 @@
           end
           object pnlBottomViewSettings: TsPanel
             Left = 0
-            Top = 135
+            Top = 142
             Width = 1211
             Height = 33
             Align = alBottom
@@ -1626,22 +1621,23 @@
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitHeight = 277
           inline fraDayStatistics: TfraDayStatistics
             Left = 0
             Top = 0
             Width = 1211
-            Height = 277
+            Height = 284
             Align = alClient
             TabOrder = 0
             ExplicitWidth = 1211
             ExplicitHeight = 277
             inherited splMain: TsSplitter
-              Height = 277
+              Height = 284
               ExplicitHeight = 277
             end
             inherited pnlLeft: TsPanel
-              Height = 277
-              ExplicitHeight = 277
+              Height = 284
+              ExplicitHeight = 284
               inherited pnlLeftRevenues: TsPanel
                 inherited RevenueChart: TChart
                   PrintMargins = (
@@ -1666,10 +1662,10 @@
             end
             inherited pnlRight: TsPanel
               Width = 804
-              Height = 277
+              Height = 284
               ExplicitLeft = 407
               ExplicitWidth = 804
-              ExplicitHeight = 277
+              ExplicitHeight = 284
               inherited splRight: TsSplitter
                 Width = 802
                 ExplicitWidth = 802
@@ -1682,22 +1678,24 @@
               end
               inherited pnlRightTodayRates: TsPanel
                 Width = 802
-                Height = 29
+                Height = 36
                 ExplicitTop = 247
                 ExplicitWidth = 802
-                ExplicitHeight = 29
+                ExplicitHeight = 36
                 inherited sPanel8: TsPanel
                   Width = 800
                   ExplicitWidth = 800
                 end
                 inherited sPanel9: TsPanel
                   Width = 800
+                  Height = 2
                   ExplicitWidth = 800
-                  ExplicitHeight = 297
+                  ExplicitHeight = 2
                   inherited sbRates: TsScrollBox
                     Width = 800
+                    Height = 2
                     ExplicitWidth = 800
-                    ExplicitHeight = 297
+                    ExplicitHeight = 2
                   end
                 end
               end
@@ -1717,7 +1715,7 @@
             Left = 0
             Top = 0
             Width = 1211
-            Height = 277
+            Height = 284
             Align = alClient
             BorderStyle = bsNone
             TabOrder = 0
@@ -1728,12 +1726,13 @@
         Left = 1227
         Top = 1
         Width = 304
-        Height = 305
+        Height = 312
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
         Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
+        ExplicitHeight = 305
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
@@ -1782,7 +1781,7 @@
           Left = 0
           Top = 171
           Width = 304
-          Height = 134
+          Height = 141
           Margins.Left = 10
           Margins.Top = 0
           Margins.Right = 0
@@ -1791,6 +1790,7 @@
           Align = alClient
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
+          ExplicitHeight = 134
         end
         object pnlNotifications: TsPanel
           Left = 0
@@ -2511,7 +2511,7 @@
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.8'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2639,7 +2639,6 @@
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
-      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2696,6 +2695,7 @@
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2832,8 +2832,8 @@
     SkinData.SkinSection = 'TRANSPARENT'
   end
   object panelHide: TsPanel
-    Left = 805
-    Top = 455
+    Left = 906
+    Top = 388
     Width = 297
     Height = 59
     TabOrder = 3
@@ -2929,7 +2929,7 @@
   end
   object pnlDayStatus: TsPanel
     Left = 0
-    Top = 635
+    Top = 642
     Width = 1532
     Height = 30
     Align = alBottom
@@ -2947,6 +2947,7 @@
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 635
     object __VER: TsLabel
       Left = 1380
       Top = 0
@@ -4119,10 +4120,6 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'btnLostAndFound'
-        end
-        item
-          Visible = True
           ItemName = 'btnResStat'
         end
         item
@@ -4151,11 +4148,20 @@
         end
         item
           Visible = True
-          ItemName = 'btnTotallist'
+          ItemName = 'btnBreakfastList'
         end
         item
           Visible = True
+          ItemName = 'btnTotallist'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'btnRptNationalReport'
+        end
+        item
+          Visible = True
+          ItemName = 'btnLostAndFound'
         end
         item
           Visible = True
@@ -4164,30 +4170,6 @@
         item
           Visible = True
           ItemName = 'dxRptStockitems'
-        end
-        item
-          Visible = True
-          ItemName = 'btnResStatusPerdDay'
-        end
-        item
-          Visible = True
-          ItemName = 'dxUserActivityLog'
-        end
-        item
-          Visible = True
-          ItemName = 'btnCreditcardTokenUsage'
-        end
-        item
-          Visible = True
-          ItemName = 'btnItemTransations'
-        end
-        item
-          Visible = True
-          ItemName = 'btnFinanceMutationTraces'
-        end
-        item
-          Visible = True
-          ItemName = 'btnDailySalesAndStatistics'
         end>
       OneOnRow = False
       Row = 0
@@ -4246,7 +4228,7 @@
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 1128
+      DockedLeft = 878
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4268,6 +4250,10 @@
         item
           Visible = True
           ItemName = 'btnClosedInvoicesAllSimpleList'
+        end
+        item
+          Visible = True
+          ItemName = 'btnCreditcardTokenUsage'
         end>
       OneOnRow = False
       Row = 0
@@ -4456,6 +4442,10 @@
         item
           Visible = True
           ItemName = 'btnReRegisterPMS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxUserActivityLog2'
         end>
       OneOnRow = False
       Row = 0
@@ -4466,7 +4456,7 @@
     object barinnBar9: TdxBar
       Caption = 'Templates'
       CaptionButtons = <>
-      DockedLeft = 972
+      DockedLeft = 1048
       DockedTop = 0
       FloatLeft = 1278
       FloatTop = 8
@@ -4486,7 +4476,7 @@
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1337
+      DockedLeft = 1168
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -4496,6 +4486,18 @@
         item
           Visible = True
           ItemName = 'btnBookKeepingQueries'
+        end
+        item
+          Visible = True
+          ItemName = 'btnItemTransations'
+        end
+        item
+          Visible = True
+          ItemName = 'btnFinanceMutationTraces'
+        end
+        item
+          Visible = True
+          ItemName = 'btnDailySalesAndStatistics'
         end>
       OneOnRow = False
       Row = 0
@@ -5457,6 +5459,10 @@
         item
           Visible = True
           ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
         end>
     end
     object bbUpdateTranslations: TdxBarButton
@@ -5627,6 +5633,26 @@
       Hint = 'National Statistics'
       Visible = ivAlways
       LargeImageIndex = 32
+    end
+    object dxUserActivityLog2: TdxBarLargeButton
+      Caption = 'ActivityLog'
+      Category = 0
+      Hint = 'Show user activity report'
+      Visible = ivAlways
+      LargeImageIndex = 97
+      OnClick = dxUserActivityLogClick
+    end
+    object btnBreakfastList: TdxBarLargeButton
+      Caption = 'Breakfast List'
+      Category = 0
+      Hint = 'Breakfast List'
+      Visible = ivAlways
+      LargeImageIndex = 90
+      OnClick = btnBreakfastListClick
+    end
+    object dxBarButton9: TdxBarButton
+      Action = acResStatusPerDay
+      Category = 0
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -7415,7 +7441,8 @@
       end
       item
         Name = 'Breakfast'
-        DataType = ftBoolean
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'NoRoom'
@@ -7587,8 +7614,8 @@
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    Left = 336
-    Top = 545
+    Left = 480
+    Top = 529
   end
   object allReservationsDS: TDataSource
     DataSet = mAllReservations
@@ -23797,8 +23824,8 @@
   object ilFilter: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
-    Left = 928
-    Top = 456
+    Left = 936
+    Top = 408
     Bitmap = {
       494C010102000500040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -24076,8 +24103,8 @@
   end
   object pupGroups: TPopupMenu
     OnPopup = pupGroupsPopup
-    Left = 424
-    Top = 544
+    Left = 288
+    Top = 512
     object R2: TMenuItem
       Caption = 'Reservation Profile'
       Default = True
@@ -24163,6 +24190,11 @@
     object actHotelStatusApp: TAction
       Caption = 'Test HotelStatus App'
       OnExecute = actHotelStatusAppExecute
+    end
+    object acResStatusPerDay: TAction
+      Caption = 'Res status per day'
+      ImageIndex = 62
+      OnExecute = btnResStatusPerdDayClick
     end
   end
   object pupSelectHomePage: TPopupMenu

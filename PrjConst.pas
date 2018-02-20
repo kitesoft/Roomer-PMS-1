@@ -124,7 +124,6 @@ uses uAppGlobal,
   uRoomClassEdit,
   urptReservations,
   uFrmPostInvoices,
-  urptBreakfastGuests,
   uGuestCheckInForm,
   uRptNotes,
 //  uRptGuests,
@@ -204,7 +203,7 @@ uses uAppGlobal,
   , uUtils
   , Generics.Collections
   , uFrmConnectionsStatistics
-  , uResGuestList;
+  , uResGuestList, uRptBreakfastList;
 
 
 const PRE_KEY_NAME = 'PrjConst.Constants.';
@@ -957,8 +956,9 @@ begin
   constants.Add('shTx_ReservationProfile_ChangeAllRooms', 'Change all rooms to ');
   constants.Add('shTx_ReservationProfile_BreakfastInc', 'Breakfast included ?');
   constants.Add('shTx_ReservationProfile_BreakfastNotInc', 'Breakfast NOT included ?');
-  constants.Add('shTx_ReservationProfile_Included', 'Included');
-  constants.Add('shTx_ReservationProfile_NotIncluded', 'Not included');
+  constants.Add('shTx_ReservationProfile_Included', 'Breakfast (Included)');
+  constants.Add('shTx_ReservationProfile_NotIncluded', 'Breakfast (Not included)');
+  constants.Add('shTx_ReservationProfile_NoBreakfast', 'No Breakfast');
   constants.Add('shTx_ReservationProfile_GroupAccount', 'Group Account ?');
   constants.Add('shTx_ReservationProfile_RoomAccount', 'Room Account ?');
   constants.Add('shTx_ReservationProfile_NotArrived', 'Not arrived');
@@ -1953,7 +1953,6 @@ begin
 
   TfrmRptReservations.Create(nil).Free;
   FrmPostInvoices := TFrmPostInvoices.Create(nil); FrmPostInvoices.Free; FrmPostInvoices := nil;
-  frmRptBreakfastGuests := TfrmRptBreakfastGuests.Create(nil); frmRptBreakfastGuests.Free; frmRptBreakfastGuests := nil;
   TfrmGuestCheckInForm.Create(nil).Free;
 
   frmRptNotes := TfrmRptNotes.Create(nil); frmRptNotes.Free; frmRptNotes := nil;
@@ -2037,6 +2036,7 @@ begin
   TfrmInvoiceEdit.Create(nil).Free;
   TFrmConnectionsStatistics.Create(nil).Free;
   TfrmResGuestList.Create(nil).Free;
+  TfrmBreakfastList.Create(nil).Free;
 end;
 
 
