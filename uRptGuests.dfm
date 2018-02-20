@@ -3,7 +3,7 @@ object frmRptGuests: TfrmRptGuests
   Top = 0
   Caption = 'Guests'
   ClientHeight = 564
-  ClientWidth = 1126
+  ClientWidth = 1312
   Color = clBtnFace
   Constraints.MinWidth = 970
   Font.Charset = DEFAULT_CHARSET
@@ -22,13 +22,13 @@ object frmRptGuests: TfrmRptGuests
   object Panel3: TsPanel
     Left = 0
     Top = 0
-    Width = 1126
+    Width = 1312
     Height = 89
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     DesignSize = (
-      1126
+      1312
       89)
     object __labLocationsList: TsLabel
       Left = 426
@@ -143,7 +143,7 @@ object frmRptGuests: TfrmRptGuests
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -165,7 +165,7 @@ object frmRptGuests: TfrmRptGuests
         Color = clWhite
         EditMask = '!99/99/9999;1; '
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = 4473924
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -186,7 +186,7 @@ object frmRptGuests: TfrmRptGuests
       Height = 21
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 4473924
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -198,8 +198,8 @@ object frmRptGuests: TfrmRptGuests
     object chkOneday: TsCheckBox
       Left = 23
       Top = 59
-      Width = 61
-      Height = 20
+      Width = 69
+      Height = 17
       Caption = 'One day'
       Checked = True
       State = cbChecked
@@ -210,7 +210,7 @@ object frmRptGuests: TfrmRptGuests
       ImgUnchecked = 0
     end
     object gbxUseStatusOfRooms: TsGroupBox
-      Left = 784
+      Left = 970
       Top = 9
       Width = 333
       Height = 74
@@ -221,8 +221,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteWaitingList: TsCheckBox
         Left = 14
         Top = 17
-        Width = 69
-        Height = 20
+        Width = 77
+        Height = 17
         Caption = 'Waitinglist'
         Checked = True
         State = cbChecked
@@ -234,8 +234,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteAlotment: TsCheckBox
         Left = 14
         Top = 34
-        Width = 65
-        Height = 20
+        Width = 73
+        Height = 17
         Caption = 'Allotment'
         Checked = True
         State = cbChecked
@@ -247,8 +247,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteOrder: TsCheckBox
         Left = 134
         Top = 52
-        Width = 75
-        Height = 20
+        Width = 83
+        Height = 17
         Caption = 'Not Arrived'
         Checked = True
         State = cbChecked
@@ -260,8 +260,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteNoShow: TsCheckBox
         Left = 14
         Top = 52
-        Width = 61
-        Height = 20
+        Width = 69
+        Height = 17
         Caption = 'No show'
         Checked = True
         State = cbChecked
@@ -273,8 +273,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteDeparted: TsCheckBox
         Left = 134
         Top = 17
-        Width = 65
-        Height = 20
+        Width = 73
+        Height = 17
         Caption = 'Departed'
         Checked = True
         State = cbChecked
@@ -286,8 +286,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteBlocked: TsCheckBox
         Left = 228
         Top = 34
-        Width = 56
-        Height = 20
+        Width = 64
+        Height = 17
         Caption = 'Blocked'
         TabOrder = 5
         SkinData.SkinSection = 'CHECKBOX'
@@ -297,8 +297,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteGuest: TsCheckBox
         Left = 134
         Top = 34
-        Width = 48
-        Height = 20
+        Width = 56
+        Height = 17
         Caption = 'Guest'
         Checked = True
         State = cbChecked
@@ -310,8 +310,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcluteCANCELED: TsCheckBox
         Left = 228
         Top = 17
-        Width = 64
-        Height = 20
+        Width = 72
+        Height = 17
         Caption = 'Canceled'
         TabOrder = 7
         SkinData.SkinSection = 'CHECKBOX'
@@ -321,8 +321,8 @@ object frmRptGuests: TfrmRptGuests
       object chkExcludeWaitingListNonOptional: TsCheckBox
         Left = 228
         Top = 52
-        Width = 69
-        Height = 20
+        Width = 77
+        Height = 17
         Caption = 'Waitinglist'
         Checked = True
         State = cbChecked
@@ -333,7 +333,7 @@ object frmRptGuests: TfrmRptGuests
       end
     end
     object rgrShow: TsRadioGroup
-      Left = 631
+      Left = 817
       Top = 9
       Width = 147
       Height = 74
@@ -351,8 +351,8 @@ object frmRptGuests: TfrmRptGuests
     object chkGroup: TsCheckBox
       Left = 282
       Top = 66
-      Width = 122
-      Height = 20
+      Width = 130
+      Height = 17
       Caption = 'Group by reservation'
       TabOrder = 6
       OnClick = chkGroupClick
@@ -364,7 +364,7 @@ object frmRptGuests: TfrmRptGuests
   object Panel5: TsPanel
     Left = 0
     Top = 89
-    Width = 1126
+    Width = 1312
     Height = 43
     Align = alTop
     TabOrder = 1
@@ -385,7 +385,7 @@ object frmRptGuests: TfrmRptGuests
     end
     object btnReport: TsButton
       AlignWithMargins = True
-      Left = 994
+      Left = 1180
       Top = 4
       Width = 128
       Height = 35
@@ -457,7 +457,7 @@ object frmRptGuests: TfrmRptGuests
   object dxStatusBar1: TdxStatusBar
     Left = 0
     Top = 544
-    Width = 1126
+    Width = 1312
     Height = 20
     Panels = <>
     Font.Charset = DEFAULT_CHARSET
@@ -485,7 +485,7 @@ object frmRptGuests: TfrmRptGuests
   object grGuests: TcxGrid
     Left = 0
     Top = 132
-    Width = 1126
+    Width = 1312
     Height = 412
     Align = alClient
     TabOrder = 4
@@ -644,7 +644,9 @@ object frmRptGuests: TfrmRptGuests
       end
       object tvGuestsBreakfast: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Breakfast'
-        Width = 36
+        PropertiesClassName = 'TcxTextEditProperties'
+        OnGetDisplayText = tvGuestsBreakfastGetDisplayText
+        Width = 86
         Position.BandIndex = 1
         Position.ColIndex = 1
         Position.RowIndex = 0
@@ -894,7 +896,8 @@ object frmRptGuests: TfrmRptGuests
       end
       item
         Name = 'Breakfast'
-        DataType = ftBoolean
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'RoomDescription'

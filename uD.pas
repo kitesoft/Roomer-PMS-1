@@ -249,7 +249,6 @@ type
     function Del_PriceRuleByCode(Code: string): boolean;
     function PriceRuleExist(Code: string): boolean;
     function isMixedStatus(reservation: Integer): string;
-    function isMixedBreakfast(reservation: Integer): string;
     function isMixedPaymentDetails(reservation: Integer): string;
     function isGroup(RoomReservation: Integer): boolean;
 
@@ -353,7 +352,6 @@ type
     function isAllRRSameCurrency(reservation: Integer): boolean;
     // Er Allar herbergisb�kanir innan b�kunnar � sama gjaldmi�li
 
-    function GetBreakfastIncluted(reservation, RoomReservation: Integer): boolean;
     function GetGroupAccount(reservation, RoomReservation: Integer): boolean;
 
     function OpenInvoiceInvoiceLines(reservation, RoomReservation: Integer): Integer;
@@ -644,7 +642,6 @@ type
     procedure Reservations_InitUseStayTax;
 
     Function GroupAccountCount(reservation: Integer): Integer;
-    Function BreakFastInclutedCount(reservation: Integer): Integer;
 
     procedure UpdateStatusSimple(reservation, RoomReservation: Integer; newStatus: string);
 
@@ -1845,28 +1842,6 @@ begin
   finally
     freeandnil(rSet);
   end;
-end;
-
-function Td.isMixedBreakfast(reservation: Integer): string;
-var
-  s: string;
-  rSet: TRoomerDataSet;
-begin
-  result := 'MIXED';
-
-  s := '';
-  s := s + 'SELECT distinct invBreakfast from roomreservations where reservation=%d ';
-
-  rSet := CreateNewDataSet;
-  try
-    s := format(s, [reservation]);
-    hData.rSet_bySQL(rSet, s);
-    if rSet.recordcount = 1 then
-      result := _bool2str(rSet.FieldByName('invBreakfast').asBoolean, 0);
-  finally
-    freeandnil(rSet);
-  end;
-
 end;
 
 function Td.isMixedPaymentDetails(reservation: Integer): string;
@@ -3495,7 +3470,6 @@ begin
   s := '';
   s := s + 'UPDATE roomreservations ' + chr(10);
   s := s + 'Set' + chr(10);
-//  s := s + '  InvBreakfast = ' + _db(ord(aBreakfast)) + chr(10);
   s := s + '  Breakfast = ' + _db(aBreakfast.ToDBString) + chr(10);
   s := s + '  ,BreakfastPrice = ' + _db(aPrice) + chr(10);
   s := s + 'WHERE Reservation = ' + _db(reservation) + chr(10);
@@ -3956,28 +3930,6 @@ end;
 function Td.GetApplicationId: string;
 begin
   Result := d.roomerMainDataSet.ApplicationId;
-end;
-
-function Td.GetBreakfastIncluted(reservation, RoomReservation: Integer): boolean;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-begin
-  result := False;
-  rSet := CreateNewDataSet;
-  try
-    // s := '';
-    // s := s + ' SELECT InvBreakfast FROM RoomReservations '+chr(10);
-    // s := s + ' WHERE Reservation = ' + inttostr(reservation)+chr(10);
-    // s := s + ' AND RoomReservation = ' + inttostr(RoomReservation)+chr(10);
-    s := format(select_GetBreakfastIncluted, [reservation, RoomReservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      result := rSet['InvBreakfast'];
-    end;
-  finally
-    freeandnil(rSet);
-  end;
 end;
 
 function Td.GetGroupAccount(reservation, RoomReservation: Integer): boolean;
@@ -7738,7 +7690,7 @@ var
   NightsUntilDeparture: Integer;
 
   GroupAccount: boolean;
-  Breakfast: boolean;
+  Breakfast: TBreakfastType;
 
   sDateTime: string;
   sStaff: string;
@@ -7817,7 +7769,7 @@ begin
                   status := rSet.FieldByName('Status').Asstring;
                   reservation := rSet.FieldByName('Reservation').AsInteger;
                   GroupAccount := rSet['GroupAccount'];
-                  Breakfast := rSet['invBreakfast'];
+                  Breakfast := TBreakfastType.FromDBString(rSet['Breakfast']);
                   StatusText := d.ExtStatusText(status, date, Arrival, departure);
                   NightsTotal := trunc(departure) - trunc(Arrival);
                   NightsFromArrival := trunc(date) - trunc(Arrival);
@@ -7850,7 +7802,7 @@ begin
                       UTF8String(''));
                     nRoomreservation.writestring(UTF8String('group_account'), UTF8String(boolToStr(GroupAccount)),
                       UTF8String(''));
-                    nRoomreservation.writestring(UTF8String('breakfast'), UTF8String(boolToStr(Breakfast)),
+                    nRoomreservation.writestring(UTF8String('breakfast'), UTF8String(Breakfast.ToDBString),
                       UTF8String(''));
                     nRoomreservation.writestring(UTF8String('status_text'), UTF8String(StatusText), UTF8String(''));
                     nRoomreservation.writestring(UTF8String('nights_total'), UTF8String(inttostr(NightsTotal)),
@@ -10359,30 +10311,6 @@ begin
 {$endif}
 end;
 
-Function Td.BreakFastInclutedCount(reservation: Integer): Integer;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-begin
-  //
-  result := 0;
-  rSet := CreateNewDataSet;
-  try
-    // s := s+' SELECT '+chr(10);
-    // s := s+'   COUNT(invBreakfast) AS cnt '+chr(10);
-    // s := s+' FROM '+chr(10);
-    // s := s+'   RoomReservations '+chr(10);
-    // s := s+' WHERE '+chr(10);
-    // s := s+'   (Reservation = '+_db(Reservation)+') AND (invBreakfast = 1) '+chr(10);
-    s := format(select_BreakFastInclutedCount, [reservation]);
-    if hData.rSet_bySQL(rSet, s) then
-    begin
-      result := rSet.FieldByName('cnt').AsInteger;
-    end;
-  finally
-    freeandnil(rSet);
-  end;
-end;
 
 Function Td.GroupAccountCount(reservation: Integer): Integer;
 var
@@ -15354,9 +15282,6 @@ var
   lExecPLan: TRoomerExecutionPlan;
   lOldCount: integer;
   lReservation: integer;
-  lRoom: string;
-  lArrival: TDateTime;
-  lDeparture: TDateTime;
   lRoomResFld: TField;
   lMainNameFld: TFIeld;
   bm: TBookmark;
@@ -15446,12 +15371,12 @@ begin
         else
           raise Exception.CreateFmt('Changing guestcount to %d failed', [aNewGuestCount]);
 
-        if not GetBreakfastIncluted(lReservation, aRoomReservation) then
-          if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
-          begin
-            RR_GetRoomArrivalAndDeparture(aRoomReservation, lRoom, lArrival, lDeparture);
-            INV_UpdateBreakfastGuests(lReservation, aRoomReservation, aNewGuestCount * (trunc(lDeparture) - trunc(lArrival)));
-          end;
+//        if not GetBreakfastIncluted(lReservation, aRoomReservation) then
+//          if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
+//          begin
+//            RR_GetRoomArrivalAndDeparture(aRoomReservation, lRoom, lArrival, lDeparture);
+//            INV_UpdateBreakfastGuests(lReservation, aRoomReservation, aNewGuestCount * (trunc(lDeparture) - trunc(lArrival)));
+//          end;
 
       finally
         lExecPlan.Free;

@@ -95,7 +95,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 305
-        ActivePage = tabFrontDesk
+        ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -284,7 +284,7 @@ object frmMain: TfrmMain
             SortSettings.HeaderColorTo = 16579058
             SortSettings.HeaderMirrorColor = 16380385
             SortSettings.HeaderMirrorColorTo = 16182488
-            Version = '8.2.5.2'
+            Version = '8.2.4.1'
             ColWidths = (
               47
               49
@@ -457,7 +457,6 @@ object frmMain: TfrmMain
                 'Arrival'
                 'Departure'
                 'All')
-              OnChanging = rgrGroupreportStayTypeChanging
             end
             object btnGroupReportExpandAll: TsButton
               Left = 136
@@ -543,16 +542,6 @@ object frmMain: TfrmMain
                 TabOrder = 2
                 OnClick = btnGroupReportShowClick
               end
-            end
-            object btnBreakfastGuests: TsButton
-              Left = 394
-              Top = 11
-              Width = 110
-              Height = 21
-              Caption = 'Breakfast guests'
-              TabOrder = 5
-              Visible = False
-              OnClick = btnBreakfastGuestsClick
             end
           end
           object gAllReservations: TcxGrid
@@ -698,8 +687,9 @@ object frmMain: TfrmMain
                 OnGetProperties = tvAllReservationsTotalStayRateGetProperties
               end
               object tvAllReservationsBreakfast: TcxGridDBColumn
-                Caption = 'Breakfast.'
                 DataBinding.FieldName = 'Breakfast'
+                PropertiesClassName = 'TcxTextEditProperties'
+                OnGetDisplayText = tvAllReservationsBreakfastGetDisplayText
               end
               object tvAllReservationsbreakfastGuests: TcxGridDBColumn
                 Caption = 'Brkf. Guests'
@@ -1072,7 +1062,7 @@ object frmMain: TfrmMain
               SortSettings.HeaderColorTo = 16579058
               SortSettings.HeaderMirrorColor = 16380385
               SortSettings.HeaderMirrorColorTo = 16182488
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 73
                 20
@@ -1430,7 +1420,7 @@ object frmMain: TfrmMain
               SearchFooter.MatchCaseCaption = 'Match case'
               SearchFooter.ResultFormat = '(%d of %d)'
               SortSettings.DefaultFormat = ssAutomatic
-              Version = '8.2.5.2'
+              Version = '8.2.4.1'
               ColWidths = (
                 64
                 64
@@ -2061,8 +2051,6 @@ object frmMain: TfrmMain
             DirectInput = False
             ShowWeeks = True
             PopupWidth = 250
-            ExplicitLeft = 38
-            ExplicitTop = 5
           end
           object pnlStaffComm: TsPanel
             AlignWithMargins = True
@@ -2501,7 +2489,7 @@ object frmMain: TfrmMain
         ParentColor = False
         Transparent = True
         OnAnchorClick = mmoMessageAnchorClick
-        Version = '1.9.2.8'
+        Version = '1.9.2.7'
         ExplicitLeft = 87
         ExplicitWidth = 1019
       end
@@ -2631,7 +2619,6 @@ object frmMain: TfrmMain
     TabOrder = 2
     TabStop = False
     object rbTabHome: TdxRibbonTab
-      Active = True
       Caption = 'Roomer'
       Groups = <
         item
@@ -2688,6 +2675,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -2824,8 +2812,8 @@ object frmMain: TfrmMain
     SkinData.SkinSection = 'TRANSPARENT'
   end
   object panelHide: TsPanel
-    Left = 805
-    Top = 455
+    Left = 906
+    Top = 388
     Width = 297
     Height = 59
     TabOrder = 3
@@ -4111,10 +4099,6 @@ object frmMain: TfrmMain
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'btnLostAndFound'
-        end
-        item
-          Visible = True
           ItemName = 'btnResStat'
         end
         item
@@ -4143,11 +4127,20 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
-          ItemName = 'btnTotallist'
+          ItemName = 'btnBreakfastList'
         end
         item
           Visible = True
+          ItemName = 'btnTotallist'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'btnRptNationalReport'
+        end
+        item
+          Visible = True
+          ItemName = 'btnLostAndFound'
         end
         item
           Visible = True
@@ -4160,26 +4153,6 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnResStatusPerdDay'
-        end
-        item
-          Visible = True
-          ItemName = 'dxUserActivityLog'
-        end
-        item
-          Visible = True
-          ItemName = 'btnCreditcardTokenUsage'
-        end
-        item
-          Visible = True
-          ItemName = 'btnItemTransations'
-        end
-        item
-          Visible = True
-          ItemName = 'btnFinanceMutationTraces'
-        end
-        item
-          Visible = True
-          ItemName = 'btnDailySalesAndStatistics'
         end>
       OneOnRow = False
       Row = 0
@@ -4238,7 +4211,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 1128
+      DockedLeft = 938
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4260,6 +4233,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnClosedInvoicesAllSimpleList'
+        end
+        item
+          Visible = True
+          ItemName = 'btnCreditcardTokenUsage'
         end>
       OneOnRow = False
       Row = 0
@@ -4448,6 +4425,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnReRegisterPMS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxUserActivityLog2'
         end>
       OneOnRow = False
       Row = 0
@@ -4458,7 +4439,7 @@ object frmMain: TfrmMain
     object barinnBar9: TdxBar
       Caption = 'Templates'
       CaptionButtons = <>
-      DockedLeft = 972
+      DockedLeft = 1048
       DockedTop = 0
       FloatLeft = 1278
       FloatTop = 8
@@ -4478,7 +4459,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1337
+      DockedLeft = 1228
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -4488,6 +4469,18 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'btnBookKeepingQueries'
+        end
+        item
+          Visible = True
+          ItemName = 'btnItemTransations'
+        end
+        item
+          Visible = True
+          ItemName = 'btnFinanceMutationTraces'
+        end
+        item
+          Visible = True
+          ItemName = 'btnDailySalesAndStatistics'
         end>
       OneOnRow = False
       Row = 0
@@ -5619,6 +5612,22 @@ object frmMain: TfrmMain
       Hint = 'National Statistics'
       Visible = ivAlways
       LargeImageIndex = 32
+    end
+    object dxUserActivityLog2: TdxBarLargeButton
+      Caption = 'ActivityLog'
+      Category = 0
+      Hint = 'Show user activity report'
+      Visible = ivAlways
+      LargeImageIndex = 97
+      OnClick = dxUserActivityLogClick
+    end
+    object btnBreakfastList: TdxBarLargeButton
+      Caption = 'Breakfast List'
+      Category = 0
+      Hint = 'Breakfast List'
+      Visible = ivAlways
+      LargeImageIndex = 90
+      OnClick = btnBreakfastListClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -7407,7 +7416,8 @@ object frmMain: TfrmMain
       end
       item
         Name = 'Breakfast'
-        DataType = ftBoolean
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'NoRoom'
@@ -7579,8 +7589,8 @@ object frmMain: TfrmMain
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    Left = 336
-    Top = 545
+    Left = 480
+    Top = 529
   end
   object allReservationsDS: TDataSource
     DataSet = mAllReservations
@@ -23789,8 +23799,8 @@ object frmMain: TfrmMain
   object ilFilter: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
-    Left = 928
-    Top = 456
+    Left = 936
+    Top = 408
     Bitmap = {
       494C010102000500040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -24068,8 +24078,8 @@ object frmMain: TfrmMain
   end
   object pupGroups: TPopupMenu
     OnPopup = pupGroupsPopup
-    Left = 424
-    Top = 544
+    Left = 288
+    Top = 512
     object R2: TMenuItem
       Caption = 'Reservation Profile'
       Default = True

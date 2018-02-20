@@ -751,6 +751,10 @@ type
     procedure edtAllBreakfastPriceChange(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
     procedure cbxBreakfastAllRoomsChange(Sender: TObject);
+    procedure tvAllGuestsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure tvGuestRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
     vStartName: string;
@@ -1056,8 +1060,8 @@ begin
 
   lblAllBreakfastPriceCurrency.Caption := RoomerCurrencyManager.DefaultCurrency;
 
-  FAllRoomsBreakfastChanged := false;
   UpdateAllRoomsBreakfast;
+  FAllRoomsBreakfastChanged := false;
 end;
 
 procedure TfrmReservationProfile.FormCreate(Sender: TObject);
@@ -3909,6 +3913,12 @@ begin
     mRooms.First;
 end;
 
+procedure TfrmReservationProfile.tvAllGuestsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  aText := TBreakfastType.FromDBString(aRecord.values[sender.Index]).AsReadableString;
+end;
+
 procedure TfrmReservationProfile.tvAllGuestsCanFocusRecord
   (Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   var AAllow: Boolean);
@@ -3931,6 +3941,12 @@ begin
     end;
   end;
   zInt := rr;
+end;
+
+procedure TfrmReservationProfile.tvGuestRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  aText := TBreakfastType.FromDBString(aRecord.values[sender.Index]).AsReadableString;
 end;
 
 procedure TfrmReservationProfile.tvGuestRoomsCanFocusRecord

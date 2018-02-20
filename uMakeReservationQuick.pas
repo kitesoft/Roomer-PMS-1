@@ -542,7 +542,7 @@ type
     lblPerPerson: TsLabel;
     lblOnGroupInvoice: TsLabel;
     lblPrice: TsLabel;
-    edtBreakfast: TsCurrencyEdit;
+    edtBreakfastPrice: TsCurrencyEdit;
     cbxBreakfastGrp: TsCheckBox;
     Alerts: TsTabSheet;
     grRoomRes: TcxGrid;
@@ -1393,13 +1393,14 @@ begin
     FrmAlertPanel.PlaceEditPanel(Alerts, FNewReservation.AlertList);
     gbxProfileAlert.Visible := False;
 
+    edtBreakfastPrice.Value := Item_GetPrice(g.qBreakFastItem);
+    UpdateControls;
+
   finally
     screen.Cursor := crDefault;
   end;
 
   PostMessage(Handle, WM_LOADPREVIOUS_GUESTS, 0, 0);
-
-  UpdateControls;
 
 end;
 
@@ -1862,7 +1863,7 @@ end;
 
 procedure TfrmMakeReservationQuick.UpdateControls;
 begin
-  edtBreakfast.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) = TBreakFastType.Excluded;
+  edtBreakfastPrice.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) = TBreakFastType.Excluded;
   cbxBreakfastGrp.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) <> TBreakFastType.None;
 end;
 
@@ -4246,7 +4247,7 @@ begin
         oSelectedRoomItem.Rates.RateItemsList.Add(rateItem);
 
         oSelectedRoomItem.Breakfast := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex);
-        oSelectedRoomItem.BreakfastCost := edtBreakfast.Value;
+        oSelectedRoomItem.BreakfastCost := edtBreakfastPrice.Value;
         oSelectedRoomItem.BreakfastCostGroupAccount := cbxBreakfastGrp.Checked;
       end;
 

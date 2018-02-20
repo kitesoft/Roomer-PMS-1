@@ -78,7 +78,7 @@ uses
   dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust, dxSkinSummer2008, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridDBTableView, Vcl.ComCtrls, sPageControl, cxCurrencyEdit
+  cxGridDBTableView, Vcl.ComCtrls, sPageControl, cxCurrencyEdit, cxTextEdit
   ;
 type
   TfrmRptGuests = class(TForm)
@@ -175,6 +175,8 @@ type
     procedure tvGuestsTotalStayRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
     procedure tvGuestsCurrencyRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tvGuestsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
      zLocationInString : string;
@@ -207,7 +209,7 @@ uses
   , uRoomerLanguage
   , uDImages
   , uReservationProfile
-  , uMain, uSQLUtils;
+  , uMain, uSQLUtils, uRoomerCurrencymanager, uBreakfastTypeDefinitions;
 
 function RptGuests : boolean;
 begin
@@ -252,16 +254,20 @@ begin
   result := sRooms;
 end;
 
-
+procedure TfrmRptGuests.tvGuestsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  aText := TBreakfastType.FromDBString(aRecord.Values[Sender.Index]).AsReadableString;
+end;
 
 procedure TfrmRptGuests.tvGuestsCurrencyRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmRptGuests.tvGuestsTotalStayRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := d.getCurrencyProperties(Arecord.Values[tvGuestsCurrency.index]);
+  RoomerCurrencyManager.CurrencyDefinition[Arecord.Values[tvGuestsCurrency.index]].SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmRptGuests.btnClearClick(Sender: TObject);
@@ -541,12 +547,12 @@ begin
       s := s+'  , rr.room '#10;
       s := s+'  , rr.roomtype '#10;
       s := s+'  , rr.Status '#10;
-      s := s+'  , rr.invBreakfast AS Breakfast '#10;
+      s := s+'  , rr.invBreakfast AS invBreakfast '#10; // deprecated
+      s := s+'  , rr.Breakfast AS Breakfast '#10;
       s := s+'  , Concat((SELECT Description from rooms where rr.room = rooms.room),'+_Db('  ')+',(SELECT Equipments from rooms where rr.room = rooms.room)) as RoomDescription '#10;
       s := s+'  , (SELECT location from rooms where rr.room = rooms.room) as location '#10;
       s := s+'  , (SELECT Floor from rooms where rr.room = rooms.room) as floor '#10;
       s := s+'  , (SELECT Equipments from rooms where rr.room = rooms.room) as Equipments '#10;
-//20 Equipments
       s := s+'  , (SELECT Description from locations where locations.location = (SELECT location from rooms where rr.room = rooms.room)) as LocationDescription '#10;
       s := s+'  , rr.GroupAccount '#10;
       s := s+'  , rv.marketSegment '#10;

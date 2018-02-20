@@ -3808,7 +3808,9 @@ begin
     b.Append('   ,`Reservation` ' + #10);
     b.Append('   ,`Status` ' + #10);
     b.Append('   ,`GroupAccount` ' + #10);
-    b.Append('   ,`invBreakfast` ' + #10);
+//    b.Append('   ,`invBreakfast` ' + #10);
+    b.Append('   ,`Breakfast` ' + #10);
+    b.Append('   ,`BreakfastPrice` ' + #10);
     b.Append('   ,`RoomPrice1` ' + #10);
     b.Append('   ,`Price1From` ' + #10);
     b.Append('   ,`Price1To` ' + #10);
@@ -3854,7 +3856,8 @@ begin
     b.Append('  , ' + _db(theData.Reservation) + #10);
     b.Append('  , ' + _db(theData.Status) + #10);
     b.Append('  , ' + _db(theData.GroupAccount) + #10);
-    b.Append('  , ' + _db(ord(theData.Breakfast)) + #10);
+    b.Append('  , ' + _db(theData.Breakfast.ToDBString) + #10);
+    b.Append('  , ' + _db(theData.BreakfastPrice.ToNative) + #10);
     b.Append('  , ' + _db(theData.RoomPrice1) + #10);
     b.Append('  , ' + _db(theData.Price1From) + #10);
     b.Append('  , ' + _db(theData.Price1To) + #10);
@@ -3922,7 +3925,7 @@ begin
     b.Append('   ,Reservation = ' + _db(theData.Reservation) + #10);
     b.Append('   ,Status = ' + _db(theData.Status) + #10);
     b.Append('   ,GroupAccount = ' + _db(theData.GroupAccount) + #10);
-    b.Append('   ,invBreakfast = ' + _db(theData.Breakfast = TBreakfastType.Included) + #10);
+//    b.Append('   ,invBreakfast = ' + _db(theData.Breakfast = TBreakfastType.Included) + #10);
     b.Append('   ,Breakfast = ' + _db(theData.Breakfast.ToDBString) + #10);
     b.Append('   ,BreakfastPrice = ' + _db(theData.BreakfastPrice.ToNative) + #10);
     b.Append('   ,RoomPrice1 = ' + _db(theData.RoomPrice1) + #10);
@@ -3992,7 +3995,9 @@ begin
   s := s + '  ,Reservation ' + #10;
   s := s + '  ,Status ' + #10;
   s := s + '  ,GroupAccount ' + #10;
-  s := s + '  ,invBreakfast ' + #10;
+//  s := s + '  ,invBreakfast ' + #10;
+  s := s + '  ,Breakfast ' + #10;
+  s := s + '  ,BreakfastPrice ' + #10;
   s := s + '  ,RoomPrice1 ' + #10;
   s := s + '  ,Price1From ' + #10;
   s := s + '  ,Price1To ' + #10;
@@ -4036,7 +4041,8 @@ begin
   s := s + '  , ' + _db(theData.Reservation) + #10;
   s := s + '  , ' + _db(theData.Status) + #10;
   s := s + '  , ' + _db(theData.GroupAccount) + #10;
-  s := s + '  , ' + _db(ord(theData.Breakfast)) + #10;
+  s := s + '  , ' + _db(theData.Breakfast.ToDBString) + #10;
+  s := s + '  , ' + _db(theData.BreakfastPrice.ToNative) + #10;
   s := s + '  , ' + _db(theData.RoomPrice1) + #10;
   s := s + '  , ' + _db(theData.Price1From) + #10;
   s := s + '  , ' + _db(theData.Price1To) + #10;
@@ -4299,7 +4305,8 @@ begin
       result.Reservation := rSet.fieldbyname('Reservation').asInteger;
       result.Status := rSet.fieldbyname('Status').asString;
       result.GroupAccount := rSet['GroupAccount'];
-      result.Breakfast := TBreakfastType.FromItemIndex(rSet['invBreakfast']);
+      result.Breakfast := TBreakfastType.FromDBString(rSet['Breakfast']);
+      result.BreakfastPrice := rSet.FieldByName('BreakfastPrice').AsFloat;
       result.RoomPrice1 := rSet.fieldbyname('RoomPrice1').AsFloat;
       result.Price1From := rSet.fieldbyname('Price1From').asString;
       result.Price1To := rSet.fieldbyname('Price1To').asString;

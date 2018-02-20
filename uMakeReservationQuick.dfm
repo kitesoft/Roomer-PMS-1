@@ -2937,7 +2937,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Alignment = taRightJustify
                 Caption = 'Breakfast:'
               end
-              object edtBreakfast: TsCurrencyEdit
+              object edtBreakfastPrice: TsCurrencyEdit
                 Left = 234
                 Top = 29
                 Width = 65

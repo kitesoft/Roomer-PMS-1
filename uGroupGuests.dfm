@@ -64,8 +64,8 @@ inherited frmGroupGuests: TfrmGroupGuests
       object chkCompactView: TsCheckBox
         Left = 14
         Top = 80
-        Width = 95
-        Height = 17
+        Width = 87
+        Height = 20
         Caption = 'Compact view'
         Checked = True
         State = cbChecked
@@ -257,6 +257,7 @@ inherited frmGroupGuests: TfrmGroupGuests
         end
         object tvRoomsBreakfast: TcxGridDBBandedColumn
           DataBinding.FieldName = 'Breakfast'
+          OnGetDisplayText = tvRoomsBreakfastGetDisplayText
           Options.Editing = False
           Width = 87
           Position.BandIndex = 0
@@ -1021,8 +1022,9 @@ inherited frmGroupGuests: TfrmGroupGuests
       FieldName = 'RoomType'
       Size = 10
     end
-    object mRomsBreakfast: TBooleanField
+    object mRomsBreakfast: TWideStringField
       FieldName = 'Breakfast'
+      Size = 10
     end
     object mRoomsArrival: TDateTimeField
       FieldName = 'Arrival'
@@ -1072,8 +1074,9 @@ inherited frmGroupGuests: TfrmGroupGuests
       FieldName = 'RoomType'
       Size = 10
     end
-    object BooleanField3: TBooleanField
+    object BooleanField3: TWideStringField
       FieldName = 'Breakfast'
+      Size = 10
     end
     object DateTimeField4: TDateTimeField
       FieldName = 'Arrival'

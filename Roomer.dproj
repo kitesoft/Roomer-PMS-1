@@ -655,9 +655,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Form>frmRptReservations</Form>
         </DCCReference>
         <DCCReference Include="uRoomerMessageDialog.pas"/>
-        <DCCReference Include="uRptBreakfastGuests.pas">
-            <Form>frmRptBreakfastGuests</Form>
-        </DCCReference>
         <DCCReference Include="uGuestCheckInForm.pas">
             <Form>FrmGuestCheckInForm</Form>
         </DCCReference>
@@ -1047,6 +1044,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="uRptBreakfastList.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

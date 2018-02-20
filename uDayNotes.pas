@@ -148,7 +148,7 @@ type
     gridCurrentGuestsDBTableView1NightsFromArrival: TcxGridDBColumn;
     gridCurrentGuestsDBTableView1NightsUntilDeparture: TcxGridDBColumn;
     mCurrentGuests_Groupaccount: TBooleanField;
-    mCurrentGuests_breakfast: TBooleanField;
+    mCurrentGuests_breakfast: TWideStringField;
     gridCurrentGuestsDBTableView1Groupaccount: TcxGridDBColumn;
     gridCurrentGuestsDBTableView1breakfast: TcxGridDBColumn;
     btnGetCurrentGuestsRefresh: TsButton;
@@ -403,7 +403,7 @@ uses
   , uReservationStateDefinitions
   , uSQLUtils, uDateTimeHelper, ufrmInvoiceEdit, uInvoiceDefinitions
   , uRoomerLanguage
-  ;
+  , uBreakfastTypeDefinitions;
 
 
 var
@@ -509,7 +509,7 @@ var
   NightsUntilDeparture : integer;
 
   GroupAccount : boolean;
-  Breakfast    : boolean;
+  Breakfast    : TBreakfastType;
 
 
 begin
@@ -568,7 +568,7 @@ begin
                 Status               := rSet.FieldByName('Status').asString;
                 Reservation          := rSet.FieldByName('Reservation').asInteger;
                 GroupAccount         := rSet['GroupAccount'];
-                Breakfast            := rSet['invBreakfast'];
+                Breakfast            := TBreakfastType.FromDBString( rSet['Breakfast']);
 
                 StatusText := d.ExtStatusText(status,aDate, Arrival, departure);
 
@@ -596,7 +596,7 @@ begin
                 mCurrentGuests_.fieldbyname('Reservation').AsInteger         :=  Reservation         ;
                 mCurrentGuests_.fieldbyname('GuestCount').AsInteger          :=  GuestCount          ;
                 mCurrentGuests_.fieldbyname('GroupAccount').AsBoolean        :=  GroupAccount         ;
-                mCurrentGuests_.fieldbyname('Breakfast').AsBoolean           :=  Breakfast           ;
+                mCurrentGuests_.fieldbyname('Breakfast').AsString            :=  Breakfast.AsReadableString;
 
                 mCurrentGuests_.fieldbyname('NightsTotal').AsInteger          := NightsTotal          ;
                 mCurrentGuests_.fieldbyname('NightsFromArrival').AsInteger    := NightsFromArrival    ;

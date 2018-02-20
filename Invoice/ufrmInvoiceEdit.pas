@@ -4613,27 +4613,6 @@ begin
                   GuestName, NumberGuests, ChildrenCount, Package, lRoomReservation,
                   zRoomRSet.FieldByName('BreakFast').AsString,
                   zRoomRSet.fieldbyName('BreakfastPrice').AsFloat, true);
-
-//          end
-
-//??? What is this about?
-//          else if (ABS(AverageRate) = 0) and (status <> 'B') then
-//          begin
-//            if package <> '' then
-//            begin
-//              _s := Package_getRoomDescription(Package, Room, Arrival, Departure, GuestName);
-//              if FRoomReservation = 0 then
-//                _s := _s + ' ' + lRoomText + ':' + Room;
-//            end
-//            else
-//              _s := format(lRoomtext + ' %s %s-%s', [Room, FormatDateTime('dd/mm', Arrival), FormatDateTime('dd/mm', Departure)]);
-//            sText := _s;
-//            tmp := trim(zRoomRSet.FieldByName('rrDescription').asString);
-//            if copy(tmp, 1, 2) = '--' then
-//              sText := '';
-//            sText := tmp + sText;
-//            AddRoom(Room, 0, InvoiceCurrency, Arrival, Departure, UnpaidDays, sText, (lRoomReservation = 0), lRoomReservation, 0, false, '', '', NumberGuests, ChildrenCount, package, lRoomReservation, zRoomRSet.FieldByName('invBreakFast').AsBoolean);
-//          end;
         end;
         inc(index);
         zRoomRSet.Next;

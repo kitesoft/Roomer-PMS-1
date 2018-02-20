@@ -437,6 +437,7 @@ object frmReservationProfile: TfrmReservationProfile
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
+        Visible = False
         object lblAllBreakfastPrice: TsLabel
           Left = 31
           Top = 6
@@ -1999,7 +2000,7 @@ object frmReservationProfile: TfrmReservationProfile
     Top = 374
     Width = 1144
     Height = 255
-    ActivePage = RoomsTab
+    ActivePage = GuestsTab
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -3147,8 +3148,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 102
-          Height = 17
+          Width = 94
+          Height = 20
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
@@ -3288,6 +3289,7 @@ object frmReservationProfile: TfrmReservationProfile
             object tvGuestRoomsBreakfast: TcxGridDBColumn
               DataBinding.FieldName = 'Breakfast'
               PropertiesClassName = 'TcxComboBoxProperties'
+              OnGetDisplayText = tvGuestRoomsBreakfastGetDisplayText
             end
             object tvGuestRoomsrrArrival: TcxGridDBColumn
               DataBinding.FieldName = 'Arrival'
@@ -3490,6 +3492,7 @@ object frmReservationProfile: TfrmReservationProfile
             object tvAllGuestsBreakfast: TcxGridDBColumn
               DataBinding.FieldName = 'Breakfast'
               PropertiesClassName = 'TcxComboBoxProperties'
+              OnGetDisplayText = tvAllGuestsBreakfastGetDisplayText
             end
             object tvAllGuestsrrArrival: TcxGridDBColumn
               DataBinding.FieldName = 'Arrival'

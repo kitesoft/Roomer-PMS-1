@@ -71,7 +71,7 @@ uses
   , uReservationStateChangeHandler
   , uFraDayStatistics
   , uFrmRateQuery
-  , uFraHotelStatisticsFooter
+  , uFraHotelStatisticsFooter, cxTextEdit
     ;
 
 type
@@ -303,7 +303,6 @@ type
     tvAllReservationsEmail: TcxGridDBColumn;
     tvAllReservationsWebsite: TcxGridDBColumn;
     tvAllReservationsRvGuestCount: TcxGridDBColumn;
-    tvAllReservationsBreakfast: TcxGridDBColumn;
     tvAllReservationsNoRoom: TcxGridDBColumn;
     tvAllReservationsBookable: TcxGridDBColumn;
     tvAllReservationsStatistics: TcxGridDBColumn;
@@ -537,7 +536,6 @@ type
     btnSearchForGuests: TsButton;
     timBlinker: TTimer;
     dxBarLargeButton2: TdxBarLargeButton;
-    btnBreakfastGuests: TsButton;
     btnLostAndFound: TdxBarLargeButton;
     btnRptNotes: TdxBarLargeButton;
     pnlDayStatus: TsPanel;
@@ -688,6 +686,9 @@ type
     dxBarSubItem11: TdxBarSubItem;
     dxBarButton8: TdxBarButton;
     btnNationalStatistics: TdxBarLargeButton;
+    tvAllReservationsBreakfast: TcxGridDBColumn;
+    dxUserActivityLog2: TdxBarLargeButton;
+    btnBreakfastList: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -841,7 +842,6 @@ type
     procedure timSearchTimer(Sender: TObject);
     procedure btnClearSearchClick(Sender: TObject);
     procedure N12Click(Sender: TObject);
-    procedure rgrGroupreportStayTypeChanging(Sender: TObject; NewIndex: integer; var AllowChange: boolean);
     procedure btnChannelsClick(Sender: TObject);
     procedure btnRatesClick(Sender: TObject);
     procedure btnBackForwardClick(Sender: TObject);
@@ -901,7 +901,6 @@ type
     procedure grOneDayRoomsGridHint(Sender: TObject; ARow, ACol: integer; var HintStr: string);
     procedure timBlinkerTimer(Sender: TObject);
     procedure dxBarLargeButton2Click(Sender: TObject);
-    procedure btnBreakfastGuestsClick(Sender: TObject);
     procedure grPeriodRoomsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure __dxBarCombo1CloseUp(Sender: TObject);
     procedure btnLostAndFoundClick(Sender: TObject);
@@ -984,6 +983,9 @@ type
       var VAlign: TVAlignment);
     procedure btnFilterDropdownClick(Sender: TObject);
     procedure grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure tvAllReservationsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure btnBreakfastListClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1601,7 +1603,6 @@ uses
 		, uRptManagment
 		, uRoomerExceptions
 		, uRoomerMessageDialog
-		, uRptBreakfastGuests
 		, uLostAndFound
 		, uRunWithElevatedOption
 		,urptNotes
@@ -1653,7 +1654,7 @@ uses
     , uFinanceTransactionReport
     , uDailyTotalsReport
     , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
-  uRoomReservationOBJ;
+  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -2556,12 +2557,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.btnBreakfastGuestsClick(Sender: TObject);
-begin
-  // **
-  rptBreakfastGuests;
-end;
-
 procedure TfrmMain.OneDayUpdatePage(aDate: TdateTime);
 begin
   BusyOn;
@@ -3328,6 +3323,12 @@ procedure TfrmMain.tvAllReservationsAverageRateGetProperties(Sender: TcxCustomGr
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
+end;
+
+procedure TfrmMain.tvAllReservationsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  aText := TBreakfastType.FromDBString(aRecord.Values[Sender.Index]).AsReadableString;
 end;
 
 procedure TfrmMain.tvAllReservationsTotalStayRateGetProperties(Sender: TcxCustomGridTableItem;
@@ -11194,6 +11195,11 @@ begin
   RptBookkeeping;
 end;
 
+procedure TfrmMain.btnBreakfastListClick(Sender: TObject);
+begin
+  ShowBreakfastList;
+end;
+
 procedure TfrmMain.btnBookKeepingCodesClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
@@ -12627,7 +12633,7 @@ var
   Room: string;
   RoomType: string;
   status: string;
-  Breakfast: boolean;
+  Breakfast: TBreakfastType;
   noRoom: boolean;
   RoomDescription: string;
   Bookable: boolean;
@@ -12710,7 +12716,7 @@ begin
             Room := rSet.FieldByName('Room').asString;
             RoomType := rSet.FieldByName('RoomType').asString;
             status := rSet.FieldByName('Status').asString;
-            Breakfast := rSet['Breakfast'];
+            Breakfast := TBreakfastType.FromDBString(rSet['Breakfast']);
             noRoom := rSet['NoRoom'];
             RoomDescription := rSet.FieldByName('RoomDescription').asString;
             Bookable := rSet['Bookable'];
@@ -12743,10 +12749,8 @@ begin
             Infants := rSet.FieldByName('NumInfants').asinteger;
 
             breakfastguests := 0;
-            if Breakfast then
-            begin
+            if Breakfast in [TBreakfastType.Included, TBreakfastType.Excluded] then
               breakfastguests := RRGuestCount;
-            end;
 
             if RoomCount < 2 then
             begin
@@ -12771,7 +12775,8 @@ begin
             mAllReservations.FieldByName('Room').asString := Room;
             mAllReservations.FieldByName('RoomType').asString := RoomType;
             mAllReservations.FieldByName('Status').asString := status;
-            mAllReservations['Breakfast'] := Breakfast;
+            mAllReservations['Breakfast'] := Breakfast.ToDBString;
+            mAllReservations.FieldByName('BreakfastGuests').asinteger := breakfastguests;
             mAllReservations['NoRoom'] := noRoom;
             mAllReservations.FieldByName('RoomDescription').asString := RoomDescription;
             mAllReservations['Bookable'] := Bookable;
@@ -12797,7 +12802,6 @@ begin
             mAllReservations.FieldByName('ResLine').asString := Copy(ResLine, 1, 100);
             mAllReservations.FieldByName('GroupReservation').asinteger := GroupReservation;
             mAllReservations.FieldByName('GroupReservationName').asString := GroupReservationName;
-            mAllReservations.FieldByName('BreakfastGuests').asinteger := breakfastguests;
 
             mAllReservations.FieldByName('Currency').asString := Currency;
             mAllReservations.FieldByName('AverageRate').AsFloat := AverageRate;
@@ -12835,12 +12839,6 @@ procedure TfrmMain.rgrGroupReportDateTypeClick(Sender: TObject);
 begin
   refreshGuestList;
   zGuestListFirstTime := false;
-end;
-
-procedure TfrmMain.rgrGroupreportStayTypeChanging(Sender: TObject; NewIndex: integer; var AllowChange: boolean);
-begin
-  // AllowChange := True;
-  // btnRefreshOneDay.Click;
 end;
 
 procedure TfrmMain.rgrGroupreportStayTypeClick(Sender: TObject);

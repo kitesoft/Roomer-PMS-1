@@ -37,7 +37,7 @@ inherited frmRptReservations: TfrmRptReservations
       Top = 117
       Width = 1234
       Height = 489
-      ActivePage = tabRoom
+      ActivePage = tabReservation
       Align = alClient
       TabOrder = 0
       OnChange = pageMainChange
@@ -448,9 +448,8 @@ inherited frmRptReservations: TfrmRptReservations
             object tvRoomReservationsGroupAccount: TcxGridDBColumn
               DataBinding.FieldName = 'GroupAccount'
             end
-            object tvRoomReservationsinvBreakfast: TcxGridDBColumn
-              Caption = 'Breakfast'
-              DataBinding.FieldName = 'invBreakfast'
+            object tvRoomReservationsBreakfast: TcxGridDBColumn
+              DataBinding.FieldName = 'Breakfast'
             end
             object tvRoomReservationsCurrency: TcxGridDBColumn
               DataBinding.FieldName = 'Currency'
@@ -635,7 +634,7 @@ inherited frmRptReservations: TfrmRptReservations
               DataBinding.FieldName = 'GroupAccount'
             end
             object cxGridDBColumn48: TcxGridDBColumn
-              DataBinding.FieldName = 'invBreakfast'
+              DataBinding.FieldName = 'Breakfast'
             end
             object cxGridDBColumn49: TcxGridDBColumn
               DataBinding.FieldName = 'Currency'
@@ -818,9 +817,10 @@ inherited frmRptReservations: TfrmRptReservations
               Caption = 'is Group'
               DataBinding.FieldName = 'GroupAccount'
             end
-            object tvRoomsinvBreakfast: TcxGridDBColumn
+            object tvRoomsBreakfast: TcxGridDBColumn
               Caption = 'Break- fast'
-              DataBinding.FieldName = 'invBreakfast'
+              DataBinding.FieldName = 'Breakfast'
+              OnGetDisplayText = tvRoomsBreakfastGetDisplayText
               Width = 41
             end
             object tvRoomsCustomer: TcxGridDBColumn
@@ -1611,8 +1611,9 @@ inherited frmRptReservations: TfrmRptReservations
         DataType = ftBoolean
       end
       item
-        Name = 'invBreakfast'
-        DataType = ftBoolean
+        Name = 'Breakfast'
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'Currency'
@@ -1859,8 +1860,9 @@ inherited frmRptReservations: TfrmRptReservations
         DataType = ftBoolean
       end
       item
-        Name = 'invBreakfast'
-        DataType = ftBoolean
+        Name = 'Breakfast'
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'Currency'
