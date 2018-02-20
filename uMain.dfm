@@ -1,4 +1,4 @@
-object frmMain: TfrmMain
+﻿object frmMain: TfrmMain
   Left = 685
   Top = 134
   ActiveControl = pageMainGrids

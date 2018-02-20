@@ -3785,6 +3785,12 @@ begin
     dtDate.Date := ShowHomeDateForm(dtDate.Date, Key);
     Key := #0;
   end;
+
+  if Key = #27 then
+  begin
+    FPeriod_bMouseDown := false;
+    FPeriodNO_MouseDown := false;
+  end;
 end;
 
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -9293,6 +9299,7 @@ end;
 procedure TfrmMain.grPeriodRoomsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   FPeriod_bMouseDown := false;
+  FPeriodNO_MouseDown := false;
 end;
 
 procedure TfrmMain.grPeriodRoomsDragOver(Sender, Source: TObject; X, Y: integer; State: TDragState;
@@ -9787,8 +9794,7 @@ begin
   allow := false;
 
   if ACol <> zzSourceCol then
-
-    exit;
+     exit;
 
   if (ACol >= grPeriodRooms.FixedCols) and (ARow >= grPeriodRooms.FixedRows) and
     ((ARow <> grPeriodRooms.RowCount - 1) OR grPeriodViewFilterOn) and
@@ -9824,6 +9830,8 @@ begin
 
     finally
       grPeriodRooms.endUpdate;
+      FPeriod_bMouseDown := false;
+      FPeriodNO_MouseDown := false;
     end;
   end;
 end;
@@ -9903,6 +9911,7 @@ end;
 
 procedure TfrmMain.grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  FPeriod_bMouseDown := false;
   FPeriodNO_MouseDown := false;
 end;
 
@@ -9928,6 +9937,8 @@ begin
     RefreshGrid;
     grPeriodRooms_NO.GotoCell(ACol, ARow);
     NullGlobals;
+    FPeriod_bMouseDown := false;
+    FPeriodNO_MouseDown := false;
   end;
 end;
 

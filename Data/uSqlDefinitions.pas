@@ -1060,8 +1060,8 @@ select_ProvideARoom2_MoveToRoomEnh2 : string =
 '  , Room '+
 '  , RoomType '+
 '  , Status '+
-'  , RR_Arrival(Roomreservation, false) as Arrival '+
-'  , RR_Departure(Roomreservation, false) as Departure '+
+'  , RR_Arrival(Roomreservation, true) as Arrival '+
+'  , RR_Departure(Roomreservation, true) as Departure '+
 '  , blockMove '+
 '  , blockMoveReason '+
 ' FROM '+
@@ -1117,8 +1117,8 @@ select_RoomReservation : string =
 '    ,RoomRentPaymentInvoice '#10+
 '    ,Hallres '#10+
 '    ,rrDescription '#10+
-'   , RR_Arrival(roomreservation, false) as Arrival '+
-'   , RR_Departure(roomreservation, false) as Departure '+
+'   , RR_Arrival(roomreservation, true) as Arrival '+
+'   , RR_Departure(roomreservation, true) as Departure '+
 '    ,rrIsNoRoom '#10+
 '    ,rrRoomAlias '#10+
 '    ,rrRoomTypeAlias '#10+
@@ -1142,8 +1142,8 @@ select_RoomReservation : string =
 //TESTED NOT
 select_ReservationProfile_Display : string =
 'SELECT *, '+
-' RV_Arrival(reservation, false) as ArrivalDate, '+
-' RV_Departure(reservation, false) as DepartureDate '+
+' RV_Arrival(reservation, true) as ArrivalDate, '+
+' RV_Departure(reservation, true) as DepartureDate '+
 ' from reservations '+
 'where Reservation = %d ';
 
