@@ -689,6 +689,8 @@ type
     tvAllReservationsBreakfast: TcxGridDBColumn;
     dxUserActivityLog2: TdxBarLargeButton;
     btnBreakfastList: TdxBarLargeButton;
+    acResStatusPerDay: TAction;
+    dxBarButton9: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);

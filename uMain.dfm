@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 685
   Top = 134
   ActiveControl = pageMainGrids
-  ClientHeight = 665
+  ClientHeight = 672
   ClientWidth = 1532
   Color = clWhite
   DoubleBuffered = True
@@ -27,7 +27,7 @@ object frmMain: TfrmMain
   OnShow = FormShow
   DesignSize = (
     1532
-    665)
+    672)
   PixelsPerInch = 96
   TextHeight = 13
   object sLabel1: TsLabel
@@ -60,7 +60,7 @@ object frmMain: TfrmMain
     Left = 0
     Top = 158
     Width = 1532
-    Height = 477
+    Height = 484
     Margins.Left = 0
     Margins.Top = 0
     Margins.Right = 0
@@ -71,18 +71,20 @@ object frmMain: TfrmMain
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
+    ExplicitHeight = 477
     object pnlBottom: TsPanel
       Left = 0
       Top = 170
       Width = 1532
-      Height = 307
+      Height = 314
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 307
       object splStatistics: TsSplitter
         Left = 1220
         Top = 1
         Width = 7
-        Height = 305
+        Height = 312
         Align = alRight
         Color = clGradientActiveCaption
         ParentColor = False
@@ -94,12 +96,13 @@ object frmMain: TfrmMain
         Left = 1
         Top = 1
         Width = 1219
-        Height = 305
+        Height = 312
         ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitHeight = 305
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
@@ -107,7 +110,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 0
             Width = 1211
-            Height = 277
+            Height = 284
             Cursor = crDefault
             Align = alClient
             BevelEdges = []
@@ -429,6 +432,7 @@ object frmMain: TfrmMain
         object tabGuestList: TsTabSheet
           Caption = 'tabGuestList'
           ImageIndex = 9
+          ExplicitHeight = 277
           object Panel3: TsPanel
             Left = 0
             Top = 0
@@ -548,7 +552,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 100
             Width = 1211
-            Height = 177
+            Height = 184
             Align = alClient
             BevelInner = bvNone
             BevelOuter = bvRaised
@@ -562,6 +566,7 @@ object frmMain: TfrmMain
             PopupMenu = pupGroups
             TabOrder = 1
             LookAndFeel.NativeStyle = False
+            ExplicitHeight = 177
             object tvAllReservations: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               Navigator.Buttons.First.Visible = True
@@ -830,7 +835,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 0
             Width = 1211
-            Height = 127
+            Height = 134
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 0
@@ -879,7 +884,7 @@ object frmMain: TfrmMain
               Left = 0
               Top = 28
               Width = 1211
-              Height = 77
+              Height = 84
               Cursor = crDefault
               Align = alClient
               BevelInner = bvNone
@@ -1106,7 +1111,7 @@ object frmMain: TfrmMain
             end
             object pnlLegends: TsPanel
               Left = 0
-              Top = 105
+              Top = 112
               Width = 1211
               Height = 22
               Align = alBottom
@@ -1265,7 +1270,7 @@ object frmMain: TfrmMain
           end
           object splitPeriod: TcxSplitter
             Left = 0
-            Top = 127
+            Top = 134
             Width = 1211
             Height = 8
             Hint = 'No Rooms'
@@ -1285,7 +1290,7 @@ object frmMain: TfrmMain
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
-            Top = 168
+            Top = 175
             Width = 1211
             Height = 109
             Hint = 'Test Hint'
@@ -1431,7 +1436,7 @@ object frmMain: TfrmMain
           end
           object pnlBottomViewSettings: TsPanel
             Left = 0
-            Top = 135
+            Top = 142
             Width = 1211
             Height = 33
             Align = alBottom
@@ -1604,22 +1609,23 @@ object frmMain: TfrmMain
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
+          ExplicitHeight = 277
           inline fraDayStatistics: TfraDayStatistics
             Left = 0
             Top = 0
             Width = 1211
-            Height = 277
+            Height = 284
             Align = alClient
             TabOrder = 0
             ExplicitWidth = 1211
             ExplicitHeight = 277
             inherited splMain: TsSplitter
-              Height = 277
+              Height = 284
               ExplicitHeight = 277
             end
             inherited pnlLeft: TsPanel
-              Height = 277
-              ExplicitHeight = 277
+              Height = 284
+              ExplicitHeight = 284
               inherited pnlLeftRevenues: TsPanel
                 inherited RevenueChart: TChart
                   PrintMargins = (
@@ -1644,10 +1650,10 @@ object frmMain: TfrmMain
             end
             inherited pnlRight: TsPanel
               Width = 804
-              Height = 277
+              Height = 284
               ExplicitLeft = 407
               ExplicitWidth = 804
-              ExplicitHeight = 277
+              ExplicitHeight = 284
               inherited splRight: TsSplitter
                 Width = 802
                 ExplicitWidth = 802
@@ -1660,22 +1666,24 @@ object frmMain: TfrmMain
               end
               inherited pnlRightTodayRates: TsPanel
                 Width = 802
-                Height = 29
+                Height = 36
                 ExplicitTop = 247
                 ExplicitWidth = 802
-                ExplicitHeight = 29
+                ExplicitHeight = 36
                 inherited sPanel8: TsPanel
                   Width = 800
                   ExplicitWidth = 800
                 end
                 inherited sPanel9: TsPanel
                   Width = 800
+                  Height = 2
                   ExplicitWidth = 800
-                  ExplicitHeight = 297
+                  ExplicitHeight = 2
                   inherited sbRates: TsScrollBox
                     Width = 800
+                    Height = 2
                     ExplicitWidth = 800
-                    ExplicitHeight = 297
+                    ExplicitHeight = 2
                   end
                 end
               end
@@ -1691,7 +1699,7 @@ object frmMain: TfrmMain
             Left = 0
             Top = 0
             Width = 1211
-            Height = 277
+            Height = 284
             Align = alClient
             BorderStyle = bsNone
             TabOrder = 0
@@ -1702,12 +1710,13 @@ object frmMain: TfrmMain
         Left = 1227
         Top = 1
         Width = 304
-        Height = 305
+        Height = 312
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
         Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
+        ExplicitHeight = 305
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
@@ -1758,7 +1767,7 @@ object frmMain: TfrmMain
           Left = 0
           Top = 171
           Width = 304
-          Height = 134
+          Height = 141
           Margins.Left = 10
           Margins.Top = 0
           Margins.Right = 0
@@ -1767,6 +1776,7 @@ object frmMain: TfrmMain
           Align = alClient
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
+          ExplicitHeight = 134
         end
         object pnlNotifications: TsPanel
           Left = 0
@@ -2909,7 +2919,7 @@ object frmMain: TfrmMain
   end
   object pnlDayStatus: TsPanel
     Left = 0
-    Top = 635
+    Top = 642
     Width = 1532
     Height = 30
     Align = alBottom
@@ -2927,6 +2937,7 @@ object frmMain: TfrmMain
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
+    ExplicitTop = 635
     object __VER: TsLabel
       Left = 1380
       Top = 0
@@ -4149,10 +4160,6 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'dxRptStockitems'
-        end
-        item
-          Visible = True
-          ItemName = 'btnResStatusPerdDay'
         end>
       OneOnRow = False
       Row = 0
@@ -4211,7 +4218,7 @@ object frmMain: TfrmMain
     object barinnReportsInvoices: TdxBar
       Caption = 'Invoices'
       CaptionButtons = <>
-      DockedLeft = 938
+      DockedLeft = 878
       DockedTop = 0
       FloatLeft = 1324
       FloatTop = 8
@@ -4459,7 +4466,7 @@ object frmMain: TfrmMain
     object barinnBar10: TdxBar
       Caption = 'Ledger'
       CaptionButtons = <>
-      DockedLeft = 1228
+      DockedLeft = 1168
       DockedTop = 0
       FloatLeft = -183
       FloatTop = 8
@@ -5442,6 +5449,10 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
         end>
     end
     object bbUpdateTranslations: TdxBarButton
@@ -5628,6 +5639,10 @@ object frmMain: TfrmMain
       Visible = ivAlways
       LargeImageIndex = 90
       OnClick = btnBreakfastListClick
+    end
+    object dxBarButton9: TdxBarButton
+      Action = acResStatusPerDay
+      Category = 0
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'
@@ -24165,6 +24180,11 @@ object frmMain: TfrmMain
     object actHotelStatusApp: TAction
       Caption = 'Test HotelStatus App'
       OnExecute = actHotelStatusAppExecute
+    end
+    object acResStatusPerDay: TAction
+      Caption = 'Res status per day'
+      ImageIndex = 62
+      OnExecute = btnResStatusPerdDayClick
     end
   end
   object pupSelectHomePage: TPopupMenu
