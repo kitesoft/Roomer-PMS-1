@@ -98,9 +98,9 @@ begin
     DisplayFormat  := cxEditPropertiesCurrencyFormat(CurrencyFormatSettings);
   end;
   if aProperties is TcxCalcEditProperties then
-  with TcxCurrencyEditProperties(aProperties) do
+  with TcxCalcEditProperties(aProperties) do
   begin
-    DecimalPlaces  := CurrencyFormatSettings.CurrencyDecimals;
+//    DecimalPlaces  := CurrencyFormatSettings.CurrencyDecimals;
     DisplayFormat  := cxEditPropertiesCurrencyFormat(CurrencyFormatSettings);
   end;
 end;

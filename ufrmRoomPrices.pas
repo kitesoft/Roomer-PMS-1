@@ -340,7 +340,7 @@ procedure TfrmRoomPrices.tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridT
 begin
   inherited;
   if not aRecord.Values[tvRoomRatesisPercentage.Index] then
-    FCurrencyDefinition.SetcxEditProperties(aProperties);
+    aProperties := FCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmRoomPrices.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
@@ -362,7 +362,7 @@ procedure TfrmRoomPrices.tvRoomResAveragePriceDisplayGetProperties(Sender: TcxCu
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  FCurrencyDefinition.SetcxEditProperties(aProperties);
+  aProperties := FCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmRoomPrices.tvRoomResAveragePricePropertiesEditValueChanged(Sender: TObject);

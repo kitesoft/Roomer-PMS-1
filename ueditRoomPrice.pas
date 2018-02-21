@@ -569,7 +569,7 @@ procedure TfrmEditRoomPrice.tvRoomRatesRentDiscountGetProperties(Sender: TcxCust
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   if not aRecord.Values[tvRoomRatesisPercentage.Index] then
-    FCurrencyDefinition.SetcxEditProperties(aProperties);
+    aProperties := FCUrrencyDefinition.GetcxEditProperties
 end;
 
 procedure TfrmEditRoomPrice.tvRoomRatesFoooterSummaryCurrencyGetTextSum(

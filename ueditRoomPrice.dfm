@@ -38,8 +38,6 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
       ParentFont = False
       TabOrder = 0
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitLeft = -21
-      ExplicitTop = -63
       DesignSize = (
         410
         130)
@@ -194,12 +192,7 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         ExplicitWidth = 171
         inherited pnlLookup: TsPanel
           Width = 171
-          inherited lblDescription: TsLabel
-            Width = 78
-            Height = 20
-            ExplicitWidth = 101
-            ExplicitHeight = 20
-          end
+          ExplicitWidth = 171
         end
       end
     end

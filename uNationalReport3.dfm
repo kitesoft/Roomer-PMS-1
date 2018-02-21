@@ -968,12 +968,12 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Style = []
         end
         object sLabel1: TsLabel
-          Left = 492
+          Left = 489
           Top = 24
-          Width = 41
+          Width = 44
           Height = 13
           Alignment = taRightJustify
-          Caption = 'Private :'
+          Caption = 'Leisure : '
           ParentFont = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
