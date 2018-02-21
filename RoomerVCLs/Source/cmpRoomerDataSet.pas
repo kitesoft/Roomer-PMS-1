@@ -522,7 +522,7 @@ var
 begin
   Result := '';
   for i := 1 to length(source) do
-    if CharInSet(source[i], ['+', '^', '&', '%', '?', '\', '`',':','/','.']) then
+    if CharInSet(source[i], ['+', '^', '&', '%', '?', '\', '`',':','/','.', #10, #13]) then
       Result := Result + '%' + inttohex(ord(source[i]), 2)
     else
       Result := Result + source[i];

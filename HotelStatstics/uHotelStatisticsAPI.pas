@@ -4,15 +4,12 @@ interface
 uses
     cmpRoomerDataset
   , SysUtils
+  , uMobileAPI
   , uHotelStatistics
   , Classes
   ;
 
 type
-  EMobileAPICallerException = class(Exception);
-
-  TBaseMobileAPICaller = class abstract(TObject)
-  end;
 
   THotelStatisticsMobileAPICaller = class(TBaseMobileAPICaller)
   private const
