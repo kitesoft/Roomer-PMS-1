@@ -66,9 +66,8 @@ type
     labWeekDayFrom: TsLabel;
     labWeekDayTo: TsLabel;
     labErr: TsLabel;
-    sGroupBox1: TsGroupBox;
+    gbxSplit: TsGroupBox;
     Label1: TsLabel;
-    sLabel1: TsLabel;
     btnSplit: TsButton;
     sLabel2: TsLabel;
     labPart1: TsLabel;
@@ -78,6 +77,8 @@ type
     edNightCount: TsSpinEdit;
     dtSplitAt: TsDateEdit;
     btnChangeDates: TsButton;
+    lbSecondResult: TsLabel;
+    lbFirstResult: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnChangeDatesClick(Sender: TObject);
@@ -167,7 +168,7 @@ uses
     , uReservationStateDefinitions
     , uUtils
     , UITypes
-    , uSQLUtils;
+    , uSQLUtils, uDateTimeHelper;
 
 {$R *.dfm}
 
@@ -617,7 +618,20 @@ begin
   else
     btnOk.Enabled := False;
 
-  btnSplit.Enabled := (zRoomReservation > 0) and  dtSplitAt.CheckValidDate(false) and (zArrival < dtSplitAt.date) and (dtSplitAt.Date <= zDeparture);
+  gbxSplit.Enabled := (zRoomReservation > 0) and (TDateTime(zArrival).DaysBetween(zDeparture) > 1);
+  dtSplitAt.Enabled := gbxSPlit.Enabled;
+  btnSplit.Enabled := gbxSplit.Enabled and dtSplitAt.CheckValidDate(false) and (zArrival < dtSplitAt.date) and (dtSplitAt.Date < zDeparture);
+
+  if gbxSplit.Enabled and btnSplit.Enabled then
+  begin
+    labPart1.Caption := Format('%s - %s', [DateToStr(zArrival), DateToStr(dtSplitAt.Date)]);
+    labpart2.Caption := Format('%s - %s', [DateToStr(dtSplitAt.Date), DateToStr(zDeparture)]);
+  end
+  else
+  begin
+    labPart1.Caption := '-';
+    labpart2.Caption := '-';
+  end
 end;
 
 procedure TfrmChangeRRdates.FormCreate(Sender: TObject);
@@ -641,6 +655,9 @@ begin
   dtArrival.date := zArrival;
   dtDeparture.date := zDeparture;
   edNightCount.Value := trunc(dtDeparture.date - dtArrival.Date);
+
+  dtSplitAt.MinDate := zArrival;
+  dtSplitAt.MaxDate := zDeparture;
   dtSplitAt.date := zArrival + 1;
 
   zIsPaid := false;
@@ -941,9 +958,9 @@ var
   Arrival2: TdateTime;
   Departure2: TdateTime;
 
-  roomHolder: recRoomReservationHolder;
+  currentRoomHolder: recRoomReservationHolder;
 
-  firstHolder: recRoomReservationHolder;
+  newRoomHolder: recRoomReservationHolder;
 
   newRrId: integer;
   s: string;
@@ -961,9 +978,9 @@ begin
   // **
   if MessageDlg('Split reservation at ' + dateTostr(dtSplitAt.date), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
-    roomHolder := SP_GET_RoomReservation(zRoomReservation);
-    firstHolder := roomHolder;
-    package := roomHolder.package;
+    currentRoomHolder := SP_GET_RoomReservation(zRoomReservation);
+    newRoomHolder := currentRoomHolder;
+    package := currentRoomHolder.package;
 
     Arrival1 := zArrival;
     Departure1 := dtSplitAt.date;
@@ -976,9 +993,12 @@ begin
       try
 
         newRrId := RR_SetNewID();
-        firstHolder.RoomReservation := newRrId;
-        firstHolder.Arrival := Arrival1;
-        firstHolder.Departure := Departure1;
+        newRoomHolder.RoomReservation := newRrId;
+        newRoomHolder.Arrival := Arrival1;
+        newRoomHolder.Departure := Departure1;
+
+        if currentRoomHolder.rrIsNoRoom then
+          newRoomHolder.Room := '<' + IntToStr(newRoomHolder.RoomReservation) + '>';
 
         Rset := CreateNewDataSet;
         try
@@ -991,25 +1011,25 @@ begin
           s := s + ' WHERE (ADate >= %s '#10;
           s := s + '  and ADate < %s) '#10;
           s := s + ' AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10;
-          s := s + ' AND (roomreservation = ' + _db(roomHolder.RoomReservation) + ') '#10;
+          s := s + ' AND (roomreservation = ' + _db(currentRoomHolder.RoomReservation) + ') '#10;
           s := format(s, [_db(Arrival1, true), _db(Departure1, true)]);
 
           if hData.rSet_bySQL(Rset, s) then
           begin
-            firstHolder.averageRate := Rset.FieldByName('averageRate').AsFloat;
-            firstHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
+            newRoomHolder.averageRate := Rset.FieldByName('averageRate').AsFloat;
+            newRoomHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
           end;
         finally
           FreeAndNil(Rset);
         end;
 
-        s := SQL_UPDATE_RoomReservation(firstHolder);
+        s := SQL_UPDATE_RoomReservation(newRoomHolder);
         // copyToClipboard(s);
         // DebugMessage('invoicelines '#10#10+s);
         ExecutionPlan.AddExec(s);
 
-        roomHolder.Arrival := Arrival2;
-        roomHolder.Departure := Departure2;
+        currentRoomHolder.Arrival := Arrival2;
+        currentRoomHolder.Departure := Departure2;
 
         Rset := CreateNewDataSet;
         try
@@ -1022,50 +1042,30 @@ begin
           s := s + ' WHERE (ADate >= %s '#10;
           s := s + '  and ADate < %s) '#10;
           s := s + ' AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) '#10;
-          s := s + ' AND (roomreservation = ' + _db(roomHolder.RoomReservation) + ') '#10;
+          s := s + ' AND (roomreservation = ' + _db(currentRoomHolder.RoomReservation) + ') '#10;
           s := format(s, [_db(Arrival2, true), _db(Departure2, true)]);
 
           if hData.rSet_bySQL(Rset, s) then
           begin
-            roomHolder.averageRate := Rset.FieldByName('averageRate').AsFloat;
-            roomHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
+            currentRoomHolder.averageRate := Rset.FieldByName('averageRate').AsFloat;
+            currentRoomHolder.rateCount := Rset.FieldByName('rateCount').asInteger;
           end;
         finally
           FreeAndNil(Rset);
         end;
 
-//        s := '';
-//        s := s + ' UPDATE roomreservations ';
-//        s := s + ' SET ';
-//        s := s + '  Arrival = ' + _db(Arrival2) + ' ';
-//        s := s + ' ,Departure = ' + _db(Departure2) + ' ';
-//        s := s + ' ,rrArrival = ' + _db(Arrival2) + ' ';
-//        s := s + ' ,rrDeparture = ' + _db(Departure2) + ' ';
-//        s := s + ' ,rateCount = ' + _db(roomHolder.rateCount) + ' ';
-//
-//        s := s + ' WHERE ';
-//        s := s + '   (roomreservation=' + _db(roomHolder.RoomReservation) + ') ';
-//        // copyToClipboard(s);
-//        // DebugMessage('invoicelines '#10#10+s);
-//        ExecutionPlan.AddExec(s);
+        s := '';
+        s := s + ' UPDATE roomsdate '#10;
+        s := s + ' SET '#10;
+        s := s + '  roomreservation = ' + _db(newRrId) + ' '#10;
+        s := s + ' ,room = ' + _db(newRoomHolder.Room) + ' '#10;
+        s := s + ' WHERE '#10;
+        s := s + '   (ADate BETWEEN ' + _db(newRoomHolder.Arrival) + ' AND ' + _db(TDateTime(newRoomHolder.Departure).AddDays(-1))+ ') '#10;
+        s := s + '  AND (roomreservation=' + _db(currentRoomHolder.RoomReservation) + ') ';
 
-        iDayCount := trunc(Departure1) - trunc(Arrival1);
-        for ii := trunc(Arrival1) to trunc(Arrival1) + iDayCount - 1 do
-        begin
-          lDate := ii;
-          sDate := _db(lDate, false);
-          s := '';
-          s := s + ' UPDATE roomsdate ';
-          s := s + ' SET ';
-          s := s + ' roomreservation = ' + _db(newRrId) + ' ';
-          s := s + ' WHERE ';
-          s := s + '   (Adate = ' + _db(sDate) + ') ';
-          s := s + '  AND (roomreservation=' + _db(roomHolder.RoomReservation) + ') ';
-
-          // copyToClipboard(s);
-          // DebugMessage(s);
-          ExecutionPlan.AddExec(s);
-        end;
+        copyToClipboard(s);
+        // DebugMessage(s);
+        ExecutionPlan.AddExec(s);
 
         Rset := CreateNewDataSet;
         try
@@ -1075,7 +1075,7 @@ begin
           s := s + ' FROM  '#10;
           s := s + '   persons '#10;
           s := s + ' WHERE '#10;
-          s := s + ' (roomreservation = ' + _db(roomHolder.RoomReservation) + ') '#10;
+          s := s + ' (roomreservation = ' + _db(currentRoomHolder.RoomReservation) + ') '#10;
 
           if hData.rSet_bySQL(Rset, s) then
           begin

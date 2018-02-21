@@ -631,7 +631,7 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         SkinData.SkinSection = 'BUTTON'
       end
     end
-    object sGroupBox1: TsGroupBox
+    object gbxSplit: TsGroupBox
       AlignWithMargins = True
       Left = 308
       Top = 5
@@ -645,6 +645,7 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Caption = '.. or split reservation in two'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
+      ExplicitTop = 2
       DesignSize = (
         310
         155)
@@ -660,23 +661,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         Alignment = taRightJustify
         Caption = 'Split at :'
       end
-      object sLabel1: TsLabel
-        Left = 200
-        Top = 24
-        Width = 4
-        Height = 13
-        Margins.Left = 4
-        Margins.Top = 4
-        Margins.Right = 4
-        Margins.Bottom = 4
-        Caption = '-'
-        ParentFont = False
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-      end
       object sLabel2: TsLabel
         Left = 108
         Top = 45
@@ -689,8 +673,8 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         Caption = 'First date in second reservation'
       end
       object labPart1: TsLabel
-        Left = 27
-        Top = 71
+        Left = 108
+        Top = 78
         Width = 4
         Height = 13
         Margins.Left = 4
@@ -700,8 +684,8 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         Caption = '-'
       end
       object labPart2: TsLabel
-        Left = 27
-        Top = 92
+        Left = 108
+        Top = 98
         Width = 4
         Height = 13
         Margins.Left = 4
@@ -709,6 +693,30 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         Margins.Right = 4
         Margins.Bottom = 4
         Caption = '-'
+      end
+      object lbSecondResult: TsLabel
+        Left = 60
+        Top = 98
+        Width = 42
+        Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Alignment = taRightJustify
+        Caption = 'Second :'
+      end
+      object lbFirstResult: TsLabel
+        Left = 74
+        Top = 77
+        Width = 28
+        Height = 13
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Alignment = taRightJustify
+        Caption = 'First :'
       end
       object btnSplit: TsButton
         Left = 231
@@ -730,7 +738,7 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       end
       object dtSplitAt: TsDateEdit
         Left = 108
-        Top = 18
+        Top = 21
         Width = 86
         Height = 21
         Margins.Left = 4
@@ -757,12 +765,12 @@ inherited frmChangeRRdates: TfrmChangeRRdates
     end
   end
   inherited psRoomerBase: TcxPropertiesStore
-    Left = 288
-    Top = 24
+    Left = 120
+    Top = 312
   end
   inherited cxsrRoomerStyleRepository: TcxStyleRepository
-    Left = 336
-    Top = 64
+    Left = 216
+    Top = 312
     PixelsPerInch = 96
     inherited dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
       BuiltIn = True
