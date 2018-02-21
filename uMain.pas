@@ -613,7 +613,6 @@ type
     dxBarLargeButton6: TdxBarLargeButton;
     mnuConfirmBooking: TMenuItem;
     btnConfirmAllottedBooking: TdxBarLargeButton;
-    HTMLHint1: THTMLHint;
     timOfflineReports: TTimer;
     btnDynamicRateRules: TdxBarLargeButton;
     R2: TMenuItem;
@@ -857,7 +856,6 @@ type
     procedure grOneDayRoomsEndColumnSize(Sender: TObject; ACol: integer);
     procedure grPeriodRoomsDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
     procedure grPeriodRoomsGridHint(Sender: TObject; ARow, ACol: integer; var HintStr: string);
-    procedure HTMLHint1ShowHint(var HintStr: string; var CanShow: boolean; var HintInfo: THintInfo);
     procedure btnChannelPlansClick(Sender: TObject);
     procedure btnReservationsListClick(Sender: TObject);
     procedure grPeriodRoomsResize(Sender: TObject);
@@ -1012,10 +1010,7 @@ type
     curNoDrop: HCursor;
     curNoDropNew: HCursor;
 
-    ShowComponentNameOnHint: boolean;
     FDayViewSizesRead: boolean;
-
-
 
     zOneDayResPointers: TOneDayResPointersArray;
     zOneDay_bSelectedNonRooms: array [1 .. 500, 1 .. 2] of integer;
@@ -2800,8 +2795,6 @@ begin
   zDoRefresh := false;
   zDoRefreshPeriod := false;
 
-  ShowComponentNameOnHint := LowerCase(ParameterByName('ShowComponentNameOnHint')) = 'true';
-
   zShowCaptions := true;
   barinn.HideAll;
   StoreMain.StorageName := 'Software\Roomer\FormStatus\StoreMainV2';
@@ -2938,7 +2931,7 @@ begin
 
     embOccupancyView.InitEmbededOccupancyView(pnlPeriodNoRooms);
 
-    Application.ShowHint := true; // definitions for hints
+    Application.ShowHint := true;
 
 //    timOfflineReportsTimer(nil);
 
@@ -2967,8 +2960,6 @@ var
 begin
   pnlNoRoomDrop.Color := sSkinManager1.GetGlobalColor;
   lblNoRoom.Font.Color := sSkinManager1.GetGlobalFontColor;
-  HTMLHint1.HintColor := sSkinManager1.GetHighLightColor(false);
-  HTMLHint1.HintFont.Color := sSkinManager1.GetHighLightFontColor(false);
 
   skinName := LowerCase(trim(sSkinManager1.skinName));
 
@@ -8415,6 +8406,7 @@ begin
 
       Price := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Price;
       Discount := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Discount;
+      IsPercentage := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Percentage;
       Information := FReservationsModel.Reservations[iReservationIdx].Information;
       PMInfo := FReservationsModel.Reservations[iReservationIdx].PMInfo;
       PriceType := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].PriceType;
@@ -12972,13 +12964,6 @@ begin
     FreeAndNil(frmRptbViewer);
   end;
 
-end;
-
-procedure TfrmMain.HTMLHint1ShowHint(var HintStr: string; var CanShow: boolean; var HintInfo: THintInfo);
-begin
-  if ShowComponentNameOnHint then
-    HintStr := Format('<b>%s</b><br><br>', [HintInfo.HintControl.name]) + HintStr;
-  CanShow := true;
 end;
 
 procedure TfrmMain.ShowTimelyMessage(const sMessage: string);

@@ -17,14 +17,19 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
   object pnlHint: TsPanel
     Left = 200
     Top = 8
-    Width = 438
-    Height = 568
+    Width = 435
+    Height = 578
+    AutoSize = True
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'Segoe UI'
     Font.Style = []
+    Padding.Left = 10
+    Padding.Top = 10
+    Padding.Right = 10
+    Padding.Bottom = 10
     ParentFont = False
     TabOrder = 0
     OnMouseDown = pnlHintMouseDown
@@ -32,8 +37,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
     OnMouseUp = pnlHintMouseUp
     SkinData.SkinSection = 'PANEL_LOW'
     object __hlblTotalInvoice: THTMLabel
-      Left = 258
-      Top = 258
+      Left = 252
+      Top = 260
       Width = 154
       Height = 94
       Font.Charset = DEFAULT_CHARSET
@@ -49,8 +54,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Version = '1.9.2.7'
     end
     object clbStatus: TsLabel
-      Left = 16
-      Top = 8
+      Left = 10
+      Top = 10
       Width = 121
       Height = 18
       AutoSize = False
@@ -65,8 +70,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __lbStatus: TsLabel
-      Left = 170
-      Top = 8
+      Left = 164
+      Top = 10
       Width = 67
       Height = 15
       Caption = 'Due to arrive'
@@ -80,8 +85,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object clbName: TsLabel
-      Left = 16
-      Top = 23
+      Left = 10
+      Top = 25
       Width = 121
       Height = 18
       AutoSize = False
@@ -96,8 +101,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __lbName: TsLabel
-      Left = 148
-      Top = 23
+      Left = 142
+      Top = 25
       Width = 270
       Height = 21
       AutoSize = False
@@ -113,8 +118,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object clbRoom: TsLabel
-      Left = 16
-      Top = 57
+      Left = 10
+      Top = 59
       Width = 121
       Height = 18
       AutoSize = False
@@ -129,8 +134,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __lbRoom: TsLabel
-      Left = 148
-      Top = 57
+      Left = 142
+      Top = 59
       Width = 270
       Height = 21
       AutoSize = False
@@ -146,8 +151,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object clbGuests: TsLabel
-      Left = 16
-      Top = 40
+      Left = 10
+      Top = 42
       Width = 121
       Height = 18
       AutoSize = False
@@ -162,8 +167,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __lbGuests: TsLabel
-      Left = 148
-      Top = 40
+      Left = 142
+      Top = 42
       Width = 270
       Height = 21
       AutoSize = False
@@ -179,8 +184,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object clbChannel: TsLabel
-      Left = 16
-      Top = 108
+      Left = 10
+      Top = 110
       Width = 121
       Height = 18
       AutoSize = False
@@ -195,8 +200,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __lbChannel: TsLabel
-      Left = 148
-      Top = 108
+      Left = 142
+      Top = 110
       Width = 270
       Height = 21
       AutoSize = False
@@ -212,8 +217,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object clbRatePlan: TsLabel
-      Left = 16
-      Top = 158
+      Left = 10
+      Top = 160
       Width = 121
       Height = 18
       AutoSize = False
@@ -228,8 +233,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __lbRatePlan: TsLabel
-      Left = 148
-      Top = 158
+      Left = 142
+      Top = 160
       Width = 49
       Height = 15
       Caption = 'Early bird'
@@ -244,8 +249,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object __lbDeparture: TsLabel
-      Left = 148
-      Top = 91
+      Left = 142
+      Top = 93
       Width = 270
       Height = 21
       AutoSize = False
@@ -261,8 +266,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object clbDeparture: TsLabel
-      Left = 16
-      Top = 91
+      Left = 10
+      Top = 93
       Width = 121
       Height = 18
       AutoSize = False
@@ -277,8 +282,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object clbArrival: TsLabel
-      Left = 16
-      Top = 74
+      Left = 10
+      Top = 76
       Width = 121
       Height = 18
       AutoSize = False
@@ -293,8 +298,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __lbArrival: TsLabel
-      Left = 148
-      Top = 74
+      Left = 142
+      Top = 76
       Width = 270
       Height = 21
       AutoSize = False
@@ -310,8 +315,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object clbRate: TsLabel
-      Left = 16
-      Top = 174
+      Left = 10
+      Top = 176
       Width = 121
       Height = 18
       AutoSize = False
@@ -326,8 +331,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object shpStatus: TShape
-      Left = 148
-      Top = 9
+      Left = 142
+      Top = 11
       Width = 15
       Height = 16
       Brush.Color = clRed
@@ -336,24 +341,9 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       OnMouseDown = pnlHintMouseDown
       OnMouseUp = pnlHintMouseUp
     end
-    object __lblHide: TsLabel
-      Left = 417
-      Top = 6
-      Width = 10
-      Height = 18
-      Cursor = crHandPoint
-      Caption = 'X'
-      ParentFont = False
-      OnClick = __lblHideClick
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Courier New'
-      Font.Style = [fsBold]
-    end
     object clbTotal: TsLabel
-      Left = 133
-      Top = 174
+      Left = 127
+      Top = 176
       Width = 119
       Height = 21
       Alignment = taRightJustify
@@ -369,8 +359,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object clblDaily: TsLabel
-      Left = 297
-      Top = 174
+      Left = 291
+      Top = 176
       Width = 115
       Height = 21
       Alignment = taRightJustify
@@ -386,8 +376,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __hlblTotal: THTMLabel
-      Left = 106
-      Top = 188
+      Left = 100
+      Top = 190
       Width = 146
       Height = 64
       Font.Charset = DEFAULT_CHARSET
@@ -407,8 +397,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Version = '1.9.2.7'
     end
     object __hlblDaily: THTMLabel
-      Left = 282
-      Top = 188
+      Left = 276
+      Top = 190
       Width = 130
       Height = 64
       Font.Charset = DEFAULT_CHARSET
@@ -426,15 +416,15 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Version = '1.9.2.7'
     end
     object Shape1: TShape
-      Left = 151
-      Top = 188
+      Left = 145
+      Top = 190
       Width = 266
       Height = 1
       Pen.Color = clGray
     end
     object sLabel1: TsLabel
-      Left = 16
-      Top = 125
+      Left = 10
+      Top = 127
       Width = 121
       Height = 18
       AutoSize = False
@@ -449,8 +439,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object __hlbBookingIds: THTMLabel
-      Left = 148
-      Top = 125
+      Left = 142
+      Top = 127
       Width = 270
       Height = 42
       Font.Charset = DEFAULT_CHARSET
@@ -470,15 +460,15 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Version = '1.9.2.7'
     end
     object Shape2: TShape
-      Left = 18
-      Top = 377
+      Left = 12
+      Top = 379
       Width = 399
       Height = 1
       Pen.Color = clGray
     end
     object clbNotes: TsLabel
-      Left = 54
-      Top = 368
+      Left = 48
+      Top = 370
       Width = 121
       Height = 21
       Alignment = taCenter
@@ -497,8 +487,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object sLabel2: TsLabel
-      Left = 256
-      Top = 368
+      Left = 250
+      Top = 370
       Width = 121
       Height = 21
       Alignment = taCenter
@@ -517,8 +507,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object clbInvoiceStatus: TsLabel
-      Left = 16
-      Top = 244
+      Left = 10
+      Top = 246
       Width = 121
       Height = 18
       AutoSize = False
@@ -533,8 +523,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object HTMLabel1: THTMLabel
-      Left = 106
-      Top = 258
+      Left = 100
+      Top = 260
       Width = 146
       Height = 94
       Font.Charset = DEFAULT_CHARSET
@@ -554,8 +544,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Version = '1.9.2.7'
     end
     object sLabel5: TsLabel
-      Left = 297
-      Top = 244
+      Left = 291
+      Top = 246
       Width = 115
       Height = 21
       Alignment = taRightJustify
@@ -571,8 +561,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object clbRoomRentInvoice: TsLabel
-      Left = 22
-      Top = 260
+      Left = 16
+      Top = 262
       Width = 103
       Height = 57
       AutoSize = False
@@ -588,8 +578,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = []
     end
     object hlbGuarantee: THTMLabel
-      Left = 143
-      Top = 350
+      Left = 137
+      Top = 352
       Width = 240
       Height = 29
       Font.Charset = DEFAULT_CHARSET
@@ -607,8 +597,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Version = '1.9.2.7'
     end
     object sLabel3: TsLabel
-      Left = 16
-      Top = 350
+      Left = 10
+      Top = 352
       Width = 121
       Height = 18
       AutoSize = False
@@ -623,27 +613,28 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       Font.Style = [fsBold]
     end
     object Shape3: TShape
-      Left = 151
-      Top = 258
+      Left = 145
+      Top = 260
       Width = 266
       Height = 1
       Pen.Color = clGray
     end
     object __labBlockNote: TsLabel
-      Left = 54
-      Top = 532
+      Left = 48
+      Top = 534
       Width = 363
       Height = 34
       AutoSize = False
     end
     object __lbNotes: TsMemo
-      Left = 19
-      Top = 391
+      Left = 13
+      Top = 393
       Width = 209
       Height = 117
       BorderStyle = bsNone
+      Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -661,13 +652,14 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       SkinData.SkinSection = 'EDIT'
     end
     object __lbPAymentNotes: TsMemo
-      Left = 230
-      Top = 391
+      Left = 224
+      Top = 393
       Width = 201
       Height = 117
       BorderStyle = bsNone
+      Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Segoe UI'
       Font.Style = []
@@ -685,8 +677,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
       SkinData.SkinSection = 'EDIT'
     end
     object cbxBlocked: TsCheckBox
-      Left = 19
-      Top = 509
+      Left = 13
+      Top = 511
       Width = 170
       Height = 17
       Caption = 'Room is blocked from move'

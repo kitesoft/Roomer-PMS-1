@@ -1,4 +1,4 @@
-﻿object frmMain: TfrmMain
+object frmMain: TfrmMain
   Left = 685
   Top = 134
   ActiveControl = pageMainGrids
@@ -71,7 +71,6 @@
     ParentDoubleBuffered = False
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitHeight = 477
     object pnlBottom: TsPanel
       Left = 0
       Top = 170
@@ -79,7 +78,6 @@
       Height = 314
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 307
       object splStatistics: TsSplitter
         Left = 1220
         Top = 1
@@ -97,12 +95,11 @@
         Top = 1
         Width = 1219
         Height = 312
-        ActivePage = tabGuestList
+        ActivePage = tabOneDayView
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
-        ExplicitHeight = 305
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
@@ -435,7 +432,6 @@
         object tabGuestList: TsTabSheet
           Caption = 'tabGuestList'
           ImageIndex = 9
-          ExplicitHeight = 277
           object Panel3: TsPanel
             Left = 0
             Top = 0
@@ -569,7 +565,6 @@
             PopupMenu = pupGroups
             TabOrder = 1
             LookAndFeel.NativeStyle = False
-            ExplicitHeight = 177
             object tvAllReservations: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               Navigator.Buttons.First.Visible = True
@@ -1294,7 +1289,7 @@
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 160
+            ExplicitTop = 167
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1621,7 +1616,6 @@
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
           SkinData.SkinSection = 'TRANSPARENT'
-          ExplicitHeight = 277
           inline fraDayStatistics: TfraDayStatistics
             Left = 0
             Top = 0
@@ -1630,7 +1624,7 @@
             Align = alClient
             TabOrder = 0
             ExplicitWidth = 1211
-            ExplicitHeight = 277
+            ExplicitHeight = 284
             inherited splMain: TsSplitter
               Height = 284
               ExplicitHeight = 277
@@ -1711,6 +1705,10 @@
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -1732,7 +1730,6 @@
         TabOrder = 0
         Visible = False
         SkinData.SkinSection = 'TRANSPARENT'
-        ExplicitHeight = 305
         object lblBusyDownloading: TsLabel
           Left = 0
           Top = 158
@@ -1790,7 +1787,6 @@
           Align = alClient
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitHeight = 134
         end
         object pnlNotifications: TsPanel
           Left = 0
@@ -2947,7 +2943,6 @@
     SkinData.CustomColor = True
     SkinData.CustomFont = True
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = 635
     object __VER: TsLabel
       Left = 1380
       Top = 0
@@ -5374,7 +5369,7 @@
       Category = 0
       Hint = 'Show stockitem usage'
       Visible = ivAlways
-      LargeImageIndex = 90
+      LargeImageIndex = 91
       OnClick = dxRptStockitemsClick
     end
     object btnHideCancelledBookings: TdxBarLargeButton
@@ -24155,23 +24150,6 @@
     OnMessage = ApplicationEvents1Message
     Left = 880
     Top = 592
-  end
-  object HTMLHint1: THTMLHint
-    Ellipsis = False
-    HintFont.Charset = DEFAULT_CHARSET
-    HintFont.Color = clInfoText
-    HintFont.Height = -11
-    HintFont.Name = 'Tahoma'
-    HintFont.Style = []
-    HintStyle = hsRectangle
-    MaxWidth = 0
-    URLColor = clBlack
-    XMargin = 0
-    YMargin = 0
-    OnShowHint = HTMLHint1ShowHint
-    Version = '1.4.0.1'
-    Left = 672
-    Top = 520
   end
   object timOfflineReports: TTimer
     Enabled = False

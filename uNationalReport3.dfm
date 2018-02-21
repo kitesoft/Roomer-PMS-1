@@ -1222,8 +1222,8 @@ object frmNationalReport3: TfrmNationalReport3
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 400
-    Top = 176
+    Left = 232
+    Top = 248
     object mnuThisRoom: TMenuItem
       Caption = 'Closed this Room'
     end

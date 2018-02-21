@@ -1386,6 +1386,8 @@ begin
 
   constants.Add('shUI_NotAvailable', 'N/A');
   constants.Add('shUI_OnGroupInvoice', '[Group Invoice]');
+  constants.Add('shUI_nights', 'nights');
+  constants.Add('shUI_ManuallyEnteredReservation', 'Manually entered reservation');
 
   constants.Add('shUI_InvoiceCaption', 'INVOICE');
   constants.Add('shUI_GroupInvoiceCaption', 'GROUP INVOICE');

@@ -1,11 +1,11 @@
-unit uReservationHintHolder;
+ï»¿unit uReservationHintHolder;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, sPanel, Vcl.StdCtrls, sButton, sLabel,
-  uPopupListEx, uAppGlobal, hData, uG, _Glob, uUtils, AdvShape, PrjConst, sMemo, HTMLabel, Vcl.Menus, sCheckBox;
+  uPopupListEx, uAppGlobal, hData, uG, _Glob, uUtils, AdvShape, PrjConst, sMemo, HTMLabel, Vcl.Menus, sCheckBox, uAmount;
 
 type
 
@@ -24,7 +24,6 @@ type
     __lbDeparture: TsLabel;
     __lbArrival: TsLabel;
     __lbNotes: TsMemo;
-    __lblHide: TsLabel;
     __hlblTotal: THTMLabel;
     __hlblDaily: THTMLabel;
 
@@ -61,7 +60,6 @@ type
     __labBlockNote: TsLabel;
     cbxBlocked: TsCheckBox;
     procedure timHideTimer(Sender: TObject);
-    procedure __lblHideClick(Sender: TObject);
     procedure C1Click(Sender: TObject);
     procedure pnlHintMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure pnlHintMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -75,13 +73,15 @@ type
     procedure ReadInfo(rri: RecRDInfo);
     procedure CM_MenuClosed(var msg: TMessage) ; message CM_MENU_CLOSED;
     procedure CM_ExitMenuLoop(var msg: TMessage) ; message CM_EXIT_MENU_LOOP;
-     { Private declarations }
-  public
-    { Public declarations }
-    procedure InitEmbededHint(prnt : TWinControl);
-    procedure Release;
-    procedure CancelHint;
+    procedure GetPriceInfo(rri: RecRDInfo; var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight,
+      PriceNightNetto: TAmount);
+    function GetBookingId(rri: RecRDInfo): String;
+    function GetChannelName(rriChannel: Integer): String;
+    function GetTrimmedPercentage(value: Double): String;
 
+  public
+    procedure CancelHint;
+    procedure InitEmbededHint(prnt : TWinControl);
     procedure ActivateHint(X, Y, CellWidth, CellHeight : Integer; rri: RecRDInfo);
   end;
 
@@ -93,7 +93,9 @@ uses clipbrd
   , uMain
   , UITypes
   , uRoomerLanguage
-  ;
+  , Math
+  , uDateTimeHelper
+  , uCurrencyConstants;
 
 { TFrmReservationHintHolder }
 
@@ -111,71 +113,43 @@ begin
   timHide.Enabled := True;
 end;
 
-procedure GetPriceInfo(rri: RecRDInfo;
-            var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto : Double;
-            var CurrencyLetter : String);
-var discountAmount : Double;
+procedure TFrmReservationHintHolder.GetPriceInfo(rri: RecRDInfo;
+            var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto : TAmount);
 begin
-  TotalPrice := 0.0;
-  TotalDiscount := 0.0;
-  TotalPriceNetto := 0.0;
-  PriceNight := 0.0;
-  DiscountNight := 0.0;
-  PriceNightNetto := 0.0;
-  CurrencyLetter := '€';
-  if rri.Discount <> 0 then
-  begin
-    if rri.IsPercentage then
-    begin
-      discountAmount := rri.Price / ((100-rri.Discount)/100); // ro.Price * ro.Discount / 100;
-      PriceNight := discountAmount;
-      DiscountNight := discountAmount - rri.Price;
-    end
-    else
-    begin
-      PriceNight := rri.Price + rri.Discount;
-      DiscountNight := rri.Discount;
-    end;
-
-    PriceNightNetto := rri.Price;
-  end else
-  begin
-    PriceNightNetto := rri.Price;
-    PriceNight := rri.Price;
-  end;
+  PriceNight := TAmount.Create(rri.Price, rri.Currency);
+  DiscountNight := TAmount.Create(rri.Discount, rri.Currency);
+  PriceNightNetto := PriceNight - DiscountNight;
 
   TotalPrice := PriceNight * (trunc(rri.Departure) - trunc(rri.Arrival));
   TotalPriceNetto := PriceNightNetto * (trunc(rri.Departure) - trunc(rri.Arrival));
   TotalDiscount := DiscountNight * (trunc(rri.Departure) - trunc(rri.Arrival));
-  if Lowercase(rri.Currency) <> 'eur' then
-    CurrencyLetter := rri.Currency;
 end;
 
-function GetChannelName(rriChannel : Integer) : String;
+function TFrmReservationHintHolder.GetChannelName(rriChannel : Integer) : String;
 begin
     if glb.LocateChannelById(rriChannel) then
       result := glb.ChannelsSet['name']
     else
-      result := 'Manually entered reservation';
+      result := GetTranslatedText('shUI_ManuallyEnteredReservation');
 end;
 
-function GetBookingId(rri: RecRDInfo) : String;
+function TFrmReservationHintHolder.GetBookingId(rri: RecRDInfo) : String;
 begin
   result := rri.BookingId;
   if trim(result) = '' then
     result := GetTranslatedText('shUI_NotAvailable');
 end;
 
-function GetTrimmedPercentage(value : Double) : String;
+function TFrmReservationHintHolder.GetTrimmedPercentage(value : Double) : String;
 begin
-  result := trim(_floatToStr(value, 12, 2));
-  if copy(result, length(result) - 2, 2) = '00' then
-    result := trim(_floatToStr(value, 12, 0));
+  if SameValue(value, trunc(value)) then
+    result := trim(_floatToStr(value, 12, 0))
+  else
+    result := trim(_floatToStr(value, 12, 2));
 end;
 
 procedure TFrmReservationHintHolder.ReadInfo(rri: RecRDInfo);
-var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto : Double;
-    CurrencyLetter : String;
+var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto : TAmount;
     backColor, fontColor : TColor;
     sColor1, sColor2 : String;
     temp : String;
@@ -196,82 +170,65 @@ begin
   else
     __lbRatePlan.Caption := rri.RoomClass;
 
-  __lbArrival.Caption := Capitalize(FormatDateTime('ddd, mmm d yyyy', rri.Arrival));
-  __lbDeparture.Caption := Capitalize(FormatDateTime('ddd, mmm d yyyy', rri.Departure));
+  __lbArrival.Caption := Capitalize(FormatDateTime('ddd, ', rri.Arrival)) + DatetoStr(rri.Arrival);
+  __lbDeparture.Caption := Format('%s, %s (%s %s)',
+              [Capitalize(FormatDateTime('ddd, ', rri.Departure)),
+               DateToStr(rri.Departure),
+               IntToStr(trunc(rri.Departure - rri.Arrival)),
+               GetTranslatedText('shUI_nights')
+              ]);
 
-  __hlbBookingIds.HTMLText.Text := format('Channel: <B>%s</B><br>Roomer: <B>%d</B> (Room: <B>%d</B>)<br>',
+  __hlbBookingIds.HTMLText.Text := format('Channel: <B>%s</B><br>Reservationid: <B>%d</B> (Roomreservationid: <B>%d</B>)<br>',
               [
                 GetBookingId(rri),
                 rri.Reservation,
                 rri.RoomReservation
               ]);
 
-  GetPriceInfo(rri, TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto, CurrencyLetter);
-  // <P align="right">€ 123.000,00<br><U>- (10) € 12.300,00</U><br><B>€ 11.000,00</B></P>
+  GetPriceInfo(rri, TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto);
+  // <P align="right">ï¿½ 123.000,00<br><U>- (10) ï¿½ 12.300,00</U><br><B>ï¿½ 11.000,00</B></P>
   if rri.Discount <> 0 then
   begin
       if rri.IsPercentage then
       begin
-        __hlblTotal.HTMLText.Text := format('<P align="right">%s %s<br><U>(%s) %s -%s</U><br><B>%s %s</B><br></P>',
+        __hlblTotal.HTMLText.Text := format('<P align="right">%s<br><U>(%s) -%s</U><br><B>%s</B><br></P>',
               [
-                CurrencyLetter,
-                trim(_floatToStr(TotalPrice, 12, 2)),
-
-                GetTrimmedPercentage(rri.Discount) + '%',
-                CurrencyLetter,
-                trim(_floatToStr(TotalDiscount, 12, 2)),
-
-                CurrencyLetter,
-                trim(_floatToStr(TotalPriceNetto, 12, 2))
+                TotalPrice.AsDisplayStringWithCode,
+                GetTrimmedPercentage( (TotalDiscount / TotalPrice)*100) + '%',
+                TotalDiscount.AsDisplayStringWithCode,
+                TotalPriceNetto.AsDisplayStringWithCode
               ]);
-        __hlblDaily.HTMLText.Text := format('<P align="right">%s %s<br><U>(%s) %s -%s</U><br><B>%s %s</B><br></P>',
+        __hlblDaily.HTMLText.Text := format('<P align="right">%s<br><U>(%s) -%s</U><br><B>%s</B><br></P>',
               [
-                CurrencyLetter,
-                trim(_floatToStr(PriceNight, 12, 2)),
-
-                GetTrimmedPercentage(rri.Discount) + '%',
-                CurrencyLetter,
-                trim(_floatToStr(DiscountNight, 12, 2)),
-
-                CurrencyLetter,
-                trim(_floatToStr(PriceNightNetto, 12, 2))
+                PriceNight.AsDisplayStringWithCode,
+                GetTrimmedPercentage((DiscountNight / PriceNight)*100) + '%',
+                DiscountNight.AsDisplayStringWithCode,
+                PriceNightNetto.AsDisplayStringWithCode
               ]);
       end else
       begin
-        __hlblTotal.HTMLText.Text := format('<P align="right">%s %s<br><U>%s -%s</U><br><B>%s %s</B><br></P>',
+        __hlblTotal.HTMLText.Text := format('<P align="right">%s<br><U>-%s</U><br><B>%s</B><br></P>',
               [
-                CurrencyLetter,
-                trim(_floatToStr(TotalPrice, 12, 2)),
-
-                CurrencyLetter,
-                trim(_floatToStr(TotalDiscount, 12, 2)),
-
-                CurrencyLetter,
-                trim(_floatToStr(TotalPriceNetto, 12, 2))
+                TotalPrice.AsDisplayStringWithCode,
+                TotalDiscount.AsDisplayStringWithCode,
+                TotalPriceNetto.AsDisplayStringWithCode
               ]);
-        __hlblDaily.HTMLText.Text := format('<P align="right">%s %s<br><U>%s -%s</U><br><B>%s %s</B><br></P>',
+        __hlblDaily.HTMLText.Text := format('<P align="right">%s<br><U>-%s</U><br><B>%s</B><br></P>',
               [
-                CurrencyLetter,
-                trim(_floatToStr(PriceNight, 12, 2)),
-
-                CurrencyLetter,
-                trim(_floatToStr(DiscountNight, 12, 2)),
-
-                CurrencyLetter,
-                trim(_floatToStr(PriceNightNetto, 12, 2))
+                PriceNight.AsDisplayStringWithCode,
+                DiscountNight.AsDisplayStringWithCode,
+                PriceNightNetto.AsDisplayStringWithCode
               ]);
       end;
   end else
   begin
-        __hlblTotal.HTMLText.Text := format('<P align="right"><B>%s %s</B><br></P>',
+        __hlblTotal.HTMLText.Text := format('<P align="right"><B>%s</B><br></P>',
               [
-                CurrencyLetter,
-                trim(_floatToStr(TotalPriceNetto, 12, 2))
+                TotalPriceNetto.AsDisplayStringWithCode //trim(_floatToStr(TotalPriceNetto, 12, 2))
               ]);
-        __hlblDaily.HTMLText.Text := format('<P align="right"><B>%s %s</B><br></P>',
+        __hlblDaily.HTMLText.Text := format('<P align="right"><B>%s</B><br></P>',
               [
-                CurrencyLetter,
-                trim(_floatToStr(PriceNightNetto, 12, 2))
+                PriceNightNetto.AsDisplayStringWithCode //trim(_floatToStr(PriceNightNetto, 12, 2))
               ]);
   end;
 
@@ -279,10 +236,6 @@ begin
     clbRoomRentInvoice.Caption := GetTranslatedText('shUI_RoomInvoices') + ' ' + inttostr(rri.PaymentInvoice)
   else
     clbRoomRentInvoice.Caption := '';
-//  if rri.PaymentInvoice > 0 then
-//    clbRoomRentInvoice.Caption := GetTranslatedText('shUI_RoomRentInvoice') + ' ' + inttostr(rri.PaymentInvoice)
-//  else
-//    clbRoomRentInvoice.Caption := '';
 
   if rri.OngoingSale + rri.OngoingRent > 0 then
   begin
@@ -293,26 +246,17 @@ begin
     sColor1 := '';
     sColor2 := '';
   end;
-  __hlblTotalInvoice.HTMLText.Text := format('<P align="right">%s %s<br>%s %s<br>%s %s<br><U>%s %s</U><br><B>%s%s %s%s</B><br></P>',
+  __hlblTotalInvoice.HTMLText.Text := format('<P align="right">%s<br>%s<br>%s<br><U>%s</U><br><B>%s %s%s</B><br></P>',
               [
-                g.qNativeCurrency,
-                trim(_floatToStr(rri.OngoingSale, 12, 2)),
-
-                IIF(rri.GroupAccount, '', g.qNativeCurrency),
-                IIF(rri.GroupAccount, '<I>' + GetTranslatedText('shUI_OnGroupInvoice') + '</I>', trim(_floatToStr(rri.OngoingTaxes, 12, 2))),
-
-                IIF(rri.GroupAccount, '', g.qNativeCurrency),
-                IIF(rri.GroupAccount, '<I>' + GetTranslatedText('shUI_OnGroupInvoice') + '</I>', trim(_floatToStr(rri.OngoingRent, 12, 2))),
-
-                g.qNativeCurrency,
-                trim(_floatToStr(rri.Payments, 12, 2)),
-
+                TAmount(rri.OngoingSale).AsDisplayStringWithCode,
+                IIF(rri.GroupAccount, '<I>' + GetTranslatedText('shUI_OnGroupInvoice') + '</I>', TAmount(rri.OngoingTaxes).AsDisplayStringWithCode),
+                IIF(rri.GroupAccount, '<I>' + GetTranslatedText('shUI_OnGroupInvoice') + '</I>', TAmount(rri.OngoingRent).AsDisplayStringWithCode),
+                TAmount(rri.Payments).AsDisplayStringWithCode,
                 sColor1,
-                g.qNativeCurrency,
-                trim(_floatToStr(rri.OngoingSale +
-                                 IIF(rri.GroupAccount, 0.00, rri.OngoingTaxes) +
-                                 IIF(rri.GroupAccount, 0.00, rri.OngoingRent) -
-                                 rri.Payments, 12, 2)),
+                TAmount(rri.OngoingSale +
+                        IIF(rri.GroupAccount, 0.00, rri.OngoingTaxes) +
+                        IIF(rri.GroupAccount, 0.00, rri.OngoingRent) -
+                        rri.Payments).AsDisplayStringWithCode,
                 sColor2
               ]);
 
@@ -335,9 +279,6 @@ begin
   end;
 
   hlbGuarantee.HtmlText.Text := format('<B>%s%s%s</B>', [sColor1, temp, sColor2]);
-
-//  lbRate.Caption := 'Total ' + CurrencyLetter + ' ' + trim(_floatToStr(TotalPriceNetto, 12, 2)) + ' / ' +
-//                    'Average ' + CurrencyLetter + ' ' + trim(_floatToStr(PriceNightNetto, 12, 2));
 
   __lbNotes.Text := rri.Information;
   __lbPAymentNotes.Text := rri.PMInfo;
@@ -478,17 +419,6 @@ begin
   pnlHint.Parent := prnt;
 end;
 
-
-procedure TFrmReservationHintHolder.__lblHideClick(Sender: TObject);
-begin
-  CancelHint;
-end;
-
-procedure TFrmReservationHintHolder.Release;
-begin
-  pnlHint.Hide;
-  pnlHint.Parent := self;
-end;
 
 procedure TFrmReservationHintHolder.timHideTimer(Sender: TObject);
 begin
