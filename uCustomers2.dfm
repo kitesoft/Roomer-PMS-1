@@ -21,19 +21,6 @@ object frmCustomers2: TfrmCustomers2
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object sSplitter1: TsSplitter
-    Left = 0
-    Top = 414
-    Width = 861
-    Height = 10
-    Cursor = crVSplit
-    Align = alBottom
-    MinSize = 50
-    ShowGrip = True
-    SkinData.SkinSection = 'SPLITTER'
-    ExplicitTop = 541
-    ExplicitWidth = 943
-  end
   object sPanel1: TsPanel
     Left = 0
     Top = 0
@@ -66,6 +53,17 @@ object frmCustomers2: TfrmCustomers2
       SkinData.SkinSection = 'SPEEDBUTTON'
       Images = DImages.PngImageList1
       ImageIndex = 10
+    end
+    object DBEdit1: TDBEdit
+      Left = 616
+      Top = 9
+      Width = 121
+      Height = 21
+      DataField = 'Customer'
+      DataSource = DS
+      TabOrder = 6
+      Visible = False
+      OnChange = DBEdit1Change
     end
     object btnOther: TsButton
       Left = 293
@@ -207,346 +205,368 @@ object frmCustomers2: TfrmCustomers2
       SkinData.SkinSection = 'BUTTON'
     end
   end
-  object sPanel2: TsPanel
-    Left = 0
-    Top = 424
-    Width = 861
-    Height = 86
-    Align = alBottom
-    TabOrder = 3
-    SkinData.SkinSection = 'PANEL'
-    object sSplitter2: TsSplitter
-      Left = 261
-      Top = 1
-      Width = 8
-      Height = 84
-      MinSize = 50
-      ShowGrip = True
-      SkinData.SkinSection = 'SPLITTER'
-      ExplicitHeight = 122
-    end
-    object grMemo: TcxGrid
-      Left = 1
-      Top = 1
-      Width = 260
-      Height = 84
-      Align = alLeft
-      Constraints.MinWidth = 260
-      TabOrder = 0
-      LookAndFeel.NativeStyle = False
-      object tvMemo: TcxGridDBTableView
-        OnDblClick = tvDataDblClick
-        Navigator.Buttons.CustomButtons = <>
-        Navigator.Buttons.First.Visible = True
-        Navigator.Buttons.PriorPage.Hint = 'Prior page'
-        Navigator.Buttons.PriorPage.Visible = True
-        Navigator.Buttons.Prior.Hint = 'Prior'
-        Navigator.Buttons.Prior.Visible = True
-        Navigator.Buttons.Next.Hint = 'Next'
-        Navigator.Buttons.Next.Visible = True
-        Navigator.Buttons.NextPage.Hint = 'Next page'
-        Navigator.Buttons.NextPage.Visible = True
-        Navigator.Buttons.Last.Hint = 'Last'
-        Navigator.Buttons.Last.Visible = True
-        Navigator.Buttons.Insert.Hint = 'Insert'
-        Navigator.Buttons.Insert.Visible = True
-        Navigator.Buttons.Append.Enabled = False
-        Navigator.Buttons.Append.Hint = 'Append'
-        Navigator.Buttons.Append.Visible = False
-        Navigator.Buttons.Delete.Hint = 'Delete'
-        Navigator.Buttons.Delete.Visible = True
-        Navigator.Buttons.Edit.Enabled = False
-        Navigator.Buttons.Edit.Hint = 'Edit'
-        Navigator.Buttons.Edit.Visible = False
-        Navigator.Buttons.Post.Hint = 'Post'
-        Navigator.Buttons.Post.Visible = True
-        Navigator.Buttons.Cancel.Hint = 'Cancel'
-        Navigator.Buttons.Cancel.Visible = True
-        Navigator.Buttons.Refresh.Enabled = False
-        Navigator.Buttons.Refresh.Hint = 'Refresh'
-        Navigator.Buttons.Refresh.Visible = False
-        Navigator.Buttons.SaveBookmark.Enabled = False
-        Navigator.Buttons.SaveBookmark.Hint = 'Save bookmark'
-        Navigator.Buttons.SaveBookmark.Visible = False
-        Navigator.Buttons.GotoBookmark.Enabled = False
-        Navigator.Buttons.GotoBookmark.Hint = 'Goto bookmark'
-        Navigator.Buttons.GotoBookmark.Visible = False
-        Navigator.Buttons.Filter.Hint = 'Filter'
-        Navigator.Buttons.Filter.Visible = True
-        Navigator.InfoPanel.Visible = True
-        Navigator.Visible = True
-        FilterBox.CustomizeDialog = False
-        FilterBox.Visible = fvNever
-        OnFocusedRecordChanged = tvDataFocusedRecordChanged
-        DataController.DataSource = mMemoDS
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        DataController.OnSortingChanged = tvDataDataControllerSortingChanged
-        OptionsBehavior.AlwaysShowEditor = True
-        OptionsBehavior.IncSearch = True
-        OptionsData.Appending = True
-        OptionsData.CancelOnExit = False
-        OptionsView.GroupByBox = False
-        OptionsView.Indicator = True
-        object tvMemoRecId: TcxGridDBColumn
-          DataBinding.FieldName = 'RecId'
-          Visible = False
-        end
-        object tvMemoActive: TcxGridDBColumn
-          DataBinding.FieldName = 'Active'
-        end
-        object tvMemoCustomer: TcxGridDBColumn
-          DataBinding.FieldName = 'Customer'
-          Visible = False
-        end
-        object tvMemoDescription: TcxGridDBColumn
-          DataBinding.FieldName = 'Description'
-          Width = 204
-        end
-        object tvMemoPreference: TcxGridDBColumn
-          DataBinding.FieldName = 'Preference'
-          Visible = False
-        end
-        object tvMemoID: TcxGridDBColumn
-          DataBinding.FieldName = 'ID'
-        end
-      end
-      object lvMemo: TcxGridLevel
-        GridView = tvMemo
-      end
-    end
-    object DBMemo1: TDBMemo
-      Left = 269
-      Top = 1
-      Width = 591
-      Height = 84
-      Align = alClient
-      DataField = 'Preference'
-      DataSource = mMemoDS
-      TabOrder = 1
-    end
-  end
-  object sPanel3: TsPanel
+  object sPanelGrids: TsPanel
     Left = 0
     Top = 89
     Width = 861
-    Height = 325
+    Height = 421
     Align = alClient
-    TabOrder = 4
-    SkinData.SkinSection = 'PANEL'
-    object grData: TcxGrid
+    TabOrder = 3
+    object sSplitter1: TsSplitter
+      Left = 1
+      Top = 324
+      Width = 859
+      Height = 10
+      Cursor = crVSplit
+      Align = alBottom
+      MinSize = 50
+      ShowGrip = True
+      SkinData.SkinSection = 'SPLITTER'
+      ExplicitLeft = 0
+      ExplicitTop = 541
+      ExplicitWidth = 943
+    end
+    object sPanel2: TsPanel
+      Left = 1
+      Top = 334
+      Width = 859
+      Height = 86
+      Align = alBottom
+      TabOrder = 0
+      SkinData.SkinSection = 'PANEL'
+      object sSplitter2: TsSplitter
+        Left = 261
+        Top = 1
+        Width = 8
+        Height = 84
+        MinSize = 50
+        ShowGrip = True
+        SkinData.SkinSection = 'SPLITTER'
+        ExplicitHeight = 122
+      end
+      object grMemo: TcxGrid
+        Left = 1
+        Top = 1
+        Width = 260
+        Height = 84
+        Align = alLeft
+        Constraints.MinWidth = 260
+        TabOrder = 0
+        LookAndFeel.NativeStyle = False
+        object tvMemo: TcxGridDBTableView
+          OnDblClick = tvDataDblClick
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.First.Visible = True
+          Navigator.Buttons.PriorPage.Hint = 'Prior page'
+          Navigator.Buttons.PriorPage.Visible = True
+          Navigator.Buttons.Prior.Hint = 'Prior'
+          Navigator.Buttons.Prior.Visible = True
+          Navigator.Buttons.Next.Hint = 'Next'
+          Navigator.Buttons.Next.Visible = True
+          Navigator.Buttons.NextPage.Hint = 'Next page'
+          Navigator.Buttons.NextPage.Visible = True
+          Navigator.Buttons.Last.Hint = 'Last'
+          Navigator.Buttons.Last.Visible = True
+          Navigator.Buttons.Insert.Hint = 'Insert'
+          Navigator.Buttons.Insert.Visible = True
+          Navigator.Buttons.Append.Enabled = False
+          Navigator.Buttons.Append.Hint = 'Append'
+          Navigator.Buttons.Append.Visible = False
+          Navigator.Buttons.Delete.Hint = 'Delete'
+          Navigator.Buttons.Delete.Visible = True
+          Navigator.Buttons.Edit.Enabled = False
+          Navigator.Buttons.Edit.Hint = 'Edit'
+          Navigator.Buttons.Edit.Visible = False
+          Navigator.Buttons.Post.Hint = 'Post'
+          Navigator.Buttons.Post.Visible = True
+          Navigator.Buttons.Cancel.Hint = 'Cancel'
+          Navigator.Buttons.Cancel.Visible = True
+          Navigator.Buttons.Refresh.Enabled = False
+          Navigator.Buttons.Refresh.Hint = 'Refresh'
+          Navigator.Buttons.Refresh.Visible = False
+          Navigator.Buttons.SaveBookmark.Enabled = False
+          Navigator.Buttons.SaveBookmark.Hint = 'Save bookmark'
+          Navigator.Buttons.SaveBookmark.Visible = False
+          Navigator.Buttons.GotoBookmark.Enabled = False
+          Navigator.Buttons.GotoBookmark.Hint = 'Goto bookmark'
+          Navigator.Buttons.GotoBookmark.Visible = False
+          Navigator.Buttons.Filter.Hint = 'Filter'
+          Navigator.Buttons.Filter.Visible = True
+          Navigator.InfoPanel.Visible = True
+          Navigator.Visible = True
+          FilterBox.CustomizeDialog = False
+          FilterBox.Visible = fvNever
+          OnFocusedRecordChanged = tvDataFocusedRecordChanged
+          DataController.DataSource = mMemoDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          DataController.OnSortingChanged = tvDataDataControllerSortingChanged
+          OptionsBehavior.AlwaysShowEditor = True
+          OptionsBehavior.IncSearch = True
+          OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
+          OptionsView.GroupByBox = False
+          OptionsView.Indicator = True
+          object tvMemoRecId: TcxGridDBColumn
+            DataBinding.FieldName = 'RecId'
+            Visible = False
+          end
+          object tvMemoActive: TcxGridDBColumn
+            DataBinding.FieldName = 'Active'
+          end
+          object tvMemoCustomer: TcxGridDBColumn
+            DataBinding.FieldName = 'Customer'
+            Visible = False
+          end
+          object tvMemoDescription: TcxGridDBColumn
+            DataBinding.FieldName = 'Description'
+            Width = 204
+          end
+          object tvMemoPreference: TcxGridDBColumn
+            DataBinding.FieldName = 'Preference'
+            Visible = False
+          end
+          object tvMemoID: TcxGridDBColumn
+            DataBinding.FieldName = 'ID'
+          end
+        end
+        object lvMemo: TcxGridLevel
+          GridView = tvMemo
+        end
+      end
+      object DBMemo1: TDBMemo
+        Left = 269
+        Top = 1
+        Width = 589
+        Height = 84
+        Align = alClient
+        DataField = 'Preference'
+        DataSource = mMemoDS
+        TabOrder = 1
+      end
+    end
+    object sPanel3: TsPanel
       Left = 1
       Top = 1
       Width = 859
       Height = 323
       Align = alClient
-      PopupMenu = mnuOther
-      TabOrder = 0
-      LookAndFeel.NativeStyle = False
-      object tvData: TcxGridDBTableView
-        OnDblClick = tvDataDblClick
-        Navigator.Buttons.CustomButtons = <>
-        Navigator.Buttons.First.Visible = True
-        Navigator.Buttons.PriorPage.Hint = 'Prior page'
-        Navigator.Buttons.PriorPage.Visible = True
-        Navigator.Buttons.Prior.Hint = 'Prior'
-        Navigator.Buttons.Prior.Visible = True
-        Navigator.Buttons.Next.Hint = 'Next'
-        Navigator.Buttons.Next.Visible = True
-        Navigator.Buttons.NextPage.Hint = 'Next page'
-        Navigator.Buttons.NextPage.Visible = True
-        Navigator.Buttons.Last.Hint = 'Last'
-        Navigator.Buttons.Last.Visible = True
-        Navigator.Buttons.Insert.Hint = 'Insert'
-        Navigator.Buttons.Insert.Visible = True
-        Navigator.Buttons.Append.Enabled = False
-        Navigator.Buttons.Append.Hint = 'Append'
-        Navigator.Buttons.Append.Visible = False
-        Navigator.Buttons.Delete.Hint = 'Delete'
-        Navigator.Buttons.Delete.Visible = True
-        Navigator.Buttons.Edit.Enabled = False
-        Navigator.Buttons.Edit.Hint = 'Edit'
-        Navigator.Buttons.Edit.Visible = False
-        Navigator.Buttons.Post.Hint = 'Post'
-        Navigator.Buttons.Post.Visible = True
-        Navigator.Buttons.Cancel.Hint = 'Cancel'
-        Navigator.Buttons.Cancel.Visible = True
-        Navigator.Buttons.Refresh.Enabled = False
-        Navigator.Buttons.Refresh.Hint = 'Refresh'
-        Navigator.Buttons.Refresh.Visible = False
-        Navigator.Buttons.SaveBookmark.Enabled = False
-        Navigator.Buttons.SaveBookmark.Hint = 'Save bookmark'
-        Navigator.Buttons.SaveBookmark.Visible = False
-        Navigator.Buttons.GotoBookmark.Enabled = False
-        Navigator.Buttons.GotoBookmark.Hint = 'Goto bookmark'
-        Navigator.Buttons.GotoBookmark.Visible = False
-        Navigator.Buttons.Filter.Hint = 'Filter'
-        Navigator.Buttons.Filter.Visible = True
-        Navigator.InfoPanel.Visible = True
-        Navigator.Visible = True
-        OnFocusedRecordChanged = tvDataFocusedRecordChanged
-        DataController.DataSource = DS
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        DataController.OnSortingChanged = tvDataDataControllerSortingChanged
-        OptionsBehavior.AlwaysShowEditor = True
-        OptionsBehavior.IncSearch = True
-        OptionsData.Appending = True
-        OptionsData.CancelOnExit = False
-        OptionsData.DeletingConfirmation = False
-        OptionsView.GroupByBox = False
-        OptionsView.Indicator = True
-        object tvDataRecId: TcxGridDBColumn
-          DataBinding.FieldName = 'RecId'
-          Visible = False
+      TabOrder = 1
+      SkinData.SkinSection = 'PANEL'
+      object grData: TcxGrid
+        Left = 1
+        Top = 1
+        Width = 857
+        Height = 321
+        Align = alClient
+        PopupMenu = mnuOther
+        TabOrder = 0
+        LookAndFeel.NativeStyle = False
+        object tvData: TcxGridDBTableView
+          OnDblClick = tvDataDblClick
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.First.Visible = True
+          Navigator.Buttons.PriorPage.Hint = 'Prior page'
+          Navigator.Buttons.PriorPage.Visible = True
+          Navigator.Buttons.Prior.Hint = 'Prior'
+          Navigator.Buttons.Prior.Visible = True
+          Navigator.Buttons.Next.Hint = 'Next'
+          Navigator.Buttons.Next.Visible = True
+          Navigator.Buttons.NextPage.Hint = 'Next page'
+          Navigator.Buttons.NextPage.Visible = True
+          Navigator.Buttons.Last.Hint = 'Last'
+          Navigator.Buttons.Last.Visible = True
+          Navigator.Buttons.Insert.Hint = 'Insert'
+          Navigator.Buttons.Insert.Visible = True
+          Navigator.Buttons.Append.Enabled = False
+          Navigator.Buttons.Append.Hint = 'Append'
+          Navigator.Buttons.Append.Visible = False
+          Navigator.Buttons.Delete.Hint = 'Delete'
+          Navigator.Buttons.Delete.Visible = True
+          Navigator.Buttons.Edit.Enabled = False
+          Navigator.Buttons.Edit.Hint = 'Edit'
+          Navigator.Buttons.Edit.Visible = False
+          Navigator.Buttons.Post.Hint = 'Post'
+          Navigator.Buttons.Post.Visible = True
+          Navigator.Buttons.Cancel.Hint = 'Cancel'
+          Navigator.Buttons.Cancel.Visible = True
+          Navigator.Buttons.Refresh.Enabled = False
+          Navigator.Buttons.Refresh.Hint = 'Refresh'
+          Navigator.Buttons.Refresh.Visible = False
+          Navigator.Buttons.SaveBookmark.Enabled = False
+          Navigator.Buttons.SaveBookmark.Hint = 'Save bookmark'
+          Navigator.Buttons.SaveBookmark.Visible = False
+          Navigator.Buttons.GotoBookmark.Enabled = False
+          Navigator.Buttons.GotoBookmark.Hint = 'Goto bookmark'
+          Navigator.Buttons.GotoBookmark.Visible = False
+          Navigator.Buttons.Filter.Hint = 'Filter'
+          Navigator.Buttons.Filter.Visible = True
+          Navigator.InfoPanel.Visible = True
+          Navigator.Visible = True
+          OnFocusedRecordChanged = tvDataFocusedRecordChanged
+          DataController.DataSource = DS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          DataController.OnSortingChanged = tvDataDataControllerSortingChanged
+          OptionsBehavior.AlwaysShowEditor = True
+          OptionsBehavior.IncSearch = True
+          OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
+          OptionsData.DeletingConfirmation = False
+          OptionsView.GroupByBox = False
+          OptionsView.Indicator = True
+          object tvDataRecId: TcxGridDBColumn
+            DataBinding.FieldName = 'RecId'
+            Visible = False
+          end
+          object tvDataID: TcxGridDBColumn
+            DataBinding.FieldName = 'ID'
+            Visible = False
+          end
+          object tvDataCustomer: TcxGridDBColumn
+            Caption = 'CustomerID'
+            DataBinding.FieldName = 'Customer'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.CharCase = ecUpperCase
+            Properties.OnValidate = tvDataCustomerPropertiesValidate
+            Width = 115
+          end
+          object tvDataPID: TcxGridDBColumn
+            Caption = 'Personal ID'
+            DataBinding.FieldName = 'PID'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Caption = '...'
+                Default = True
+                Kind = bkText
+              end>
+            Properties.OnButtonClick = tvDataPIDPropertiesButtonClick
+            Width = 128
+          end
+          object tvDataColumn1: TcxGridDBColumn
+            Caption = 'IMG'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.OnButtonClick = tvDataColumn1PropertiesButtonClick
+            Width = 25
+          end
+          object tvDataSurname: TcxGridDBColumn
+            Caption = 'Full name'
+            DataBinding.FieldName = 'Surname'
+            Width = 120
+          end
+          object tvDataName: TcxGridDBColumn
+            DataBinding.FieldName = 'Name'
+            Visible = False
+            Width = 150
+          end
+          object tvDataCustomerType: TcxGridDBColumn
+            DataBinding.FieldName = 'CustomerType'
+            Visible = False
+            Width = 90
+          end
+          object tvDatastaytaxincluted: TcxGridDBColumn
+            DataBinding.FieldName = 'staytaxincluted'
+          end
+          object tvDataTravelAgency: TcxGridDBColumn
+            DataBinding.FieldName = 'TravelAgency'
+          end
+          object tvDataAddress1: TcxGridDBColumn
+            DataBinding.FieldName = 'Address1'
+            Width = 120
+          end
+          object tvDataAddress2: TcxGridDBColumn
+            DataBinding.FieldName = 'Address2'
+            Width = 120
+          end
+          object tvDataAddress3: TcxGridDBColumn
+            Caption = 'Postal code '
+            DataBinding.FieldName = 'Address3'
+            Width = 120
+          end
+          object tvDataAddress4: TcxGridDBColumn
+            Caption = 'City'
+            DataBinding.FieldName = 'Address4'
+            Width = 120
+          end
+          object tvDataCountry: TcxGridDBColumn
+            DataBinding.FieldName = 'Country'
+            Visible = False
+          end
+          object tvDataCountryName: TcxGridDBColumn
+            DataBinding.FieldName = 'CountryName'
+            Width = 100
+          end
+          object tvDataTel1: TcxGridDBColumn
+            DataBinding.FieldName = 'Tel1'
+            Width = 70
+          end
+          object tvDataTel2: TcxGridDBColumn
+            DataBinding.FieldName = 'Tel2'
+            Width = 70
+          end
+          object tvDataFAX: TcxGridDBColumn
+            DataBinding.FieldName = 'FAX'
+            Width = 70
+          end
+          object tvDataEmailAddress: TcxGridDBColumn
+            DataBinding.FieldName = 'EmailAddress'
+            Width = 100
+          end
+          object tvDataHomepage: TcxGridDBColumn
+            DataBinding.FieldName = 'Homepage'
+            Width = 100
+          end
+          object tvDataContactPerson: TcxGridDBColumn
+            DataBinding.FieldName = 'ContactPerson'
+            Width = 100
+          end
+          object tvDatapcCode: TcxGridDBColumn
+            DataBinding.FieldName = 'pcCode'
+          end
+          object tvDataRatePlanId: TcxGridDBColumn
+            DataBinding.FieldName = 'RatePlanId'
+          end
+          object tvDataCurrency: TcxGridDBColumn
+            DataBinding.FieldName = 'Currency'
+          end
+          object tvDataDiscountPercent: TcxGridDBColumn
+            Caption = 'Disc'
+            DataBinding.FieldName = 'DiscountPercent'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Width = 46
+          end
+          object tvDatadele: TcxGridDBColumn
+            DataBinding.FieldName = 'dele'
+            Visible = False
+          end
+          object tvDataCustomerTypeDescription: TcxGridDBColumn
+            Caption = 'Market segment'
+            DataBinding.FieldName = 'CustomerTypeDescription'
+            Width = 100
+          end
+          object tvDatapcID: TcxGridDBColumn
+            DataBinding.FieldName = 'pcID'
+          end
+          object tvDataActive: TcxGridDBColumn
+            DataBinding.FieldName = 'Active'
+            Width = 54
+          end
+          object tvDatanotes: TcxGridDBColumn
+            DataBinding.FieldName = 'notes'
+            PropertiesClassName = 'TcxMemoProperties'
+          end
         end
-        object tvDataID: TcxGridDBColumn
-          DataBinding.FieldName = 'ID'
-          Visible = False
+        object lvData: TcxGridLevel
+          GridView = tvData
         end
-        object tvDataCustomer: TcxGridDBColumn
-          Caption = 'CustomerID'
-          DataBinding.FieldName = 'Customer'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.CharCase = ecUpperCase
-          Properties.OnValidate = tvDataCustomerPropertiesValidate
-          Width = 115
-        end
-        object tvDataPID: TcxGridDBColumn
-          Caption = 'Personal ID'
-          DataBinding.FieldName = 'PID'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Caption = '...'
-              Default = True
-              Kind = bkText
-            end>
-          Properties.OnButtonClick = tvDataPIDPropertiesButtonClick
-          Width = 128
-        end
-        object tvDataColumn1: TcxGridDBColumn
-          Caption = 'IMG'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.OnButtonClick = tvDataColumn1PropertiesButtonClick
-          Width = 25
-        end
-        object tvDataSurname: TcxGridDBColumn
-          Caption = 'Full name'
-          DataBinding.FieldName = 'Surname'
-          Width = 120
-        end
-        object tvDataName: TcxGridDBColumn
-          DataBinding.FieldName = 'Name'
-          Visible = False
-          Width = 150
-        end
-        object tvDataCustomerType: TcxGridDBColumn
-          DataBinding.FieldName = 'CustomerType'
-          Visible = False
-          Width = 90
-        end
-        object tvDatastaytaxincluted: TcxGridDBColumn
-          DataBinding.FieldName = 'staytaxincluted'
-        end
-        object tvDataTravelAgency: TcxGridDBColumn
-          DataBinding.FieldName = 'TravelAgency'
-        end
-        object tvDataAddress1: TcxGridDBColumn
-          DataBinding.FieldName = 'Address1'
-          Width = 120
-        end
-        object tvDataAddress2: TcxGridDBColumn
-          DataBinding.FieldName = 'Address2'
-          Width = 120
-        end
-        object tvDataAddress3: TcxGridDBColumn
-          Caption = 'Postal code '
-          DataBinding.FieldName = 'Address3'
-          Width = 120
-        end
-        object tvDataAddress4: TcxGridDBColumn
-          Caption = 'City'
-          DataBinding.FieldName = 'Address4'
-          Width = 120
-        end
-        object tvDataCountry: TcxGridDBColumn
-          DataBinding.FieldName = 'Country'
-          Visible = False
-        end
-        object tvDataCountryName: TcxGridDBColumn
-          DataBinding.FieldName = 'CountryName'
-          Width = 100
-        end
-        object tvDataTel1: TcxGridDBColumn
-          DataBinding.FieldName = 'Tel1'
-          Width = 70
-        end
-        object tvDataTel2: TcxGridDBColumn
-          DataBinding.FieldName = 'Tel2'
-          Width = 70
-        end
-        object tvDataFAX: TcxGridDBColumn
-          DataBinding.FieldName = 'FAX'
-          Width = 70
-        end
-        object tvDataEmailAddress: TcxGridDBColumn
-          DataBinding.FieldName = 'EmailAddress'
-          Width = 100
-        end
-        object tvDataHomepage: TcxGridDBColumn
-          DataBinding.FieldName = 'Homepage'
-          Width = 100
-        end
-        object tvDataContactPerson: TcxGridDBColumn
-          DataBinding.FieldName = 'ContactPerson'
-          Width = 100
-        end
-        object tvDatapcCode: TcxGridDBColumn
-          DataBinding.FieldName = 'pcCode'
-        end
-        object tvDataRatePlanId: TcxGridDBColumn
-          DataBinding.FieldName = 'RatePlanId'
-        end
-        object tvDataCurrency: TcxGridDBColumn
-          DataBinding.FieldName = 'Currency'
-        end
-        object tvDataDiscountPercent: TcxGridDBColumn
-          Caption = 'Disc'
-          DataBinding.FieldName = 'DiscountPercent'
-          PropertiesClassName = 'TcxCalcEditProperties'
-          Width = 46
-        end
-        object tvDatadele: TcxGridDBColumn
-          DataBinding.FieldName = 'dele'
-          Visible = False
-        end
-        object tvDataCustomerTypeDescription: TcxGridDBColumn
-          Caption = 'Market segment'
-          DataBinding.FieldName = 'CustomerTypeDescription'
-          Width = 100
-        end
-        object tvDatapcID: TcxGridDBColumn
-          DataBinding.FieldName = 'pcID'
-        end
-        object tvDataActive: TcxGridDBColumn
-          DataBinding.FieldName = 'Active'
-          Width = 54
-        end
-        object tvDatanotes: TcxGridDBColumn
-          DataBinding.FieldName = 'notes'
-          PropertiesClassName = 'TcxMemoProperties'
-        end
-      end
-      object lvData: TcxGridLevel
-        GridView = tvData
       end
     end
   end
@@ -602,8 +622,8 @@ object frmCustomers2: TfrmCustomers2
   object DS: TDataSource
     DataSet = m_
     OnStateChange = DSStateChange
-    Left = 304
-    Top = 280
+    Left = 280
+    Top = 232
   end
   object grPrinter: TdxComponentPrinter
     CurrentLink = prLink_grData
@@ -783,8 +803,8 @@ object frmCustomers2: TfrmCustomers2
   end
   object mMemoDS: TDataSource
     DataSet = Memo_
-    Left = 472
-    Top = 368
+    Left = 552
+    Top = 232
   end
   object Memo_: TRoomerDataSet
     BeforeDelete = Memo_BeforeDelete
@@ -799,8 +819,8 @@ object frmCustomers2: TfrmCustomers2
     RoomerDatasetsUri = 'http://mobile.roomerpms.com:8080/services/datasets/'
     SessionLengthSeconds = 0
     PrimaryKeyField = 'ID'
-    Left = 544
-    Top = 368
+    Left = 552
+    Top = 288
   end
   object FormStore: TcxPropertiesStore
     Components = <

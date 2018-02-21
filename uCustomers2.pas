@@ -172,6 +172,7 @@ type
     m_pcCode: TWideStringField;
     sPanel2: TsPanel;
     sPanel3: TsPanel;
+    DBEdit1: TDBEdit;
     grData: TcxGrid;
     tvData: TcxGridDBTableView;
     tvDataRecId: TcxGridDBColumn;
@@ -390,9 +391,6 @@ begin
     rSet := CreateNewDataSet;
     try
       s := format(select_CustomerPlus_byActive, [ord(active),zSortStr]);
-//    copyToClipboard(s);
-//    DebugMessage('-- 10 Invoiceheads'#10#10+s);
-
 
       if rSet_bySQL(rSet,s) then
       begin
