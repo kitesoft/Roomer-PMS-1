@@ -139,7 +139,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       ParentFont = False
       TabOrder = 0
       OnCloseUp = edTemplateCloseUp
-      ExplicitWidth = 348
     end
     object btnResources: TsButton
       Left = 499
@@ -151,7 +150,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       TabOrder = 1
       OnClick = btnResourcesClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 527
     end
     object edTo: TsComboBox
       Left = 144
@@ -173,7 +171,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       TabOrder = 2
       OnCloseUp = edToCloseUp
       OnChange = edToChange
-      ExplicitWidth = 348
     end
     object edCC: TsComboBox
       Left = 144
@@ -195,7 +192,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       TabOrder = 3
       OnCloseUp = edToCloseUp
       OnChange = edToChange
-      ExplicitWidth = 348
     end
     object edSubject: TsEdit
       Left = 144
@@ -223,7 +219,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
     Align = alBottom
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 750
     object btnOk: TsButton
       AlignWithMargins = True
       Left = 405
@@ -238,7 +233,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       TabOrder = 0
       OnClick = btnOkClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 518
     end
     object btnEdit: TsButton
       AlignWithMargins = True
@@ -265,7 +259,6 @@ object FrmReservationEmailingDialog: TFrmReservationEmailingDialog
       ModalResult = 2
       TabOrder = 2
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 635
     end
   end
   object WebBrowser: TWebBrowser
