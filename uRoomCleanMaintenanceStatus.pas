@@ -64,11 +64,20 @@ type
     procedure SetRadioButtons;
     function GetStatus: string;
     procedure SetStatus(const Value: string);
+    function GetCleaningRemarks: string;
+    function GetLostAndFound: string;
+    function GetMaintenanceRemarks: string;
+    procedure SetCleaningRemarks(const Value: string);
+    procedure SetLostAndFound(const Value: string);
+    procedure SetMaintenanceRemarks(const Value: string);
     { Private declarations }
   public
     { Public declarations }
     FormPosition : TPoint;
     property Status: string read GetStatus write SetStatus;
+    property CleaningRemarks: string read GetCleaningRemarks write SetCleaningRemarks;
+    property MaintenanceRemarks: string read GetMaintenanceRemarks write SetMaintenanceRemarks;
+    property LostAndFound: string read GetLostAndFound write SetLostAndFound;
   end;
 
 function SetRoomCleanAndMaintenanceStatus(sRoom : string; x, y : integer) : boolean;
@@ -89,24 +98,21 @@ uses
   , uSQLUtils
   , objRoomList2
   , uRoomerLanguage
-  , uRoomServicesAPI;
+  , uRoomServicesAPI, uRoomservicesStatus;
 
 {$R *.dfm}
 
 function SetRoomCleanAndMaintenanceStatus(sRoom : string; x, y : integer) : boolean;
 var
-  s : string;
-  dsRoom, dsNotes : TRoomerDataSet;
-  obj : TObject;
-  currStatus : STring;
+  dsRoom: TRoomerDataSet;
   RoomItem : TRoomItem;
   lParams: RRoomServicesSetStatusParameters;
   frm: TfrmRoomCleanMaintenanceStatus;
+  lRoomServicesdAPI: TRoomServicesMobileAPICaller;
 begin
   // --
   result := false;
   dsRoom := nil;
-  dsNotes := nil;
   frm := TfrmRoomCleanMaintenanceStatus.Create(nil);
   try
     dsRoom := createNewDataSet;
@@ -130,72 +136,58 @@ begin
 		          'WHERE rooms.Room=''%s''', [sRoom])
               );
     dsRoom.First;
+    frm.Status := dsRoom['status'];
 
-    frm.mmoCleaningNotes.Lines.Text:= dsRoom['CleaningNotes'];
-    if Trim(frm.mmoCleaningNotes.Text) = '' then
-      frm.shpCleaningNotes.Brush.Color := clGray
-    else
-      frm.shpCleaningNotes.Brush.Color := clRed;
-
-    frm.mmoMaintenanceNotes.Lines.Text:= dsRoom['MaintenanceNotes'];
-    if Trim(frm.mmoMaintenanceNotes.Text) = '' then
-      frm.shpMaintenanceNotes.Brush.Color := clGray
-    else
-      frm.shpMaintenanceNotes.Brush.Color := clRed;
-
-    frm.mmoLostAndFound.Lines.Text := dsRoom['LostAndFound'];
-    if Trim(frm.mmoLostAndFound.Text) = '' then
-      frm.shpLostAndFound.Brush.Color := clGray
-    else
-      frm.shpLostAndFound.Brush.Color := clRed;
+    frm.CleaningRemarks := dsRoom['CleaningNotes'];
+    frm.LostAndFound := dsRoom['LostAndFound'];
+    frm.MaintenanceRemarks := dsRoom['MaintenanceNotes'];
 
     frm.FormPosition.X := x;
     frm.FormPosition.Y := y;
 
-
     frm.Caption := frm.Caption + format(' [%s]', [sRoom]);
-    frm.Status := dsRoom['status'];
     frm.ShowModal;
 
-    if (dsRoom['CleaningNotes'] <> frm.mmoCleaningNotes.Text) then
+    lParams.Clear;
+    if not frm.CleaningRemarks.Equals(dsRoom['CleaningNotes']) then
     begin
       lParams.setCleaningNotes := true;
-      lParams.CleaningNotes := frm.mmoCleaningNotes.Text;
+      lParams.CleaningNotes := frm.CleaningRemarks;
     end;
-    if (dsRoom['MaintenanceNotes'] <> frm.mmoMaintenanceNotes.Text) then
+
+    if not frm.MaintenanceRemarks.Equals(dsRoom['MaintenanceNotes']) then
     begin
       lParams.setMaintenanceNotes := true;
-      lParams.MaintenanceNotes := frm.mmoMaintenanceNotes.Text;
+      lParams.MaintenanceNotes := frm.MaintenanceRemarks;
     end;
-    if (dsRoom['LostAndFound'] <> frm.mmoLostAndFound.Text) then
+
+    if not frm.LostAndFound.Equals(dsRoom['LostAndFound']) then
     begin
       lParams.setLostAndFound := true;
-      lParams.lostAndFound := frm.mmoLostAndFound.Text;
+      lParams.lostAndFound := frm.LostAndFound;
     end;
 
-    with TRoomServicesMobileAPICaller.Create do
-    try
-      SetStatus(sRoom, Now, lParams);
-    finally
-      Free;
-    end;
-
-    if dsRoom['status'] <> frm.Status then
+    if not frm.Status.Equals(dsRoom['Status']) then
     begin
-      if dsRoom.State <> dsEdit then
-        dsRoom.Edit;
-      dsRoom['status'] := frm.Status;
+      lParams.setStatus := true;
+      lParams.Status := frm.Status;
+
       RoomItem := g.oRooms.FindRoomFromRoomNumber(sRoom);
-      RoomItem.Status := dsRoom['status'];
+      RoomItem.Status := frm.Status;
     end;
 
-    dsRoom.CheckBrowseMode;
+    lRoomServicesdAPI := TRoomServicesMobileAPICaller.Create;
+    try
+      lRoomServicesdAPI.SetStatus(sRoom, Now, lParams);
+    finally
+      lRoomServicesdAPI.Free;
+    end;
+
     glb.RefreshTableByName('rooms');
 
 
   finally
     dsRoom.Free;
-    dsNotes.Free;
     frm.free;
   end;
 end;
@@ -208,7 +200,7 @@ begin
   rb := Sender as TRadioButton;
   if assigned(rb) then
   begin
-    FStatus := Copy(rb.Caption, 3, 1);
+    FStatus := Copy(rb.Name, 4, 1);
     Close;
   end;
 end;
@@ -234,9 +226,51 @@ begin
 
 end;
 
+function TfrmRoomCleanMaintenanceStatus.GetCleaningRemarks: string;
+begin
+  Result := mmoCleaningNotes.Lines.Text;
+end;
+
+function TfrmRoomCleanMaintenanceStatus.GetLostAndFound: string;
+begin
+  Result := mmoLostAndFound.Lines.Text;
+end;
+
+function TfrmRoomCleanMaintenanceStatus.GetMaintenanceRemarks: string;
+begin
+  Result := mmoMaintenanceNotes.Lines.Text;
+end;
+
 function TfrmRoomCleanMaintenanceStatus.GetStatus: string;
 begin
-  Result := FStatus;
+  Result := FStatus.ToUpper;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetCleaningRemarks(const Value: string);
+begin
+  mmoCleaningNotes.Lines.Text := Value;
+  if Value.IsEmpty then
+    shpCleaningNotes.Brush.Color := clGray
+  else
+    shpCleaningNotes.Brush.Color := clRed;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetLostAndFound(const Value: string);
+begin
+  mmoLostAndFound.Lines.Text := Value;
+  if Value.IsEmpty then
+    shpLostAndFound.Brush.Color := clGray
+  else
+    shpLostAndFound.Brush.Color := clRed;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetMaintenanceRemarks(const Value: string);
+begin
+  mmoMaintenanceNotes.Lines.Text := Value;
+  if Value.IsEmpty then
+    shpMaintenanceNotes.Brush.Color := clGray
+  else
+    shpMaintenanceNotes.Brush.Color := clRed;
 end;
 
 procedure TfrmRoomCleanMaintenanceStatus.SetRadioButtons;

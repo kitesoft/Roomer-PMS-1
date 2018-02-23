@@ -4,7 +4,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   ActiveControl = sButton1
   BorderStyle = bsToolWindow
   Caption = 'Room Status'
-  ClientHeight = 366
+  ClientHeight = 368
   ClientWidth = 277
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -192,9 +192,9 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxW: TsRadioButton
     Left = 35
     Top = 121
-    Width = 87
+    Width = 82
     Height = 20
-    Caption = 'Beeing cleened'
+    Caption = 'Being cleaned'
     TabOrder = 8
     OnClick = cbxCClick
     SkinData.SkinSection = 'CHECKBOX'
@@ -447,7 +447,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Left = 3
       Top = 3
       Width = 271
-      Height = 19
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -466,11 +466,11 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 275
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 267
     end
     object shpCleaningNotes: TShape
       Left = 179
@@ -488,7 +488,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     object mmoCleaningNotes: TsMemo
       AlignWithMargins = True
       Left = 3
-      Top = 26
+      Top = 22
       Width = 271
       Height = 32
       Margins.Left = 2
@@ -561,7 +561,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Left = 3
       Top = 3
       Width = 271
-      Height = 19
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -580,11 +580,11 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 275
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 267
     end
     object shpLostAndFound: TShape
       Left = 179
@@ -602,7 +602,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     object mmoLostAndFound: TsMemo
       AlignWithMargins = True
       Left = 3
-      Top = 26
+      Top = 22
       Width = 271
       Height = 32
       Margins.Left = 2
@@ -630,6 +630,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
       SkinData.SkinSection = 'EDIT'
+      ExplicitTop = 26
     end
     object pnlLostAndFound_Button: TsPanel
       Left = 1
@@ -645,6 +646,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       TabOrder = 1
       Visible = False
       SkinData.SkinSection = 'PANEL'
+      ExplicitLeft = 3
+      ExplicitTop = 4
       object sButton3: TsButton
         Left = 218
         Top = 0
@@ -679,7 +682,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Left = 3
       Top = 3
       Width = 271
-      Height = 19
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -698,11 +701,11 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 275
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 267
     end
     object shpMaintenanceNotes: TShape
       Left = 179
@@ -720,7 +723,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     object mmoMaintenanceNotes: TsMemo
       AlignWithMargins = True
       Left = 3
-      Top = 26
+      Top = 22
       Width = 271
       Height = 32
       Margins.Left = 2

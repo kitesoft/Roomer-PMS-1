@@ -346,7 +346,9 @@ uses
   uFraHotelStatisticsFooter in 'mainEmbeddables\uFraHotelStatisticsFooter.pas' {fraHotelStatisticsFooter: TFrame},
   uRptBreakfastList in 'uRptBreakfastList.pas',
   uRoomServicesAPI in 'Roomservices\uRoomServicesAPI.pas',
-  uMobileAPI in 'MobileAPI\uMobileAPI.pas';
+  uMobileAPI in 'MobileAPI\uMobileAPI.pas',
+  uRoomservicesStatus in 'Roomservices\uRoomservicesStatus.pas',
+  uRptCleaningTimes in 'uRptCleaningTimes.pas';
 
 {$R *.RES}
 
