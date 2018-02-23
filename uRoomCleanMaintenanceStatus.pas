@@ -58,16 +58,27 @@ type
     procedure btnAllCleanClick(Sender: TObject);
     procedure sButton6Click(Sender: TObject);
   private
+    FStatus: string;
     procedure HideOtherPanels(pnl: TsPanel);
     procedure HideShowPanel(show: Boolean; pnl: TsPanel);
+    procedure SetRadioButtons;
+    function GetStatus: string;
+    procedure SetStatus(const Value: string);
+    function GetCleaningRemarks: string;
+    function GetLostAndFound: string;
+    function GetMaintenanceRemarks: string;
+    procedure SetCleaningRemarks(const Value: string);
+    procedure SetLostAndFound(const Value: string);
+    procedure SetMaintenanceRemarks(const Value: string);
     { Private declarations }
   public
     { Public declarations }
     FormPosition : TPoint;
+    property Status: string read GetStatus write SetStatus;
+    property CleaningRemarks: string read GetCleaningRemarks write SetCleaningRemarks;
+    property MaintenanceRemarks: string read GetMaintenanceRemarks write SetMaintenanceRemarks;
+    property LostAndFound: string read GetLostAndFound write SetLostAndFound;
   end;
-
-var
-  frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus;
 
 function SetRoomCleanAndMaintenanceStatus(sRoom : string; x, y : integer) : boolean;
 
@@ -87,24 +98,22 @@ uses
   , uSQLUtils
   , objRoomList2
   , uRoomerLanguage
-  ;
+  , uRoomServicesAPI, uRoomservicesStatus;
 
 {$R *.dfm}
 
 function SetRoomCleanAndMaintenanceStatus(sRoom : string; x, y : integer) : boolean;
 var
-  s : string;
-  dsRoom, dsCodes, dsNotes : TRoomerDataSet;
-  obj : TObject;
-  currStatus : STring;
+  dsRoom: TRoomerDataSet;
   RoomItem : TRoomItem;
+  lParams: RRoomServicesSetStatusParameters;
+  frm: TfrmRoomCleanMaintenanceStatus;
+  lRoomServicesdAPI: TRoomServicesMobileAPICaller;
 begin
   // --
   result := false;
   dsRoom := nil;
-  dsCodes := nil;
-  dsNotes := nil;
-  Application.CreateForm(TfrmRoomCleanMaintenanceStatus, frmRoomCleanMaintenanceStatus);
+  frm := TfrmRoomCleanMaintenanceStatus.Create(nil);
   try
     dsRoom := createNewDataSet;
     hData.rSet_bySQL(dsRoom,
@@ -127,112 +136,73 @@ begin
 		          'WHERE rooms.Room=''%s''', [sRoom])
               );
     dsRoom.First;
-    currStatus := dsRoom['status'];
-    frmRoomCleanMaintenanceStatus.mmoCleaningNotes.Text := dsRoom['CleaningNotes'];
-    if Trim(frmRoomCleanMaintenanceStatus.mmoCleaningNotes.Text) = '' then
-      frmRoomCleanMaintenanceStatus.shpCleaningNotes.Brush.Color := clGray
-    else
-      frmRoomCleanMaintenanceStatus.shpCleaningNotes.Brush.Color := clRed;
+    frm.Status := dsRoom['status'];
 
-    frmRoomCleanMaintenanceStatus.mmoMaintenanceNotes.Text := dsRoom['MaintenanceNotes'];
-    if Trim(frmRoomCleanMaintenanceStatus.mmoMaintenanceNotes.Text) = '' then
-      frmRoomCleanMaintenanceStatus.shpMaintenanceNotes.Brush.Color := clGray
-    else
-      frmRoomCleanMaintenanceStatus.shpMaintenanceNotes.Brush.Color := clRed;
+    frm.CleaningRemarks := dsRoom['CleaningNotes'];
+    frm.LostAndFound := dsRoom['LostAndFound'];
+    frm.MaintenanceRemarks := dsRoom['MaintenanceNotes'];
 
-    frmRoomCleanMaintenanceStatus.mmoLostAndFound.Text := dsRoom['LostAndFound'];
-    if Trim(frmRoomCleanMaintenanceStatus.mmoLostAndFound.Text) = '' then
-      frmRoomCleanMaintenanceStatus.shpLostAndFound.Brush.Color := clGray
-    else
-      frmRoomCleanMaintenanceStatus.shpLostAndFound.Brush.Color := clRed;
+    frm.FormPosition.X := x;
+    frm.FormPosition.Y := y;
 
-    dsCodes := createNewDataSet;
-    hData.rSet_bySQL(dsCodes,
-       'SELECT name, code, color, id FROM maintenancecodes');
+    frm.Caption := frm.Caption + format(' [%s]', [sRoom]);
+    frm.ShowModal;
 
-    dsCodes.first;
-    while not dsCodes.Eof do
+    lParams.Clear;
+    if not frm.CleaningRemarks.Equals(dsRoom['CleaningNotes']) then
     begin
-      obj := frmRoomCleanMaintenanceStatus.findComponent('cbx' + dsCodes['code']);
-      if assigned(obj) then
-      begin
-        TRadioButton(obj).Caption := dsCodes['name'];
-        if dsCodes['code'] = currStatus then
-          TRadioButton(obj).Checked := true;
-      end;
-      obj := frmRoomCleanMaintenanceStatus.findComponent('edt' + dsCodes['code']);
-      if assigned(obj) then
-      begin
-        TEdit(obj).Color := HtmlToColor(dsCodes['color'], clWhite);
-      end;
-
-      dsCodes.Next;
+      lParams.setCleaningNotes := true;
+      lParams.CleaningNotes := frm.CleaningRemarks;
     end;
 
-    frmRoomCleanMaintenanceStatus.FormPosition.X := x;
-    frmRoomCleanMaintenanceStatus.FormPosition.Y := y;
-
-
-    if frmRoomCleanMaintenanceStatus.FormPosition.Y + frmRoomCleanMaintenanceStatus.Height > Screen.Height then
-      frmRoomCleanMaintenanceStatus.FormPosition.Y := Screen.Height - frmRoomCleanMaintenanceStatus.Height - 20;
-
-    frmRoomCleanMaintenanceStatus.Caption := frmRoomCleanMaintenanceStatus.Caption + format(' [%s]', [sRoom]);
-    frmRoomCleanMaintenanceStatus.ShowModal;
-
-    if (dsRoom['CleaningNotes'] <> frmRoomCleanMaintenanceStatus.mmoCleaningNotes.Text) OR
-       (dsRoom['MaintenanceNotes'] <> frmRoomCleanMaintenanceStatus.mmoMaintenanceNotes.Text) OR
-       (dsRoom['LostAndFound'] <> frmRoomCleanMaintenanceStatus.mmoLostAndFound.Text) then
+    if not frm.MaintenanceRemarks.Equals(dsRoom['MaintenanceNotes']) then
     begin
-      s := 'UPDATE maintenanceroomnotes SET CleaningNotes=%s, MaintenanceNotes=%s, LostAndFound=%s WHERE Room=%s';
-      s := format(s, [_db(frmRoomCleanMaintenanceStatus.mmoCleaningNotes.Text),
-          _db(frmRoomCleanMaintenanceStatus.mmoMaintenanceNotes.Text),
-          _db(frmRoomCleanMaintenanceStatus.mmoLostAndFound.Text),
-          _db(sRoom)]);
-      d.roomerMainDataSet.DoCommand(s);
+      lParams.setMaintenanceNotes := true;
+      lParams.MaintenanceNotes := frm.MaintenanceRemarks;
     end;
 
-    dsCodes.first;
-    while not dsCodes.Eof do
+    if not frm.LostAndFound.Equals(dsRoom['LostAndFound']) then
     begin
-      obj := frmRoomCleanMaintenanceStatus.findComponent('cbx' + dsCodes['code']);
-      if assigned(obj) then
-      begin
-        if TRadioButton(obj).Checked then
-        begin
-          if dsRoom['status'] <> dsCodes['code'] then
-          begin
-            if dsRoom.State <> dsEdit then
-              dsRoom.Edit;
-            dsRoom['status'] := dsCodes['code'];
-          end;
-          Break;
-        end;
-      end;
-      dsCodes.Next;
+      lParams.setLostAndFound := true;
+      lParams.lostAndFound := frm.LostAndFound;
     end;
-    if dsRoom.State = dsEdit then
+
+    if not frm.Status.Equals(dsRoom['Status']) then
     begin
-      dsRoom.Post;
+      lParams.setStatus := true;
+      lParams.Status := frm.Status;
+
       RoomItem := g.oRooms.FindRoomFromRoomNumber(sRoom);
-      RoomItem.Status := dsRoom['status'];
+      RoomItem.Status := frm.Status;
     end;
 
+    lRoomServicesdAPI := TRoomServicesMobileAPICaller.Create;
+    try
+      lRoomServicesdAPI.SetStatus(sRoom, Now, lParams);
+    finally
+      lRoomServicesdAPI.Free;
+    end;
 
     glb.RefreshTableByName('rooms');
 
 
   finally
     dsRoom.Free;
-    dsCodes.Free;
-    dsNotes.Free;
-    frmRoomCleanMaintenanceStatus.free;
+    frm.free;
   end;
 end;
 
 
 procedure TfrmRoomCleanMaintenanceStatus.cbxCClick(Sender: TObject);
+var
+  rb: TRadioButton;
 begin
-  Close;
+  rb := Sender as TRadioButton;
+  if assigned(rb) then
+  begin
+    FStatus := Copy(rb.Name, 4, 1);
+    Close;
+  end;
 end;
 
 procedure TfrmRoomCleanMaintenanceStatus.FormCreate(Sender: TObject);
@@ -243,12 +213,102 @@ begin
   pnlCleaningNotes.Height := 29;
   pnlMaintenanceNotes.Height := 29;
   pnlLostAndFound.Height := 29;
+  SetRadioButtons;
 end;
 
 procedure TfrmRoomCleanMaintenanceStatus.FormShow(Sender: TObject);
 begin
-  frmRoomCleanMaintenanceStatus.Left := FormPosition.x;
-  frmRoomCleanMaintenanceStatus.Top := FormPosition.y;
+  if FormPosition.Y + Height > Screen.Height then
+    FormPosition.Y := Screen.Height - Height - 20;
+
+  Left := FormPosition.x;
+  Top := FormPosition.y;
+
+end;
+
+function TfrmRoomCleanMaintenanceStatus.GetCleaningRemarks: string;
+begin
+  Result := mmoCleaningNotes.Lines.Text;
+end;
+
+function TfrmRoomCleanMaintenanceStatus.GetLostAndFound: string;
+begin
+  Result := mmoLostAndFound.Lines.Text;
+end;
+
+function TfrmRoomCleanMaintenanceStatus.GetMaintenanceRemarks: string;
+begin
+  Result := mmoMaintenanceNotes.Lines.Text;
+end;
+
+function TfrmRoomCleanMaintenanceStatus.GetStatus: string;
+begin
+  Result := FStatus.ToUpper;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetCleaningRemarks(const Value: string);
+begin
+  mmoCleaningNotes.Lines.Text := Value;
+  if Value.IsEmpty then
+    shpCleaningNotes.Brush.Color := clGray
+  else
+    shpCleaningNotes.Brush.Color := clRed;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetLostAndFound(const Value: string);
+begin
+  mmoLostAndFound.Lines.Text := Value;
+  if Value.IsEmpty then
+    shpLostAndFound.Brush.Color := clGray
+  else
+    shpLostAndFound.Brush.Color := clRed;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetMaintenanceRemarks(const Value: string);
+begin
+  mmoMaintenanceNotes.Lines.Text := Value;
+  if Value.IsEmpty then
+    shpMaintenanceNotes.Brush.Color := clGray
+  else
+    shpMaintenanceNotes.Brush.Color := clRed;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetRadioButtons;
+var
+  dsCodes: TRoomerDataSet;
+  obj: TComponent;
+begin
+  dsCodes := CreateNewDataset;
+  try
+    hData.rSet_bySQL(dsCodes,
+       'SELECT name, code, color, id FROM maintenancecodes');
+
+    dsCodes.first;
+    while not dsCodes.Eof do
+    begin
+      obj := findComponent('cbx' + dsCodes['code']);
+      if assigned(obj) then
+        TRadioButton(obj).Caption := dsCodes['name'];
+
+      obj := findComponent('edt' + dsCodes['code']);
+      if assigned(obj) then
+        TEdit(obj).Color := HtmlToColor(dsCodes['color'], clWhite);
+
+      dsCodes.Next;
+    end;
+
+  finally
+    dsCodes.Free;
+  end;
+end;
+
+procedure TfrmRoomCleanMaintenanceStatus.SetStatus(const Value: string);
+var
+  obj: TRadioButton;
+begin
+  obj := findComponent('cbx' + Value) as TRadioButton;
+  if assigned(obj) then
+    obj.Checked := true;
 end;
 
 procedure TfrmRoomCleanMaintenanceStatus.HideOtherPanels(pnl : TsPanel);

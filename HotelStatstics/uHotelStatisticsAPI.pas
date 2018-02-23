@@ -4,19 +4,20 @@ interface
 uses
     cmpRoomerDataset
   , SysUtils
+  , uMobileAPI
   , uHotelStatistics
   , Classes
   ;
 
 type
-  EMobileAPICallerException = class(Exception);
 
-  TBaseMobileAPICaller = class abstract(TObject)
-  end;
+  EHotelStatisticsAPIException = class(EMobileAPICallerException);
 
   THotelStatisticsMobileAPICaller = class(TBaseMobileAPICaller)
   private const
     cStatisticsURI = '/hotelstatistics';
+  protected
+    function getURI: string; override;
   public
     /// <summary>
     ///   Implementation of /service/hotelstatistics mobile api endpoint, returning a THotelStatisticsList
@@ -56,17 +57,24 @@ var
 begin
   Assert(assigned(aStatistics));
   try
-    lResponse := d.roomerMainDataSet.downloadUrlAsString(d.roomerMainDataSet.RoomerUri + cStatisticsURI +
-                  '/' + dateToSqlString(aFromDate) +
-                  '/' + dateToSqlString(aToDate.AddDays(1)));
+    lResponse := d.roomerMainDataSet.downloadRoomerUrlAsString(getURI +
+                      '/' + dateToSqlString(aFromDate) + '/' + dateToSqlString(aToDate.AddDays(1)));
 
     aStatistics.LoadFromXML(lResponse);
   except
-    aStatistics.Clear;
-    raise;
+    on E: Exception do
+    begin
+      aStatistics.Clear;
+      raise EHotelStatisticsAPIException.CreateFmt('Error while retrieving hotelstatistics [%s]', [E.Message]);
+    end;
   end;
 end;
 
+
+function THotelStatisticsMobileAPICaller.getURI: string;
+begin
+  Result := inherited + cStatisticsURI;
+end;
 
 { THotelStatisticsMobileAPICallerThreaded }
 

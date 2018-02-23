@@ -1907,7 +1907,7 @@ begin
   frmAboutRoomer := TfrmAboutRoomer.Create(nil); frmAboutRoomer.Free; frmAboutRoomer := nil;
   frmChannelAvailabilityManager := TfrmChannelAvailabilityManager.Create(nil); frmChannelAvailabilityManager.Free; frmChannelAvailabilityManager := nil;
   TfrmEditRoomPrice.Create(nil).Free;
-  frmRoomCleanMaintenanceStatus := TfrmRoomCleanMaintenanceStatus.Create(nil); frmRoomCleanMaintenanceStatus.Free; frmRoomCleanMaintenanceStatus := nil;
+  TfrmRoomCleanMaintenanceStatus.Create(nil).Free;
   frmRates := TfrmRates.Create(nil); frmRates.Free; frmRates := nil;
   frmSeasons2 := TfrmSeasons2.Create(nil); frmSeasons2.Free; frmSeasons2 := nil;
   TfrmRoomRates.Create(nil).Free;

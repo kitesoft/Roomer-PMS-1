@@ -1045,6 +1045,10 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="uRptBreakfastList.pas"/>
+        <DCCReference Include="Roomservices\uRoomServicesAPI.pas"/>
+        <DCCReference Include="MobileAPI\uMobileAPI.pas"/>
+        <DCCReference Include="Roomservices\uRoomservicesStatus.pas"/>
+        <DCCReference Include="uRptCleaningTimes.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

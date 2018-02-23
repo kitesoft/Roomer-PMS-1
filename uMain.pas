@@ -690,6 +690,7 @@ type
     btnBreakfastList: TdxBarLargeButton;
     acResStatusPerDay: TAction;
     dxBarButton9: TdxBarButton;
+    btnCleaningReport: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -986,6 +987,7 @@ type
     procedure tvAllReservationsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
     procedure btnBreakfastListClick(Sender: TObject);
+    procedure btnCleaningReportClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1651,7 +1653,7 @@ uses
     , uFinanceTransactionReport
     , uDailyTotalsReport
     , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
-  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList;
+  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -10451,6 +10453,11 @@ var
 begin
   LogUserClickedButton(Sender);
   if openCleaningNotes(actNone, false, theData) then;
+end;
+
+procedure TfrmMain.btnCleaningReportClick(Sender: TObject);
+begin
+  ShowCleaningTimes();
 end;
 
 procedure TfrmMain.btnClearSearchClick(Sender: TObject);

@@ -344,7 +344,11 @@ uses
   uHotelStatisticsAPI in 'HotelStatstics\uHotelStatisticsAPI.pas',
   uHotelStatistics in 'HotelStatstics\uHotelStatistics.pas',
   uFraHotelStatisticsFooter in 'mainEmbeddables\uFraHotelStatisticsFooter.pas' {fraHotelStatisticsFooter: TFrame},
-  uRptBreakfastList in 'uRptBreakfastList.pas';
+  uRptBreakfastList in 'uRptBreakfastList.pas',
+  uRoomServicesAPI in 'Roomservices\uRoomServicesAPI.pas',
+  uMobileAPI in 'MobileAPI\uMobileAPI.pas',
+  uRoomservicesStatus in 'Roomservices\uRoomservicesStatus.pas',
+  uRptCleaningTimes in 'uRptCleaningTimes.pas';
 
 {$R *.RES}
 

@@ -4,7 +4,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   ActiveControl = sButton1
   BorderStyle = bsToolWindow
   Caption = 'Room Status'
-  ClientHeight = 366
+  ClientHeight = 368
   ClientWidth = 277
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -65,8 +65,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxC: TsRadioButton
     Left = 35
     Top = 164
-    Width = 50
-    Height = 18
+    Width = 45
+    Height = 20
     Caption = 'Clean'
     Checked = True
     TabOrder = 0
@@ -77,8 +77,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxU: TsRadioButton
     Left = 35
     Top = 100
-    Width = 61
-    Height = 18
+    Width = 56
+    Height = 20
     Caption = 'Unclean'
     TabOrder = 1
     OnClick = cbxCClick
@@ -87,8 +87,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxO: TsRadioButton
     Left = 35
     Top = 259
-    Width = 88
-    Height = 18
+    Width = 83
+    Height = 20
     Caption = 'Out of service'
     TabOrder = 2
     OnClick = cbxCClick
@@ -172,8 +172,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxS: TsRadioButton
     Left = 35
     Top = 187
-    Width = 156
-    Height = 18
+    Width = 151
+    Height = 20
     Caption = 'Clean but needs maintenance'
     TabOrder = 6
     OnClick = cbxCClick
@@ -182,8 +182,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxF: TsRadioButton
     Left = 35
     Top = 211
-    Width = 102
-    Height = 18
+    Width = 97
+    Height = 20
     Caption = 'maint in progress'
     TabOrder = 7
     OnClick = cbxCClick
@@ -192,9 +192,9 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxW: TsRadioButton
     Left = 35
     Top = 121
-    Width = 92
-    Height = 18
-    Caption = 'Beeing cleened'
+    Width = 82
+    Height = 20
+    Caption = 'Being cleaned'
     TabOrder = 8
     OnClick = cbxCClick
     SkinData.SkinSection = 'CHECKBOX'
@@ -277,8 +277,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxR: TsRadioButton
     Left = 35
     Top = 142
-    Width = 80
-    Height = 18
+    Width = 75
+    Height = 20
     Caption = 'Ready for in'
     TabOrder = 12
     OnClick = cbxCClick
@@ -287,8 +287,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxL: TsRadioButton
     Left = 35
     Top = 283
-    Width = 91
-    Height = 18
+    Width = 86
+    Height = 20
     Caption = 'Wait for check'
     TabOrder = 13
     OnClick = cbxCClick
@@ -347,8 +347,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxD: TsRadioButton
     Left = 35
     Top = 306
-    Width = 74
-    Height = 18
+    Width = 69
+    Height = 20
     Caption = 'Do not dist'
     TabOrder = 16
     OnClick = cbxCClick
@@ -357,8 +357,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
   object cbxM: TsRadioButton
     Left = 35
     Top = 235
-    Width = 81
-    Height = 18
+    Width = 76
+    Height = 20
     Caption = 'Maintain nee'
     TabOrder = 17
     OnClick = cbxCClick
@@ -423,6 +423,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     Margins.Top = 2
     Margins.Right = 2
     Margins.Bottom = 2
+    Cancel = True
     Caption = 'Close'
     Default = True
     ModalResult = 2
@@ -467,6 +468,9 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Shadow.Distance = 2
       Shadow.OffsetKeeper.LeftTop = -1
       Shadow.OffsetKeeper.RightBottom = 3
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 267
     end
     object shpCleaningNotes: TShape
       Left = 179
@@ -496,7 +500,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       BorderStyle = bsNone
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2302755
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -578,6 +582,9 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Shadow.Distance = 2
       Shadow.OffsetKeeper.LeftTop = -1
       Shadow.OffsetKeeper.RightBottom = 3
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 267
     end
     object shpLostAndFound: TShape
       Left = 179
@@ -607,18 +614,23 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       BorderStyle = bsNone
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2302755
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
+      Lines.Strings = (
+        'regel 1'
+        'regel 2')
       ParentFont = False
       TabOrder = 0
+      Text = 'regel 1'#13#10'regel 2'#13#10
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
       BoundLabel.Font.Height = -13
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
       SkinData.SkinSection = 'EDIT'
+      ExplicitTop = 26
     end
     object pnlLostAndFound_Button: TsPanel
       Left = 1
@@ -634,6 +646,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       TabOrder = 1
       Visible = False
       SkinData.SkinSection = 'PANEL'
+      ExplicitLeft = 3
+      ExplicitTop = 4
       object sButton3: TsButton
         Left = 218
         Top = 0
@@ -689,6 +703,9 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Shadow.Distance = 2
       Shadow.OffsetKeeper.LeftTop = -1
       Shadow.OffsetKeeper.RightBottom = 3
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 267
     end
     object shpMaintenanceNotes: TShape
       Left = 179
@@ -718,7 +735,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       BorderStyle = bsNone
       Color = clWhite
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2302755
+      Font.Color = clBlack
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
