@@ -1214,6 +1214,8 @@ begin
     end;
 
     Display_rGrid(zRoomReservation);
+    FAllRoomsBreakfastChanged := false;
+
     d.RR_GetMemoBothTextForRoom(zRoomReservation, HiddenInfo, ChannelRequest);
     gbxRoomInformation.caption := 'Notes for Room : ' + mRoomsRoom.asstring;
     memRoomNotes.Lines.text := HiddenInfo;

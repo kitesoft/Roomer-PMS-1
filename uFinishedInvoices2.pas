@@ -203,7 +203,6 @@ TYPE
     Procedure doSend;
     procedure PerformPrint;
 
-
   public
     { Public declarations }
     zType               : TInvoiceTypes;
@@ -379,7 +378,6 @@ begin
     inherited;
   end;
 end;
-
 
 procedure TfrmFinishedInvoices2.initGrid;
 begin
@@ -1052,48 +1050,53 @@ var filename : String;
     KeyString : String;
     Description : String;
     variables : TList<String>;
+    lAddresses: TStringlist;
 begin
-  //
-//   ShowMEssage(filenames.Text);
-   frxPDFExport1.ShowDialog := False;
-   frxPDFExport1.ShowProgress := False;
-   try
-     filename := CreateNewFileName(TPath.Combine(GetTempPath, 'Invoice'), '.pdf');
-     frxPDFExport1.Filename := filename;
-     List := TStringList.Create;
-     List.Add(filename + '=invoice.pdf');
-     frxInvoiceReport.Export(frxPDFExport1);
-   finally
-     frxPDFExport1.ShowDialog := True;
-     frxPDFExport1.ShowProgress := True;
-   end;
-   variables := TList<String>.Create;
-   try
-     variables.Add('User=' + d.roomerMainDataSet.username);
-     variables.Add('Invoice=' + inttostr(zInvoiceNumber));
-     variables.Add('Room=' + zSavedRoom);
-     variables.Add('roomReservation=' + inttostr(zSavedRoomReservation));
-     variables.Add('Reservation=' + inttostr(zSavedRoomReservation));
-     try
-       if sendFileAsAttachment(zEmailAddress {ToField}, GetTranslatedText('shTxEmailInvoice'), list, variables) then;
-     finally
-       if fileExists(filename) then
-         try
-           KeyString := format(BOOKING_STATIC_RESOURCES, [inttostr(zSavedReservation)]);
-           if zInvoiceNumber > 1000000000 then
-             Description := 'Proforma Invoice.pdf'
-           else
-             Description := 'Invoice.pdf';
+  try
+    frxPDFExport1.ShowDialog := False;
+    frxPDFExport1.ShowProgress := False;
+    filename := CreateNewFileName(TPath.Combine(GetTempPath, 'Invoice'), '.pdf');
+    frxPDFExport1.Filename := filename;
+    List := TStringList.Create;
+    List.Add(filename + '=invoice.pdf');
+    frxInvoiceReport.Export(frxPDFExport1);
+  finally
+    frxPDFExport1.ShowDialog := True;
+    frxPDFExport1.ShowProgress := True;
+  end;
 
-           UploadFileToResources(KeyString, ACCESS_RESTRICTED, Description, filename);
-           DeleteFile(filename);
-         except
-           // Is okay if it fails
-         end;
-     end;
-   finally
-     variables.Free;
-   end;
+  variables := TList<String>.Create;
+  try
+    variables.Add('User=' + d.roomerMainDataSet.username);
+    variables.Add('Invoice=' + inttostr(zInvoiceNumber));
+    variables.Add('Room=' + zSavedRoom);
+    variables.Add('roomReservation=' + inttostr(zSavedRoomReservation));
+    variables.Add('Reservation=' + inttostr(zSavedRoomReservation));
+
+    lAddresses := TStringList.Create;
+    try
+      d.GetEmailAddressesForInvoiceNumber(zInvoiceNumber, lAddresses);
+      sendFileAsAttachment(lAddresses {ToField}, GetTranslatedText('shTxEmailInvoice'), list, variables);
+    finally
+      lAddresses.Free;
+    end;
+
+    if fileExists(filename) then
+      try
+        KeyString := format(BOOKING_STATIC_RESOURCES, [inttostr(zSavedReservation)]);
+        if zInvoiceNumber > 1000000000 then
+          Description := 'Proforma Invoice.pdf'
+        else
+          Description := Format('Invoice_%s.pdf', [zInvoiceNumber]);
+
+        UploadFileToResources(KeyString, ACCESS_RESTRICTED, Description, filename);
+        DeleteFile(filename);
+      except
+       // Is okay if it fails
+      end;
+  finally
+    variables.Free;
+  end;
 end;
 
 procedure TfrmFinishedInvoices2.frxInvoiceReportPrintPage(Page: TfrxReportPage; CopyNo: Integer);

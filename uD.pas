@@ -693,6 +693,8 @@ type
     procedure GenerateOfflineReports;
     function CheckOutRoom(reservation, RoomReservation: Integer; Room: String): boolean;
 
+    procedure GetEmailAddressesForInvoiceNumber(aInvoiceNumber: integer; aAddressList: TStrings);
+
     procedure CheckAndCorrectCredentials(const aHotelCode: string);
     property ApplicationId: string read GetApplicationId write SetApplicationid;
 
@@ -4524,6 +4526,53 @@ begin
     freeandnil(rSet);
   end;
 end;
+
+procedure Td.GetEmailAddressesForInvoiceNumber(aInvoiceNumber: integer; aAddressList: TStrings);
+var s : String;
+    rSet : TRoomerDataset;
+begin
+  Assert(assigned(aAddressList));
+  aAddressList.Clear;
+  s := format(
+       'SELECT DISTINCT Email FROM '#10 +
+       '( '#10 +
+       'SELECT r.ContactEmail AS Email '#10 +
+       ' FROM reservations r '#10 +
+       ' JOIN invoiceheads ih on r.reservation=ih.reservation '#10 +
+       ' WHERE ih.invoicenumber=%d AND TRIM(IFNULL(r.ContactEmail, '''')) <> '''' '#10 +
+       'UNION ALL '#10 +
+       'SELECT p.Email FROM persons p'#10 +
+       ' JOIN invoiceheads ih on p.reservation=ih.reservation '#10 +
+       ' WHERE ih.invoicenumber=%d AND p.MainName AND TRIM(IFNULL(p.Email, '''')) <> '''' '#10 +
+       'UNION ALL '#10 +
+       'SELECT c.EmailAddress as Email '#10 +
+       '  FROM customers c '#10 +
+       '  JOIN reservations r on r.customer=c.customer '#10 +
+       '  JOIN invoiceheads ih on r.reservation=ih.reservation and ih.invoicenumber=%d '#10 +
+       '  WHERE TRIM(IFNULL(c.EmailAddress, '''')) <> '''' '#10 +
+       'UNION ALL '#10 +
+       'SELECT p.Email FROM persons p '#10 +
+       ' JOIN invoiceheads ih on p.reservation=ih.reservation '#10 +
+       ' WHERE ih.invoicenumber=%d AND not p.MainName and TRIM(IFNULL(p.Email, '''')) <> '''' '#10 +
+       ') xxx', [aInvoiceNumber, aInvoiceNumber, aInvoiceNumber, aInvoiceNumber]);
+  rSet := CreateNewDataset;
+  try
+    if hData.rSet_bySQL(rSet, s) then
+    begin
+      rSet.First;
+      while NOT rSet.Eof do
+      begin
+        aAddressList.add(rSet['Email']);
+        rSet.Next;
+      end;
+    end;
+  finally
+    rSet.Free;
+  end;
+
+end;
+
+
 
 function Td.GetCustomerName(customer: string): string;
 begin

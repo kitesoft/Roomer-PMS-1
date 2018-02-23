@@ -9,6 +9,7 @@ inherited frmRptReservations: TfrmRptReservations
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
+  ExplicitTop = -154
   ExplicitWidth = 1250
   ExplicitHeight = 683
   PixelsPerInch = 96
@@ -37,7 +38,7 @@ inherited frmRptReservations: TfrmRptReservations
       Top = 117
       Width = 1234
       Height = 489
-      ActivePage = tabReservation
+      ActivePage = tabRoom
       Align = alClient
       TabOrder = 0
       OnChange = pageMainChange
@@ -145,6 +146,8 @@ inherited frmRptReservations: TfrmRptReservations
           PopupMenu = PopupMenu1
           TabOrder = 1
           LookAndFeel.NativeStyle = False
+          ExplicitLeft = 4
+          ExplicitTop = 46
           object tvReservations: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             Navigator.Buttons.Insert.Visible = False
@@ -821,6 +824,7 @@ inherited frmRptReservations: TfrmRptReservations
               Caption = 'Break- fast'
               DataBinding.FieldName = 'Breakfast'
               OnGetDisplayText = tvRoomsBreakfastGetDisplayText
+              Options.Editing = False
               Width = 41
             end
             object tvRoomsCustomer: TcxGridDBColumn
