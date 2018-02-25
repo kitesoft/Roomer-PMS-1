@@ -135,7 +135,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Padding.Bottom = 3
           TabOrder = 0
           SkinData.SkinSection = 'PANEL'
-          ExplicitTop = 293
           object lblMinStay: TsLabel
             Left = 134
             Top = 7
@@ -465,6 +464,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Margins.Right = 2
               Margins.Bottom = 2
               AutoComplete = False
+              Style = csDropDownList
               DropDownCount = 16
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -592,6 +592,7 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Margins.Right = 2
               Margins.Bottom = 2
               AutoComplete = False
+              Style = csDropDownList
               DropDownCount = 16
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -1273,10 +1274,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Availabilities'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Panel2: TsPanel
             Left = 0
             Top = 522
@@ -1557,10 +1554,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
           Margins.Right = 2
           Margins.Bottom = 2
           Caption = 'Rates'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object rateGrid: TAdvStringGrid
             Left = 0
             Top = 54

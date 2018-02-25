@@ -3132,7 +3132,11 @@ begin
   cbxRoomTypes.BulkChanging := True;
   try
     cbxRoomTypes.Items.Clear;
-    sql := 'SELECT rtg.* FROM roomtypegroups rtg WHERE Active AND rtg.id IN (SELECT roomClassId FROM channelclassrelations) ORDER BY orderIndex, TopClass, Code';
+    sql := 'SELECT rtg.* '#10+
+            ' FROM roomtypegroups rtg '#10+
+            ' WHERE Active '#10+
+            ' AND rtg.id IN (SELECT roomClassId FROM channelclassrelations) '#10+
+            ' ORDER BY orderIndex, TopClass, Code';
 
     ARoomTypeSet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.queryRoomer(sql));
     ARoomTypeSet.First;
@@ -3194,13 +3198,13 @@ begin
 
     if sList <> '' then
       sList := format('id IN (%s) AND', [sList]);
-    sql := format('SELECT rtg.* FROM roomtypegroups rtg WHERE Active ' +
-                  'AND rtg.id IN ' +
-                  '   (SELECT roomClassId FROM channelclassrelations ' +
-                  '    WHERE channelId IN (SELECT id FROM channels ch WHERE %s ' +
-                  '                        (SELECT FIND_IN_SET(ch.id, channels) FROM channelmanagers WHERE id=%d)))', [sList, CurrentChannelMan.FId]);
+    sql := format('SELECT rtg.* FROM roomtypegroups rtg WHERE Active '#10 +
+                  'AND rtg.id IN '#10 +
+                  '   (SELECT roomClassId FROM channelclassrelations '#10 +
+                  '    WHERE channelId IN (SELECT id FROM channels ch WHERE %s '#10 +
+                  '                        (SELECT FIND_IN_SET(ch.id, channels) FROM channelmanagers WHERE id=%d)))'#10 +
+                  ' ORDER BY orderIndex, TopClass, Code', [sList, CurrentChannelMan.FId]);
 
-  
     ARoomTypeSet := RoomerDataSet.ActivateNewDataset(RoomerDataSet.queryRoomer(sql));
     ARoomTypeSet.First;
     while (NOT ARoomTypeSet.EOF) do
