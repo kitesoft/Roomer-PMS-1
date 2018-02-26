@@ -759,7 +759,9 @@ end;
 
 function TTax.ValidDaysDuringStay(aArrival, aDeparture: TDate): integer;
 begin
-  if IsValidInStay(aArrival, aDeparture) then
+  if PROBE_DATE = TTaxProbeDate.InvoiceDate then
+    Result := trunc(aDeparture) - trunc(aArrival)
+  else if IsValidInStay(aArrival, aDeparture) then
     Result := min(trunc(aDeparture-1), trunc(VALID_TO)) - max(trunc(aArrival), trunc(VALID_FROM)) + 1
   else
     result := 0;
