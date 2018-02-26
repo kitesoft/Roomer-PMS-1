@@ -967,9 +967,12 @@ begin
         ' SELECT ' +
         '     invoicelines.ItemID AS Item ' +
         '   , SUM(invoicelines.Number) AS ItemCount ' +
-        '   , SUM(invoicelines.Total + invoicelines.revenueCorrection) AS Total ' +
-        '   , SUM(invoicelines.Total  + invoicelines.revenueCorrection - (invoicelines.Vat + invoicelines.revenueCorrectionVAT)) AS TotalWoVat ' +
-        '   , SUM(invoicelines.Vat + invoicelines.revenueCorrectionVAT) AS TotalVat ' +
+//        '   , SUM(invoicelines.Total + invoicelines.revenueCorrection) AS Total ' +
+//        '   , SUM(invoicelines.Total  + invoicelines.revenueCorrection - (invoicelines.Vat + invoicelines.revenueCorrectionVAT)) AS TotalWoVat ' +
+//        '   , SUM(invoicelines.Vat + invoicelines.revenueCorrectionVAT) AS TotalVat ' +
+        '   , SUM(invoicelines.revenue) AS Total ' +
+        '   , SUM(invoicelines.revenue / (100 + IFNULL(vat.VATPercentage, 0)) * 100) AS TotalWoVat ' +
+        '   , SUM(invoicelines.revenue / (100 + IFNULL(vat.VATPercentage, 0)) * IFNULL(vat.VATPercentage,0)) AS TotalVat ' +
         '   , items.Description ' +
         '   , items.AccountKey ' +
         '   , itemtypes.Itemtype ' +
@@ -978,6 +981,7 @@ begin
         ' FROM ' +
         '   itemtypes ' +
         '     INNER JOIN items ON itemtypes.Itemtype = items.Itemtype ' +
+        '     LEFT JOIN VATCodes vat on itemtypes.VATCode=vat.VATCode '#10+
         '     RIGHT OUTER JOIN invoicelines ON items.Item = invoicelines.ItemID ' +
         ' WHERE ' +
         '   (invoicelines.InvoiceNumber IN %s ) ' +
@@ -1022,15 +1026,19 @@ begin
       sql :=
         ' SELECT ' +
         '      SUM(il.Number) AS ItemCount ' +
-        '    , SUM(il.Total + il.revenueCorrection) AS Total ' +
-        '    , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
-        '    , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
+//        '    , SUM(il.Total + il.revenueCorrection) AS Total ' +
+//        '    , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
+//        '    , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
+        '   , SUM(il.revenue) AS Total ' +
+        '   , SUM(il.revenue / (100 + IFNULL(vat.VATPercentage, 0)) * 100) AS TotalWoVat ' +
+        '   , SUM(il.revenue / (100 + IFNULL(vat.VATPercentage, 0)) * IFNULL(vat.VATPercentage,0)) AS TotalVat ' +
         '    , itemtypes.Itemtype ' +
         '    , itemtypes.Description AS ItemTypeDescription ' +
         '    , itemtypes.VATCode ' +
         ' FROM ' +
         '    itemtypes ' +
         '       INNER JOIN items ON itemtypes.Itemtype = items.Itemtype ' +
+        '       LEFT JOIN VATCodes vat on itemtypes.VATCode=vat.VATCode '#10+
         '       RIGHT OUTER JOIN invoicelines il ON items.Item = il.ItemID ' +
         ' WHERE ' +
         '   (il.InvoiceNumber IN  %s ) ' +
@@ -1072,9 +1080,12 @@ begin
       sql :=
         ' SELECT ' +
         '     SUM(il.Number) AS ItemCount ' +
-        '   , SUM(il.Total + il.revenueCorrection) AS Total ' +
-        '   , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
-        '   , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
+//        '   , SUM(il.Total + il.revenueCorrection) AS Total ' +
+//        '   , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
+//        '   , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
+        '   , SUM(il.revenue) AS Total ' +
+        '   , SUM(il.revenue / (100 + IFNULL(vatcodes.VATPercentage, 0)) * 100) AS TotalWoVat ' +
+        '   , SUM(il.revenue / (100 + IFNULL(vatcodes.VATPercentage, 0)) * IFNULL(vatcodes.VATPercentage,0)) AS TotalVat ' +
         '   , vatcodes.VATCode ' +
         '   , vatcodes.Description ' +
         '   , vatcodes.VATPercentage ' +
@@ -1155,15 +1166,16 @@ begin
         '   , il.Description ' +
         '   , il.Price ' +
         '   , il.VATType ' +
-        '   , il.Total + il.revenueCorrection AS AmountWithTax ' +
-        '   , il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat) AS AmountNoTax ' +
-        '   , il.Vat + il.revenueCorrectionVat as AmountTax' +
+        '   , il.revenue AS AmountWithTax ' +
+        '   , (il.Total / (100 + IFNULL(vat.VATPercentage, 0)) * 100) AS AmountNoTax ' +
+        '   , (il.Total / (100 + IFNULL(vat.VATPercentage, 0)) * IFNULL(vat.VATPercentage, 0)) AS AmountTax ' +
         '   , il.Currency ' +
         '   , il.CurrencyRate ' +
         '   , il.ImportRefrence ' +
         '   , il.ImportSource ' +
         ' FROM ' +
         '   invoicelines il' +
+        '   LEFT JOIN Vatcodes vat on vat.VATCode=il.VATType '#10+
         ' WHERE ' +
         '   (il.InvoiceNumber IN  %s ) '; // zSqlInText
 
