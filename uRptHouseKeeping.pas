@@ -182,15 +182,15 @@ begin
       '             FROM cleaningnotes cn '#10 +
       '	  JOIN (  '#10 +
         '     SELECT DISTINCT-- get all rooms occupied today or yesterday or still dirty '#10 +
-        '     r.Room, '#10 +
-        '     r.Status as CleanStatus, '#10 +
-        '     rd.roomreservation, '#10 +
-        '     RR_arrival(rd.roomreservation, false) as Arrival, '#10 +
-        '     RR_Departure(rd.roomreservation, false) as Departure, '#10 +
-        '     (SELECT count(*) from roomsdate rd1 where rd1.roomreservation=rr.roomreservation and rd1.resflag not in (''X'', ''C'')) as numberOfDays, '#10 +
-        '            DATEDIFF({probedate}, rr.Arrival) AS daysInHouse, '#10 +
-        '            ({probedate} = rr.Departure) as IsDeparting, '#10 +
-        '            (rr.Status=''D'') AS isDeparted '#10 +
+        '       r.Room, '#10 +
+        '       r.Status as CleanStatus, '#10 +
+        '       rd.roomreservation, '#10 +
+        '       RR_arrival(rd.roomreservation, false) as Arrival, '#10 +
+        '       RR_Departure(rd.roomreservation, false) as Departure, '#10 +
+        '       (SELECT count(*) from roomsdate rd1 where rd1.roomreservation=rr.roomreservation and rd1.resflag not in (''X'', ''C'')) as numberOfDays, '#10 +
+        '       DATEDIFF({probedate}, RR_Arrival(rd.roomreservation, false)) AS daysInHouse, '#10 +
+        '       ({probedate} = RR_Departure(rd.roomreservation, false)) as IsDeparting, '#10 +
+        '       (rr.Status=''D'') AS isDeparted '#10 +
         '     FROM rooms r '#10 +
         '     LEFT JOIN roomsdate rd on rd.room=r.room '#10 +
         '                         and (Adate={probedate} OR DATE_ADD(ADate, INTERVAL 1 DAY)={probedate}) '#10 +
@@ -219,19 +219,19 @@ begin
       '	  LEFT OUTER JOIN ( SELECT * '#10+
       '			 , (select count(*) from persons p where p.roomreservation = rrd.RoomReservation)  + rrd.numChildren + rrd.numInfants as NumGuestsD '#10+
       '	         FROM roomreservations rrd '#10+
-      '			 where rrd.status in (''P'',''G'',''D'') and rrd.departure = {probedate} '#10+
+      '			 where rrd.status in (''P'',''G'',''D'') and RR_Departure(rrd.roomreservation, false)= {probedate} '#10+
       '			) departing on departing.room = r.room '#10+
       ' '#10+
       '		LEFT OUTER JOIN ( SELECT * '#10+
       '			 , (select count(*) from persons p where p.roomreservation = rra.RoomReservation)  + rra.numChildren + rra.numInfants as NumGuestsA '#10+
       '	         FROM roomreservations rra '#10+
-      '			 where rra.status in (''P'',''G'',''D'') and rra.arrival= {probedate} '#10+
+      '			 where rra.status in (''P'',''G'',''D'') and RR_Arrival(rra.roomreservation, false)= {probedate} '#10+
       '			) arriving on arriving.room = r.room '#10+
       ' '#10+
       '		LEFT OUTER JOIN ( SELECT * '#10+
       '			 , (select count(*) from persons p where p.roomreservation = rrs.RoomReservation)  + rrs.numChildren + rrs.numInfants as NumGuestsS '#10+
       '	         FROM roomreservations rrs '#10+
-      '			 where rrs.status in (''P'',''G'',''D'') and rrs.arrival < {probedate} and rrs.departure > {probedate} '#10+
+      '			 where rrs.status in (''P'',''G'',''D'') and RR_Arrival(rrs.roomreservation ,false) < {probedate} and RR_Departure(rrs.roomreservation, false) > {probedate} '#10+
       '			) stayover on stayover.room=r.room '#10+
       '  where r.active and not r.hidden '#10+
       '	 group by room, roomtype, floor, numberguests '#10+
