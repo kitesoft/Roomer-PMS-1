@@ -165,7 +165,6 @@ type
     procedure btnApplyClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure tvRoomResEditColumnButtonClick(Sender: TObject; AButtonIndex: Integer);
-    procedure tvRoomResAveragePricePropertiesEditValueChanged(Sender: TObject);
     procedure btnRatePerDateClick(Sender: TObject);
     procedure btnApplyAllRoomtypesClick(Sender: TObject);
     procedure btnApplySameRoomTypeClick(Sender: TObject);
@@ -184,6 +183,7 @@ type
       const AValue: Variant; AIsFooter: Boolean; var AText: string);
     procedure tvRoomResTcxGridDBDataControllerTcxDataSummaryFooterSummaryItems4GetText(Sender: TcxDataSummaryItem;
       const AValue: Variant; AIsFooter: Boolean; var AText: string);
+    procedure mRoomResAfterPost(DataSet: TDataSet);
   private
     FRoomReservations: TStringlist;
     FCurrency: string;
@@ -242,7 +242,7 @@ const
     '   (SELECT name FROM persons pe WHERE pe.MainName AND pe.roomreservation = rd.roomreservation LIMIT 1)) AS GuestName '#10+
     ' ,rr.numChildren as ChildrenCount '#10 +
     ' ,rr.numInfants as InfantCount '#10 +
-    ' ,(SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AveragePrice '#10 +
+    ' ,(SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AveragePriceDisplay '#10 +
     ' ,rr.RateCount '#10 +
     ' ,rr.Discount as AverageDiscount '#10 +
     ' ,rr.Groupaccount '#10 +
@@ -355,28 +355,14 @@ procedure TfrmRoomPrices.tvRoomResAveragepriceDisplayGetDisplayText(Sender: TcxC
 begin
   inherited;
   if not VarIsNull(aRecord.Values[tvRoomResAveragePriceDB.Index]) then
-    aText := FCurrencyDefinition.FormattedValue(aRecord.Values[tvRoomResAveragePriceDB.Index]);
+    aText := FCurrencyDefinition.FormattedValue(aRecord.Values[tvRoomResAveragePriceDB.Index], true);
 end;
 
 procedure TfrmRoomPrices.tvRoomResAveragePriceDisplayGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   inherited;
-  aProperties := FCurrencyDefinition.GetcxEditProperties;
-end;
-
-procedure TfrmRoomPrices.tvRoomResAveragePricePropertiesEditValueChanged(Sender: TObject);
-var
-  NewRate: double;
-begin
-  mRoomRes.post;
-  NewRate := mRoomResAveragePriceDisplay.asfloat;
-
-  if not SameValue(mRoomResAveragePrice.AsFloat, NewRate, 0.01) then
-    CalcOnePrice(mRoomResRoomReservation.Asinteger, NewRate);
-
-  if chkAutoUpdateNullPrice.checked then
-    ApplyNettoRateToNullPrice(NewRate, mRoomResRoomReservation.Asinteger, mRoomResRoomType.asString);
+  FCurrencyDefinition.SetcxEditProperties(aProperties);
 end;
 
 procedure TfrmRoomPrices.tvRoomResEditColumnButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -528,6 +514,24 @@ begin
                                            mRoomRatesDiscount.AsFloat));
   mRoomRatesRentAmount.AsFloat := mRoomRatesRate.AsFloat - mRoomRatesDiscountAmount.AsFloat;
   mRoomRatesNativeAmount.AsFloat := FCurrencyDefinition.Rate * mRoomRatesRentAmount.AsFloat;
+end;
+
+procedure TfrmRoomPrices.mRoomResAfterPost(DataSet: TDataSet);
+var
+  NewRate: double;
+begin
+  inherited;
+  if mRoomRes.ControlsDisabled then
+    Exit;
+
+  NewRate := mRoomResAveragePriceDisplay.asfloat;
+
+  if not SameValue(mRoomResAveragePrice.AsFloat, NewRate, 0.01) then
+    CalcOnePrice(mRoomResRoomReservation.Asinteger, NewRate);
+
+  if chkAutoUpdateNullPrice.checked then
+    ApplyNettoRateToNullPrice(NewRate, mRoomResRoomReservation.Asinteger, mRoomResRoomType.asString);
+
 end;
 
 procedure TfrmRoomPrices.mRoomResCalcFields(DataSet: TDataSet);

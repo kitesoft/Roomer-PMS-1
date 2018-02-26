@@ -176,6 +176,7 @@ inherited frmRoomPrices: TfrmRoomPrices
       DataController.DataSource = mRoomResDS
       DataController.DetailKeyFieldNames = 'RoomReservation'
       DataController.KeyFieldNames = 'RoomReservation'
+      DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -312,7 +313,6 @@ inherited frmRoomPrices: TfrmRoomPrices
         Caption = 'Average Rate'
         DataBinding.FieldName = 'AveragePriceDisplay'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.OnEditValueChanged = tvRoomResAveragePricePropertiesEditValueChanged
         OnGetDisplayText = tvRoomResAveragepriceDisplayGetDisplayText
         OnGetProperties = tvRoomResAveragePriceDisplayGetProperties
         Width = 100
@@ -468,6 +468,7 @@ inherited frmRoomPrices: TfrmRoomPrices
     Indexes = <>
     SortOptions = []
     SortedField = 'Room'
+    AfterPost = mRoomResAfterPost
     OnCalcFields = mRoomResCalcFields
     Left = 64
     Top = 392
