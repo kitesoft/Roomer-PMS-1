@@ -85,12 +85,10 @@ type
     { Private declarations }
   private
     ThreadedDataGetter : TGetSQLDataThreaded;
-    procedure RefreshButtons;
     function GetSenderAsPanel(Sender: TObject): TsPanel;
     function GetShapeComponentOfButton(Sender: TObject): TShape;
     procedure DrawDateRow;
     procedure PrepareGridText;
-    procedure RefreshHotelStatsData;
     procedure UpdateGridFromStats(aStatsList: THotelStatisticsList);
   public
     { Public declarations }
@@ -155,69 +153,11 @@ end;
 
 { TFrmFrontDeskPageButton }
 
-procedure TFrmFrontDeskPageButton.RefreshButtons;
-var sql: String;
-    res : TRoomerDataSet;
-    sDate, sYesterday : String;
-begin
-  res := CreateNewDataSet;
-  try
-    sDate := dateToSqlString(now);
-    sYesterday := dateToSqlString(now-1);
-    sql := format('SELECT ' +
-//                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-//                  'WHERE ADate=''%s'' ' +
-//                  'AND rd.ResFlag IN (''P'') ' +
-//                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivals, ' +
-
-//                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-//                  'WHERE ADate=DATE_ADD(''%s'', INTERVAL -1 DAY) ' +
-//                  'AND rd.ResFlag IN (''G'',''P'') ' +
-//                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDepartures, ' +
-
-                  '(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-                  'WHERE ADate=DATE_ADD(''%s'', INTERVAL 1 DAY) ' +
-                  'AND rd.ResFlag IN (''P'') ' +
-                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL -1 DAY))) AS NumArrivalsTomorrow ' +
-
-                  ',(SELECT COUNT(id) AS NumEntries FROM roomsdate rd ' +
-                  'WHERE ADate=''%s'' ' +
-                  'AND rd.ResFlag IN (''G'',''P'') ' +
-                  'AND NOT EXISTS(SELECT id FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND ADate=DATE_ADD(rd.ADate, INTERVAL 1 DAY))) AS NumDeparturesTomorrow '
-
-//                  '(SELECT COUNT(id) NumEntries FROM ' +
-//                  '(SELECT ID FROM roomsdate rd ' +
-//                  'WHERE ADate IN (''%s'', ''%s'') ' +
-//                  'AND rd.ResFlag IN (''G'') ' +
-//                  'GROUP BY RoomReservation) xxx) AS NumInHouse'
-                  ,[sDate, sDate, sDate, sDate, sDate, sYesterday]
-            );
-    rSet_bySQL(res, sql, False);
-    res.First;
-    if NOT res.Eof then
-    begin
-//      lblArrivals.Caption := inttostr(res['NumArrivals']);
-//      lblDepartures.Caption := inttostr(res['NumDepartures']);
-      lblTomArrivals.Caption := inttostr(res['NumArrivalsTomorrow']);
-      lblTomDepartures.Caption := inttostr(res['NumDeparturesTomorrow']);
-//      lblInHouse.Caption := inttostr(res['NumInHouse']);
-    end;
-  finally
-    FreeAndNil(res);
-  end;
-end;
 
 procedure TFrmFrontDeskPageButton.RefreshDisplay;
 begin
-  RefreshButtons;
-  RefreshHotelStatsData;
-end;
-
-procedure TFrmFrontDeskPageButton.RefreshHotelStatsData;
-begin
   THotelStatisticsMobileAPICallerThreaded.GetHotelStatistics(ShowFromDate, TDateTime(ShowFromDate).AddDays(6), UpdateGridFromStats);
 end;
-
 
 procedure TFrmFrontDeskPageButton.Shape2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -274,6 +214,12 @@ begin
         lblArrivals.Caption := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
         lblDepartures.Caption := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
         lblInHouse.Caption := lStats.Statistic['IN_HOUSE'].FormattedValue;
+      end;
+
+      if (lDate = TDateTime(FSHowFromDate).AddDays(1)) then
+      begin
+        lblTomArrivals.Caption := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
+        lblTomDepartures.Caption := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
       end;
 
       StatGrid.Cells[i+1, ROW_ARRIVALS]     := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
