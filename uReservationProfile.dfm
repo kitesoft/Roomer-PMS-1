@@ -1460,6 +1460,8 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Main guest for room :'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
+            ExplicitLeft = -1
+            ExplicitTop = -1
             DesignSize = (
               228
               169)
@@ -3148,8 +3150,8 @@ object frmReservationProfile: TfrmReservationProfile
         object chkShowAllGuests: TsCheckBox
           Left = 333
           Top = 11
-          Width = 94
-          Height = 20
+          Width = 102
+          Height = 17
           Caption = 'Show all guests'
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4

@@ -1263,7 +1263,7 @@ end;
 
 procedure TfrmReservationProfile.sButton2Click(Sender: TObject);
 begin
-  UpdateAllRoomsBreakfast;
+  //UpdateAllRoomsBreakfast;
 end;
 
 procedure TfrmReservationProfile.sButton4Click(Sender: TObject);
