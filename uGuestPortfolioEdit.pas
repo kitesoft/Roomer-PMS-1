@@ -466,6 +466,9 @@ begin
     _frmGuestPortfolio.Dataset := rSet;
     _frmGuestPortfolio.ShowBackForthButtons := AllowNavigation;
     result := _frmGuestPortfolio.ShowModal = mrOk;
+    if result then
+      glb.TableList.TableEntity['personprofiles'].RefreshFromServer;
+
   finally
     FreeAndNil(_frmGuestPortfolio);
   end;
