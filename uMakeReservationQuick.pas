@@ -2593,7 +2593,10 @@ begin
       edtRoom.Text := glb.PersonProfiles['Room'];
       edtRoomType.Text := glb.PersonProfiles['RoomType'];
 
-      fraLookupCountry.Code := glb.PersonProfiles['Country'];
+      if glb.PersonProfiles['Country'] <> '' then
+        fraLookupCountry.Code := glb.PersonProfiles['Country']
+      else
+        fraLookupCountry.Code := FNewReservation.HomeCustomer.Country;
       SetProfileAlertVisibility;
     end;
   end;
