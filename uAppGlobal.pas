@@ -215,7 +215,7 @@ Type
       function IsValidInList(list: TSet_Of_Integer; intValue : Integer): Boolean;
       function ValidateHelpContext(ctx: Integer): Boolean;
 
-      procedure LoadStaticTables(startingUp : Boolean = False);
+      procedure LoadStaticTables;
       procedure RefreshTablesWhenNeeded;
       procedure FillRoomAndTypeGridNew(agrRooms : TStringGrid );
       procedure FillLocationsMenu(mnu : TMenuItem; event : TNotifyEvent);
@@ -624,7 +624,6 @@ begin
     if enable then
     begin
       tableList.RefreshTimeStampsFromServer;
-      tableEntity.RefreshIfNeeded;
     end;
   end;
 end;
@@ -796,17 +795,17 @@ end;
 
 procedure TGlobalSettings.RefreshTableByName(const aTable: string);
 begin
-  tablesList.TableEntity[aTable].RefreshIfNeeded;
+  tablesList.RefreshTimeStampsFromServer(aTable);
 end;
 
-procedure TGlobalSettings.LoadStaticTables(startingUp : Boolean = False);
+procedure TGlobalSettings.LoadStaticTables;
 var
   rSet: TRoomerDataSet;
   s    : string;
   bTemp : Boolean;
 begin
 
-  tableslist.RefreshAllLocally(startingUp);
+  tableslist.RefreshAllLocally(false);
 
   if NOT d.roomerMainDataSet.OfflineMode then
   begin
@@ -1659,7 +1658,7 @@ procedure OpenAppSettings;
 begin
   glb.Free;
   glb := TGlobalSettings.create;
-  glb.LoadStaticTables(true);
+  glb.LoadStaticTables();
   glb.ReloadPreviousGuests;
   InitGlobalCurrencyManager(TRoomerCurrencyManager, TCurrencyCode(glb.ControlSet.FieldByName('nativecurrency').asString));
 end;

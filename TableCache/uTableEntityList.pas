@@ -40,6 +40,10 @@ type
 
     function IsStale: boolean;
     procedure SetLastUpdateOnServer(const Value: TDateTime);
+    /// <summary>
+    ///   Calls RefreshFromServer if server-timestamp is higher then local file timestamp
+    /// </summary>
+    procedure RefreshIfNeeded;
   public
     constructor Create(const tableName : String; aTimestampHandler: ICachedTimestampHandler; const sqlExtension : String = ''); virtual;
     destructor Destroy; override;
@@ -51,11 +55,6 @@ type
     ///   Reload data from local cache file. If this file is empty or ForceRefresh is True then RefreshFromServer is called
     /// </summary>
     procedure RefreshLocally(ForceRefresh : Boolean = true);
-    /// <summary>
-    ///   Calls RefreshFromServer if server-timestamp is higher then local file timestamp
-    /// </summary>
-    procedure RefreshIfNeeded;
-
     property TableName : String read FTableName;
     property RSet : TRoomerDataSet read FRSet;
     property RefreshEnabled : Boolean read FRefreshEnabled write FRefreshEnabled;
@@ -77,7 +76,7 @@ type
     constructor Create;
     procedure RefreshAllIfNeeded;
     procedure RefreshAllLocally(ForceRefresh : Boolean = true);
-    procedure RefreshTimeStampsFromServer;
+    procedure RefreshTimeStampsFromServer(const aTableName: string = '');
 
     property TableEntity[aName: string]: TCachedTableEntity read GetTableEntityByName;
     property Dataset[aName: string]: TRoomerDataset read GetDatasetByName;
@@ -184,9 +183,15 @@ begin
     lTable.RefreshIfNeeded;
 end;
 
-procedure TTableDictionary.RefreshTimeStampsFromServer;
+procedure TTableDictionary.RefreshTimeStampsFromServer(const aTableName: string = '');
+var
+  lTable: TCachedTableEntity;
 begin
-  FCachedTimestampHandler.RefreshTimeStampsFromServer(Self);
+  if aTableName.IsEmpty then
+    FCachedTimestampHandler.RefreshTimeStampsFromServer(Self)
+  else
+    if TryGetValue(aTableName, lTable) then
+      FCachedTimestampHandler.RefreshTimeStampFromServer(lTable);
 end;
 { TTableEntity }
 
