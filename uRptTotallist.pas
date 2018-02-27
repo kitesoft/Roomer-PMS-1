@@ -253,7 +253,7 @@ begin
            '     SUM(IF(rd.resFlag IN (''O''), p.numGuests, 0)) AS paxWaitinglist, '#10 +
            '     SUM(IF(rd.resFlag IN (''L''), 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
            '     SUM(IF(rd.resFlag IN (''L''), p.numGuests, 0)) AS paxWaitinglistNonOptional, '#10 +
-           '     SUM(IF(rd.resFlag IN (''A''), 1, 0)) AS roomsAllotmennt, '#10 +
+           '     SUM(IF(rd.resFlag IN (''A''), 1, 0)) AS roomsAllotment, '#10 +
            '     SUM(IF(rd.resFlag IN (''A''), p.numGuests, 0)) AS paxAllotment, '#10 +
            '     SUM(IF(rd.resFlag IN (''N''), 1, 0)) AS roomsNoShow, '#10 +
            '     SUM(IF(rd.resFlag IN (''N''), p.numGuests, 0)) AS paxNoShow, '#10 +
