@@ -464,7 +464,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Margins.Right = 2
               Margins.Bottom = 2
               AutoComplete = False
-              Style = csDropDownList
               DropDownCount = 16
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
@@ -592,7 +591,6 @@ object frmChannelAvailabilityManager: TfrmChannelAvailabilityManager
               Margins.Right = 2
               Margins.Bottom = 2
               AutoComplete = False
-              Style = csDropDownList
               DropDownCount = 16
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clWindowText
