@@ -969,6 +969,10 @@ object frmReservationProfile: TfrmReservationProfile
             end
             object TabSheet4: TsTabSheet
               Caption = 'Customer'
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object Label19: TsLabel
                 Left = 10
                 Top = 35
@@ -1232,10 +1236,6 @@ object frmReservationProfile: TfrmReservationProfile
                     Height = 22
                     ExplicitWidth = 172
                     ExplicitHeight = 22
-                    inherited lblDescription: TsLabel
-                      Width = 46
-                      Height = 22
-                    end
                     inherited edCode: TsEdit
                       Height = 22
                     end
@@ -1254,6 +1254,10 @@ object frmReservationProfile: TfrmReservationProfile
             object TabSheet5: TsTabSheet
               Caption = 'Customer Tel / Email'
               ImageIndex = 1
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object Label11: TsLabel
                 Left = 45
                 Top = 29
@@ -1460,8 +1464,6 @@ object frmReservationProfile: TfrmReservationProfile
             Caption = 'Main guest for room :'
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitLeft = -1
-            ExplicitTop = -1
             DesignSize = (
               228
               169)
@@ -1948,9 +1950,8 @@ object frmReservationProfile: TfrmReservationProfile
                 BevelInner = bvNone
                 BevelOuter = bvNone
                 BorderStyle = bsNone
-                Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
+                Font.Color = clWindowText
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -1979,9 +1980,8 @@ object frmReservationProfile: TfrmReservationProfile
                 BevelInner = bvNone
                 BevelOuter = bvNone
                 BorderStyle = bsNone
-                Color = clWhite
                 Font.Charset = DEFAULT_CHARSET
-                Font.Color = clBlack
+                Font.Color = clWindowText
                 Font.Height = -9
                 Font.Name = 'Tahoma'
                 Font.Style = []
@@ -2020,6 +2020,10 @@ object frmReservationProfile: TfrmReservationProfile
     SkinData.SkinSection = 'PAGECONTROL'
     object RoomsTab: TsTabSheet
       Caption = 'Rooms'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grRooms: TcxGrid
         Left = 0
         Top = 86
@@ -3696,6 +3700,10 @@ object frmReservationProfile: TfrmReservationProfile
     end
     object sTabSheet2: TsTabSheet
       Caption = 'Alerts'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlAlertHolder: TsPanel
         Left = 0
         Top = 0
@@ -3710,6 +3718,10 @@ object frmReservationProfile: TfrmReservationProfile
     object InvoicesTab: TsTabSheet
       Caption = 'Afgehandelde facturen'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel11: TsPanel
         Left = 0
         Top = 0

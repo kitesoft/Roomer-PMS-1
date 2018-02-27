@@ -4710,6 +4710,7 @@ begin
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
   EditInvoice(iReservation, iRoomReservation, TInvoiceType.itDebitInvoice, 0, false);
+  RefreshGrid;
 end;
 
 procedure TfrmMain.G4Click(Sender: TObject);
@@ -4720,6 +4721,7 @@ begin
     exit;
   iReservation := mAllReservations['Reservation'];
   EditInvoice(iReservation, 0, TInvoiceType.itDebitInvoice, 0, false);
+  RefreshGrid;
 end;
 
 function TfrmMain.GetActivePeriodGrid: TAdvStringGrid;
@@ -4995,6 +4997,7 @@ begin
        _iRoomReservation := 0;
 
     EditInvoice(_iReservation, _iRoomReservation, TInvoiceType.itDebitInvoice, _InvoiceIndex, false);
+    RefreshGrid;
   end;
 end;
 
@@ -11517,6 +11520,7 @@ begin
       // This is not groupinvoice
       EditInvoice(d.qRes, d.qrres, TInvoiceType.itDebitInvoice, 0, false);
     end;
+    RefreshGrid;
   end;
 
   d.qRes := -1;
@@ -11543,6 +11547,7 @@ begin
       EditInvoice(d.qRes, d.qrres, TInvoiceType.itDebitInvoice, 0, false);
     end;
   end;
+  RefreshGrid;
 
   d.qRes := -1;
   d.qrres := -1;
@@ -11553,6 +11558,7 @@ procedure TfrmMain._CashInvoice;
 begin
   try
     EditInvoice(0, 0, TInvoiceType.itCashInvoice, 0, false);
+    RefreshGrid;
   finally
   end;
 end;

@@ -168,7 +168,9 @@ uses
     , uReservationStateDefinitions
     , uUtils
     , UITypes
-    , uSQLUtils, uDateTimeHelper;
+    , uSQLUtils
+    , uDateTimeHelper
+    , DateUtils;
 
 {$R *.dfm}
 
@@ -966,13 +968,9 @@ var
   s: string;
 
   ExecutionPlan: TRoomerExecutionPlan;
-  sDate: string;
-  iDayCount: integer;
-  ii: integer;
   personData: RecPersonHolder;
   package: string;
   rr: integer;
-  lDate: TDate;
 
 begin
   // **

@@ -62,9 +62,14 @@ class procedure TAccountTypeHelper.AsStrings(aItemList: TStrings);
 var
   s: TAccountType;
 begin
-  aItemList.Clear;
-  for s := low(s) to high(s) do
-    aItemList.Add(s.AsReadableString);
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(s) to high(s) do
+      aItemList.Add(s.AsReadableString);
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 class function TAccountTypeHelper.FromBool(const aIsGroupAccount: boolean): TAccountType;

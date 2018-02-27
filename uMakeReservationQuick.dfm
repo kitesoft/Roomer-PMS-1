@@ -137,9 +137,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         Height = 51
         Align = alClient
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -198,9 +197,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         Height = 51
         Align = alClient
         BorderStyle = bsNone
-        Color = clWhite
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -324,7 +322,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1117
     Height = 577
-    ActivePage = tabRoomRates
+    ActivePage = taReservation
     Align = alClient
     TabOrder = 2
     OnChange = pgcMainChange
@@ -601,9 +599,9 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 end
                 object chkGroupInvoice: TsCheckBox
                   AlignWithMargins = True
-                  Left = 208
+                  Left = 200
                   Top = 0
-                  Width = 101
+                  Width = 109
                   Height = 21
                   Margins.Top = 0
                   Margins.Right = 0
@@ -615,7 +613,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
-                  ExplicitLeft = 200
+                  ExplicitLeft = 208
                 end
               end
             end
@@ -706,9 +704,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 ItemIndex = -1
                 ParentFont = False
                 TabOrder = 0
-                Items.Strings = (
-                  'Leisure'
-                  'Business')
               end
               object edInvRefrence: TsEdit
                 AlignWithMargins = True
@@ -1329,7 +1324,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object edContactAddress1: TsEdit
                   AlignWithMargins = True
                   Left = 152
-                  Top = 91
+                  Top = 85
                   Width = 350
                   Height = 21
                   Margins.Left = 150
@@ -1346,12 +1341,12 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 0
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 85
+                  ExplicitTop = 91
                 end
                 object edContactAddress2: TsEdit
                   AlignWithMargins = True
                   Left = 152
-                  Top = 118
+                  Top = 112
                   Width = 350
                   Height = 21
                   Margins.Left = 150
@@ -1368,12 +1363,12 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 1
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 112
+                  ExplicitTop = 118
                 end
                 object edContactAddress3: TsEdit
                   AlignWithMargins = True
                   Left = 152
-                  Top = 145
+                  Top = 139
                   Width = 350
                   Height = 21
                   Margins.Left = 150
@@ -1390,12 +1385,12 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 2
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 139
+                  ExplicitTop = 145
                 end
                 object edContactAddress4: TsEdit
                   AlignWithMargins = True
                   Left = 152
-                  Top = 172
+                  Top = 166
                   Width = 350
                   Height = 21
                   Margins.Left = 150
@@ -1412,14 +1407,14 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 3
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 166
+                  ExplicitTop = 172
                 end
                 object chkContactIsGuest: TsCheckBox
                   AlignWithMargins = True
                   Left = 12
                   Top = 18
                   Width = 567
-                  Height = 20
+                  Height = 17
                   Margins.Left = 10
                   Margins.Bottom = 0
                   Caption = 'Contact is guest'
@@ -1434,7 +1429,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object edContactFax: TsEdit
                   AlignWithMargins = True
                   Left = 152
-                  Top = 226
+                  Top = 220
                   Width = 151
                   Height = 21
                   Margins.Left = 150
@@ -1451,14 +1446,14 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 4
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 223
+                  ExplicitTop = 226
                 end
                 object cbxAddToGuestProfiles: TsCheckBox
                   AlignWithMargins = True
                   Left = 152
-                  Top = 68
+                  Top = 65
                   Width = 427
-                  Height = 20
+                  Height = 17
                   Margins.Left = 150
                   Margins.Bottom = 0
                   Caption = 'Add to guest profiles'
@@ -1471,7 +1466,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object edContactPerson1: TcxComboBox
                   AlignWithMargins = True
                   Left = 152
-                  Top = 41
+                  Top = 38
                   Margins.Left = 150
                   Margins.Right = 80
                   Align = alTop
@@ -1486,7 +1481,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object pnlPhones: TsPanel
                   AlignWithMargins = True
                   Left = 152
-                  Top = 199
+                  Top = 193
                   Width = 350
                   Height = 21
                   Margins.Left = 150
@@ -1552,7 +1547,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 object pnlEmail: TsPanel
                   AlignWithMargins = True
                   Left = 152
-                  Top = 253
+                  Top = 247
                   Width = 380
                   Height = 21
                   Margins.Left = 150
@@ -1583,7 +1578,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                     AlignWithMargins = True
                     Left = 206
                     Top = 3
-                    Width = 148
+                    Width = 156
                     Height = 15
                     Margins.Left = 6
                     Caption = 'Send confirmation by email'
@@ -2092,8 +2087,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteWaitingList: TsCheckBox
             Left = 14
             Top = 19
-            Width = 69
-            Height = 20
+            Width = 77
+            Height = 17
             Caption = 'Waitinglist'
             TabOrder = 0
             SkinData.SkinSection = 'CHECKBOX'
@@ -2103,8 +2098,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteAllotment: TsCheckBox
             Left = 14
             Top = 41
-            Width = 65
-            Height = 20
+            Width = 73
+            Height = 17
             Caption = 'Allotment'
             TabOrder = 1
             SkinData.SkinSection = 'CHECKBOX'
@@ -2114,8 +2109,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteOrder: TsCheckBox
             Left = 327
             Top = 19
-            Width = 48
-            Height = 20
+            Width = 56
+            Height = 17
             Caption = 'Order'
             TabOrder = 2
             SkinData.SkinSection = 'CHECKBOX'
@@ -2125,8 +2120,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteNoShow: TsCheckBox
             Left = 224
             Top = 41
-            Width = 61
-            Height = 20
+            Width = 69
+            Height = 17
             Caption = 'No show'
             TabOrder = 3
             SkinData.SkinSection = 'CHECKBOX'
@@ -2136,8 +2131,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteDeparted: TsCheckBox
             Left = 122
             Top = 19
-            Width = 65
-            Height = 20
+            Width = 73
+            Height = 17
             Caption = 'Departed'
             TabOrder = 4
             SkinData.SkinSection = 'CHECKBOX'
@@ -2147,8 +2142,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteBlocked: TsCheckBox
             Left = 224
             Top = 19
-            Width = 56
-            Height = 20
+            Width = 64
+            Height = 17
             Caption = 'Blocked'
             TabOrder = 5
             SkinData.SkinSection = 'CHECKBOX'
@@ -2158,8 +2153,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcluteGuest: TsCheckBox
             Left = 122
             Top = 41
-            Width = 48
-            Height = 20
+            Width = 56
+            Height = 17
             Caption = 'Guest'
             TabOrder = 6
             SkinData.SkinSection = 'CHECKBOX'
@@ -2169,8 +2164,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkExcludeWaitingListNonOptional: TsCheckBox
             Left = 327
             Top = 41
-            Width = 72
-            Height = 20
+            Width = 80
+            Height = 17
             Caption = 'Waiting list'
             TabOrder = 7
             SkinData.SkinSection = 'CHECKBOX'
@@ -2459,8 +2454,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
         object cbxFilterSelectedTypes: TsCheckBox
           Left = 8
           Top = 69
-          Width = 188
-          Height = 20
+          Width = 196
+          Height = 17
           Caption = 'Only show rooms of selected types'
           Checked = True
           State = cbChecked
@@ -2868,8 +2863,8 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object chkAutoUpdateNullPrice: TsCheckBox
             Left = 7
             Top = 18
-            Width = 126
-            Height = 20
+            Width = 134
+            Height = 17
             Caption = 'Auto update Null Price'
             Checked = True
             State = cbChecked
@@ -2967,7 +2962,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Left = 367
                 Top = 32
                 Width = 20
-                Height = 20
+                Height = 16
                 TabOrder = 2
                 SkinData.SkinSection = 'CHECKBOX'
                 ImgChecked = 0

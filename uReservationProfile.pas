@@ -2620,9 +2620,17 @@ var
 
   procedure PopulateRatePlanCombo;
   begin
-    (tvRoomsratePlanCode.Properties AS TcxComboBoxProperties).Items.Clear;
-    (tvRoomsratePlanCode.Properties AS TcxComboBoxProperties).Items.Add('');
-    DynamicRates.GetAllRateCodes((tvRoomsratePlanCode.Properties AS TcxComboBoxProperties).Items);
+    with tvRoomsratePlanCode.Properties AS TcxComboBoxProperties do
+    begin
+      Items.BeginUpdate;
+      try
+        Items.Clear;
+        Items.Add('');
+        DynamicRates.GetAllRateCodes(Items);
+      finally
+        Items.EndUpdate;
+      end;
+    end;
   end;
 
   procedure InitDynamicRates;

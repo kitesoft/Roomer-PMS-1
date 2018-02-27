@@ -595,9 +595,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               TabOrder = 8
               OnChange = cbxMarketChange
               OnKeyDown = cbxMarketKeyDown
-              Items.Strings = (
-                'Leisure'
-                'Business')
             end
             object chkCountryForAllGuests: TsCheckBox
               Left = 190
@@ -680,10 +677,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet6: TsTabSheet
             Caption = 'Company'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel22: TsLabel
               Left = 11
               Top = 24
@@ -954,6 +947,10 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               inherited pnlLookup: TsPanel
                 Width = 241
                 ExplicitWidth = 241
+                inherited lblDescription: TsLabel
+                  Width = 148
+                  Height = 20
+                end
               end
             end
           end
@@ -1217,10 +1214,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           SkinData.SkinSection = 'PAGECONTROL'
           object sTabSheet3: TsTabSheet
             Caption = 'Credit card'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object sLabel12: TsLabel
               Left = 66
               Top = 117
@@ -1375,10 +1368,6 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           end
           object sTabSheet5: TsTabSheet
             Caption = 'None'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
           end
         end
       end

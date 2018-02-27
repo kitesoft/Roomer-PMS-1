@@ -70,9 +70,14 @@ class procedure TCalculationTypeHelper.AsStrings(aItemList: TStrings);
 var
   s: TCalculationType;
 begin
-  aItemList.Clear;
-  for s := low(s) to high(s) do
-    aItemList.Add(s.AsReadableString);
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(s) to high(s) do
+      aItemList.Add(s.AsReadableString);
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 class function TCalculationTypeHelper.FromDBString(const Value: string; aDefault: TCalculationType): TCalculationType;

@@ -191,10 +191,15 @@ class procedure TReservationStateHelper.AsStrings(aItemList: TStrings; aUserSele
 var
   s: TReservationState;
 begin
-  aItemList.Clear;
-  for s := low(s) to high(s) do // dont use rsUnkown and rsMixed
-    if (aUserSelectableOnly and s.IsUserSelectable) or (not aUserSelectableOnly and (s <> rsMixed)) then
-      aItemList.AddObject(s.AsReadableString, TObject(ord(s)));
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(s) to high(s) do // dont use rsUnkown and rsMixed
+      if (aUserSelectableOnly and s.IsUserSelectable) or (not aUserSelectableOnly and (s <> rsMixed)) then
+        aItemList.AddObject(s.AsReadableString, TObject(ord(s)));
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 function TReservationStateHelper.CanChangeTo(aNewState: TReservationState): boolean;

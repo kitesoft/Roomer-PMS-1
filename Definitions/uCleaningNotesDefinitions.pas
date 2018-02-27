@@ -121,9 +121,14 @@ class procedure TCleaningNoteServiceTypeHelper.AsStrings(aItemList: TStrings);
 var
   s: TCleaningNoteServiceType;
 begin
-  aItemList.Clear;
-  for s := low(s) to high(s) do
-    aItemList.Add(s.AsReadableString);
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(s) to high(s) do
+      aItemList.Add(s.AsReadableString);
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 class function TCleaningNoteServiceTypeHelper.FromString(const aType: string) : TCleaningNoteServiceType;
@@ -176,9 +181,14 @@ class procedure TCleaningNoteOnceTypeHelper.AsStrings(aItemList: TStrings);
 var
   s: TCleaningNoteOnceType;
 begin
-  aItemList.Clear;
-  for s := low(s) to high(s) do
-    aItemList.Add(s.AsReadableString);
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(s) to high(s) do
+      aItemList.Add(s.AsReadableString);
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 class function TCleaningNoteOnceTypeHelper.FromItemIndex(aIndex: integer): TCleaningNoteOnceType;

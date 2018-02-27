@@ -1348,10 +1348,11 @@ begin
     cbxIsRoomResDiscountPrec.ItemIndex := 0;
 
     TBreakFastType.AsStrings(cbxBreakfast.Items);
+    TReservationMarketType.AsStrings(cbxMarket.Items);
     if ctrlGetBoolean('BreakfastInclDefault') then
-      cbxBreakfast.ItemIndex := 1
+      cbxBreakfast.ItemIndex := TBreakFastType.Included.ToItemIndex
     else
-      cbxBreakfast.ItemIndex := 0;
+      cbxBreakfast.ItemIndex := TBreakFastType.None.ToItemIndex;
 
     lblExtraCurrency.Caption := g.qNativeCurrency;
 

@@ -74,9 +74,14 @@ class procedure TStaffCommActionHelper.AsStrings(aItemList: TStrings);
 var
   s: TStaffCommAction;
 begin
-  aItemList.Clear;
-  for s := low(s) to high(s) do
-    aItemList.Add(s.AsReadableString);
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(s) to high(s) do
+      aItemList.Add(s.AsReadableString);
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 class function TStaffCommActionHelper.FromItemIndex(aIndex: integer): TStaffCommAction;

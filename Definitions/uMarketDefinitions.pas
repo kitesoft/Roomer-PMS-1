@@ -65,10 +65,15 @@ class procedure TReservationMarketTypeHelper.AsStrings(aItemList: TStrings);
 var
   s: TReservationMarketType;
 begin
-  aItemList.Clear;
-  for s := low(s) to high(s) do
-    if s <> mtUnknown then
-      aItemList.Add(s.AsReadableString);
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(s) to high(s) do
+      if s <> mtUnknown then
+        aItemList.Add(s.AsReadableString);
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 class function TReservationMarketTypeHelper.FromItemIndex(aIndex: integer): TReservationMarketType;

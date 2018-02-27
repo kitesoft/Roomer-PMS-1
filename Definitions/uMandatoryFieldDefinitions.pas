@@ -109,9 +109,14 @@ class procedure TMandatoryFieldHelper.AsStrings(aItemList: TStrings);
 var
   s: TMandatoryCheckinField;
 begin
-  aItemList.Clear;
-  for s := low(TMandatoryCheckinField) to high(s) do
-    aItemList.AddObject(s.AsReadableString, TObject(ord(s)));
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s := low(TMandatoryCheckinField) to high(s) do
+      aItemList.AddObject(s.AsReadableString, TObject(ord(s)));
+  finally
+    aItemList.EndUpdate;
+  end;
 end;
 
 function TMandatoryFieldHelper.AsTagid: integer;

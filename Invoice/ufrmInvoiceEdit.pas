@@ -2840,8 +2840,6 @@ begin
 
   TaxTypes.Free;
   tempInvoiceItemList.Free;
-
-  frmMain.btnRefresh.Click;
 end;
 
 procedure TfrmInvoiceEdit.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
