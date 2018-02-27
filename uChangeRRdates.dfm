@@ -645,7 +645,6 @@ inherited frmChangeRRdates: TfrmChangeRRdates
       Caption = '.. or split reservation in two'
       TabOrder = 1
       SkinData.SkinSection = 'GROUPBOX'
-      ExplicitTop = 2
       DesignSize = (
         310
         155)
@@ -737,7 +736,7 @@ inherited frmChangeRRdates: TfrmChangeRRdates
         SkinData.SkinSection = 'BUTTON'
       end
       object dtSplitAt: TsDateEdit
-        Left = 108
+        Left = 109
         Top = 21
         Width = 86
         Height = 21

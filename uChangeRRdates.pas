@@ -170,7 +170,8 @@ uses
     , UITypes
     , uSQLUtils
     , uDateTimeHelper
-    , DateUtils;
+    , DateUtils
+    , Math;
 
 {$R *.dfm}
 
@@ -622,10 +623,12 @@ begin
 
   gbxSplit.Enabled := (zRoomReservation > 0) and (TDateTime(zArrival).DaysBetween(zDeparture) > 1);
   dtSplitAt.Enabled := gbxSPlit.Enabled;
-  btnSplit.Enabled := gbxSplit.Enabled and dtSplitAt.CheckValidDate(false) and (zArrival < dtSplitAt.date) and (dtSplitAt.Date < zDeparture);
 
   if gbxSplit.Enabled and btnSplit.Enabled then
   begin
+    dtSplitAt.Date := Min(dtSplitAt.Date, TDateTime(zDeparture).AddDays(-1));
+    dtSplitAt.Date := Max(dtSplitAt.Date, TDateTime(zArrival).AddDays(1));
+
     labPart1.Caption := Format('%s - %s', [DateToStr(zArrival), DateToStr(dtSplitAt.Date)]);
     labpart2.Caption := Format('%s - %s', [DateToStr(dtSplitAt.Date), DateToStr(zDeparture)]);
   end
@@ -633,7 +636,9 @@ begin
   begin
     labPart1.Caption := '-';
     labpart2.Caption := '-';
-  end
+  end;
+  btnSplit.Enabled := gbxSplit.Enabled and dtSplitAt.CheckValidDate(false) and (zArrival < dtSplitAt.date) and (dtSplitAt.Date < zDeparture);
+
 end;
 
 procedure TfrmChangeRRdates.FormCreate(Sender: TObject);
@@ -658,8 +663,6 @@ begin
   dtDeparture.date := zDeparture;
   edNightCount.Value := trunc(dtDeparture.date - dtArrival.Date);
 
-  dtSplitAt.MinDate := zArrival;
-  dtSplitAt.MaxDate := zDeparture;
   dtSplitAt.date := zArrival + 1;
 
   zIsPaid := false;
