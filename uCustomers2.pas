@@ -306,6 +306,7 @@ type
   end;
 
 function openCustomers(act : TActTableAction; Lookup : Boolean; var theData : recCustomerHolder; AllowEdits : Boolean = True) : boolean;
+function SelectCustomer(var aCustomerCode: string) : boolean;
 
 var
   frmCustomers2: TfrmCustomers2;
@@ -368,6 +369,27 @@ begin
   end;
 end;
 
+function SelectCustomer(var aCustomerCode: string) : boolean;
+begin
+  result := false;
+  frmCustomers2 := TfrmCustomers2.Create(frmCustomers2);
+  try
+    frmCustomers2.zData.Customer := aCustomerCode;
+    frmCustomers2.Lookup := true;
+    frmCustomers2.zAct := actLookup;
+    frmCustomers2.AllowEdits := false;
+    frmCustomers2.ShowModal;
+    if frmCustomers2.modalresult = mrOk then
+    begin
+      aCustomerCode := frmCustomers2.zData.Customer;
+      result := true;
+    end
+  finally
+    freeandnil(frmCustomers2);
+  end;
+
+end;
+
 
 ///////////////////////////////////////////////////////////////////////
                     { Private declarations }
@@ -382,10 +404,11 @@ var
   rSet : TRoomerDataSet;
   active : boolean;
 begin
+  tvData.DataController.BeginFullUpdate;
   m_.DisableControls;
-  active := chkActive.Checked;
-  screen.Cursor := crHourGlass;
   try
+    screen.Cursor := crHourGlass;
+    active := chkActive.Checked;
     zFirstTime := true;
     if zSortStr = '' then zSortStr := 'customer';
     rSet := CreateNewDataSet;
@@ -396,7 +419,7 @@ begin
       begin
         if m_.active then m_.Close;
         m_.LoadFromDataSet(rSet);
-        rSet.First;
+//        rSet.First;
 //        while not rSet.eof do
 //        begin
 //          if rSet.FieldByName('notes').AsString <> '' then
@@ -428,6 +451,7 @@ begin
     end;
   finally
     m_.EnableControls;
+    tvData.DataController.EndFullUpdate;
     screen.Cursor := crDEFAULT;
   end;
 end;
@@ -471,64 +495,69 @@ end;
 
 procedure TfrmCustomers2.changeAllowgridEdit;
 begin
-  if zAllowGridEdit then
-  begin
-    tvDataID.Options.Editing             := false;
-    tvDataActive         .Options.Editing         := true;
-    tvDataCustomer       .Options.Editing         := false;
-    tvDataSurname        .Options.Editing         := true;
-    tvDataName           .Options.Editing         := true;
-    tvDataPID            .Options.Editing         := true;
-    tvDataCustomerType   .Options.Editing         := false;
-    tvDataAddress1       .Options.Editing         := true;
-    tvDataAddress2       .Options.Editing         := true;
-    tvDataAddress3       .Options.Editing         := true;
-    tvDataAddress4       .Options.Editing         := true;
-    tvDataCountry        .Options.Editing         := false;
-    tvDataTel1           .Options.Editing         := true;
-    tvDataTel2           .Options.Editing         := true;
-    tvDataFax            .Options.Editing         := true;
-    tvDataDiscountPercent.Options.Editing         := true;
-    tvDataEmailAddress   .Options.Editing         := true;
-    tvDataContactPerson  .Options.Editing         := true;
-    tvDataTravelAgency   .Options.Editing         := true;
-    tvDataCurrency       .Options.Editing         := false;
-    tvDatadele           .Options.Editing         := false;
-    tvDatapcID           .Options.Editing         := false;
-    tvDataHomepage       .Options.Editing         := true;
-    tvDataCountryName               .Options.Editing         := false;
-    tvDataCustomerTypeDescription   .Options.Editing         := false;
-    tvDatapcCode                    .Options.Editing         := false;
-    tvDataStayTaxIncluted           .Options.Editing         := true;
-  end else
-  begin
-    tvDataID.Options.Editing                      := false;
-    tvDataActive         .Options.Editing         := false;
-    tvDataCustomer       .Options.Editing         := false;
-    tvDataSurname        .Options.Editing         := false;
-    tvDataName           .Options.Editing         := false;
-    tvDataPID            .Options.Editing         := false;
-    tvDataCustomerType   .Options.Editing         := false;
-    tvDataAddress1       .Options.Editing         := false;
-    tvDataAddress2       .Options.Editing         := false;
-    tvDataAddress3       .Options.Editing         := false;
-    tvDataAddress4       .Options.Editing         := false;
-    tvDataCountry        .Options.Editing         := false;
-    tvDataTel1           .Options.Editing         := false;
-    tvDataTel2           .Options.Editing         := false;
-    tvDataFax            .Options.Editing         := false;
-    tvDataDiscountPercent.Options.Editing         := false;
-    tvDataEmailAddress   .Options.Editing         := false;
-    tvDataContactPerson  .Options.Editing         := false;
-    tvDataTravelAgency   .Options.Editing         := false;
-    tvDataCurrency       .Options.Editing         := false;
-    tvDatadele           .Options.Editing         := false;
-    tvDatapcID           .Options.Editing         := false;
-    tvDataHomepage       .Options.Editing         := false;
-    tvDataCountryName               .Options.Editing  := false;
-    tvDataCustomerTypeDescription   .Options.Editing  := false;
-    tvDatapcCode                    .Options.Editing  := false;
-    tvDataStayTaxIncluted .Options.Editing  := true;
+  tvData.DataController.BeginFullUpdate;
+  try
+    if zAllowGridEdit then
+    begin
+      tvDataID.Options.Editing             := false;
+      tvDataActive         .Options.Editing         := true;
+      tvDataCustomer       .Options.Editing         := false;
+      tvDataSurname        .Options.Editing         := true;
+      tvDataName           .Options.Editing         := true;
+      tvDataPID            .Options.Editing         := true;
+      tvDataCustomerType   .Options.Editing         := false;
+      tvDataAddress1       .Options.Editing         := true;
+      tvDataAddress2       .Options.Editing         := true;
+      tvDataAddress3       .Options.Editing         := true;
+      tvDataAddress4       .Options.Editing         := true;
+      tvDataCountry        .Options.Editing         := false;
+      tvDataTel1           .Options.Editing         := true;
+      tvDataTel2           .Options.Editing         := true;
+      tvDataFax            .Options.Editing         := true;
+      tvDataDiscountPercent.Options.Editing         := true;
+      tvDataEmailAddress   .Options.Editing         := true;
+      tvDataContactPerson  .Options.Editing         := true;
+      tvDataTravelAgency   .Options.Editing         := true;
+      tvDataCurrency       .Options.Editing         := false;
+      tvDatadele           .Options.Editing         := false;
+      tvDatapcID           .Options.Editing         := false;
+      tvDataHomepage       .Options.Editing         := true;
+      tvDataCountryName               .Options.Editing         := false;
+      tvDataCustomerTypeDescription   .Options.Editing         := false;
+      tvDatapcCode                    .Options.Editing         := false;
+      tvDataStayTaxIncluted           .Options.Editing         := true;
+    end else
+    begin
+      tvDataID.Options.Editing                      := false;
+      tvDataActive         .Options.Editing         := false;
+      tvDataCustomer       .Options.Editing         := false;
+      tvDataSurname        .Options.Editing         := false;
+      tvDataName           .Options.Editing         := false;
+      tvDataPID            .Options.Editing         := false;
+      tvDataCustomerType   .Options.Editing         := false;
+      tvDataAddress1       .Options.Editing         := false;
+      tvDataAddress2       .Options.Editing         := false;
+      tvDataAddress3       .Options.Editing         := false;
+      tvDataAddress4       .Options.Editing         := false;
+      tvDataCountry        .Options.Editing         := false;
+      tvDataTel1           .Options.Editing         := false;
+      tvDataTel2           .Options.Editing         := false;
+      tvDataFax            .Options.Editing         := false;
+      tvDataDiscountPercent.Options.Editing         := false;
+      tvDataEmailAddress   .Options.Editing         := false;
+      tvDataContactPerson  .Options.Editing         := false;
+      tvDataTravelAgency   .Options.Editing         := false;
+      tvDataCurrency       .Options.Editing         := false;
+      tvDatadele           .Options.Editing         := false;
+      tvDatapcID           .Options.Editing         := false;
+      tvDataHomepage       .Options.Editing         := false;
+      tvDataCountryName               .Options.Editing  := false;
+      tvDataCustomerTypeDescription   .Options.Editing  := false;
+      tvDatapcCode                    .Options.Editing  := false;
+      tvDataStayTaxIncluted .Options.Editing  := true;
+    end;
+  finally
+    tvData.DataController.EndFullUpdate;
   end;
 end;
 

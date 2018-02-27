@@ -301,8 +301,12 @@ end;
 
 function THomeCustomer.Customer_update(customer: string): boolean;
 begin
-  FCustomer  := Customer;
-  result := Customer_Get(FCustomer);
+  Result := true;
+  if FCustomer.IsEmpty or not FCustomer.Equals(customer) then
+  begin
+    FCustomer  := Customer;
+    result := Customer_Get(FCustomer);
+  end;
 end;
 
 end.
