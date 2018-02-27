@@ -308,7 +308,8 @@ end;
 
 procedure TfraCustomLookupPanel.SetCode(const Value: string);
 begin
-  edCode.Text := Value;
+  if edCode.Text <> Value then
+    edCode.Text := Value;
 end;
 
 procedure TfraCustomLookupPanel.SetFocus;

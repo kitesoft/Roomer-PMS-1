@@ -64,12 +64,12 @@ end;
 
 procedure TfraCustomerPanel.DoInternalSelect;
 var
-  theData: recCustomerHolder;
+  lData: recCustomerHolder;
 begin
   inherited;
-  theData.Customer := Code;
-  if OpenCustomers(actLookup, true, theData) then
-    Code := theData.Customer;
+  lData.Customer := Code;
+  if openCustomers(actLookup, true, lData, true) then
+    Code := lData.Customer;
 end;
 
 function TfraCustomerPanel.GetCountryCode: string;
