@@ -1080,7 +1080,7 @@ begin
             while not Rset.eof do
             begin
               initPersonHolder(personData);
-              personData.Person := Rset.FieldByName('person').asInteger;
+//              personData.Person := Rset.FieldByName('person').asInteger;
               personData.RoomReservation := newRrId;
               personData.Reservation := Rset.FieldByName('Reservation').asInteger;
               personData.name := Rset.FieldByName('name').asString;
