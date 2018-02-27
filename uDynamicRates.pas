@@ -214,8 +214,9 @@ end;
 procedure TDynamicRates.GetAllRateCodes(List : TStrings);
 var s : String;
 begin
-  chRates.First;
+  List.BeginUpdate;
   try
+  chRates.First;
     while NOT chRates.Eof do
     begin
       s := chRates['rateCode'];
@@ -226,7 +227,7 @@ begin
       chRates.Next;
     end;
   finally
-
+    List.EndUpdate;
   end;
 end;
 
