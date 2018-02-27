@@ -230,7 +230,7 @@ type
     ppLabel18: TppLabel;
     ppLabel20: TppLabel;
     ppLabel21: TppLabel;
-    cxButton1: TsButton;
+    btnChangeCountry: TsButton;
     cxLabel8: TsLabel;
     cxLabel6: TsLabel;
     labRooms: TsLabel;
@@ -241,9 +241,9 @@ type
     tvNationalStatistics1ReservationCount: TcxGridDBColumn;
     mHagstofa1RoomReservationCount: TIntegerField;
     tvNationalStatistics1RoomReservationCount: TcxGridDBColumn;
-    sLabel1: TsLabel;
-    sLabel2: TsLabel;
-    sLabel3: TsLabel;
+    lbLeisure: TsLabel;
+    lbConference: TsLabel;
+    lbBusiness: TsLabel;
     sLabel4: TsLabel;
     LabTotalVisitType: TsLabel;
     sLabel6: TsLabel;
@@ -290,12 +290,15 @@ type
     procedure btnNationalStatisticsReportClick(Sender: TObject);
     procedure ppHeaderBand1BeforePrint(Sender: TObject);
     procedure ppSummaryBand1BeforePrint(Sender: TObject);
-    procedure cxButton1Click(Sender: TObject);
+    procedure btnChangeCountryClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mAllGuestsAfterScroll(DataSet: TDataSet);
     procedure edBusinessChange(Sender: TObject);
     procedure btnPostToHagstofaClick(Sender: TObject);
     procedure mnuConferenceClick(Sender: TObject);
+    procedure btnChangeMarketClick(Sender: TObject);
+    procedure tvAllGuestsMarketGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
     zDateFrom : Tdate;
@@ -330,7 +333,7 @@ type
     function getRoomReservationsList : string;
     procedure getRoomInfo;
     procedure ShowData;
-    procedure SetMarketButtonMenuCaptions;
+    procedure SetMarketCaptions;
 
   public
     { Public declarations }
@@ -381,18 +384,18 @@ begin
 end;
 
 procedure TfrmNationalReport3.mAllGuestsAfterScroll(DataSet: TDataSet);
+var
+  mt: TreservationMarketType;
 begin
-  btnChangeMarket.Caption := TReservationMarketType.mtUnknown.AsReadableString;
-  if NOT (DataSet.Eof OR DataSet.Bof) then
+  if Dataset.IsEmpty then
+    btnChangeMarket.Caption := GetTranslatedText('shTx_MarketType')
+  else
   begin
-    if DataSet['Market'] = 'LEISURE' then
-       btnChangeMarket.Caption := TReservationMarketType.mtLeisure.AsReadableString
+    mt := TReservationMarketType.FromDBString(DataSet.FieldByName('Market').AsString);
+    if mt <> mtUnknown then
+      btnChangeMarket.Caption := TReservationMarketType.FromDBString(DataSet.FieldByName('Market').AsString).AsReadableString
     else
-    if DataSet['Market'] = 'BUSINESS' then
-       btnChangeMarket.Caption := TReservationMarketType.mtBusiness.AsReadableString
-    else
-    if DataSet['Market'] = 'CONFERENCE' then
-       btnChangeMarket.Caption := TReservationMarketType.mtConference.AsReadableString
+    btnChangeMarket.Caption := GetTranslatedText('shTx_MarketType');
   end;
 end;
 
@@ -401,15 +404,13 @@ var s : String;
     newMarket,
     oldMarket : String;
     iReservation : Integer;
-    oldType,
-    newType : TReservationMarketType;
+    oldType : TReservationMarketType;
 begin
   if NOT (mAllGuests.Eof OR mAllGuests.Bof) then
 
     oldMarket := mAllGuests['Market'];
     oldType := TReservationMarketType.FromDBString(oldMarket, TReservationMarketType.mtLeisure);
-    newType := TReservationMarketType.fromItemIndex(TMenuItem(Sender).Tag);
-    newMarket := newType.ToDBString;
+    newMarket := TReservationMarketType.fromItemIndex(TMenuItem(Sender).Tag).ToDBString;
 	  S := format(GetTranslatedText('shTx_NationalReport_ChangeMarketFromTo'),
               [
                 mAllGuests.FieldByName('GuestGroupName').AsString,
@@ -433,9 +434,7 @@ begin
         try
           getGuests;
           getAllGuests;
-          if mAllGuests.Locate('Reservation',iReservation,[]) then
-          begin
-          end;
+          mAllGuests.Locate('Reservation',iReservation,[]);
         finally
           mAllGuests.AfterScroll := mAllGuestsAfterScroll;
           mAllGuests.EnableControls;
@@ -568,6 +567,19 @@ begin
 
 end;
 
+procedure TfrmNationalReport3.btnChangeMarketClick(Sender: TObject);
+var
+  btn: TsButton;
+  pt: TPoint;
+begin
+  btn := (Sender as TsButton);
+  if assigned(btn.DropDownMenu) then
+  begin
+    pt := btn.ClientToScreen(Point(0, btn.ClientHeight));
+    btn.DropDownMenu.Popup(pt.X, pt.Y);
+  end;
+end;
+
 procedure TfrmNationalReport3.btnCollapseAllClick(Sender: TObject);
 begin
   tvAllGuests.DataController.Groups.FullCollapse;
@@ -586,12 +598,9 @@ end;
 
 procedure TfrmNationalReport3.btnRefreshClick(Sender : TObject);
 begin
-  btnChangeMarket.Caption := TReservationMarketType.mtUnknown.AsReadableString;
   getGuests;
   getAllGuests;
 end;
-
-
 
 procedure TfrmNationalReport3.getGuests;
 var
@@ -1078,17 +1087,20 @@ end;
 
 procedure TfrmNationalReport3.FormShow(Sender : TObject);
 begin
-  SetMarketButtonMenuCaptions;
+  SetMarketCaptions;
   ShowData;
   btnPostToHagstofa.Visible := d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled;
 end;
 
-procedure TfrmNationalReport3.SetMarketButtonMenuCaptions;
+procedure TfrmNationalReport3.SetMarketCaptions;
 begin
   btnPostToHagstofa.Enabled := False;
   mnuLeisure.Caption := TReservationMarketType.mtLeisure.AsReadableString;
+  lbLeisure.Caption := TReservationMarketType.mtLeisure.AsReadableString + ' :';
   mnuBusiness.Caption := TReservationMarketType.mtBusiness.AsReadableString;
+  lbBusiness.Caption := TReservationMarketType.mtBusiness.AsReadableString + ' :';
   mnuConference.Caption := TReservationMarketType.mtConference.AsReadableString;
+  lbConference.Caption := TReservationMarketType.mtConference.AsReadableString + ':';
 end;
 
 procedure TfrmNationalReport3.ShowData;
@@ -1137,7 +1149,13 @@ begin
   isFirstTime := false;
 end;
 
-procedure TfrmNationalReport3.cxButton1Click(Sender: TObject);
+procedure TfrmNationalReport3.tvAllGuestsMarketGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  aText := TReservationMarketType.FromDBString(aRecord.Values[Sender.Index]).AsReadableString;
+end;
+
+procedure TfrmNationalReport3.btnChangeCountryClick(Sender: TObject);
 var
   iReservation : integer;
 

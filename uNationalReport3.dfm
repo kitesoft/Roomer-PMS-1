@@ -276,7 +276,7 @@ object frmNationalReport3: TfrmNationalReport3
           OnClick = btnCollapseAllClick
           SkinData.SkinSection = 'BUTTON'
         end
-        object cxButton1: TsButton
+        object btnChangeCountry: TsButton
           AlignWithMargins = True
           Left = 272
           Top = 4
@@ -287,7 +287,7 @@ object frmNationalReport3: TfrmNationalReport3
           ImageIndex = 100
           Images = DImages.PngImageList1
           TabOrder = 2
-          OnClick = cxButton1Click
+          OnClick = btnChangeCountryClick
           SkinData.SkinSection = 'BUTTON'
         end
         object btnChangeMarket: TsButton
@@ -303,7 +303,7 @@ object frmNationalReport3: TfrmNationalReport3
           Images = DImages.PngImageList1
           Style = bsSplitButton
           TabOrder = 5
-          OnClick = cxButton1Click
+          OnClick = btnChangeMarketClick
           SkinData.SkinSection = 'BUTTON'
         end
       end
@@ -454,6 +454,7 @@ object frmNationalReport3: TfrmNationalReport3
           end
           object tvAllGuestsMarket: TcxGridDBColumn
             DataBinding.FieldName = 'Market'
+            OnGetDisplayText = tvAllGuestsMarketGetDisplayText
           end
         end
         object lvAllGuests: TcxGridLevel
@@ -967,7 +968,7 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel1: TsLabel
+        object lbLeisure: TsLabel
           Left = 489
           Top = 24
           Width = 44
@@ -981,7 +982,7 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel2: TsLabel
+        object lbConference: TsLabel
           Left = 470
           Top = 46
           Width = 63
@@ -995,7 +996,7 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel3: TsLabel
+        object lbBusiness: TsLabel
           Left = 485
           Top = 68
           Width = 48

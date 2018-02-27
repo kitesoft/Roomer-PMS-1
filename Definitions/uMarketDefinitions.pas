@@ -47,7 +47,7 @@ type
       /// </summary>
       function AsReadableString : string;
 
-      class function FromDBString(const Value: string; aDefault: TReservationMarketType): TReservationMarketType; static;
+      class function FromDBString(const Value: string; aDefault: TReservationMarketType = mtUnknown): TReservationMarketType; static;
       function ToDBString: string;
 
     end;
@@ -84,7 +84,6 @@ end;
 function TReservationMarketTypeHelper.AsReadableString : string;
 begin
   case Self of
-    mtUnknown:    Result := '';
     mtBusiness:   Result := GetTranslatedText('shTx_MarketType_Business');
     mtLeisure:    Result := GetTranslatedText('shTx_MarketType_Leisure');
     mtConference: Result := GetTranslatedText('shTx_MarketType_Conference');

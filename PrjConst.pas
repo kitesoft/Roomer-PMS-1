@@ -1778,6 +1778,7 @@ begin
   constants.Add('shTx_PCIConnection_SettingInActiveCaption', 'Connection to payment provider has not been activated. Ask your Roomer account manager about the possibilities');
   constants.Add('shTx_PCIConnection_AsDefault', '<default mapping>');
 
+  constants.Add('shTx_MarketType', 'MarketType');
   constants.Add('shTx_MarketType_Business', 'Business');
   constants.Add('shTx_MarketType_Leisure', 'Leisure');
   constants.Add('shTx_MarketType_Conference', 'Conference');
