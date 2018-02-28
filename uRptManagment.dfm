@@ -28,7 +28,6 @@ object frmRptManagment: TfrmRptManagment
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1167
     object cxGroupBox2: TsGroupBox
       Left = 148
       Top = 3
@@ -211,7 +210,6 @@ object frmRptManagment: TfrmRptManagment
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
-    ExplicitWidth = 1167
   end
   object pageMain: TsPageControl
     Left = 0
@@ -222,10 +220,8 @@ object frmRptManagment: TfrmRptManagment
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitWidth = 1167
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
-      ExplicitWidth = 1159
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -235,7 +231,6 @@ object frmRptManagment: TfrmRptManagment
         FullRepaint = False
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1159
         object btnGuestsExcel: TsButton
           AlignWithMargins = True
           Left = 11
@@ -265,7 +260,6 @@ object frmRptManagment: TfrmRptManagment
           TabOrder = 1
           OnClick = btnReportClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 1027
         end
       end
       object grStat: TcxGrid
@@ -276,7 +270,6 @@ object frmRptManagment: TfrmRptManagment
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1159
         object tvStat: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = StatDS
@@ -433,7 +426,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 1
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object tvStatsrevenue: TcxGridDBBandedColumn
@@ -496,7 +489,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object tvStatsarrivingRooms: TcxGridDBBandedColumn
@@ -505,7 +498,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object tvStatsnoShow: TcxGridDBBandedColumn
@@ -513,7 +506,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object tvStatsdepartingRooms: TcxGridDBBandedColumn
@@ -522,7 +515,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 6
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object tvStatsdepartedRooms: TcxGridDBBandedColumn
@@ -531,7 +524,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object tvStatsoccupiedRooms: TcxGridDBBandedColumn
@@ -540,7 +533,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object tvStatstotalRooms: TcxGridDBBandedColumn
@@ -605,7 +598,7 @@ object frmRptManagment: TfrmRptManagment
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
             Position.BandIndex = 2
-            Position.ColIndex = 8
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
         end
@@ -627,6 +620,10 @@ object frmRptManagment: TfrmRptManagment
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
