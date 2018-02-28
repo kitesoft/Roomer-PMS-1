@@ -401,106 +401,77 @@ begin
             begin
               lDate := ii;
               sDate := _db(lDate, false);
+
+              rd_.First;
+              initRoomsDateHolderRec(rec);
+              rec.ADate := sDate;
+              if Room = '' then
+              begin
+                Room := '<' + inttostr(RoomReservation) + '>';
+                isNoRoom := true;
+              end;
+              rec.Room := Room;
+              rec.isNoRoom := isNoRoom;
+              rec.RoomType := RoomType;
+              rec.RoomReservation := RoomReservation;
+              rec.ResFlag := status;
+              rec.Reservation := Reservation;
+              rec.PriceCode := priceType;
+
               if rateCount = 1 then // same rate all days 5 11 4 12 3 13 2 14 1 15 0 16 -1
               begin
-                rd_.First;
-                initRoomsDateHolderRec(rec);
-                rec.ADate := sDate;
-                if Room = '' then
-                begin
-                  Room := '<' + inttostr(RoomReservation) + '>';
-                  isNoRoom := true;
-                end;
-                rec.Room := Room;
-                rec.isNoRoom := isNoRoom;
-                rec.RoomType := RoomType;
-                rec.RoomReservation := RoomReservation;
-                rec.ResFlag := status;
-                rec.Reservation := Reservation;
-                rec.PriceCode := priceType;
                 rec.roomRate := rd_.FieldByName('RoomRate').AsFloat;
                 rec.Discount := rd_.FieldByName('Discount').AsFloat;
-                rec.isPercentage := rd_.FieldByName('isPercentage').asBoolean;
-                rec.showDiscount := rd_.FieldByName('showDiscount').asBoolean;
-                if paidCount > 0 then
-                begin
-                  rec.Paid := true;
-                  dec(paidCount);
-                end
-                else
-                begin
-                  rec.Paid := false;
-                end;
-                rec.Currency := rd_.FieldByName('Currency').asString;
-
-                if lst.IndexOf(sDate) >= 0 then
-                begin
-                  s := ' UPDATE roomsdate ' + #10;
-                  s := s + ' SET ' + #10;
-                  s := s + '     resFlag  = ' + _db(status) + ' ' + #10;
-                  s := s + '     , Room  = ' + _db(Room) + ' ' + #10;
-                  if rec.Paid then
-                    s := s + '     , Paid  = 1' + #10
-                  else
-                    s := s + '     , Paid  = 0' + #10;
-                  s := s + ' WHERE ' + #10;
-                  s := s + '       (roomreservation= ' + _db(RoomReservation) + ') and (Adate=' + _db(sDate) +
-                    ') ' + #10;
-                  ExePlan.AddExec(s);
-                end
-                else
-                begin
-                  ExePlan.AddExec(hData.SQL_INS_RoomsDate(rec));
-                end;
               end
               else
               begin
-                rd_.First;
-                initRoomsDateHolderRec(rec);
-                rec.ADate := sDate;
-                if Room = '' then
-                begin
-                  Room := '<' + inttostr(RoomReservation) + '>';
-                  isNoRoom := true;
-                end;
-                rec.Room := Room;
-                rec.isNoRoom := isNoRoom;
-                rec.RoomType := RoomType;
-                rec.RoomReservation := RoomReservation;
-                rec.ResFlag := status;
-                rec.Reservation := Reservation;
-                rec.PriceCode := priceType;
                 rec.roomRate := averageRate;
                 rec.Discount := avrageDiscount;
-                rec.isPercentage := rd_.FieldByName('isPercentage').asBoolean;
-                rec.showDiscount := rd_.FieldByName('showDiscount').asBoolean;
-                if paidCount > 0 then
-                begin
-                  rec.Paid := true;
-                  dec(paidCount);
-                end
-                else
-                begin
-                  rec.Paid := false;
-                end;
-                rec.Currency := rd_.FieldByName('Currency').asString;
-
-                if lst.IndexOf(sDate) >= 0 then
-                begin
-                  s := ' UPDATE roomsdate ' + #10;
-                  s := s + ' SET ' + #10;
-                  s := s + '     resFlag  = ' + _db(status) + ' ' + #10;
-                  s := s + '     , Room  = ' + _db(Room) + ' ' + #10;
-                  s := s + ' WHERE ' + #10;
-                  s := s + '       (roomreservation= ' + _db(RoomReservation) + ') and (Adate=' + _db(sDate) +
-                    ') ' + #10;
-                  ExePlan.AddExec(s);
-                end
-                else
-                begin
-                  ExePlan.AddExec(hData.SQL_INS_RoomsDate(rec));
-                end;
               end;
+
+              rec.isPercentage := rd_.FieldByName('isPercentage').asBoolean;
+              rec.showDiscount := rd_.FieldByName('showDiscount').asBoolean;
+
+              if paidCount > 0 then
+              begin
+                rec.Paid := true;
+                dec(paidCount);
+              end
+              else
+              begin
+                rec.Paid := false;
+              end;
+              rec.Currency := rd_.FieldByName('Currency').asString;
+
+              if lst.IndexOf(sDate) >= 0 then // roomsdate record already exists (and set to status X)
+              begin
+                s := ' UPDATE roomsdate ' + #10;
+                s := s + ' SET ' + #10;
+                s := s + '     resFlag  = ' + _db(status) + ' ' + #10;
+                s := s + '     , Room  = ' + _db(Room) + ' ' + #10;
+                s := s + '     , isNoRoom = ' + _db(isNoRoom) + ' ' + #10;
+                if rec.Paid then
+                  s := s + '     , Paid  = 1' + #10
+                else
+                  s := s + '     , Paid  = 0' + #10;
+                s := s + ' WHERE ' + #10;
+                s := s + '       (roomreservation= ' + _db(RoomReservation) + ') and (Adate=' + _db(sDate) +
+                  ') ' + #10;
+                ExePlan.AddExec(s);
+              end
+              else
+                ExePlan.AddExec(hData.SQL_INS_RoomsDate(rec));
+
+            end;
+
+            if Room <> rd_.FieldByName('room').asString then
+            begin
+              s := ' UPDATE roomreservations' + #10;
+              s := s + ' SET ' + #10;
+              s := s + '   status  = ' + _db(status) + ' ' + #10;
+              s := s + '   , Room  = ' + _db(Room) + ' ' + #10;
+              s := s + ' WHERE (roomreservation= ' + _db(RoomReservation) + ')'#10;
+              ExePlan.AddExec(s);
             end;
 
             s := ' DELETE FROM roomsdate where ResFlag =' + _db(STATUS_DELETED) + ' AND RoomReservation = ' + _db(RoomReservation) + #10;
