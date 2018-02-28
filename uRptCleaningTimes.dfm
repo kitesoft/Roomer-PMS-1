@@ -174,8 +174,6 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     inherited grData: TcxGrid
       Width = 855
       Height = 392
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 855
       ExplicitHeight = 392
       inherited tvData: TcxGridDBBandedTableView
@@ -288,6 +286,7 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     Top = 216
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43154.649115509260000000
+      AssignedFormatValues = []
       OptionsSize.AutoWidth = True
       OptionsView.ExpandButtons = False
       OptionsView.FilterBar = False

@@ -692,6 +692,7 @@ begin
   try
     if oRooms <> nil then
       freeandNil(oRooms);
+
     oRooms := TRooms.Create(qHotelCode);
   finally
     Unlock;

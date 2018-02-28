@@ -723,6 +723,8 @@ begin
   constants.Add('shTx_HouseKeeping_Code_L', 'Wait For Checkout');
   constants.Add('shTx_HouseKeeping_Code_D', 'Do Not Disturb');
   constants.Add('shTx_HouseKeeping_Code_', 'Unknown status');
+  constants.Add('shTx_SetAllRoomsCleanConfirmation', 'Setting all rooms to Clean. Are you sure?');
+  constants.Add('shTx_SetAllRoomsUnCleanConfirmation', 'Setting all rooms to UnClean. Are you sure?');
 
   constants.Add('shTx_HouseKeeping_NumberOfGuests', ' %d guests.');
   constants.Add('shTx_HouseKeeping_GuestWaitingForGuestToDepart', 'Wait for guest to depart.');

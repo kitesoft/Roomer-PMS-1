@@ -22,6 +22,7 @@ type
     setLostAndFound: boolean;
 
     procedure Clear;
+    function AnythingToSet: boolean;
   end;
 
   TRoomServicesMobileAPICaller = class(TBaseMobileAPICaller)
@@ -35,6 +36,7 @@ type
     /// </summary>
     procedure SetStatus(const aRoom: string; aDate: TDate; const aParams: RRoomServicesSetStatusParameters);
     procedure GetRoomDetails(const aRoom: string; aRoomDetails: TRoomServicesStatus);
+    procedure SetAllRoomStatus(aDate: TDate; const aStatus: string);
   end;
 
 implementation
@@ -71,6 +73,30 @@ end;
 function TRoomServicesMobileAPICaller.getURI: string;
 begin
   Result := inherited + cRoomServicesURI;
+end;
+
+procedure TRoomServicesMobileAPICaller.SetAllRoomStatus(aDate: TDate; const aStatus: string);
+const
+  cSetAllStatusURI = '/setallroomstatus';
+var
+  lData: TStringList;
+  lResponse: string;
+//  @FormParam("dt") final String date,
+//	@FormParam("st") final String status,
+begin
+  lData := TStringlist.Create;
+  try
+    lData.Delimiter := '&';
+    lData.StrictDelimiter := true;
+
+    lData.Add(Format('dt=%s', [dateToSqlString(aDate)]));
+    lData.Add(Format('st=%s', [aStatus]));
+    lResponse := d.roomerMainDataSet.PostData(getURI + cSetAllStatusURI, lData.DelimitedText);
+
+  finally
+    lData.Free;
+  end;
+
 end;
 
 procedure TRoomServicesMobileAPICaller.SetStatus(const aRoom: string; aDate: TDate; const aParams: RRoomServicesSetStatusParameters);
@@ -112,6 +138,11 @@ begin
 end;
 
 { RRoomServicesSetStatusParameters }
+
+function RRoomServicesSetStatusParameters.AnythingToSet: boolean;
+begin
+  Result := setStatus or setCleaningNotes or setMaintenanceNotes or setLostAndFound;
+end;
 
 procedure RRoomServicesSetStatusParameters.Clear;
 begin

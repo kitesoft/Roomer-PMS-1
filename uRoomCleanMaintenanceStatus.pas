@@ -98,7 +98,7 @@ uses
   , uSQLUtils
   , objRoomList2
   , uRoomerLanguage
-  , uRoomServicesAPI, uRoomservicesStatus;
+  , uRoomServicesAPI, uRoomservicesStatus, PrjConst;
 
 {$R *.dfm}
 
@@ -176,15 +176,18 @@ begin
       RoomItem.Status := frm.Status;
     end;
 
-    lRoomServicesdAPI := TRoomServicesMobileAPICaller.Create;
-    try
-      lRoomServicesdAPI.SetStatus(sRoom, Now, lParams);
-    finally
-      lRoomServicesdAPI.Free;
+    if lParams.AnythingToSet then
+    begin
+      lRoomServicesdAPI := TRoomServicesMobileAPICaller.Create;
+      try
+        lRoomServicesdAPI.SetStatus(sRoom, Now, lParams);
+      finally
+        lRoomServicesdAPI.Free;
+      end;
     end;
 
+    // Always refresh, AllClean could have been used
     glb.RefreshTableByName('rooms');
-
 
   finally
     dsRoom.Free;
@@ -361,12 +364,18 @@ end;
 
 procedure TfrmRoomCleanMaintenanceStatus.btnAllCleanClick(Sender: TObject);
 begin
-  d.SetAllClean;
+  if MessageDlg(GetTranslatedtext('shTx_SetAllRoomsCleanConfirmation'), mtConfirmation, mbYesNo, 0) = mrYes then
+    d.SetAllClean
+  else
+    ModalResult := mrNone;
 end;
 
 procedure TfrmRoomCleanMaintenanceStatus.sButton6Click(Sender: TObject);
 begin
-  d.SetAllunClean;
+  if MessageDlg(GetTranslatedtext('shTx_SetAllRoomsUnCleanConfirmation'), mtConfirmation, mbYesNo, 0) = mrYes then
+    d.SetAllunClean
+  else
+    ModalResult := mrNone;
 end;
 
 end.

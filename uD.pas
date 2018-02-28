@@ -755,7 +755,7 @@ uses
     , uFrmCheckOut
     , UITypes
     , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit,
-    Math, uInvoiceDefinitions, uProvideARoom2, uRoomerCurrencymanager;
+    Math, uInvoiceDefinitions, uProvideARoom2, uRoomerCurrencymanager, uRoomServicesAPI;
 
 {$R *.dfm}
 
@@ -4456,40 +4456,42 @@ type
 
 procedure Td.SetUnclean(Room: string);
 var
-  s: string;
+  lApi: TRoomServicesMobileAPICaller;
+  RParams: RRoomServicesSetStatusParameters;
 begin
-  if not ctrlGetBoolean('useSetUnclean') then
-    exit;
-  s := '';
-  s := s + 'UPDATE rooms ' + chr(10);
-  s := s + '   Set Status = ' + _db('U') + chr(10);
-  s := s + ' where Room  = ' + _db(Room) + chr(10);
-  if not cmd_bySQL(s) then
-  begin
+  lApi := TRoomServicesMobileAPICaller.Create;
+  try
+    RParams.setStatus := true;
+    RParams.Status := 'U';
+    lApi.SetStatus(Room, Now, RParams);
+    glb.TableList['rooms'].RefreshFromServer;
+    g.RefreshRoomList;
+  finally
+    lApi.Free;
   end;
 end;
 
 procedure Td.SetAllClean;
 var
-  s: string;
+  lApi: TRoomServicesMobileAPICaller;
 begin
-  s := '';
-  s := s + 'UPDATE rooms ' + chr(10);
-  s := s + '   Set Status = ' + _db('C') + chr(10);
-  if not cmd_bySQL(s) then
-  begin
+  lApi := TRoomServicesMobileAPICaller.Create;
+  try
+    lApi.SetAllRoomStatus(Now, 'C');
+  finally
+    lApi.Free;
   end;
 end;
 
 procedure Td.SetAllUnClean;
 var
-  s: string;
+  lApi: TRoomServicesMobileAPICaller;
 begin
-  s := '';
-  s := s + 'UPDATE rooms ' + chr(10);
-  s := s + '   Set Status = ' + _db('U') + chr(10);
-  if not cmd_bySQL(s) then
-  begin
+  lApi := TRoomServicesMobileAPICaller.Create;
+  try
+    lApi.SetAllRoomStatus(Now, 'U');
+  finally
+    lApi.Free;
   end;
 end;
 
@@ -10882,9 +10884,9 @@ end;
 
 procedure Td.CheckOutGuest(RoomReservation: Integer; Room: String);
 begin
-
   d.roomerMainDataSet.SystemSetRoomStatus(RoomReservation, rsDeparted.AsStatusChar);
-  SetUnclean(Room);
+  if g.qUseSetUnclean then
+    SetUnclean(Room);
   g.updateCurrentGuestlist;
 end;
 
