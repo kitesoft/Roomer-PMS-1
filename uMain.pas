@@ -4356,9 +4356,8 @@ procedure TfrmMain.Open_RES_edForm(_grid: TAdvStringGrid);
 begin
   if GetSelectedRoomInformation then
   begin
-    if EditReservation(_iReservation, _iRoomReservation) then
-    begin
-    end;
+    EditReservation(_iReservation, _iRoomReservation);
+    PostMessage(handle, WM_REFRESH_PERIOD_VIEW_BOTTOM_REFRESH, 0, 0);
   end;
 end;
 

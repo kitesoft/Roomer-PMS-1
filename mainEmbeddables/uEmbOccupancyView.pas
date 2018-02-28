@@ -21,7 +21,7 @@ type
     fromDate, toDate: TDateTime;
     FOccupancyViewType: TOccupancyViewType;
     FCell0FontSize: Integer;
-    procedure TranslateAll;
+    procedure TranslateHeaders;
     procedure RefreshStats;
     procedure SetOccupancyViewType(const Value: TOccupancyViewType);
     function GetOriginalParentHeight: Integer;
@@ -52,6 +52,8 @@ implementation
 
 {$R *.dfm}
 
+uses uHotelStatisticsAPI, uHotelStatistics;
+
 { TembOccupancyView }
 
 procedure TembOccupancyView.SetCell0FontSize(const Value: Integer);
@@ -76,7 +78,6 @@ begin
       pnlEmbeddable.Parent.Height := 200;
 
     RefreshStats;
-    TranslateAll;
   end;
 end;
 
@@ -92,10 +93,9 @@ begin
 
   grdOccupancy.BeginUpdate;
   try
-    grdOccupancy.ColCount := trunc(toDate) - trunc(fromDate) + 1;
+//    grdOccupancy.ColCount := trunc(toDate) - trunc(fromDate) + 1;
     grdOccupancy.FixedCols := 1;
     RefreshStats;
-    TranslateAll;
     grdOccupancy.Show;
   finally
     grdOccupancy.EndUpdate;
@@ -104,77 +104,51 @@ end;
 
 procedure TembOccupancyView.RefreshStats;
 var
-  OCC, ADR, REVPAR, Revenue{, BAR} : Double;
-  RoomsSold, {RoomCount,} Availability, OOO : Integer;
-  s : String;
-  rSet : TRoomerDataSet;
   col : Integer;
+  lStats: THotelStatisticsList;
+  lDateStat: TSingleDateStatistics;
 begin
-    s := format(HOTEL_PERFORMANCE_QUERY_BETWEEN_DATES,
-         [
-          dateToSqlString(FromDate),
-          dateToSqlString(ToDate),
+  grdOccupancy.RowCount := 3 + (4 * ABS(ORD(OccupancyViewType = ovtAdvanced)));
+  grdOccupancy.ColCount := trunc(toDate) - trunc(fromDate) + 2;
 
-          dateToSqlString(FromDate),
-          dateToSqlString(ToDate),
-
-          dateToSqlString(FromDate),
-          dateToSqlString(ToDate),
-
-          dateToSqlString(FromDate),
-          dateToSqlString(ToDate),
-
-          dateToSqlString(FromDate),
-          dateToSqlString(ToDate)
-         ]);
-
-    copytoclipboard(s);
-//    debugmessage(s);
-
-    grdOccupancy.RowCount := 3 + (4 * ABS(ORD(OccupancyViewType = ovtAdvanced)));
-    grdOccupancy.ColCount := trunc(toDate) - trunc(fromDate) + 2;
-    rSet := CreateNewDataSet;
+  lStats := THotelStatisticsList.Create;
+  try
+    with THotelStatisticsMobileAPICaller.Create do
     try
-        hData.rSet_bySQL(rSet, s);
-        rSet.First;
-        col := 0;
-        while NOT rSet.EOF do
-        begin
-          inc(col);
-
-          OCC := rSet['OCC'];
-          REVPAR := rSet['RevPar'];
-          Availability := rSet['Availability'];
-          OOO := rSet['OOO'];
-
-          grdOccupancy.Cells[col,0] := formatFloat('#,##0.00 %', OCC);
-          grdOccupancy.Cells[col,1] := inttostr(Availability - OOO);
-          grdOccupancy.Cells[col,2] := formatFloat('#,##0.00', REVPAR);
-
-          if OccupancyViewType = ovtAdvanced then
-          begin
-            Revenue := rSet['Revenue'];
-            RoomsSold := rSet['RoomsSold'];
-            ADR := rSet['ADR'];
-//            BAR := 0.00;
-
-            grdOccupancy.Cells[col,3] := formatFloat('#,##0.00', Revenue);
-            grdOccupancy.Cells[col,4] := inttostr(RoomsSold);
-//            grdOccupancy.Cells[col,5] := formatFloat('#,##0.00', BAR);
-            grdOccupancy.Cells[col,5] := inttostr(OOO);
-            grdOccupancy.Cells[col,6] := formatFloat('#,##0.00', ADR);
-          end;
-
-          rSet.Next;
-        end;
+      GetHotelStatistics(fromDate, toDate, lStats);
     finally
-      freeAndNil(rSet);
+      Free;
     end;
+
+    col := 0;
+
+    for lDateStat in lStats.StatisticsPerDateList do // TODO: Force order by date!
+    begin
+      inc(col);
+
+      grdOccupancy.Cells[col,0] := lDateStat.Statistic['Occupancy'].FormattedValue;
+      grdOccupancy.Cells[col,1] := lDateStat.Statistic['SELLABLE_ROOMS'].FormattedValue;
+      grdOccupancy.Cells[col,2] := lDateStat.Statistic['REVPAR'].FormattedValue;
+
+      if OccupancyViewType = ovtAdvanced then
+      begin
+        grdOccupancy.Cells[col,3] := lDateStat.Statistic['REVENUES'].FormattedValue;
+        grdOccupancy.Cells[col,4] := lDateStat.Statistic['ROOMS_SOLD'].FormattedValue;
+        grdOccupancy.Cells[col,5] := lDateStat.Statistic['OOO_ROOMS'].FormattedValue;
+        grdOccupancy.Cells[col,6] := lDateStat.Statistic['ADR'].FormattedValue;
+      end;
+
+    end;
+
+    TranslateHeaders;
+  finally
+    lStats.Free;
+  end;
 
 end;
 
 
-procedure TembOccupancyView.TranslateAll;
+procedure TembOccupancyView.TranslateHeaders;
 begin
   grdOccupancy.Cells[0,0] := GetTranslatedText('shUI_Occupancy');
   grdOccupancy.Cells[0,1] := GetTranslatedText('shUI_Availability');
@@ -184,7 +158,6 @@ begin
   begin
     grdOccupancy.Cells[0,3] := GetTranslatedText('shUI_RoomRevenue');
     grdOccupancy.Cells[0,4] := GetTranslatedText('shUI_RoomsSold');
-//    grdOccupancy.Cells[0,5] := GetTranslatedText('shUI_BestAverageRate');
     grdOccupancy.Cells[0,5] := GetTranslatedText('shUI_OOO');
     grdOccupancy.Cells[0,6] := GetTranslatedText('shUI_AverageDailyRate');
   end;
