@@ -72,7 +72,7 @@ implementation
 { TManadatoryFieldsHelper }
 
 uses PrjConst, SysUtils, uUtils, uAppGlobal
-     ;
+     , uD;
 
 const MF_PMSSETTING_NAMES : Array[low(TMandatoryCheckinField)..high(TMandatoryCheckinField)] of String =
      ('CITY_MANDATORY',
@@ -136,8 +136,9 @@ end;
 
 function TMandatoryFieldHelper.isCurrentlyOn: Boolean;
 begin
-//  result := glb.GetPmsSettingsAsBoolean(MF_KEY_GROUP, PMSSettingName, False, True)
   Result := Self in glb.PMSSettings.MandatoryCheckinFields;
+  if Self = TMandatoryCheckinField.mfNationality then
+    Result := Result OR d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled
 end;
 
 class function TMandatoryFieldHelper.MinimumTagid: integer;

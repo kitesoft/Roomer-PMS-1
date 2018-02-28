@@ -67,6 +67,8 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
           object sTabSheet2: TsTabSheet
             Caption = 'Guest Info'
             SkinData.SkinSection = 'TRANSPARENT'
+            ExplicitLeft = 8
+            ExplicitTop = 19
             object sLabel6: TsLabel
               Left = 97
               Top = 126
@@ -612,6 +614,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               ImgUnchecked = 0
             end
             inline fraNationality: TfraCountryPanel
+              Tag = 105
               Left = 190
               Top = 204
               Width = 241
@@ -636,6 +639,7 @@ object FrmGuestCheckInForm: TFrmGuestCheckInForm
               end
             end
             inline fraCountry: TfraCountryPanel
+              Tag = 101
               Left = 190
               Top = 534
               Width = 241
