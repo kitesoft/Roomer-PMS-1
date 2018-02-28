@@ -7584,7 +7584,7 @@ begin
     Point := grPeriodRooms.ClientToScreen(Point);
     SetRoomCleanAndMaintenanceStatus(grPeriodRooms.cells[ACol, ARow], Point.X, Point.Y);
 
-    FOneDay_bMouseDown := false;
+    FPeriod_bMouseDown := false;
     if grPeriodRooms.dragging then
       grPeriodRooms.EndDrag(false);
     FillPeriodGridWithRooms;
