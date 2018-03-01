@@ -121,7 +121,6 @@ TYPE
     FExtraBedIncluded: Boolean;
     FExtraBed: Boolean;
     FExtraBedCostGroupAccount: Boolean;
-    FBreakfastCostGroupAccount: Boolean;
     FManualChannelId: Integer;
     FratePlanCode: String;
     FExpCOT: string;
@@ -206,7 +205,6 @@ TYPE
 
     property Breakfast  : TBreakfastType read FBreakfast   write FBreakfast;
     property BreakfastCost  : TAmount read FBreakfastCost   write FBreakfastCost      ;
-    property BreakfastCostGroupAccount : Boolean    read FBreakfastCostGroupAccount   write FBreakfastCostGroupAccount      ;
     property ExtraBed  : Boolean    read FExtraBed   write FExtraBed      ;
     property ExtraBedIncluded  : Boolean    read FExtraBedIncluded   write FExtraBedIncluded      ;
     property ExtraBedCost  : Double    read FExtraBedCost   write FExtraBedCost      ;

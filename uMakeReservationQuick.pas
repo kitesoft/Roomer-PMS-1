@@ -540,10 +540,8 @@ type
     lblExtraCurrency: TsLabel;
     Shape1: TShape;
     lblPerPerson: TsLabel;
-    lblOnGroupInvoice: TsLabel;
     lblPrice: TsLabel;
     edtBreakfastPrice: TsCurrencyEdit;
-    cbxBreakfastGrp: TsCheckBox;
     Alerts: TsTabSheet;
     grRoomRes: TcxGrid;
     tvRoomRes: TcxGridDBTableView;
@@ -1865,7 +1863,6 @@ end;
 procedure TfrmMakeReservationQuick.UpdateControls;
 begin
   edtBreakfastPrice.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) = TBreakFastType.Excluded;
-  cbxBreakfastGrp.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) <> TBreakFastType.None;
 end;
 
 procedure TfrmMakeReservationQuick.initCustomer;
@@ -4252,7 +4249,6 @@ begin
 
         oSelectedRoomItem.Breakfast := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex);
         oSelectedRoomItem.BreakfastCost := edtBreakfastPrice.Value;
-        oSelectedRoomItem.BreakfastCostGroupAccount := cbxBreakfastGrp.Checked;
       end;
 
       mRoomRates.next;

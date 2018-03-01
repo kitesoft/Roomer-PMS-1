@@ -322,7 +322,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1117
     Height = 577
-    ActivePage = taReservation
+    ActivePage = tabRoomRates
     Align = alClient
     TabOrder = 2
     OnChange = pgcMainChange
@@ -613,7 +613,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   SkinData.SkinSection = 'CHECKBOX'
                   ImgChecked = 0
                   ImgUnchecked = 0
-                  ExplicitLeft = 208
                 end
               end
             end
@@ -1341,7 +1340,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 0
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 91
                 end
                 object edContactAddress2: TsEdit
                   AlignWithMargins = True
@@ -1363,7 +1361,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 1
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 118
                 end
                 object edContactAddress3: TsEdit
                   AlignWithMargins = True
@@ -1385,7 +1382,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 2
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 145
                 end
                 object edContactAddress4: TsEdit
                   AlignWithMargins = True
@@ -1407,7 +1403,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 3
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 172
                 end
                 object chkContactIsGuest: TsCheckBox
                   AlignWithMargins = True
@@ -1446,7 +1441,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                   ShowHint = False
                   TabOrder = 4
                   SkinData.SkinSection = 'EDIT'
-                  ExplicitTop = 226
                 end
                 object cbxAddToGuestProfiles: TsCheckBox
                   AlignWithMargins = True
@@ -2895,7 +2889,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               TabOrder = 0
               SkinData.SkinSection = 'PANEL'
               object lblExtraCurrency: TsLabel
-                Left = 308
+                Left = 343
                 Top = 32
                 Width = 16
                 Height = 13
@@ -2909,23 +2903,15 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Height = 2
               end
               object lblPerPerson: TsLabel
-                Left = 331
+                Left = 366
                 Top = 32
                 Width = 12
                 Height = 13
                 Hint = 'Per person'
                 Caption = 'PP'
               end
-              object lblOnGroupInvoice: TsLabel
-                Left = 334
-                Top = 5
-                Width = 81
-                Height = 13
-                Alignment = taRightJustify
-                Caption = 'On group invoice'
-              end
               object lblPrice: TsLabel
-                Left = 253
+                Left = 289
                 Top = 5
                 Width = 23
                 Height = 13
@@ -2941,7 +2927,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 Caption = 'Breakfast:'
               end
               object edtBreakfastPrice: TsCurrencyEdit
-                Left = 234
+                Left = 269
                 Top = 29
                 Width = 65
                 Height = 21
@@ -2957,16 +2943,6 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
                 SkinData.SkinSection = 'EDIT'
                 GlyphMode.Blend = 0
                 GlyphMode.Grayed = False
-              end
-              object cbxBreakfastGrp: TsCheckBox
-                Left = 367
-                Top = 32
-                Width = 20
-                Height = 16
-                TabOrder = 2
-                SkinData.SkinSection = 'CHECKBOX'
-                ImgChecked = 0
-                ImgUnchecked = 0
               end
               object cbxBreakfast: TsComboBox
                 Left = 84
