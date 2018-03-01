@@ -2988,20 +2988,26 @@ begin
 //    'WHERE rtg.Active ' + 'AND rtg.Code=rtg.searchCode ' + 'AND pdd.date>=''%s'' AND pdd.date<=DATE_ADD(''%s'',INTERVAL %d DAY) ' +
 //    'GROUP BY pdd.date, rtg.code ' + 'ORDER BY pdd.date, rtg.code ', [sFrom, sFrom, FCurrentNumDays]);
 
-  sql := format('SELECT xxx.date, rtg.Code, rtg.TopClass AS searchCode, rtg.Description, NumRooms - UsedRooms AS freeRooms ' +
+  sql := ReplaceString(
+         ReplaceString(
+                'SELECT xxx.date, rtg.Code, rtg.TopClass AS searchCode, rtg.Description, SUM(NumRooms - UsedRooms) AS freeRooms ' +
                 'FROM ' +
-                '(SELECT DATE(pdd.date) AS date, rt.RoomType, rt.RoomTypeGroup, r.NumRooms, COUNT(rd.id) AS UsedRooms ' +
+                '(SELECT DATE(pdd.date) AS date, rt.RoomType, rt.RoomTypeGroup, r.NumRooms, rd.UsedRooms ' +
                 'FROM roomtypes rt ' +
                 '     JOIN  predefineddates pdd ' +
-                '     LEFT JOIN roomsdate rd ON pdd.date=rd.ADate AND rt.active AND rt.RoomType=rd.RoomType AND (ISNULL(rd.ResFlag) OR (NOT rd.ResFlag IN (''X'',''C'',''O'',''N''))) ' +
+                '     LEFT JOIN (SELECT rd.ADate, rd.RoomType, COUNT(rd.id) AS UsedRooms FROM roomsdate rd WHERE rd.ADate>=@FROM_DATE AND rd.ADate<=DATE_ADD(@FROM_DATE,INTERVAL @NUM_DAYS DAY) ' +
+                '                AND (ISNULL(rd.ResFlag) OR (NOT rd.ResFlag IN (''X'',''C'',''O'',''N''))) GROUP BY rd.ADate, rd.RoomType) rd ON rt.RoomType=rd.RoomType AND pdd.date=rd.ADate ' +
                 '     LEFT JOIN (SELECT r.RoomType, COUNT(r.id) AS NumRooms FROM rooms r WHERE r.Active AND NOT r.WildCard GROUP BY r.RoomType) AS r ON r.RoomType=rt.RoomType ' +
-                'WHERE pdd.date>=''%s'' AND pdd.date<=DATE_ADD(''%s'',INTERVAL %d DAY) ' +
+                'WHERE pdd.date>=@FROM_DATE AND pdd.date<=DATE_ADD(@FROM_DATE,INTERVAL @NUM_DAYS DAY) ' +
+                'AND rt.Active ' +
                 'GROUP BY pdd.date, rt.RoomType ' +
                 'ORDER BY pdd.date, rt.RoomType ' +
                 ') xxx ' +
                 'JOIN roomtypes rt ON rt.active AND rt.RoomType=xxx.RoomType ' +
                 'JOIN roomtypegroups rtg ON rtg.active AND rtg.Code=rtg.TopClass AND (rtg.Code=rt.RoomTypeGroup OR rtg.TopClass=rt.RoomTypeGroup) ' +
-                'GROUP BY xxx.date, xxx.RoomTypeGroup', [sFrom, sFrom, FCurrentNumDays]);
+                'GROUP BY xxx.date, xxx.RoomTypeGroup',
+                '@FROM_DATE', _DB(sFrom)),
+                '@NUM_DAYS', _DB(FCurrentNumDays));
   ThreadedDataGetter.execute(sql, BackgroundAvailabilityFetchHandler);
 end;
 
