@@ -4360,7 +4360,7 @@ begin
   if GetSelectedRoomInformation then
   begin
     EditReservation(_iReservation, _iRoomReservation);
-    PostMessage(handle, WM_REFRESH_PERIOD_VIEW_BOTTOM_REFRESH, 0, 0);
+    RefreshGrid;
   end;
 end;
 
