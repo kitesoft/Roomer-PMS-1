@@ -242,14 +242,14 @@ begin
 
       s := '   SELECT '#10 +
            '     pd.date AS dtDate, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking AND RR_Arrival(rd.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking AND RR_Arrival(rd.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
            '     IFNULL(dep.numRooms, 0) AS roomsDeparture, '#10 +
            '     IFNULL(dep.numGuests, 0) AS paxDeparture, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsInHouse, '#10 +
-           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q''), p.numGuests, 0)) AS paxInHouse, '#10 +
-           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, 1, 0)) AS roomsStayOver, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, p.numGuests, 0)) AS paxStayOver, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking, 1, 0)) AS roomsInHouse, '#10 +
+           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking , p.numGuests, 0)) AS paxInHouse, '#10 +
+           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, 1, 0)) AS roomsStayOver, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking  AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, p.numGuests, 0)) AS paxStayOver, '#10 +
            '     SUM(IF(rd.resFlag IN (''O''), 1, 0)) AS roomsWaitinglist, '#10 +
            '     SUM(IF(rd.resFlag IN (''O''), p.numGuests, 0)) AS paxWaitinglist, '#10 +
            '     SUM(IF(rd.resFlag IN (''L''), 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
@@ -258,10 +258,10 @@ begin
            '     SUM(IF(rd.resFlag IN (''A''), p.numGuests, 0)) AS paxAllotment, '#10 +
            '     SUM(IF(rd.resFlag IN (''N''), 1, 0)) AS roomsNoShow, '#10 +
            '     SUM(IF(rd.resFlag IN (''N''), p.numGuests, 0)) AS paxNoShow, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N''), 1, 0)) AS roomsTotal, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N''), p.numGuests, 0)) AS paxTotal, '#10 +
-           '     SUM(IF(rd.resFlag IN (''B'') AND r.outOfOrderBlocking=1, 1, 0)) AS roomsOutOfOrder, '#10 +
-           '     SUM(IF(rd.resFlag IN (''B'') AND r.outOfOrderBlocking=1, p.numGuests, 0)) AS paxOutOfOrder '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N'', ''B'') AND NOT r.outOfOrderBlocking, 1, 0)) AS roomsTotal, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N'', ''B'') AND NOT r.outOfOrderBlocking, p.numGuests, 0)) AS paxTotal, '#10 +
+           '     SUM(IF(r.outOfOrderBlocking=1, 1, 0)) AS roomsOutOfOrder, '#10 +
+           '     SUM(IF(r.outOfOrderBlocking=1, p.numGuests, 0)) AS paxOutOfOrder '#10 +
            'FROM '#10 +
            '    predefineddates pd '#10 +
            '    LEFT JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') '#10 +
@@ -281,7 +281,7 @@ begin
            '                ) dep ON dep.departure=pd.date '#10 +
            'WHERE '#10 +
            '    (pd.date >= %s AND pd.date<=%s) '#10 +
-           '    AND (ISNULL(rd.room) OR ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s)))) '#10 +
+           '    AND ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s))) '#10 +
            'GROUP BY pd.date';
 
     s := format(s, [lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
