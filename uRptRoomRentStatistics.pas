@@ -1,4 +1,4 @@
-unit uRptManagment;
+unit uRptRoomRentStatistics;
 
 interface
 
@@ -59,7 +59,7 @@ uses
   ;
 
 type
-  TfrmRptManagment = class(TForm)
+  TfrmRptRoomRentStatistics = class(TForm)
     Panel3: TsPanel;
     cxGroupBox2: TsGroupBox;
     cbxMonth: TsComboBox;
@@ -221,10 +221,7 @@ type
     { Public declarations }
   end;
 
-function rptManagment : boolean;
-
-var
-  frmRptManagment: TfrmRptManagment;
+function ShowRoomRentStatistics : boolean;
 
 implementation
 
@@ -238,22 +235,19 @@ uses
   uReservationStateDefinitions,
   uRptbViewer, uSQLUtils;
 
-function rptManagment : boolean;
+function ShowRoomRentStatistics : boolean;
+var
+  frm: TfrmRptRoomRentStatistics;
 begin
-  result := false;
-  frmRptManagment := TfrmRptManagment.Create(frmRptManagment);
+  frm := TfrmRptRoomRentStatistics.Create(nil);
   try
-    frmRptManagment.ShowModal;
-    if frmRptManagment.modalresult = mrOk then
-    begin
-      result := true;
-    end
+    Result := frm.ShowModal = mrOk;
   finally
-    freeandnil(frmRptManagment);
+    frm.Free;
   end;
 end;
 
-procedure TfrmRptManagment.ShowData;
+procedure TfrmRptRoomRentStatistics.ShowData;
 var
   y, m, d : word;
   lastDay : integer;
@@ -274,13 +268,13 @@ begin
 end;
 
 
-procedure TfrmRptManagment.tvStatsrevenueGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+procedure TfrmRptRoomRentStatistics.tvStatsrevenueGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(g.qNativeCurrency);
 end;
 
-procedure TfrmRptManagment.btnGuestsExcelClick(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.btnGuestsExcelClick(Sender: TObject);
 var
   sFilename : string;
   s         : string;
@@ -291,7 +285,7 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
-procedure TfrmRptManagment.btnRefreshClick(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.btnRefreshClick(Sender: TObject);
 var
   s    : string;
   rset1: TRoomerDataset;
@@ -339,11 +333,17 @@ begin
        '	 FROM ( '#10 +
        '		 SELECT DATE(pdd.date) AS ADate, '#10 +
        '				COUNT(rd.id) AS soldRooms, '#10 +
-       '				SUM((IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate)) * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS revenue, '#10 +
-       '				SUM((IF(rd.Discount > 0, IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), 0)) * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS totalDiscount, '#10 +
-       '				MAX(RoomRate * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS maxRate, '#10 +
-       '				MIN(RoomRate * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS minRate, '#10 +
-       '				AVG(RoomRate * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS averageRate, '#10 +
+       '        SUM(CASE WHEN rd.invoicenumber > 0 '#10+
+       '              THEN il.Price * il.currencyrate '#10+
+       '              ELSE IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate) * curr.aValue '#10+
+       '            END) as Revenue, '#10+
+       '        SUM(CASE WHEN rd.invoicenumber > 0 '#10+
+       '              THEN IF(il.ItemID = c.DIscountItem, il.Price * il.currencyrate,0) '#10+
+       '              ELSE IF(rd.Discount > 0, IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), 0) * curr.AValue '#10+
+       '            END) as TotalDiscount, '#10+
+       '				MAX(RoomRate * curr.AValue) AS maxRate, '#10 +
+       '				MIN(RoomRate * curr.AValue) AS minRate, '#10 +
+       '				AVG(RoomRate * curr.AValue) AS averageRate, '#10 +
        '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
        '				  JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
        '				  WHERE rd.adate=pdd.date AND rd.ResFlag=''G'' and RR_Arrival(rd.roomreservation, false)=pdd.date) AS checkedInToday, '#10 +
@@ -367,14 +367,16 @@ begin
        '				(SELECT COUNT(rd2.room) '#10 +
        '				  FROM roomsdate rd2 '#10 +
        '				  JOIN rooms rm2 on rm2.room = rd2.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden '#10 +
-       '				  where rd2.aDate = rd.aDate and rd2.resflag = ''B'' '#10 +
+       '				  JOIN reservations r on r.reservation = rd2.reservation and r.outOfOrderBlocking '#10 +
+       '				  where rd2.aDate = rd.aDate'#10 +
        '				 ) AS OOORooms '#10 +
        '		 FROM predefineddates pdd '#10 +
-       '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'', ''B'')) '#10 +
+       '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'')) '#10 +
        '		 JOIN rooms rm on rm.room = rd.room AND rm.active AND rm.statistics AND NOT rm.hidden '#10 +
        '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 '#10 +
        '     JOIN control c '#10 +
-       '     LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=rd.InvoiceNumber '#10 +
+//       '     LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=rd.InvoiceNumber '#10 +
+       '     LEFT JOIN invoicelines il ON il.InvoiceNumber=rd.InvoiceNumber and il.RoomReservationAlias=rd.roomreservation '#10 +
        '		 JOIN currencies curr on curr.Currency=rd.Currency '#10 +
        '		 WHERE '#10 +
        '				((pdd.date>=%s AND pdd.date<=%s)) '#10 +
@@ -456,7 +458,7 @@ begin
 
 end;
 
-procedure TfrmRptManagment.btnReportClick(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.btnReportClick(Sender: TObject);
 begin
 
   kbmStatReport.LoadFromDataSet(kbmStat, []);
@@ -482,7 +484,7 @@ begin
   end;
 end;
 
-procedure TfrmRptManagment.cbxMonthCloseUp(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.cbxMonthCloseUp(Sender: TObject);
 var
   y, m : word;
   lastDay : integer;
@@ -505,7 +507,7 @@ begin
   zSetDates := true;
 end;
 
-procedure TfrmRptManagment.dtDateFromChange(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.dtDateFromChange(Sender: TObject);
 begin
   if zSetDates then
   begin
@@ -517,12 +519,12 @@ begin
   end;
 end;
 
-procedure TfrmRptManagment.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TfrmRptRoomRentStatistics.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   //**
 end;
 
-procedure TfrmRptManagment.FormCreate(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
@@ -530,20 +532,20 @@ begin
   glb.fillListWithYears(cbxYear.Items, 1, False);
 end;
 
-procedure TfrmRptManagment.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TfrmRptRoomRentStatistics.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
     Close;
 end;
 
-procedure TfrmRptManagment.FormShow(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.FormShow(Sender: TObject);
 begin
   //**
   _restoreForm(self);
   showdata;
 end;
 
-procedure TfrmRptManagment.sButton2Click(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.sButton2Click(Sender: TObject);
 var
   aValue : integer;
   sDate  : string;

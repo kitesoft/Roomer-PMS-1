@@ -1,4 +1,4 @@
-object frmRptManagment: TfrmRptManagment
+object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   Left = 0
   Top = 0
   Caption = 'Room/Rent Statistics'
@@ -609,6 +609,10 @@ object frmRptManagment: TfrmRptManagment
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0

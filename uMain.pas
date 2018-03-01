@@ -1599,7 +1599,7 @@ uses
 		, uRptCustInvoices
 		, uRptResInvoices
 		,uFrmRBEContainer
-		, uRptManagment
+		, uRptRoomRentStatistics
 		, uRoomerExceptions
 		, uRoomerMessageDialog
 		, uLostAndFound
@@ -3783,8 +3783,9 @@ begin
 
   if Key = #27 then
   begin
-    FPeriod_bMouseDown := false;
-    FPeriodNO_MouseDown := false;
+  FOneDay_bMouseDown := false;
+  FPeriod_bMouseDown := false;
+  FPeriodNO_MouseDown := false;
   end;
 end;
 
@@ -4376,6 +4377,8 @@ begin
     if ViewMode = vmOneDay then
     begin
       FOneDay_bMouseDown := false;
+      FPeriod_bMouseDown := false;
+      FPeriodNO_MouseDown := false;
       if grOneDayRooms.dragging then
         grOneDayRooms.EndDrag(false);
       RefreshGrid;
@@ -5655,6 +5658,8 @@ var
 begin
   // --
   FOneDay_bMouseDown := false;
+  FPeriod_bMouseDown := false;
+  FPeriodNO_MouseDown := false;
   try
 
     // double click on Room Column
@@ -5678,6 +5683,8 @@ begin
 
       g.RefreshRoomList;
       FOneDay_bMouseDown := false;
+      FPeriod_bMouseDown := false;
+      FPeriodNO_MouseDown := false;
       if grOneDayRooms.dragging then
         grOneDayRooms.EndDrag(false);
       btnRefreshOneDay.Click;
@@ -5796,6 +5803,8 @@ begin
           begin
             RefreshGrid;
             FOneDay_bMouseDown := false;
+            FPeriod_bMouseDown := false;
+            FPeriodNO_MouseDown := false;
             if grOneDayRooms.dragging then
               grOneDayRooms.EndDrag(false);
           end;
@@ -5832,6 +5841,8 @@ begin
               end
   finally
     FOneDay_bMouseDown := false;
+    FPeriod_bMouseDown := false;
+    FPeriodNO_MouseDown := false;
 
     if grOneDayRooms.dragging then
       grOneDayRooms.EndDrag(false);
@@ -6347,6 +6358,8 @@ end;
 procedure TfrmMain.grOneDayRoomsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   FOneDay_bMouseDown := false;
+  FPeriod_bMouseDown := false;
+  FPeriodNO_MouseDown := false;
 end;
 
 procedure TfrmMain.grOneDayRoomsResize(Sender: TObject);
@@ -6395,6 +6408,8 @@ begin
     if (ABS(MousePoint.X - X) > 6) or (ABS(MousePoint.Y - Y) > 6) then
     begin
       FOneDay_bMouseDown := false;
+      FPeriod_bMouseDown := false;
+      FPeriodNO_MouseDown := false;
 
       ActiveGrid.MouseToCell(MousePoint.X, MousePoint.Y, iDragCell.X, iDragCell.Y);
 
@@ -7120,6 +7135,8 @@ begin
   timKillDrag.Enabled := false;
 
   FOneDay_bMouseDown := false;
+  FPeriod_bMouseDown := false;
+  FPeriodNO_MouseDown := false;
 
   if ActiveGrid.dragging then
     ActiveGrid.EndDrag(false);
@@ -7533,7 +7550,9 @@ const
   iExtraSpace = PERIOD_GRID_RECTANGLES_WIDTH;
 begin
 
+  FOneDay_bMouseDown := false;
   FPeriod_bMouseDown := false;
+  FPeriodNO_MouseDown := false;
   if grPeriodViewFilterOn then
   begin
     isFiltering := grPeriodViewFilterOn;
@@ -7582,7 +7601,10 @@ begin
     Point := grPeriodRooms.ClientToScreen(Point);
     SetRoomCleanAndMaintenanceStatus(grPeriodRooms.cells[ACol, ARow], Point.X, Point.Y);
 
+    FOneDay_bMouseDown := false;
     FPeriod_bMouseDown := false;
+    FPeriodNO_MouseDown := false;
+
     if grPeriodRooms.dragging then
       grPeriodRooms.EndDrag(false);
     FillPeriodGridWithRooms;
@@ -9295,6 +9317,7 @@ end;
 
 procedure TfrmMain.grPeriodRoomsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
+  FOneDay_bMouseDown := false;
   FPeriod_bMouseDown := false;
   FPeriodNO_MouseDown := false;
 end;
@@ -9827,6 +9850,7 @@ begin
 
     finally
       grPeriodRooms.endUpdate;
+      FOneDay_bMouseDown := false;
       FPeriod_bMouseDown := false;
       FPeriodNO_MouseDown := false;
     end;
@@ -9908,6 +9932,7 @@ end;
 
 procedure TfrmMain.grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  FOneDay_bMouseDown := false;
   FPeriod_bMouseDown := false;
   FPeriodNO_MouseDown := false;
 end;
@@ -9934,6 +9959,7 @@ begin
     RefreshGrid;
     grPeriodRooms_NO.GotoCell(ACol, ARow);
     NullGlobals;
+    FOneDay_bMouseDown := false;
     FPeriod_bMouseDown := false;
     FPeriodNO_MouseDown := false;
   end;
@@ -10771,7 +10797,7 @@ end;
 procedure TfrmMain.btnManagmentStatClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  rptManagment;
+  ShowRoomRentStatistics;
 end;
 
 procedure TfrmMain.btnDayClosingTimesClick(Sender: TObject);

@@ -136,7 +136,7 @@ uses
   u2DMatrix in 'u2DMatrix.pas' {frm2DMatrix},
   uTaxCalc in 'uTaxCalc.pas',
   uRptResInvoices in 'uRptResInvoices.pas' {frmRptResInvoices},
-  uRptManagment in 'uRptManagment.pas' {frmRptManagment},
+  uRptRoomRentStatistics in 'uRptRoomRentStatistics.pas' {frmRptRoomRentStatistics},
   uRptCustInvoices in 'uRptCustInvoices.pas' {frmRptCustInvoices},
   uFrmRBEContainer in 'uFrmRBEContainer.pas' {FrmRBEContainer},
   uFrmRbePreferences in 'uFrmRbePreferences.pas' {frmRbePreferences},

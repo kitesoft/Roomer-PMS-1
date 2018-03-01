@@ -119,7 +119,7 @@ uses uAppGlobal,
   uRptCustInvoices,
   uFrmRBEContainer,
   uFrmRbePreferences,
-  urptManagment,
+  urptRoomrentStatistics,
   uFrmHandleBookKeepingException,
   uRoomClassEdit,
   urptReservations,
@@ -1951,7 +1951,7 @@ begin
   frmRptCustInvoices := TfrmRptCustInvoices.Create(nil); frmRptCustInvoices.Free; frmRptCustInvoices := nil;
   FrmRBEContainer := TFrmRBEContainer.Create(nil); FrmRBEContainer.Free; FrmRBEContainer := nil;
   frmRbePreferences := TfrmRbePreferences.Create(nil); frmRbePreferences.Free; frmRbePreferences := nil;
-  frmRptManagment := TfrmRptManagment.Create(nil); frmRptManagment.Free; frmRptManagment := nil;
+  TfrmRptRoomRentStatistics.Create(nil).Free;
 
   FrmHandleBookKeepingException := TFrmHandleBookKeepingException.Create(nil); FrmHandleBookKeepingException.Free; FrmHandleBookKeepingException := nil;
   TFrmRoomClassEdit.Create(nil).Free;
