@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit  ;
+  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit, dxPScxPivotGridLnk  ;
 
 type
   TfrmInHouseReport = class(TfrmBaseRoomerForm)

@@ -890,6 +890,20 @@ begin
   constants.Add('shTx_MakeBlockReservation_NotFound', ' not found !!');
   constants.Add('shTx_MakeBlockReservation_NotFound2', '** Not Found **');
   constants.Add('shTx_MakeReservationBH_PriceFor', 'Price for ');
+
+  constants.Add('shTX_TotalListheaderDates', 'Dates');
+  constants.Add('shTX_TotalListheaderTotal', 'Totals');
+  constants.Add('shTX_TotalListheaderArrival', 'Arrivals');
+  constants.Add('shTX_TotalListheaderInhouse', 'In House');
+  constants.Add('shTX_TotalListheaderDeparture', 'Departures');
+  constants.Add('shTX_TotalListheaderStayOver', 'Stay overs');
+  constants.Add('shTX_TotalListheaderOptionalBooking', 'Optional Bookings');
+  constants.Add('shTX_TotalListheaderAllotments', 'Allotments');
+  constants.Add('shTX_TotalListheaderBlocked', 'Blocked');
+  constants.Add('shTX_TotalListheaderOutOfOrder', 'Out of order');
+  constants.Add('shTX_TotalListheaderWaitingList', 'Waiting list');
+  constants.Add('shTX_TotalListheaderNoShow', 'Noshows');
+
 end;
 
 procedure AddConstants_3;

@@ -110,6 +110,8 @@ type
     lvTotallistpaxAllotment: TcxGridDBBandedColumn;
     lvTotallistroomsTotal: TcxGridDBBandedColumn;
     lvTotallistpaxTotal: TcxGridDBBandedColumn;
+    lvTotallistroomsBlocked: TcxGridDBBandedColumn;
+    lvTotallistpaxBlocked: TcxGridDBBandedColumn;
     lvTotallistroomsOutOfOrder: TcxGridDBBandedColumn;
     lvTotallistpaxOutOfOrder: TcxGridDBBandedColumn;
     FormStore: TcxPropertiesStore;
@@ -138,8 +140,10 @@ type
 
 //    function LocationInString : string;
     procedure ShowData;
+    procedure SetColumnGroupHeaders;
   protected
     procedure DoLoadData; override;
+    procedure DoShow; override;
   public
     { Public declarations }
   end;
@@ -160,7 +164,7 @@ uses
   , uRoomerDefinitions
   , uMain, uReservationStateDefinitions
   , DateUtils
-  , uSQLUtils;
+  , uSQLUtils, PrjConst;
 
 
 function rptTotalList : boolean;
@@ -174,6 +178,23 @@ begin
   end;
 end;
 
+
+procedure TfrmRptTotallist.SetColumnGroupHeaders;
+begin
+  lvTotallist.Bands[0].Caption := GetTranslatedText('shTX_TotalListheaderDates');
+  lvTotallist.Bands[1].Caption := GetTranslatedText('shTX_TotalListheaderTotal');
+  lvTotallist.Bands[2].Caption := GetTranslatedText('shTX_TotalListheaderArrival');
+  lvTotallist.Bands[3].Caption := GetTranslatedText('shTX_TotalListheaderInhouse');
+  lvTotallist.Bands[4].Caption := GetTranslatedText('shTX_TotalListheaderDeparture');
+  lvTotallist.Bands[5].Caption := GetTranslatedText('shTX_TotalListheaderStayOver');
+  lvTotallist.Bands[6].Caption := GetTranslatedText('shTX_TotalListheaderOptionalBooking');
+  lvTotallist.Bands[7].Caption := GetTranslatedText('shTX_TotalListheaderAllotments');
+  lvTotallist.Bands[8].Caption := GetTranslatedText('shTX_TotalListheaderBlocked');
+  lvTotallist.Bands[9].Caption := GetTranslatedText('shTX_TotalListheaderOutOfOrder');
+  lvTotallist.Bands[10].Caption := GetTranslatedText('shTX_TotalListheaderWaitingList');
+  lvTotallist.Bands[11].Caption := GetTranslatedText('shTX_TotalListheaderNoShow');
+
+end;
 
 procedure TfrmRptTotallist.ShowData;
 var
@@ -242,14 +263,14 @@ begin
 
       s := '   SELECT '#10 +
            '     pd.date AS dtDate, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking AND RR_Arrival(rd.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking AND RR_Arrival(rd.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
            '     IFNULL(dep.numRooms, 0) AS roomsDeparture, '#10 +
            '     IFNULL(dep.numGuests, 0) AS paxDeparture, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking, 1, 0)) AS roomsInHouse, '#10 +
-           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking , p.numGuests, 0)) AS paxInHouse, '#10 +
-           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, 1, 0)) AS roomsStayOver, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'', ''B'') AND NOT r.outOfOrderBlocking  AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, p.numGuests, 0)) AS paxStayOver, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') , 1, 0)) AS roomsInHouse, '#10 +
+           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'') , p.numGuests, 0)) AS paxInHouse, '#10 +
+           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, 1, 0)) AS roomsStayOver, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, p.numGuests, 0)) AS paxStayOver, '#10 +
            '     SUM(IF(rd.resFlag IN (''O''), 1, 0)) AS roomsWaitinglist, '#10 +
            '     SUM(IF(rd.resFlag IN (''O''), p.numGuests, 0)) AS paxWaitinglist, '#10 +
            '     SUM(IF(rd.resFlag IN (''L''), 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
@@ -258,8 +279,10 @@ begin
            '     SUM(IF(rd.resFlag IN (''A''), p.numGuests, 0)) AS paxAllotment, '#10 +
            '     SUM(IF(rd.resFlag IN (''N''), 1, 0)) AS roomsNoShow, '#10 +
            '     SUM(IF(rd.resFlag IN (''N''), p.numGuests, 0)) AS paxNoShow, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N'', ''B'') AND NOT r.outOfOrderBlocking, 1, 0)) AS roomsTotal, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N'', ''B'') AND NOT r.outOfOrderBlocking, p.numGuests, 0)) AS paxTotal, '#10 +
+           '     SUM(IF(rd.resFlag IN (''B'') AND not r.outOfOrderBlocking, 1, 0)) AS roomsBlocked, '#10 +
+           '     SUM(IF(rd.resFlag IN (''B'') AND not r.outOfOrderBlocking, p.numGuests, 0)) AS paxBlocked, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N'', ''B'') and not r.outOfOrderBlocking, 1, 0)) AS roomsTotal, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N'', ''B'') and not r.outOfOrderBlocking, p.numGuests, 0)) AS paxTotal, '#10 +
            '     SUM(IF(r.outOfOrderBlocking=1, 1, 0)) AS roomsOutOfOrder, '#10 +
            '     SUM(IF(r.outOfOrderBlocking=1, p.numGuests, 0)) AS paxOutOfOrder '#10 +
            'FROM '#10 +
@@ -271,17 +294,18 @@ begin
            '    LEFT JOIN (SELECT RoomReservation, COUNT(*) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
            '    LEFT JOIN (SELECT RR_departure(rr2.roomreservation, false) as departure, '#10+
            '                      SUM(p.numGuests) AS numGuests, '#10+
-           '                      COUNT(*) AS numRooms FROM roomreservations rr2 '#10 +
-           '                    JOIN (SELECT RoomReservation, COUNT(*) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
-           '	                  LEFT JOIN rooms ON (rooms.room = rr2.room AND rooms.active AND not rooms.wildcard and rooms.location in (%s)) '#10 +
-           '                    WHERE rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
-           '                      AND (rr2.rrIsNoRoom or not IsNUll(rooms.room)) '#10+
-           '                    GROUP BY rr2.departure '#10+
-           '                    HAVING((rr2.departure >= %s AND rr2.departure<= %s )) '#10+
-           '                ) dep ON dep.departure=pd.date '#10 +
+           '                      COUNT(*) AS numRooms '#10 +
+           '               FROM roomreservations rr2 '#10 +
+           '               JOIN (SELECT RoomReservation, COUNT(*) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
+           '	             LEFT JOIN rooms ON (rooms.room = rr2.room AND rooms.active AND not rooms.wildcard and rooms.location in (%s)) '#10 +
+           '               WHERE rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
+           '                 AND (rr2.rrIsNoRoom or not IsNUll(rooms.room)) '#10+
+           '               GROUP BY rr2.departure '#10+
+           '               HAVING((rr2.departure >= %s AND rr2.departure<= %s )) '#10+
+           '              ) dep ON dep.departure=pd.date '#10 +
            'WHERE '#10 +
            '    (pd.date >= %s AND pd.date<=%s) '#10 +
-           '    AND ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s))) '#10 +
+           '    AND ( ISNULL(rd.room) OR ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s)))) '#10 +
            'GROUP BY pd.date';
 
     s := format(s, [lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
@@ -313,6 +337,12 @@ begin
     lExecutionPlan.Free;
   end;
 
+end;
+
+procedure TfrmRptTotallist.DoShow;
+begin
+  inherited;
+  SetColumnGroupHeaders;
 end;
 
 procedure TfrmRptTotallist.btnRefreshClick(Sender: TObject);
