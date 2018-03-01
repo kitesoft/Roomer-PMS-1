@@ -2054,6 +2054,7 @@ object frmMain: TfrmMain
             DirectInput = False
             ShowWeeks = True
             PopupWidth = 250
+            Weekends = [dowLocaleDefault]
           end
           object pnlStaffComm: TsPanel
             AlignWithMargins = True
@@ -24072,8 +24073,8 @@ object frmMain: TfrmMain
     Enabled = False
     Interval = 500
     OnTimer = timRetryRefreshTimer
-    Left = 920
-    Top = 568
+    Left = 936
+    Top = 576
   end
   object timMessages: TTimer
     Enabled = False
@@ -24238,5 +24239,12 @@ object frmMain: TfrmMain
     object mnuFilterRoomType: TMenuItem
       Caption = 'Roomtype'
     end
+  end
+  object tmrDateChangeDelay: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmrDateChangeDelayTimer
+    Left = 968
+    Top = 472
   end
 end

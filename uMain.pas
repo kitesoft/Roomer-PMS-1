@@ -691,6 +691,7 @@ type
     acResStatusPerDay: TAction;
     dxBarButton9: TdxBarButton;
     btnCleaningReport: TdxBarLargeButton;
+    tmrDateChangeDelay: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -988,6 +989,7 @@ type
       var AText: string);
     procedure btnBreakfastListClick(Sender: TObject);
     procedure btnCleaningReportClick(Sender: TObject);
+    procedure tmrDateChangeDelayTimer(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -7296,6 +7298,13 @@ begin
   RedisplayGuestWindows;
 end;
 
+procedure TfrmMain.tmrDateChangeDelayTimer(Sender: TObject);
+begin
+  TTimer(Sender).Enabled := false;
+  PostMessage(handle, WM_REFRESH_DATE, 0, 0);
+  PostMessage(handle, WM_REFRESH_STAFF_COMM_NOTIFIER, 0, 0);
+end;
+
 procedure TfrmMain.pnlNoRoomDropDragDrop(Sender, Source: TObject; X, Y: integer);
 var
   // ACol : integer;
@@ -7524,10 +7533,10 @@ end;
 
 procedure TfrmMain.dtDateChange(Sender: TObject);
 begin
+  tmrDateChangeDelay.Enabled := false;
   zDateFrom := trunc(dtDate.Date);
   zDateTo := zDateFrom + zNights;
-  PostMessage(handle, WM_REFRESH_DATE, 0, 0);
-  PostMessage(handle, WM_REFRESH_STAFF_COMM_NOTIFIER, 0, 0);
+  tmrDateChangeDelay.Enabled := True;
 end;
 
 procedure TfrmMain.grPeriodRoomsEnter(Sender: TObject);
