@@ -275,7 +275,7 @@ inherited frmRptTotallist: TfrmRptTotallist
           Format = '0'
           Kind = skSum
           FieldName = 'paxStay'
-          Column = lvTotallistpaxStay
+          Column = lvTotallistpaxStayOver
         end
         item
           Format = '0'
@@ -311,7 +311,7 @@ inherited frmRptTotallist: TfrmRptTotallist
         item
           Format = '0'
           FieldName = 'roomsStay'
-          Column = lvTotallistroomsStay
+          Column = lvTotallistroomsStayOver
         end
         item
           Format = '0'
@@ -379,7 +379,7 @@ inherited frmRptTotallist: TfrmRptTotallist
           Caption = 'Departure'
         end
         item
-          Caption = 'Stay'
+          Caption = 'StayOver'
         end
         item
           Caption = 'Optional Booking'
@@ -464,18 +464,18 @@ inherited frmRptTotallist: TfrmRptTotallist
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object lvTotallistroomsStay: TcxGridDBBandedColumn
+      object lvTotallistroomsStayOver: TcxGridDBBandedColumn
         Caption = 'Rooms'
-        DataBinding.FieldName = 'roomsStay'
+        DataBinding.FieldName = 'roomsStayOver'
         PropertiesClassName = 'TcxCalcEditProperties'
         OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 5
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object lvTotallistpaxStay: TcxGridDBBandedColumn
+      object lvTotallistpaxStayOver: TcxGridDBBandedColumn
         Caption = 'Guests'
-        DataBinding.FieldName = 'paxStay'
+        DataBinding.FieldName = 'paxStayOver'
         PropertiesClassName = 'TcxCalcEditProperties'
         OnGetDisplayText = lvTotallistHideZeroValue
         Position.BandIndex = 5
@@ -639,11 +639,11 @@ inherited frmRptTotallist: TfrmRptTotallist
         DataType = ftInteger
       end
       item
-        Name = 'roomsStay'
+        Name = 'roomsStayOver'
         DataType = ftInteger
       end
       item
-        Name = 'paxStay'
+        Name = 'paxStayOver'
         DataType = ftInteger
       end
       item

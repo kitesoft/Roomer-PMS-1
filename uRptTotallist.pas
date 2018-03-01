@@ -102,8 +102,8 @@ type
     lvTotallistpaxInhouse: TcxGridDBBandedColumn;
     lvTotallistroomsDeparture: TcxGridDBBandedColumn;
     lvTotallistpaxDeparture: TcxGridDBBandedColumn;
-    lvTotallistroomsStay: TcxGridDBBandedColumn;
-    lvTotallistpaxStay: TcxGridDBBandedColumn;
+    lvTotallistroomsStayOver: TcxGridDBBandedColumn;
+    lvTotallistpaxStayOver: TcxGridDBBandedColumn;
     lvTotallistroomsWaitinglist: TcxGridDBBandedColumn;
     lvTotallistpaxWaitinglist: TcxGridDBBandedColumn;
     lvTotallistRoomsAllotment: TcxGridDBBandedColumn;
@@ -230,6 +230,7 @@ begin
   try
 
     // See https://promoir.atlassian.net/wiki/x/B4BEB for an explanation of the different states
+    // See https://promoir.atlassian.net/wiki/spaces/RP1/pages/71598087/Explanation+of+columns+in+TotalList
 
 {$REGION 'SQL statement'}
     lList := frmMain.FilteredLocations;
@@ -241,14 +242,14 @@ begin
 
       s := '   SELECT '#10 +
            '     pd.date AS dtDate, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rr.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rr.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
            '     IFNULL(dep.numRooms, 0) AS roomsDeparture, '#10 +
            '     IFNULL(dep.numGuests, 0) AS paxDeparture, '#10 +
            '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsInHouse, '#10 +
            '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q''), p.numGuests, 0)) AS paxInHouse, '#10 +
-           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsStay, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q''), p.numGuests, 0)) AS paxStay, '#10 +
+           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, 1, 0)) AS roomsStayOver, '#10 +
+           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, p.numGuests, 0)) AS paxStayOver, '#10 +
            '     SUM(IF(rd.resFlag IN (''O''), 1, 0)) AS roomsWaitinglist, '#10 +
            '     SUM(IF(rd.resFlag IN (''O''), p.numGuests, 0)) AS paxWaitinglist, '#10 +
            '     SUM(IF(rd.resFlag IN (''L''), 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
@@ -264,7 +265,7 @@ begin
            'FROM '#10 +
            '    predefineddates pd '#10 +
            '    LEFT JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') '#10 +
-           '	  LEFT JOIN rooms ON (rooms.room = rd.room AND rooms.wildcard = 0 and rooms.location in (%s)) AND ((substring(rd.room, 1, 1) = ''<'') OR (rooms.active = 1))'#10 +
+           '	  LEFT JOIN rooms ON (rooms.room = rd.room)'#10 +
            '    LEFT JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
            '    LEFT JOIN reservations r ON r.Reservation=rr.Reservation '#10 +
            '    LEFT JOIN (SELECT RoomReservation, COUNT(*) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
@@ -272,17 +273,18 @@ begin
            '                      SUM(p.numGuests) AS numGuests, '#10+
            '                      COUNT(*) AS numRooms FROM roomreservations rr2 '#10 +
            '                    JOIN (SELECT RoomReservation, COUNT(*) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
-           '	                  LEFT JOIN rooms ON (rooms.room = rr2.room AND rooms.wildcard = 0 and rooms.location in (%s)) '#10 +
+           '	                  LEFT JOIN rooms ON (rooms.room = rr2.room AND rooms.active AND not rooms.wildcard and rooms.location in (%s)) '#10 +
            '                    WHERE rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
            '                      AND (rr2.rrIsNoRoom or not IsNUll(rooms.room)) '#10+
            '                    GROUP BY rr2.departure '#10+
            '                    HAVING((rr2.departure >= %s AND rr2.departure<= %s )) '#10+
            '                ) dep ON dep.departure=pd.date '#10 +
            'WHERE '#10 +
-           '    ((pd.date >= %s AND pd.date<=%s)) '#10 +
+           '    (pd.date >= %s AND pd.date<=%s) '#10 +
+           '    AND (ISNULL(rd.room) OR ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s)))) '#10 +
            'GROUP BY pd.date';
 
-    s := format(s, [lLocationClause, lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true)]);
+    s := format(s, [lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
 
 {$ENDREGION}
 
