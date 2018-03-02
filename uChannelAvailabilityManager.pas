@@ -2990,7 +2990,7 @@ begin
 
   sql := ReplaceString(
          ReplaceString(
-                'SELECT xxx.date, rtg.Code, rtg.TopClass AS searchCode, rtg.Description, SUM(NumRooms - UsedRooms) AS freeRooms ' +
+                'SELECT xxx.date, rtg.Code, rtg.TopClass AS searchCode, rtg.Description, SUM(NumRooms - IFNULL(UsedRooms, 0)) AS freeRooms ' +
                 'FROM ' +
                 '(SELECT DATE(pdd.date) AS date, rt.RoomType, rt.RoomTypeGroup, r.NumRooms, rd.UsedRooms ' +
                 'FROM roomtypes rt ' +
