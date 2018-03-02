@@ -86,7 +86,6 @@ type
     edHomepage: TsEdit;
     gbxGuest: TsGroupBox;
     clabMarkedSegment: TsLabel;
-    LMDSimpleLabel7: TsLabel;
     LMDSimpleLabel8: TsLabel;
     LMDSimpleLabel5: TsLabel;
     LMDSimpleLabel12: TsLabel;
@@ -120,10 +119,11 @@ type
     timBlink: TTimer;
     btnPasteFile: TsButton;
     fraLookupMarketSegment: TfraLookupMarketSegment;
-    fraCountryPanel: TfraCountryPanel;
     fraCurrencyPanel: TfraCurrencyPanel;
     fraChannelPanel: TfraChannelPanel;
     fraPriceCodePanel: TfraPriceCodePanel;
+    fraCountryPanel: TfraCountryPanel;
+    LMDSimpleLabel7: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BtnOkClick(Sender: TObject);

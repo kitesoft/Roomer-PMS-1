@@ -61,7 +61,6 @@ type
     procedure DoInternalSelect(); virtual;
     function ValidateCode(const aCode: string): boolean; virtual;
     function ReadDescription(const aCode: string): string; virtual;
-    procedure SetFocus; override;
   public
     constructor Create(aOwner: TCOmponent); override;
     destructor Destroy; override;
@@ -70,6 +69,7 @@ type
     function EventsEnabled: boolean;
     property IsValid: boolean read GetIsValid;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
+    procedure SetFocus; override;
 
   protected
     { Public declarations }
@@ -189,7 +189,7 @@ function TfraCustomLookupPanel.ReadDescription(const aCode: string): string;
 var
   bm: TBookmark;
 begin
-  Result := GetTranslatedText('shNotF_star');
+  Result := '';
   if assigned(FDataset) and FDataset.Active and assigned(FDataset.FindField(FDescriptionField)) then
   begin
     bm := FDataset.Bookmark;

@@ -51,7 +51,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 567
+        Width = 566
         Height = 183
         Align = alLeft
         Caption = 'Invoice Header'
@@ -141,17 +141,35 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
         end
+        object sLabel1: TsLabel
+          Left = 2
+          Top = 132
+          Width = 103
+          Height = 13
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = 'Zip / City :'
+          Color = 15400938
+          ParentColor = False
+          ParentFont = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+        end
         object rgrInvoiceAddressType: TsRadioGroup
           AlignWithMargins = True
-          Left = 373
+          Left = 372
           Top = 15
           Width = 189
-          Height = 163
+          Height = 166
           Margins.Top = 0
+          Margins.Bottom = 0
           Align = alRight
           Caption = 'Invoice header method'
           ParentBackground = False
-          TabOrder = 0
+          TabOrder = 8
           OnClick = rgrInvoiceAddressTypeClick
           SkinData.SkinSection = 'GROUPBOX'
           ItemIndex = 1
@@ -257,7 +275,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
         object edtAddress3: TsEdit
           Left = 111
           Top = 129
-          Width = 253
+          Width = 84
           Height = 21
           AutoSize = False
           Color = clWhite
@@ -277,9 +295,9 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           BoundLabel.Font.Style = []
         end
         object edtAddress4: TsEdit
-          Left = 111
-          Top = 152
-          Width = 253
+          Left = 201
+          Top = 129
+          Width = 163
           Height = 21
           AutoSize = False
           Color = clWhite
@@ -303,7 +321,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Top = 13
           Width = 253
           Height = 22
-          TabOrder = 7
+          TabOrder = 0
           ExplicitLeft = 111
           ExplicitTop = 13
           ExplicitWidth = 253
@@ -335,6 +353,30 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
               Height = 22
               ExplicitLeft = 167
               ExplicitHeight = 22
+            end
+          end
+        end
+        inline fraCountryPanel: TfraCountryPanel
+          Left = 111
+          Top = 152
+          Width = 253
+          Height = 20
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 7
+          ExplicitLeft = 111
+          ExplicitTop = 152
+          ExplicitWidth = 253
+          inherited pnlLookup: TsPanel
+            Width = 253
+            ExplicitWidth = 253
+            inherited lblDescription: TsLabel
+              Width = 160
+              Height = 20
             end
           end
         end
@@ -414,13 +456,14 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           TabOrder = 3
           SkinData.CustomFont = True
           SkinData.ColorTone = clRed
+          ExplicitLeft = 0
         end
       end
       object pnlInvoiceProperties: TsPanel
         AlignWithMargins = True
-        Left = 576
+        Left = 575
         Top = 9
-        Width = 410
+        Width = 411
         Height = 177
         Margins.Top = 9
         Align = alClient
@@ -459,7 +502,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 4
           Top = 6
-          Width = 402
+          Width = 403
           Height = 18
           Margins.Top = 5
           Align = alTop
@@ -507,7 +550,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 30
-          Width = 281
+          Width = 282
           Height = 17
           Margins.Left = 124
           Align = alTop
@@ -528,7 +571,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 53
-          Width = 281
+          Width = 282
           Height = 17
           Margins.Left = 124
           Align = alTop
@@ -548,7 +591,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 76
-          Width = 279
+          Width = 280
           Height = 21
           Margins.Left = 124
           Margins.Right = 5
@@ -569,7 +612,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           AlignWithMargins = True
           Left = 125
           Top = 103
-          Width = 279
+          Width = 280
           Height = 20
           Margins.Left = 124
           Margins.Right = 5
@@ -584,12 +627,12 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           TabOrder = 1
           ExplicitLeft = 125
           ExplicitTop = 103
-          ExplicitWidth = 279
+          ExplicitWidth = 280
           inherited pnlLookup: TsPanel
-            Width = 279
-            ExplicitWidth = 279
+            Width = 280
+            ExplicitWidth = 280
             inherited lblDescription: TsLabel
-              Width = 186
+              Width = 187
               Height = 20
             end
           end

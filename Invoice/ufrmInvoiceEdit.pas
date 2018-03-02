@@ -81,7 +81,7 @@ uses
   , Generics.Collections
   , cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
-  , uAmount, uCurrencyConstants, uFraLookupPanel, htmlhint, uFraCustomerPanel
+  , uAmount, uCurrencyConstants, uFraLookupPanel, htmlhint, uFraCustomerPanel, uFraCountryPanel
   ;
 
 type
@@ -371,6 +371,8 @@ type
     N1: TMenuItem;
     mnuTransferPaymentToInvoicedindex: TMenuItem;
     fraCustomer: TfraCustomerPanel;
+    fraCountryPanel: TfraCountryPanel;
+    sLabel1: TsLabel;
     procedure FormCreate(Sender: TObject);
     procedure agrLinesMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure evtCustomerChangedAndValid(Sender: TObject);
@@ -466,7 +468,7 @@ type
 
     zDoSave: boolean;
 
-    zCountry: string;
+//    zCountry: string;
 
     FRoomInfoList: TRoomInfoList;
     SelectableRooms: TRoomInfoList;
@@ -2903,6 +2905,9 @@ begin
   fraCustomer.lblDescription.Visible := false;
   fraCustomer.OnChangedAndValid := evtCustomerChangedAndValid;
 
+  fraCountryPanel.OnChangedAndValid := evtHeaderChanged;
+  fraCountryPanel.AllowEmpty := true;
+
   RefreshData;
   UpdateCaptions;
   UpdateControls;
@@ -3327,7 +3332,7 @@ begin
     _db(edtAddress2.Text),
     _db(edtAddress3.Text),
     _db(edtAddress4.Text),
-    _db(zCountry),
+    _db(fraCountryPanel.Code),
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
     rgrInvoiceAddressType.itemIndex,
@@ -3355,7 +3360,7 @@ begin
       _db(edtAddress2.Text),
       _db(edtAddress3.Text),
       _db(edtAddress4.Text),
-      _db(zCountry),
+      _db(fraCountryPanel.Code),
       _db(memExtraText.Lines.Text),
       _db(edtPersonalId.Text),
       rgrInvoiceAddressType.itemIndex,
@@ -3450,7 +3455,7 @@ begin
   s := s + ', ' + format('(SELECT IFNULL((SELECT Country FROM invoiceaddressees ia WHERE ia.invoiceNumber=%d ' +
     '        AND ia.Reservation=%d ' + '        AND ia.RoomReservation=%d ' + '        AND ia.SplitNumber=%d ' +
     '        AND ia.InvoiceIndex=%d ' + '       ), %s))', [aInvoiceNumber, FReservation, FRoomReservation,
-    ord(FInvoiceType), InvoiceIndex, _db(zCountry)]);
+    ord(FInvoiceType), InvoiceIndex, _db(fraCountryPanel.Code)]);
   s := s + ', ' + _db(FInvoiceLinesList.TotalOnInvoice.ToNative * iMultiplier);
   s := s + ', ' + _db((FInvoiceLinesList.TotalOnInvoice -  FInvoiceLinesList.TotalVatOnInvoice).ToNative * iMultiplier);
   s := s + ', ' + _db(FInvoiceLinesList.TotalVatOnInvoice.ToNative * iMultiplier);
@@ -4066,7 +4071,7 @@ begin
   edtAddress2.Text := CustomerHolderEX.Address2;
   edtAddress3.Text := CustomerHolderEX.Address3;
   edtAddress4.Text := CustomerHolderEX.Address4;
-  zCountry := CustomerHolderEX.Country;
+  fraCountryPanel.Code := CustomerHolderEX.Country;
   HeaderChanged := True;
   UpdateTaxinvoiceLinesForAllRooms;
 
@@ -5231,7 +5236,7 @@ end;
 procedure TfrmInvoiceEdit.SetCustEdits;
 begin
   fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
-
+  fraCountryPanel.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
   if rgrInvoiceAddressType.itemIndex = 5 then
   begin
     fraCustomer.Code := ctrlGetString('RackCustomer');
@@ -5459,7 +5464,7 @@ begin
       edtAddress2.Text := trim(Address2);
       edtAddress3.Text := trim(Address3);
       edtAddress4.Text := trim(Address4);
-      zCountry := trim(Country);
+      fraCountryPanel.Code := trim(Country);
       result := True;
     end;
 end;
@@ -5531,7 +5536,7 @@ begin
       edtAddress4.Text := trim(Address4);
       edtInvRefrence.Text:= trim(invRefrence);
 
-      zCountry := trim(Country);
+      fraCountryPanel.Code := trim(Country);
       result := True;
     end;
   finally
@@ -5607,7 +5612,7 @@ begin
     edtInvRefrence.Text:= trim(invRefrence);
     memExtraText.Lines.Text := trim(FreeText);
 
-    zCountry := trim(Country);
+    fraCountryPanel.Code := trim(Country);
     result := True;
   end;
 end;
@@ -5672,7 +5677,7 @@ begin
     edtAddress3.Text := trim(Address3);
     edtAddress4.Text := trim(Address4);
     edtInvRefrence.Text:= trim(invRefrence);
-    zCountry := trim(Country);
+    fraCountryPanel.Code := trim(Country);
 
     result := True;
   finally
@@ -5748,7 +5753,7 @@ begin
     edtAddress2.Text := trim(Address2);
     edtAddress3.Text := trim(Address3);
     edtAddress4.Text := trim(Address4);
-    zCountry := trim(Country);
+    fraCountryPanel.Code := trim(Country);
     result := True;
   finally
     FreeAndNil(rSet);
@@ -5788,6 +5793,7 @@ end;
 procedure TfrmInvoiceEdit.rgrInvoiceAddressTypeClick(Sender: TObject);
 begin
   fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
+  fraCountryPanel.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
 
   case rgrInvoiceAddressType.itemIndex of
     0:
