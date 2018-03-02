@@ -700,6 +700,7 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure edContactPerson1PropertiesCloseUp(Sender: TObject);
     procedure cbxBreakfastChange(Sender: TObject);
+    procedure edtBreakfastPriceKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     zCustomerChanged: boolean;
@@ -4376,6 +4377,12 @@ procedure TfrmMakeReservationQuick.edNightsChange(Sender: TObject);
 begin
   zNights := edNights.Value;
   dtDeparture.date := dtArrival.date + zNights;
+end;
+
+procedure TfrmMakeReservationQuick.edtBreakfastPriceKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key in [',', '.'] then
+    Key := FormatSettings.DecimalSeparator;
 end;
 
 destructor TfrmMakeReservationQuick.Destroy;
