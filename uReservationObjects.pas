@@ -595,6 +595,7 @@ begin
               RoomObject.Currency := Trim(FieldByName('Currency').asString);
               RoomObject.FPrice := FieldByName('RoomPrice1').AsFloat;
               RoomObject.FDiscount := FieldByName('Discount').AsFloat;
+              RoomObject.Percentage := FieldByName('Percentage').AsBoolean;
               RoomObject.FPMInfo := Trim(FieldByName('rrPMInfo').Text);
               RoomObject.FHiddenInfo := Trim(FieldByName('rrHiddenInfo').Text);
               RoomObject.FMeeting := FieldByName('rrHallRes').asInteger;
