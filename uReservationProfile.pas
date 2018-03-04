@@ -156,7 +156,7 @@ type
     tvRoomsdefGuestCount: TcxGridDBBandedColumn;
     mRoomsGuestName: TWideStringField;
     tvRoomsGuestName: TcxGridDBBandedColumn;
-    tvRoomsbreakfast: TcxGridDBBandedColumn;
+    tvRoomsbreakfastText: TcxGridDBBandedColumn;
     tvRoomsaccountTypeText: TcxGridDBBandedColumn;
     mRoomsunPaidRoomRent: TFloatField;
     mRoomsDiscountUnpaidRoomRent: TFloatField;
@@ -627,6 +627,7 @@ type
     lblAllBreakfastPrice: TsLabel;
     edtAllBreakfastPrice: TsCurrencyEdit;
     lblAllBreakfastPriceCurrency: TsLabel;
+    mRoomsBreakfastText: TWideStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -746,7 +747,6 @@ type
     procedure acManagePaycardsExecute(Sender: TObject);
     procedure btnManagePayCardsClick(Sender: TObject);
     procedure cbxStatusPanelExit(Sender: TObject);
-    procedure mRoomsBreakFastGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure tvRoomsEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem; var AAllow: Boolean);
     procedure edtAllBreakfastPriceChange(Sender: TObject);
     procedure sButton2Click(Sender: TObject);
@@ -755,6 +755,8 @@ type
       var AText: string);
     procedure tvGuestRoomsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
+    procedure tvRoomsbreakfastTextPropertiesCloseUp(Sender: TObject);
+    procedure mRoomsBreakfastTextGetText(Sender: TField; var Text: string; DisplayText: Boolean);
   private
     { Private declarations }
     vStartName: string;
@@ -1053,7 +1055,7 @@ begin
   fraCustomerPanel.OnChangedAndValid := evtCustomerChangedAndValid;
   fraCustomerPanel.btnLast.Visible := False;
 
-  TBreakfastType.AsStrings((tvRoomsbreakfast.Properties as TcxComboBoxProperties).Items);
+  TBreakfastType.AsStrings((tvRoomsbreakfastText.Properties as TcxComboBoxProperties).Items);
   TBreakfastType.AsStrings((tvGuestRoomsBreakfast.Properties as TcxComboBoxProperties).Items);
   TBreakfastType.AsStrings((tvAllGuestsBreakfast.Properties as TcxComboBoxProperties).Items);
   TBreakfastType.AsStrings(cbxBreakfastAllRooms.Items);
@@ -1354,7 +1356,7 @@ begin
   tvRoomsRoomClassDescription.Visible := NOT FOutOfOrderBlocking;
   tvRoomsGuestCount.Visible := NOT FOutOfOrderBlocking;
   tvRoomsCurrency.Visible := NOT FOutOfOrderBlocking;
-  tvRoomsbreakfast.Visible := NOT FOutOfOrderBlocking;
+  tvRoomsbreakfastText.Visible := NOT FOutOfOrderBlocking;
   tvRoomsBreakfastPrice.Visible := NOT FOutOfOrderBlocking;
   tvRoomsaccountTypeText.Visible := NOT FOutOfOrderBlocking;
   rgrinvoice.Visible := NOT FOutOfOrderBlocking;
@@ -2468,24 +2470,14 @@ begin
   end;
 end;
 
-procedure TfrmReservationProfile.mRoomsBreakFastGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+procedure TfrmReservationProfile.mRoomsBreakfastTextGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
   Text := TBreakfastType.FromDBString(mRoomsBreakfast.AsString).AsReadableString;
 end;
 
 procedure TfrmReservationProfile.mRoomsCalcFields(DataSet: TDataSet);
 begin
-// RPMS-796
    mRoomsunpaidRentPrice.AsFloat := mRoomsAverageRoomRate.AsFloat;
-
-//  if mRoomsratePlanCode.AsString.IsEmpty then
-//    if mRoomsUnPaidRentNights.asInteger <> 0 then
-//      mRoomsunpaidRentPrice.AsFloat := mRoomsUnPaidRoomRent.AsFloat / mRoomsUnPaidRentNights.asInteger
-//    else
-//      mRoomsunpaidRentPrice.Clear
-//  else
-//    mRoomsunpaidRentPrice.AsFloat := DynamicRates.AverageRateStay(mRoomsratePlanCode.AsString, mRoomsRoomType.AsString, mRoomsArrival.AsDateTime, mRoomsDeparture.AsDateTime);
-
   mRoomsdayCount.asInteger := trunc(mRoomsDeparture.AsDateTime) - trunc( mRoomsArrival.ASDateTime);
   mRoomsdefGuestCount.AsInteger := glb.GET_RoomTypeNumberGuests_byRoomType(mRoomsRoomType.AsString);
 end;
@@ -3226,6 +3218,18 @@ begin
     aText := '';
 end;
 
+procedure TfrmReservationProfile.tvRoomsbreakfastTextPropertiesCloseUp(Sender: TObject);
+var
+  lNewValue: string;
+begin
+  lNewValue := TBreakFastType.fromItemIndex(TcxCombobox(Sender).ItemIndex).toDBString;
+  if not lNewValue.Equals(mRoomsBreakfast.AsString) then
+  begin
+    mRoomsBreakfast.AsString := lNewValue;
+    mRooms.Post;
+  end;
+end;
+
 procedure TfrmReservationProfile.tvRoomsCellDblClick
   (Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
   AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
@@ -3333,9 +3337,9 @@ begin
       mRoomsDayCount.asInteger := iNights;
       mRooms.Post;
 
-      if (lOrgNightCount <> mRoomsdayCount.AsInteger) and not mRoomsBreakFast.AsBoolean then
-        if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
-           d.INV_UpdateBreakfastGuests(zReservation, zRoomReservation, mRoomsGuestCount.AsInteger * mRoomsdayCount.AsInteger);
+//      if (lOrgNightCount <> mRoomsdayCount.AsInteger) and not mRoomsBreakFast.AsBoolean then
+//        if (MessageDlg(GetTranslatedText('shTx_FrmReservationprofile_UpdateExclBreakfast'), mtConfirmation, mbYesNo, 0) = mrYes) then
+//           d.INV_UpdateBreakfastGuests(zReservation, zRoomReservation, mRoomsGuestCount.AsInteger * mRoomsdayCount.AsInteger);
 
     except
       mRooms.Cancel;
