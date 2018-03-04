@@ -345,34 +345,41 @@ begin
        '				MIN(RoomRate * curr.AValue) AS minRate, '#10 +
        '				AVG(RoomRate * curr.AValue) AS averageRate, '#10 +
        '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '				  JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '				  WHERE rd.adate=pdd.date AND rd.ResFlag=''G'' and RR_Arrival(rd.roomreservation, false)=pdd.date) AS checkedInToday, '#10 +
+       '				  LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '				  WHERE rd.adate=pdd.date AND rd.ResFlag=''G'' and RR_Arrival(rd.roomreservation, false)=pdd.date '#10 +
+       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS checkedInToday, '#10+
        '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '				  JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '				  WHERE rd.adate=pdd.date AND rd.ResFlag=''P'' and RR_Arrival(rd.roomreservation, false)=pdd.date) AS arrivingRooms, '#10 +
+       '				  LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '				  WHERE rd.adate=pdd.date AND rd.ResFlag=''P'' and RR_Arrival(rd.roomreservation, false)=pdd.date '#10 +
+       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS arrivingRooms, '#10+
        '        (SELECT count(rd.id) from roomsdate rd '#10+
-       '					 JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '           WHERE rd.aDate = pdd.date and rd.ResFlag = ''N'') as NoShow, '#10+
+       '					 LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '           WHERE rd.aDate = pdd.date and rd.ResFlag = ''N'' '#10+
+       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) as NoShow, '#10+
        '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '					JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''G''and RR_Departure(rd.roomreservation, false) = pdd.date) AS departingRooms, '#10 +
+       '					LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''G''and RR_Departure(rd.roomreservation, false) = pdd.date '#10 +
+       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS departingRooms, '#10+
        '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '					JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''D''and RR_Departure(rd.roomreservation, false) = pdd.date) AS departedRooms, '#10 +
+       '					LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''D''and RR_Departure(rd.roomreservation, false) = pdd.date '#10 +
+       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS departedRooms, '#10+
        '				(SELECT COUNT(rd2.id) FROM roomsdate rd2 '#10 +
-       '					JOIN rooms r on r.room=rd2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '					WHERE ADate=pdd.date AND ResFlag=''G'') AS occupiedRooms, '#10 +
+       '					LEFT JOIN rooms r on r.room=rd2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '					WHERE ADate=pdd.date AND ResFlag=''G'' '#10 +
+       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS occupiedRooms, '#10+
        '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 +
        '				SUM((SELECT COUNT(id) FROM persons WHERE RoomReservation=rd.RoomReservation)) AS totalGuests, '#10 +
        '				(SELECT COUNT(rd2.room) '#10 +
        '				  FROM roomsdate rd2 '#10 +
-       '				  JOIN rooms rm2 on rm2.room = rd2.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden '#10 +
+       '				  LEFT JOIN rooms rm2 on rm2.room = rd2.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden '#10 +
        '				  JOIN reservations r on r.reservation = rd2.reservation and r.outOfOrderBlocking '#10 +
        '				  where rd2.aDate = rd.aDate'#10 +
+       '               AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or rm2.room is not null) '#10+
        '				 ) AS OOORooms '#10 +
        '		 FROM predefineddates pdd '#10 +
        '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'')) '#10 +
-       '		 JOIN rooms rm on rm.room = rd.room AND rm.active AND rm.statistics AND NOT rm.hidden '#10 +
+       '		 LEFT JOIN rooms rm on rm.room = rd.room AND rm.active AND rm.statistics AND NOT rm.hidden and rm.wildcard=0  '#10 +
        '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 '#10 +
        '     JOIN control c '#10 +
 //       '     LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=rd.InvoiceNumber '#10 +
@@ -380,7 +387,7 @@ begin
        '		 JOIN currencies curr on curr.Currency=rd.Currency '#10 +
        '		 WHERE '#10 +
        '				((pdd.date>=%s AND pdd.date<=%s)) '#10 +
-       '		    AND (SUBSTR(rd.room, 1, 1) = ''<'' OR NOT ISNULL((SELECT 1 FROM rooms r WHERE r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 LIMIT 1))) '#10 +
+       '		    AND (SUBSTR(rd.room, 1, 1) = ''<'' OR rm.room is not null) '#10 +
        '		 GROUP BY pdd.date '#10 +
        '		 ORDER BY pdd.date '#10 +
        '		 ) baseData1 '#10 +
@@ -400,14 +407,17 @@ begin
        '				CAST(0 AS SIGNED) AS checkedInToday, '#10 +
        '				CAST(0 AS SIGNED) AS arrivingRooms, '#10 +
        '        (SELECT count(rd.id) from roomsdate rd '#10+
-       '					 JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '           WHERE rd.aDate = pdd.date and rd.ResFlag = ''N'') as NoShow, '#10+
+       '					 LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '           WHERE rd.aDate = pdd.date and rd.ResFlag = ''N'' '#10+
+       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) as NoShow, '#10+
+       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
+       '					LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
+       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''G''and RR_Departure(rd.roomreservation, false) = pdd.date '#10+
+       '                AND (SUBSTR(rd.room, 1, 1) = ''<'' OR r.room is not null)) AS departingRooms, '#10 +
        '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
        '					JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''G''and RR_Departure(rd.roomreservation, false) = pdd.date) AS departingRooms, '#10 +
-       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '					JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''D''and RR_Departure(rd.roomreservation, false) = pdd.date) AS departedRooms, '#10 +
+       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''D''and RR_Departure(rd.roomreservation, false) = pdd.date '#10+
+       '                AND (SUBSTR(rd.room, 1, 1) = ''<'' OR r.room is not null)) AS departedRooms, '#10 +
        '				CAST(0 AS SIGNED) AS occupiedRooms, '#10 +
        '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 +
        '				CAST(0 AS SIGNED) AS totalGuests, '#10 +
