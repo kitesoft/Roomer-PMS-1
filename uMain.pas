@@ -8439,7 +8439,7 @@ begin
       BookingId := FReservationsModel.Reservations[iReservationIdx].BookingReference;
 
       Price := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Price;
-      Discount := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Discount;
+      TotalDiscountAmount := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Discount;
       IsPercentage := FReservationsModel.Reservations[iReservationIdx].Rooms[iRoomReservationIdx].Percentage;
       Information := FReservationsModel.Reservations[iReservationIdx].Information;
       PMInfo := FReservationsModel.Reservations[iReservationIdx].PMInfo;
@@ -8511,7 +8511,7 @@ begin
   result.BookingId := resCell.BookingId;
 
   result.Price := resCell.Price;
-  result.Discount := resCell.Discount;
+  result.TotalDiscountAmount := resCell.Discount;
   result.Information := resCell.Information;
   result.PMInfo := resCell.PMInfo;
   result.PriceType := resCell.PriceType;
@@ -9358,18 +9358,18 @@ procedure TfrmMain.GetPriceInfo(rri: RecRDInfo; var PricePerDay, DiscountPerDay,
 var
   discountAmount: Double;
 begin
-  if rri.Discount <> 0 then
+  if rri.TotalDiscountAmount <> 0 then
   begin
     if rri.IsPercentage then
     begin
-      discountAmount := rri.Price / ((100 - rri.Discount) / 100); // ro.Price * ro.Discount / 100;
+      discountAmount := rri.Price / ((100 - rri.TotalDiscountAmount) / 100); // ro.Price * ro.Discount / 100;
       PricePerDay := discountAmount;
-      DiscountPerDay := rri.Discount;
+      DiscountPerDay := rri.TotalDiscountAmount;
     end
     else
     begin
-      PricePerDay := rri.Price + rri.Discount;
-      DiscountPerDay := rri.Discount;
+      PricePerDay := rri.Price + rri.TotalDiscountAmount;
+      DiscountPerDay := rri.TotalDiscountAmount;
     end;
 
     PriceTotal := PricePerDay * (rri.Departure - rri.Arrival);

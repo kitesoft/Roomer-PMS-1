@@ -113,7 +113,7 @@ const
          '     rr.roomreservation in '#10+
          '        (select distinct(roomreservation) '#10+
          '         from roomsdate rd '#10+
-         '         where aDate = DATE_ADD(%s, INTERVAL -1 DAY) and resflag not in (''X'', ''C'', ''B'')) '#10+
+         '         where aDate = DATE_ADD(%s, INTERVAL -1 DAY) and resflag not in (''X'', ''C'', ''B'', ''N'', ''A'', ''O'', ''W'')) '#10+
          '     AND rr.breakfast <> ''NONE'' ';
 
 
