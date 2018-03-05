@@ -15,14 +15,14 @@ type
 
   TConnectionsHagstofaService = class
   public
-    function sendToHagstofa(fromDate, toDate : TDate; location : String) : String;
+    function sendToHagstofa(fromDate, toDate : TDate; const location : String) : String;
   end;
 
 implementation
 
 uses uUtils;
 
-function TConnectionsHagstofaService.sendToHagstofa(fromDate, toDate : TDate; location : String) : String;
+function TConnectionsHagstofaService.sendToHagstofa(fromDate, toDate : TDate; const location : String) : String;
 var url : String;
 begin
   url := d.roomerMainDataSet.RoomerUri +

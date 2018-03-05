@@ -1,23 +1,23 @@
 inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
   BorderStyle = bsSizeable
   Caption = 'Statistical connections'
-  ClientHeight = 516
+  ClientHeight = 532
   ClientWidth = 771
   ParentFont = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 787
-  ExplicitHeight = 555
+  ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited sbStatusBar: TsStatusBar
-    Top = 496
+    Top = 512
     Width = 771
     ExplicitTop = 496
     ExplicitWidth = 771
   end
   inherited pnlButtons: TsPanel
-    Top = 453
+    Top = 469
     Width = 771
     ParentFont = False
     ExplicitTop = 453
@@ -40,7 +40,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     Left = 0
     Top = 0
     Width = 771
-    Height = 453
+    Height = 469
     ActivePage = tsHagstofan
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
@@ -50,8 +50,10 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
+    ExplicitHeight = 453
     object tsSnapshot: TsTabSheet
       Caption = 'Snapshot'
+      ExplicitHeight = 422
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -262,12 +264,13 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     end
     object tsHagstofan: TsTabSheet
       Caption = 'Hagstofan'
+      ExplicitHeight = 422
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 3
         Top = 3
         Width = 757
-        Height = 416
+        Height = 432
         Align = alClient
         Caption = 'Connection settings'
         Color = clBtnFace
@@ -280,6 +283,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
+        ExplicitHeight = 416
         object lbHsId: TsLabel
           Left = 105
           Top = 163
