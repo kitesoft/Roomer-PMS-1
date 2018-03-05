@@ -41,7 +41,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     Top = 0
     Width = 771
     Height = 453
-    ActivePage = tsSnapshot
+    ActivePage = tsHagstofan
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -52,10 +52,6 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     TabOrder = 2
     object tsSnapshot: TsTabSheet
       Caption = 'Snapshot'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -266,10 +262,6 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     end
     object tsHagstofan: TsTabSheet
       Caption = 'Hagstofan'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 3

@@ -91,7 +91,7 @@ begin
   end;
 end;
 
-const SYSTEM_CODE = 'SNAPSHOT';
+const SNAPSHOT_SYSTEM_CODE = 'SNAPSHOT';
 
 procedure TFrmConnectionsStatistics.btnForceFullClick(Sender: TObject);
 begin
@@ -215,7 +215,7 @@ procedure TFrmConnectionsStatistics.FormCreate(Sender: TObject);
 begin
   inherited;
   pcPages.ActivePageIndex := 0;
-  ConnectionsStatisticsService := TConnectionsStatisticsService.Create(SYSTEM_CODE);
+  ConnectionsStatisticsService := TConnectionsStatisticsService.Create(SNAPSHOT_SYSTEM_CODE);
 end;
 
 procedure TFrmConnectionsStatistics.FormDestroy(Sender: TObject);

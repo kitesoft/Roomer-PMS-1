@@ -363,6 +363,8 @@ begin
 end;
 
 function TRoomReservationStateChangeHandler.Checkin(aReservationId: integer; aRoomReservationId: integer ): boolean;
+var
+  lShowCheckinForm: boolean;
 begin
   Result := false;
   // Allocate room if needed
@@ -374,12 +376,14 @@ begin
     if MessageDlg(Format(GetTranslatedText('shTx_Various_RoomNotClean'), [FRoom]), mtWarning, [mbYes, mbCancel], 0) <> mrYes then
       exit;
 
-  if ctrlGetBoolean('CheckinWithDetailsDialog') OR
-     d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled OR
+  lShowCheckinForm  := ctrlGetBoolean('CheckinWithDetailsDialog') OR
+     d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled;
+
+  if lShowCheckinForm or
     (MessageDlg(Format(GetTranslatedText('shCheckRoom'), [FRoom]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
   begin
     ShowAlertsForReservation(aReservationId, aRoomReservationId, atCHECK_IN);
-    if (NOT ctrlGetBoolean('CheckinWithDetailsDialog')) OR OpenGuestCheckInForm(aRoomReservationId) then
+    if not lShowCheckinForm OR OpenGuestCheckInForm(aRoomReservationId) then
     begin
       d.CheckInGuest(aRoomReservationId);
       g.updateCurrentGuestlist;

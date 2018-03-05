@@ -348,7 +348,8 @@ uses
   uRoomServicesAPI in 'Roomservices\uRoomServicesAPI.pas',
   uMobileAPI in 'MobileAPI\uMobileAPI.pas',
   uRoomservicesStatus in 'Roomservices\uRoomservicesStatus.pas',
-  uRptCleaningTimes in 'uRptCleaningTimes.pas';
+  uRptCleaningTimes in 'uRptCleaningTimes.pas',
+  uConnectionsHagstofaService in 'Connections\uConnectionsHagstofaService.pas';
 
 {$R *.RES}
 

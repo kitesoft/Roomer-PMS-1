@@ -358,9 +358,8 @@ uses
   , uMain
   , uSQLUtils
   , uRoomerLanguage
-  , uConnectionsStatisticsService
   , uRoomerMessageDialog
-  ;
+  , uConnectionsHagstofaService;
 
 {$R *.dfm}
 
@@ -446,12 +445,12 @@ begin
 end;
 
 procedure TfrmNationalReport3.btnPostToHagstofaClick(Sender: TObject);
-var ConnectionsStatisticsService : TConnectionsStatisticsService;
+var lHagstofaService : TConnectionsHagstofaService;
     answer : String;
 begin
-  ConnectionsStatisticsService := TConnectionsStatisticsService.Create('');
+  lHagstofaService := TConnectionsHagstofaService.Create;
   try
-    answer := ConnectionsStatisticsService.sendToHagstofa(zDateFrom, zDateTo, '');
+    answer := lHagstofaService.sendToHagstofa(zDateFrom, zDateTo, '');
 
     if LowerCase(answer) = 'success' then
        MessageDlg(GetTranslatedText('shTx_NationalReport_NationalReportWasSuccessfullySentToHagstofan'),
@@ -460,7 +459,7 @@ begin
        MessageDlg(format(GetTranslatedText('shTx_NationalReport_NationalReportToSentToHagstofanError'), [answer]),
                   mtError, [mbOk], 0)
   finally
-    ConnectionsStatisticsService.Free;
+    lHagstofaService.Free;
   end;
 end;
 
