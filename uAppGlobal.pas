@@ -84,7 +84,7 @@ Type
     numGuests: integer;
     GuestName, Tel1, Tel2, Fax: String;
 
-    Payments, Price, Discount: Double;
+    Payments, Price, TotalDiscountAmount: Double;
     Information, PMInfo: String;
     RoomClass: string;
     BookingId : String;

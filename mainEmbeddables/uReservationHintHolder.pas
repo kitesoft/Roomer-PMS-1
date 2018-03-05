@@ -115,14 +115,17 @@ end;
 
 procedure TFrmReservationHintHolder.GetPriceInfo(rri: RecRDInfo;
             var TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto : TAmount);
+var
+  lNights: integer;
 begin
+  lNights := max(trunc(rri.Departure) - trunc(rri.Arrival), 1);
   PriceNight := TAmount.Create(rri.Price, rri.Currency);
-  DiscountNight := TAmount.Create(rri.Discount, rri.Currency);
+  DiscountNight := TAmount.Create(rri.TotalDiscountAmount, rri.Currency)  / lNights;
   PriceNightNetto := PriceNight - DiscountNight;
 
-  TotalPrice := PriceNight * (trunc(rri.Departure) - trunc(rri.Arrival));
-  TotalPriceNetto := PriceNightNetto * (trunc(rri.Departure) - trunc(rri.Arrival));
-  TotalDiscount := DiscountNight * (trunc(rri.Departure) - trunc(rri.Arrival));
+  TotalPrice := PriceNight * lNights;
+  TotalPriceNetto := PriceNightNetto * lNights;
+  TotalDiscount := rri.TotalDiscountAmount;
 end;
 
 function TFrmReservationHintHolder.GetChannelName(rriChannel : Integer) : String;
@@ -178,7 +181,7 @@ begin
                GetTranslatedText('shUI_nights')
               ]);
 
-  __hlbBookingIds.HTMLText.Text := format('Channel: <B>%s</B><br>Reservationid: <B>%d</B> (Roomreservationid: <B>%d</B>)<br>',
+  __hlbBookingIds.HTMLText.Text := format('Channel: <B>%s</B><br>Reservationid: <B>%d</B> (RoomresId: <B>%d</B>)<br>',
               [
                 GetBookingId(rri),
                 rri.Reservation,
@@ -187,7 +190,7 @@ begin
 
   GetPriceInfo(rri, TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto);
   // <P align="right">� 123.000,00<br><U>- (10) � 12.300,00</U><br><B>� 11.000,00</B></P>
-  if rri.Discount <> 0 then
+  if rri.TotalDiscountAmount <> 0 then
   begin
       if rri.IsPercentage then
       begin
