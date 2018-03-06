@@ -334,11 +334,11 @@ begin
        '		 SELECT DATE(pdd.date) AS ADate, '#10 +
        '				COUNT(rd.id) AS soldRooms, '#10 +
        '        SUM(CASE WHEN rd.invoicenumber > 0 '#10+
-       '              THEN il.Price * il.currencyrate '#10+
+       '              THEN il.Price -- Use price of one day '#10+
        '              ELSE IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate) * curr.aValue '#10+
        '            END) as Revenue, '#10+
        '        SUM(CASE WHEN rd.invoicenumber > 0 '#10+
-       '              THEN IF(il.ItemID = c.DIscountItem, il.Price * il.currencyrate,0) '#10+
+       '              THEN IF(il.ItemID = c.DIscountItem, il.Price,0) '#10+
        '              ELSE IF(rd.Discount > 0, IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), 0) * curr.AValue '#10+
        '            END) as TotalDiscount, '#10+
        '				MAX(RoomRate * curr.AValue) AS maxRate, '#10 +
