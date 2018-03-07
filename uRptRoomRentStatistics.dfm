@@ -193,8 +193,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     object chkCompareLasYear: TsCheckBox
       Left = 306
       Top = 56
-      Width = 108
-      Height = 20
+      Width = 116
+      Height = 17
       Caption = 'Compare last year'
       TabOrder = 3
       Visible = False
