@@ -1283,7 +1283,6 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
-            ExplicitTop = 167
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
@@ -1602,10 +1601,6 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
@@ -1692,17 +1687,9 @@ object frmMain: TfrmMain
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -5149,19 +5136,6 @@ object frmMain: TfrmMain
       LargeImageIndex = 119
       OnClick = btnManagmentStatClick
     end
-    object dxBarLargeButton1: TdxBarLargeButton
-      Caption = 'New Button'
-      Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
-    end
-    object dxBarLargeButton2: TdxBarLargeButton
-      Caption = 'Customer Reservations'
-      Category = 0
-      Hint = 'Customer Reservations '
-      Visible = ivNever
-      OnClick = dxBarLargeButton2Click
-    end
     object btnLostAndFound: TdxBarLargeButton
       Caption = 'Lost and Found'
       Category = 0
@@ -5275,12 +5249,6 @@ object frmMain: TfrmMain
       Hint = 'Cancellation confirmations'
       Visible = ivAlways
     end
-    object dxBarLargeButton5: TdxBarLargeButton
-      Caption = 'New Button'
-      Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
-    end
     object btnCashierReport: TdxBarLargeButton
       Caption = 'Cashier report'
       Category = 0
@@ -5318,14 +5286,6 @@ object frmMain: TfrmMain
       ImageIndex = 95
       LargeImageIndex = 95
       OnClick = btnReDownloadRoomerClick
-    end
-    object dxBarLargeButton6: TdxBarLargeButton
-      Caption = 'New Button'
-      Category = 0
-      Hint = 'New Button'
-      Visible = ivAlways
-      SyncImageIndex = False
-      ImageIndex = -1
     end
     object btnConfirmAllottedBooking: TdxBarLargeButton
       Caption = 'Confirm Booking'
@@ -24259,5 +24219,21 @@ object frmMain: TfrmMain
     OnTimer = tmrDateChangeDelayTimer
     Left = 968
     Top = 472
+  end
+  object hhHintHTMLFormatter: THTMLHint
+    Ellipsis = False
+    HintFont.Charset = DEFAULT_CHARSET
+    HintFont.Color = clInfoText
+    HintFont.Height = -11
+    HintFont.Name = 'Tahoma'
+    HintFont.Style = []
+    HintStyle = hsRectangle
+    MaxWidth = 0
+    URLColor = clBlack
+    XMargin = 0
+    YMargin = 0
+    Version = '1.4.0.1'
+    Left = 752
+    Top = 248
   end
 end

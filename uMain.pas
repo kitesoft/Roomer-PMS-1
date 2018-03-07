@@ -523,7 +523,6 @@ type
     I1: TMenuItem;
     G4: TMenuItem;
     btnManagmentStat: TdxBarLargeButton;
-    dxBarLargeButton1: TdxBarLargeButton;
     tabRateQuery: TsTabSheet;
     sLabel2: TsLabel;
     pnlPeriodNoRooms: TsPanel;
@@ -535,7 +534,6 @@ type
     btnGoOnline: TsButton;
     btnSearchForGuests: TsButton;
     timBlinker: TTimer;
-    dxBarLargeButton2: TdxBarLargeButton;
     btnLostAndFound: TdxBarLargeButton;
     btnRptNotes: TdxBarLargeButton;
     pnlDayStatus: TsPanel;
@@ -593,7 +591,6 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
-    dxBarLargeButton5: TdxBarLargeButton;
     btnCashierReport: TdxBarLargeButton;
     tvAllReservationsNights: TcxGridDBColumn;
     tvAllReservationsCurrency: TcxGridDBColumn;
@@ -610,7 +607,6 @@ type
     dxBarSubItem7: TdxBarSubItem;
     dxBarButton5: TdxBarButton;
     btnReDownloadRoomer: TdxBarButton;
-    dxBarLargeButton6: TdxBarLargeButton;
     mnuConfirmBooking: TMenuItem;
     btnConfirmAllottedBooking: TdxBarLargeButton;
     timOfflineReports: TTimer;
@@ -692,6 +688,7 @@ type
     dxBarButton9: TdxBarButton;
     btnCleaningReport: TdxBarLargeButton;
     tmrDateChangeDelay: TTimer;
+    hhHintHTMLFormatter: THTMLHint;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -902,7 +899,6 @@ type
       var VAlign: TVAlignment);
     procedure grOneDayRoomsGridHint(Sender: TObject; ARow, ACol: integer; var HintStr: string);
     procedure timBlinkerTimer(Sender: TObject);
-    procedure dxBarLargeButton2Click(Sender: TObject);
     procedure grPeriodRoomsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure __dxBarCombo1CloseUp(Sender: TObject);
     procedure btnLostAndFoundClick(Sender: TObject);
@@ -2964,7 +2960,8 @@ var
 begin
   pnlNoRoomDrop.Color := sSkinManager1.GetGlobalColor;
   lblNoRoom.Font.Color := sSkinManager1.GetGlobalFontColor;
-
+  hhHintHTMLFormatter.HintColor := sSkinManager1.GetHighLightColor(false);
+  hhHintHTMLFormatter.HintFont.Color := sSkinManager1.GetHighLightFontColor(false);
   skinName := LowerCase(trim(sSkinManager1.skinName));
 
   if (pos(skinName, 'macos2') > 0) then
@@ -12598,10 +12595,6 @@ begin
   end;
   sSkinManager1.Loaded;
   SetExtraSkinColors;
-end;
-
-procedure TfrmMain.dxBarLargeButton2Click(Sender: TObject);
-begin
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
