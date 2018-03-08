@@ -159,6 +159,9 @@ begin
   if not DefinitionExists(aToCurrCode) then
     raise ECurrencyConversionException.CreateFmt('Converting to an unknown currency [%s]', [aToCurrCode]);
 
+  if SameValue(CurrencyDefinition[aToCurrCode].Rate, 0.00) then
+    raise ECurrencyConversionException.CreateFmt('Rate of currency [%s] is zero', [aToCurrCode]);
+
   lNewValue := aValue * aValue.CurrencyRate / CurrencyDefinition[aToCurrCode].Rate;
   Result := TAmount.Create(lNewValue, aToCurrCode);
 end;

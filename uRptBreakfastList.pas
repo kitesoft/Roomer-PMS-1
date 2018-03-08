@@ -95,26 +95,41 @@ uses
   , uDateTimeHelper, uReservationProfile, uSQLUtils;
 
 const
-  cSQL = 'SELECT '#10 +
-         '        rr.reservation '#10+
-         '      , rr.Roomreservation '#10+
-         '      , rr.Room '#10+
-         '      , r.location '#10+
-         '      , l.description as LocationDescription '#10+
-         '      , (SELECT count(id) FROM persons pe WHERE pe.roomreservation = rr.roomreservation) AS NumGuests '#10+
-         '      , rr.numChildren '#10+
-         '      , rr.numInfants '#10+
-         '      , rr.HiddenInfo as RoomNotes '#10+
-         '      , (SELECT pe.Name FROM persons pe WHERE pe.roomreservation = rr.roomreservation and pe.MainName LIMIT 1) As MainGuest '#10+
-         ' from roomreservations rr '#10+
-         ' left join rooms r on r.room = rr.room '#10+
-         ' left join locations l on r.location = l.location '#10+
-         ' where '#10+
-         '     rr.roomreservation in '#10+
-         '        (select distinct(roomreservation) '#10+
-         '         from roomsdate rd '#10+
-         '         where aDate = DATE_ADD(%s, INTERVAL -1 DAY) and resflag not in (''X'', ''C'', ''B'', ''N'', ''A'', ''O'', ''W'')) '#10+
-         '     AND rr.breakfast <> ''NONE'' ';
+  cSQL = 'SELECT '#10+
+         '      rr.reservation '#10+
+         '    , rr.Roomreservation '#10+
+         '    , rr.Room '#10+
+         '    , r.location '#10+
+         '    , l.description as LocationDescription '#10+
+         '    , (SELECT count(id) FROM persons pe WHERE pe.roomreservation = rr.roomreservation) AS NumGuests '#10+
+         '    , rr.numChildren '#10+
+         '    , rr.numInfants '#10+
+         '    , rr.HiddenInfo as RoomNotes '#10+
+         '    , (SELECT pe.Name FROM persons pe WHERE pe.roomreservation = rr.roomreservation and pe.MainName LIMIT 1) As MainGuest '#10+
+         '  from roomreservations rr '#10+
+         '  JOIN roomsdate rd on rd.roomreservation = rr.roomreservation and rd.aDate = DATE_ADD(%s, INTERVAL -1 DAY) and resflag not in (''X'', ''C'', ''B'', ''N'', ''A'', ''O'', ''W'') '#10+
+         '  left join rooms r on r.room = rr.room '#10+
+         '  left join locations l on r.location = l.location '#10+
+         '  where rr.breakfast <> ''NONE'' '#10+
+         'UNION '#10+
+         'SELECT -- add breakfasts from packages in invoicelines '#10+
+         '      rr.reservation '#10+
+         '    , rr.Roomreservation '#10+
+         '    , rr.Room '#10+
+         '    , r.location '#10+
+         '    , l.description as LocationDescription '#10+
+         '    , (SELECT count(id) FROM persons pe WHERE pe.roomreservation = rr.roomreservation) AS NumGuests '#10+
+         '    , rr.numChildren '#10+
+         '    , rr.numInfants '#10+
+         '    , rr.HiddenInfo as RoomNotes '#10+
+         '    , (SELECT pe.Name FROM persons pe WHERE pe.roomreservation = rr.roomreservation and pe.MainName LIMIT 1) As MainGuest '#10+
+         '  from invoicelines il '#10+
+         '  JOIN roomreservations rr on il.reservation=rr.reservation and (il.roomreservation=0 or il.roomreservation=rr.roomreservation) '#10+
+         '  JOIN roomsdate rd on rd.roomreservation = rr.roomreservation and rd.aDate = DATE_ADD(%s, INTERVAL -1 DAY) and resflag not in (''X'', ''C'', ''B'', ''N'', ''A'', ''O'', ''W'') '#10+
+         '  join control c on il.itemid=c.breakfastitem '#10+
+         '  left join rooms r on r.room = rr.room '#10+
+         '  left join locations l on r.location = l.location '#10+
+         '  where il.isPackage and rr.breakfast = ''NONE'' ';
 
 
 procedure ShowBreakfastList;
@@ -142,7 +157,7 @@ end;
 
 function TfrmBreakfastList.ConstructSQL: string;
 begin
-  Result := Format(cSQL, [_db(dtDate.Date)]);
+  Result := Format(cSQL, [_db(dtDate.Date), _db(dtDate.Date)]);
   CopyToClipboard(Result);
 end;
 

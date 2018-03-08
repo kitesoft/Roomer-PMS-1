@@ -127,7 +127,7 @@ begin
       inc(col);
 
       grdOccupancy.Cells[col,0] := lDateStat.Statistic['Occupancy'].FormattedValue;
-      grdOccupancy.Cells[col,1] := lDateStat.Statistic['SELLABLE_ROOMS'].FormattedValue;
+      grdOccupancy.Cells[col,1] := lDateStat.Statistic['LEFT_TO_SELL'].FormattedValue;
       grdOccupancy.Cells[col,2] := lDateStat.Statistic['REVPAR'].FormattedValue;
 
       if OccupancyViewType = ovtAdvanced then

@@ -120,7 +120,7 @@ var
 begin
   lNights := max(trunc(rri.Departure) - trunc(rri.Arrival), 1);
   PriceNight := TAmount.Create(rri.Price, rri.Currency);
-  DiscountNight := TAmount.Create(rri.TotalDiscountAmount, rri.Currency)  / lNights;
+  DiscountNight := rri.TotalDiscountAmount / lNights; //Discount is in native currency!
   PriceNightNetto := PriceNight - DiscountNight;
 
   TotalPrice := PriceNight * lNights;
@@ -190,48 +190,49 @@ begin
 
   GetPriceInfo(rri, TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto);
   // <P align="right">� 123.000,00<br><U>- (10) � 12.300,00</U><br><B>� 11.000,00</B></P>
-  if rri.TotalDiscountAmount <> 0 then
+  if not SameValue(rri.TotalDiscountAmount, 0.00) then
+
   begin
-      if rri.IsPercentage then
+      if rri.IsPercentage and not SameValue(TotalPrice * PriceNight, 0.00) then
       begin
         __hlblTotal.HTMLText.Text := format('<P align="right">%s<br><U>(%s) -%s</U><br><B>%s</B><br></P>',
               [
-                TotalPrice.AsDisplayStringWithCode,
+                TotalPrice.ToCurrency(rri.Currency).AsDisplayStringWithCode,
                 GetTrimmedPercentage( (TotalDiscount / TotalPrice)*100) + '%',
-                TotalDiscount.AsDisplayStringWithCode,
-                TotalPriceNetto.AsDisplayStringWithCode
+                TotalDiscount.ToCurrency(rri.Currency).AsDisplayStringWithCode,
+                TotalPriceNetto.ToCurrency(rri.Currency).AsDisplayStringWithCode
               ]);
         __hlblDaily.HTMLText.Text := format('<P align="right">%s<br><U>(%s) -%s</U><br><B>%s</B><br></P>',
               [
-                PriceNight.AsDisplayStringWithCode,
+                PriceNight.ToCurrency(rri.Currency).AsDisplayStringWithCode,
                 GetTrimmedPercentage((DiscountNight / PriceNight)*100) + '%',
-                DiscountNight.AsDisplayStringWithCode,
-                PriceNightNetto.AsDisplayStringWithCode
+                DiscountNight.ToCurrency(rri.Currency).AsDisplayStringWithCode,
+                PriceNightNetto.ToCurrency(rri.Currency).AsDisplayStringWithCode
               ]);
       end else
       begin
         __hlblTotal.HTMLText.Text := format('<P align="right">%s<br><U>-%s</U><br><B>%s</B><br></P>',
               [
-                TotalPrice.AsDisplayStringWithCode,
-                TotalDiscount.AsDisplayStringWithCode,
-                TotalPriceNetto.AsDisplayStringWithCode
+                TotalPrice.ToCurrency(rri.Currency).AsDisplayStringWithCode,
+                TotalDiscount.ToCurrency(rri.Currency).AsDisplayStringWithCode,
+                TotalPriceNetto.ToCurrency(rri.Currency).AsDisplayStringWithCode
               ]);
         __hlblDaily.HTMLText.Text := format('<P align="right">%s<br><U>-%s</U><br><B>%s</B><br></P>',
               [
-                PriceNight.AsDisplayStringWithCode,
-                DiscountNight.AsDisplayStringWithCode,
-                PriceNightNetto.AsDisplayStringWithCode
+                PriceNight.ToCurrency(rri.Currency).AsDisplayStringWithCode,
+                DiscountNight.ToCurrency(rri.Currency).AsDisplayStringWithCode,
+                PriceNightNetto.ToCurrency(rri.Currency).AsDisplayStringWithCode
               ]);
       end;
   end else
   begin
         __hlblTotal.HTMLText.Text := format('<P align="right"><B>%s</B><br></P>',
               [
-                TotalPriceNetto.AsDisplayStringWithCode //trim(_floatToStr(TotalPriceNetto, 12, 2))
+                TotalPriceNetto.ToCurrency(rri.Currency).AsDisplayStringWithCode //trim(_floatToStr(TotalPriceNetto, 12, 2))
               ]);
         __hlblDaily.HTMLText.Text := format('<P align="right"><B>%s</B><br></P>',
               [
-                PriceNightNetto.AsDisplayStringWithCode //trim(_floatToStr(PriceNightNetto, 12, 2))
+                PriceNightNetto.ToCurrency(rri.Currency).AsDisplayStringWithCode //trim(_floatToStr(PriceNightNetto, 12, 2))
               ]);
   end;
 

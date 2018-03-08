@@ -679,8 +679,8 @@ object FrmReservationHintHolder: TFrmReservationHintHolder
     object cbxBlocked: TsCheckBox
       Left = 13
       Top = 511
-      Width = 170
-      Height = 17
+      Width = 162
+      Height = 20
       Caption = 'Room is blocked from move'
       TabOrder = 2
       ImgChecked = 0

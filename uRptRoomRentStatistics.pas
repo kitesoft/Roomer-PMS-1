@@ -333,14 +333,16 @@ begin
        '	 FROM ( '#10 +
        '		 SELECT DATE(pdd.date) AS ADate, '#10 +
        '				COUNT(rd.id) AS soldRooms, '#10 +
-       '        SUM(CASE WHEN rd.invoicenumber > 0 '#10+
-       '              THEN il.Price * il.currencyrate '#10+
-       '              ELSE IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate) * curr.aValue '#10+
-       '            END) as Revenue, '#10+
-       '        SUM(CASE WHEN rd.invoicenumber > 0 '#10+
-       '              THEN IF(il.ItemID = c.DIscountItem, il.Price * il.currencyrate,0) '#10+
-       '              ELSE IF(rd.Discount > 0, IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), 0) * curr.AValue '#10+
-       '            END) as TotalDiscount, '#10+
+       '				SUM(CASE WHEN rd.paid '#10 +
+       '				      -- the invoiced price for one day, negative if creditted '#10 +
+       '				      THEN (SELECT sum(price * sign(number)) from invoicelines il where il.invoicenumber > 0 and il.roomreservationalias = rd.roomreservation and il.itemid= c.RoomRentItem) '#10 +
+       '				      ELSE IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate) * curr.aValue '#10 +
+       '				    END) as Revenue, '#10 +
+       '				SUM(CASE WHEN rd.paid '#10 +
+       '				      -- the invoiced discount for one day, negated if creditted '#10 +
+       '				      THEN - (SELECT sum(price * sign(number)) from invoicelines il where il.invoicenumber > 0 and il.roomreservationalias = rd.roomreservation and il.itemid= c.DiscountItem) '#10 +
+       '				      ELSE IF(rd.Discount > 0, IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), 0) * curr.AValue '#10 +
+       '				    END) as TotalDiscount, '#10 +
        '				MAX(RoomRate * curr.AValue) AS maxRate, '#10 +
        '				MIN(RoomRate * curr.AValue) AS minRate, '#10 +
        '				AVG(RoomRate * curr.AValue) AS averageRate, '#10 +
@@ -382,8 +384,6 @@ begin
        '		 LEFT JOIN rooms rm on rm.room = rd.room AND rm.active AND rm.statistics AND NOT rm.hidden and rm.wildcard=0  '#10 +
        '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 '#10 +
        '     JOIN control c '#10 +
-//       '     LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=rd.InvoiceNumber '#10 +
-       '     LEFT JOIN invoicelines il ON il.InvoiceNumber=rd.InvoiceNumber and il.RoomReservationAlias=rd.roomreservation '#10 +
        '		 JOIN currencies curr on curr.Currency=rd.Currency '#10 +
        '		 WHERE '#10 +
        '				((pdd.date>=%s AND pdd.date<=%s)) '#10 +

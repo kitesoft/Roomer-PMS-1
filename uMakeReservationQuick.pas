@@ -1640,7 +1640,7 @@ begin
       for ii := 0 to dayCount - 1 do
       begin
         ADate := Arrival + ii;
-        if mRoomRates.Locate('RateDate', ADate, []) then
+        if mRoomRates.Locate('Roomreservation;RateDate', VarArrayOf([RoomReservation, ADate]), []) then
         begin
           if FDynamicRates.active AND
             FDynamicRates.findRateByRateCode(aDate, mRoomRes['Guests'], rateId, Rate, lChannelCurrencyCode) then
