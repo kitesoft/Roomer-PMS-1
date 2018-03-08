@@ -107,7 +107,6 @@ const
           ' lastUpdate, '#10 +
           ' displayFormat, '#10 +
           ' decimals, '#10 +
-          ' guid, '#10 +
           ' action, '#10 +
           ' logtime '#10 +
           ' FROM currencies_history '#10 +
