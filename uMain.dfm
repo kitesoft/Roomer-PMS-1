@@ -96,7 +96,7 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 312
-        ActivePage = tabOneDayView
+        ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
@@ -690,7 +690,7 @@ object frmMain: TfrmMain
               object tvAllReservationsBreakfast: TcxGridDBColumn
                 DataBinding.FieldName = 'Breakfast'
                 PropertiesClassName = 'TcxTextEditProperties'
-                OnGetDisplayText = tvAllReservationsBreakfastGetDisplayText
+                Properties.MaxLength = 20
               end
               object tvAllReservationsbreakfastGuests: TcxGridDBColumn
                 Caption = 'Brkf. Guests'
@@ -3324,8 +3324,8 @@ object frmMain: TfrmMain
     StoreInIniFile = True
     UseSystemFont = False
     OnBarAdd = barinnBarAdd
-    Left = 502
-    Top = 406
+    Left = 590
+    Top = 366
     DockControlHeights = (
       0
       0
@@ -7412,7 +7412,7 @@ object frmMain: TfrmMain
       item
         Name = 'Breakfast'
         DataType = ftWideString
-        Size = 10
+        Size = 20
       end
       item
         Name = 'NoRoom'
@@ -7639,8 +7639,8 @@ object frmMain: TfrmMain
     XLSSettings.Author = 'ReportBuilder'
     XLSSettings.Subject = 'Report'
     XLSSettings.Title = 'Report'
-    Left = 160
-    Top = 569
+    Left = 464
+    Top = 369
     Version = '14.07'
     mmColumnWidth = 0
     DataPipelineName = 'dplGroups'
@@ -7765,7 +7765,7 @@ object frmMain: TfrmMain
       Background1.Brush.Style = bsClear
       Background2.Brush.Style = bsClear
       mmBottomOffset = 0
-      mmHeight = 3175
+      mmHeight = 4233
       mmPrintPosition = 0
       object ppDBText1: TppDBText
         UserName = 'DBText1'
@@ -7781,7 +7781,7 @@ object frmMain: TfrmMain
         mmHeight = 3175
         mmLeft = 794
         mmTop = 0
-        mmWidth = 10054
+        mmWidth = 13494
         BandType = 4
         LayerName = Foreground
       end
@@ -7797,7 +7797,7 @@ object frmMain: TfrmMain
         Transparent = True
         DataPipelineName = 'dplGroups'
         mmHeight = 3175
-        mmLeft = 12700
+        mmLeft = 16669
         mmTop = 0
         mmWidth = 9790
         BandType = 4
@@ -7815,9 +7815,9 @@ object frmMain: TfrmMain
         Transparent = True
         DataPipelineName = 'dplGroups'
         mmHeight = 3175
-        mmLeft = 24342
+        mmLeft = 28575
         mmTop = 0
-        mmWidth = 50536
+        mmWidth = 41275
         BandType = 4
         LayerName = Foreground
       end
@@ -7834,7 +7834,7 @@ object frmMain: TfrmMain
         Transparent = True
         DataPipelineName = 'dplGroups'
         mmHeight = 3260
-        mmLeft = 76465
+        mmLeft = 71702
         mmTop = 0
         mmWidth = 14288
         BandType = 4
@@ -7853,7 +7853,7 @@ object frmMain: TfrmMain
         Transparent = True
         DataPipelineName = 'dplGroups'
         mmHeight = 3260
-        mmLeft = 91546
+        mmLeft = 86784
         mmTop = 0
         mmWidth = 14288
         BandType = 4
@@ -7871,8 +7871,8 @@ object frmMain: TfrmMain
         TextAlignment = taRightJustified
         Transparent = True
         DataPipelineName = 'dplGroups'
-        mmHeight = 3260
-        mmLeft = 107156
+        mmHeight = 3175
+        mmLeft = 121444
         mmTop = 0
         mmWidth = 9790
         BandType = 4
@@ -7890,7 +7890,7 @@ object frmMain: TfrmMain
         Transparent = True
         DataPipelineName = 'dplGroups'
         mmHeight = 3175
-        mmLeft = 118798
+        mmLeft = 102394
         mmTop = 0
         mmWidth = 18521
         BandType = 4
@@ -7900,19 +7900,17 @@ object frmMain: TfrmMain
         UserName = 'DBText10'
         DataField = 'Breakfast'
         DataPipeline = dplGroups
-        DisplayFormat = 'Yes;No'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Name = 'Arial'
         Font.Size = 8
         Font.Style = []
-        TextAlignment = taRightJustified
         Transparent = True
         DataPipelineName = 'dplGroups'
-        mmHeight = 3175
-        mmLeft = 139436
+        mmHeight = 3260
+        mmLeft = 132557
         mmTop = 0
-        mmWidth = 7408
+        mmWidth = 18256
         BandType = 4
         LayerName = Foreground
       end
@@ -7928,21 +7926,9 @@ object frmMain: TfrmMain
         Transparent = True
         DataPipelineName = 'dplGroups'
         mmHeight = 3175
-        mmLeft = 149754
+        mmLeft = 151607
         mmTop = 0
-        mmWidth = 46567
-        BandType = 4
-        LayerName = Foreground
-      end
-      object ppLine3: TppLine
-        UserName = 'Line3'
-        ParentHeight = True
-        Position = lpLeft
-        Weight = 0.750000000000000000
-        mmHeight = 3175
-        mmLeft = 148167
-        mmTop = 0
-        mmWidth = 265
+        mmWidth = 42333
         BandType = 4
         LayerName = Foreground
       end
@@ -7987,7 +7973,7 @@ object frmMain: TfrmMain
           mmHeight = 5112
           mmLeft = 794
           mmTop = 11113
-          mmWidth = 10054
+          mmWidth = 13494
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -8004,7 +7990,7 @@ object frmMain: TfrmMain
           Font.Style = []
           Transparent = True
           mmHeight = 5112
-          mmLeft = 12700
+          mmLeft = 16669
           mmTop = 11113
           mmWidth = 9790
           BandType = 3
@@ -8056,9 +8042,9 @@ object frmMain: TfrmMain
           Font.Style = []
           Transparent = True
           mmHeight = 5112
-          mmLeft = 24342
+          mmLeft = 28575
           mmTop = 11377
-          mmWidth = 45508
+          mmWidth = 41275
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -8076,7 +8062,7 @@ object frmMain: TfrmMain
           TextAlignment = taRightJustified
           Transparent = True
           mmHeight = 5112
-          mmLeft = 80698
+          mmLeft = 75936
           mmTop = 11113
           mmWidth = 9790
           BandType = 3
@@ -8096,7 +8082,7 @@ object frmMain: TfrmMain
           TextAlignment = taRightJustified
           Transparent = True
           mmHeight = 5112
-          mmLeft = 92604
+          mmLeft = 87842
           mmTop = 11113
           mmWidth = 13229
           BandType = 3
@@ -8115,9 +8101,9 @@ object frmMain: TfrmMain
           Font.Style = []
           TextAlignment = taRightJustified
           Transparent = True
-          mmHeight = 5112
-          mmLeft = 107156
-          mmTop = 11377
+          mmHeight = 5027
+          mmLeft = 121444
+          mmTop = 11113
           mmWidth = 9790
           BandType = 3
           GroupNo = 0
@@ -8177,12 +8163,11 @@ object frmMain: TfrmMain
           Font.Name = 'Arial'
           Font.Size = 8
           Font.Style = []
-          TextAlignment = taRightJustified
           Transparent = True
-          mmHeight = 5027
-          mmLeft = 132292
+          mmHeight = 3260
+          mmLeft = 132557
           mmTop = 11113
-          mmWidth = 14552
+          mmWidth = 18256
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -8199,9 +8184,28 @@ object frmMain: TfrmMain
           Font.Style = []
           Transparent = True
           mmHeight = 3260
-          mmLeft = 149754
+          mmLeft = 151607
           mmTop = 11113
           mmWidth = 27781
+          BandType = 3
+          GroupNo = 0
+          LayerName = Foreground
+        end
+        object ppLabel11: TppLabel
+          UserName = 'Label11'
+          Anchors = [atLeft, atTop, atBottom]
+          AutoSize = False
+          Caption = 'Status'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Name = 'Arial'
+          Font.Size = 8
+          Font.Style = []
+          Transparent = True
+          mmHeight = 3260
+          mmLeft = 102394
+          mmTop = 11113
+          mmWidth = 9790
           BandType = 3
           GroupNo = 0
           LayerName = Foreground
@@ -8278,9 +8282,9 @@ object frmMain: TfrmMain
           Transparent = True
           DataPipelineName = 'dplGroups'
           mmHeight = 3175
-          mmLeft = 109009
+          mmLeft = 121444
           mmTop = 1058
-          mmWidth = 7938
+          mmWidth = 9790
           BandType = 5
           GroupNo = 0
           LayerName = Foreground
@@ -8300,8 +8304,8 @@ object frmMain: TfrmMain
   object dplGroups: TppDBPipeline
     DataSource = mDS
     UserName = 'dplGroups'
-    Left = 232
-    Top = 569
+    Left = 520
+    Top = 369
     object dplGroupsppField1: TppField
       Alignment = taRightJustify
       FieldAlias = 'RoomReservation'
@@ -8628,7 +8632,8 @@ object frmMain: TfrmMain
       end
       item
         Name = 'Breakfast'
-        DataType = ftBoolean
+        DataType = ftWideString
+        Precision = 25
       end
       item
         Name = 'NoRoom'
@@ -8768,7 +8773,7 @@ object frmMain: TfrmMain
     SubLanguageID = 1
     LocaleID = 1024
     Left = 168
-    Top = 537
+    Top = 521
   end
   object StoreMain: TcxPropertiesStore
     Active = False
@@ -24218,7 +24223,7 @@ object frmMain: TfrmMain
     Interval = 500
     OnTimer = tmrDateChangeDelayTimer
     Left = 968
-    Top = 472
+    Top = 440
   end
   object hhHintHTMLFormatter: THTMLHint
     Ellipsis = False
