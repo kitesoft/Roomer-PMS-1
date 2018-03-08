@@ -312,7 +312,8 @@ begin
              '              ) ' +
              '            ) ' +
              '          ) ' +
-             ' 	      ) / CurrencyRate) * numNights AS totalTaxes, ' +
+//             ' 	      ) / CurrencyRate) * numNights AS totalTaxes, ' +
+             ' 	      ) * CurrencyRate ) * numNights AS totalTaxes, ' +
              '    TotalRent, ' +
              '    Guarantee, ' +
              '    InvoiceIndex, ' +
