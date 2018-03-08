@@ -4570,8 +4570,8 @@ select_GuestsInfoByRoomReservation : string =
 '    ,  rooms.Location '#10+
 '    ,  rooms.Floor '#10+
 '    , Persons.Country '#10+
-'    , RR_Arrival(roomreservations.roomreservaton, false) as Arrival'#10+
-'    , RR_Departure(roomreservations.roomreservaton, false) as Departure'#10+
+'    , RR_Arrival(roomreservations.roomreservation, false) as Arrival'#10+
+'    , RR_Departure(roomreservations.roomreservation, false) as Departure'#10+
 '    , countries.CountryName '#10+
 '    , customers.Surname AS CustomerName '#10+
 '    , customers.PID AS CustomerPID '#10+
