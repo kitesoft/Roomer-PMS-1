@@ -96,11 +96,12 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 312
-        ActivePage = tabGuestList
+        ActivePage = tabPeriod
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitHeight = 345
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
@@ -1072,8 +1073,8 @@ object frmMain: TfrmMain
                 20)
             end
             object pnlViewType: TsPanel
-              Left = 288
-              Top = 64
+              Left = 1
+              Top = 1
               Width = 185
               Height = 49
               TabOrder = 1
@@ -2645,7 +2646,6 @@ object frmMain: TfrmMain
       Index = 0
     end
     object rbTabReservation: TdxRibbonTab
-      Active = True
       Caption = 'Reservation'
       Groups = <
         item
@@ -2680,6 +2680,7 @@ object frmMain: TfrmMain
       Index = 2
     end
     object rbTabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item

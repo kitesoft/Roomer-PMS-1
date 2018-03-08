@@ -98,6 +98,7 @@ begin
   qMT_.FieldDefs.Add('PMInfo', ftString, 512);
   qMT_.FieldDefs.Add('Price', ftFloat);
   qMT_.FieldDefs.Add('Discount', ftFloat);
+  qMT_.FieldDefs.Add('AllIsPercentage', ftBoolean);
   qMT_.FieldDefs.Add('ItemsOnInvoice', ftBoolean);
   qMT_.FieldDefs.Add('PriceType', ftString, 20);
   qMT_.FieldDefs.Add('Currency', ftString, 10);
@@ -265,6 +266,7 @@ begin
           qMT_.FieldByName('PMInfo').AsWideString := rSet.fieldbyname('PMInfo').asWideString;
           qMT_.FieldByName('Price').AsFloat := rSet.fieldbyname('Price').AsFloat;
           qMT_.FieldByName('Discount').AsFloat := rSet.fieldbyname('Discount').AsFloat;
+          qMT_.FieldByName('AllIsPercentage').AsBoolean:= rSet.fieldbyname('AllIsPercentage').AsBoolean;
           qMT_.FieldByName('ItemsOnInvoice').AsBoolean := rSet.fieldbyname('ItemsOnInvoice').asInteger <> 0;
           qMT_.FieldByName('PriceType').AsString := rSet.fieldbyname('PriceType').asString;
           qMT_.FieldByName('Currency').AsString := rSet.fieldbyname('Currency').asString;

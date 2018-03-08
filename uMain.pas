@@ -8111,7 +8111,11 @@ begin
                   PaymentInvoice, AscIndex, DescIndex,
                   GroupAccount, Room, RoomType, resFlag, CustomerName, isNoRoom, dt, Information, Fax, Tel2, Tel1,
                   GuestName1, PMInfo, PriceType, Currency,
-                  BookingId, Price, Discount, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
+                  BookingId,
+                  Price,
+                  Discount,
+                  rdOBJ.qMT_['AllIsPercentage'],
+                  ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
                   BlockMove, BlockMoveReason, OngoingSale, OngoingRent,
                   OngoingTaxes, rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['InvoiceIndex']);
@@ -8165,7 +8169,10 @@ begin
                   PaymentInvoice, AscIndex, DescIndex,
                   GroupAccount, Room, RoomType, resFlag, CustomerName, isNoRoom, dt, Information, Fax, Tel2, Tel1,
                   GuestName1, PMInfo, PriceType, Currency, BookingId,
-                  Price, Discount, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking, BlockMove,
+                  Price,
+                  Discount,
+                  rdOBJ.qMT_['AllIsPercentage'],
+                  ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking, BlockMove,
                   BlockMoveReason, OngoingSale, OngoingRent, OngoingTaxes,
                   rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['TotalPayment']);
@@ -8465,6 +8472,7 @@ begin
 
   result.Price := resCell.Price;
   result.TotalDiscountAmount := resCell.Discount;
+  result.IsPercentage := resCell.AllIsPercentage;
   result.Information := resCell.Information;
   result.PMInfo := resCell.PMInfo;
   result.PriceType := resCell.PriceType;

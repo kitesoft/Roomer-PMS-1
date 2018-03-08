@@ -42,11 +42,12 @@ type
     FOngoingTaxes: Double;
     FInvoiceIndex: Integer;
     FBlockMoveReason: String;
+    FAllIsPercentage: boolean;
 
   public
     constructor Create(RoomReservation, Reservation, Channel, PaymentInvoice, AscIndex, DescIndex: integer; GroupAccount: boolean;
       Room, RoomType, resFlag, CustomerName: string; isNoRoom: boolean; Date: Tdate; Information, Fax, Tel2, Tel1, GuestName, PMInfo, PriceType, Currency,
-      BookingId: String; Price, Discount: Double; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
+      BookingId: String; Price, Discount: Double; aAllIsPercentage: boolean; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
       _OutOfOrderBlocking, _BlockMove: boolean; _BlockMoveReason: String; _OngoingSale, _OngoingRent, _OngoingTaxes: Double; _Invoices, _Guarantee: String; _TotalPayments: Double
       ; _InvoiceIndex : Integer); overload;
     constructor Create; overload;
@@ -74,6 +75,7 @@ type
 
     property Price: Double read FPrice write FPrice;
     property Discount: Double read FDiscount write FDiscount;
+    property AllIsPercentage: boolean read FAllIsPercentage write fAllIsPercentage;
     property Information: String read FInformation write FInformation;
     property PMInfo: String read FPMInfo write FPMInfo;
     property PriceType: String read FPriceType write FPriceType;
@@ -105,7 +107,7 @@ implementation
 
 constructor TresCell.Create(RoomReservation, Reservation, Channel, PaymentInvoice, AscIndex, DescIndex: integer; GroupAccount: boolean;
   Room, RoomType, resFlag, CustomerName: string; isNoRoom: boolean; Date: Tdate; Information, Fax, Tel2, Tel1, GuestName, PMInfo, PriceType, Currency,
-  BookingId: String; Price, Discount: Double; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
+  BookingId: String; Price, Discount: Double; aAllIsPercentage: boolean; ItemsOnInvoice: boolean; numGuests: integer; RoomClass: string;
   _OutOfOrderBlocking, _BlockMove: boolean; _BlockMoveReason: String; _OngoingSale, _OngoingRent, _OngoingTaxes: Double; _Invoices, _Guarantee: String; _TotalPayments: Double; _InvoiceIndex : Integer);
 
 begin
@@ -132,6 +134,7 @@ begin
   FPMInfo := PMInfo;
   FPrice := Price;
   FDiscount := Discount;
+  FAllIsPercentage := aAllIsPercentage;
   FItemsOnInvoice := ItemsOnInvoice;
   FPriceType := PriceType;
   FCurrency := Currency;
