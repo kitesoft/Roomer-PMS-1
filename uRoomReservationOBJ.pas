@@ -313,16 +313,6 @@ begin
              '            ) ' +
              '          ) ' +
              ' 	      ) / CurrencyRate) * numNights AS totalTaxes, ' +
-//             '    CityTaxInCl, ' +
-//             '    taxAmount, ' +
-//             '    taxPercentage, ' +
-//             '    taxRetaxable, ' +
-//             '    taxRoomNight, ' +
-//             '    taxGuestNight, ' +
-//             '    taxGuest, ' +
-//             '    taxBooking, ' +
-//             '    taxNettoAmountBased, ' +
-//             '    taxBaseAmount, ' +
              '    TotalRent, ' +
              '    Guarantee, ' +
              '    InvoiceIndex, ' +
@@ -337,9 +327,9 @@ begin
              '    MainName, ' +
              '    Price, ' +
              '    Discount, ' +
+             '    to_bool(allIsPercentage) as AllIsPercentage, ' +
              '    PriceType, ' +
              '    Currency, ' +
-//             '    CurrencyRate, ' +
              '    ItemsOnInvoice ' +
              ' ' +
              'FROM ( ' +
@@ -357,15 +347,36 @@ begin
         s := s + ', rr.BlockMoveReason ';
         s := s + ', cur.AValue AS CurrencyRate ';
         s := s + ', (SELECT SUM(pa.Amount) AS Total FROM payments pa WHERE (pa.Amount <> 0) AND (pa.InvoiceNumber = - 1) AND (pa.RoomReservation = rd.roomReservation)) AS TotalPayment ';
-        s := s + ', ( ';
-        s := s + ' SELECT ';
-        s := s + ' SUM(il.Total) ';
-        s := s + '   FROM ';
-        s := s + '  invoicelines il ';
-        s := s + '   WHERE ';
-        s := s + ' (il.Total <> 0) AND (il.InvoiceNumber = -1) AND (il.RoomReservation = rd.roomReservation )) ';
-        s := s + '  AS TotalNoRent, ';
-        s := s + '      to_bool(IF(tax.INCL_EXCL=''INCLUDED'' OR ' +
+//        s := s + ', ( ';
+//        s := s + ' SELECT ';
+//        s := s + ' SUM(il.Total) ';
+//        s := s + '   FROM ';
+//        s := s + '  invoicelines il ';
+//        s := s + '   WHERE ';
+//        s := s + ' (il.Total <> 0) AND (il.InvoiceNumber = -1) AND (il.RoomReservation = rd.roomReservation )) ';
+//        s := s + '  AS TotalNoRent, ';
+
+        s := s + ', IFNULL(( '#10;
+        s := s + '        SELECT '#10;
+        s := s + '          SUM(il.Total) AS Total '#10;
+        s := s + '        FROM '#10;
+        s := s + '          invoicelines il '#10;
+        s := s + '        WHERE '#10;
+        s := s + '          (il.Total <> 0) AND (il.InvoiceNumber = - 1) AND (il.RoomReservation = rr.roomReservation ) '#10;
+        s := s + '          AND not (rr.status in (''X'', ''C'') and il.isPackage) -- exclude package items of cancelled bookings '#10;
+        s := s + '       ), 0) '#10;
+        s := s + '		+ -- include unpaid excluded breakfasts '#10;
+        s := s + '		CASE WHEN rr.breakfast = ''EXCLUDED'' '#10;
+        s := s + '            THEN rr.breakfastprice * (SELECT COUNT(id) FROM persons WHERE RoomReservation=rr.RoomReservation) '#10;
+        s := s + '                 * (select count(id) from roomsdate rd1 '#10;
+        s := s + '                    where rd1.roomreservation=rr.roomreservation '#10;
+        s := s + '                      and rd1.resflag <> ''X'' '#10;
+        s := s + '                      and not rd1.paid) '#10;
+        s := s + '			ELSE 0 '#10;
+        s := s + '		END AS TotalNoRent '#10;
+
+
+        s := s + ',      to_bool(IF(tax.INCL_EXCL=''INCLUDED'' OR ' +
 			       '(tax.INCL_EXCL=''PER_CUSTOMER'' AND IFNULL(cu.StayTaxIncluted, 1)), 1, 0)) AS CityTaxInCl, ' +
 			       'tax.AMOUNT AS taxAmount, ' +
 			       'to_bool(IF(tax.TAX_TYPE=''FIXED_AMOUNT'', 0, 1)) AS taxPercentage, ' +
@@ -398,13 +409,24 @@ begin
         s := s + ', rv.Tel1 ';
         s := s + ', pe.NumPersons AS NumGuests ';
         s := s + ', pe.Name AS MainName ';
-//        s := s + ', (SELECT count(id) FROM persons WHERE roomreservation=rd.roomreservation LIMIT 1) AS NumGuests ';
-//        s := s + ', IFNULL((SELECT Name FROM persons WHERE MainName=True AND roomreservation=rd.roomreservation LIMIT 1), ';
-//        s := s + '          (SELECT Name FROM persons WHERE roomreservation=rd.roomreservation ORDER BY person DESC LIMIT 1) ';
-//        s := s + '          ) AS MainName ';
         s := s + ', rv.PMInfo ';
         s := s + ', (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rd.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS Price ';
-        s := s + ', rr.Discount AS Discount ';
+//        s := s + ', rr.Discount AS Discount ';
+
+        s := s + ', (SELECT '#10;
+        s := s + '   SUM((IF(rd1.isPercentage, rd1.RoomRate * rd1.Discount / 100, rd1.Discount)) * cu1.AValue * ABS(rd1.Paid-1)) '#10;
+        s := s + ' FROM '#10;
+        s := s + '   roomsdate rd1 '#10;
+        s := s + '   INNER JOIN currencies cu1 ON cu1.Currency=rd1.Currency '#10;
+        s := s + ' WHERE '#10;
+        s := s + '   (NOT rd1.ResFlag IN (''X'',''C'',''W'',''Z'')) AND (rd1.RoomReservation = rr.roomReservation ) '#10;
+		 		s := s + ') as Discount '#10;
+
+        s := s + ', (SELECT MIN(rd1.isPercentage) '#10;
+        s := s + '     FROM roomsdate rd1 '#10;
+        s := s + '     WHERE (NOT rd1.ResFlag IN (''X'',''C'',''W'',''Z'')) AND (rd1.RoomReservation = rr.roomReservation ) '#10;
+        s := s + '  ) as AllIsPercentage '#10;
+
         s := s + ', rr.PriceType AS PriceType ';
         s := s + ', rd.Currency AS Currency ';
 

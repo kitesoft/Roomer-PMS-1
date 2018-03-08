@@ -389,10 +389,9 @@ var
   '          invoicenumber '#10+
 //  '          , sum(Total + revenueCorrection) as Total '#10+
 //  '          , sum(Vat + revenueCorrectionVat) AS TotalVAT '#10+
-  '          , sum(revenue) as Total '#10+
-  '          , sum(revenue / (100 + IFNULL(vat.VATPercentage, 0)) * IFNULL(vat.VATPercentage, 0)) AS TotalVAT '#10+
+  '          , sum(Total) as Total '#10+
+  '          , sum(Vat) AS TotalVAT '#10+
   '        from invoicelines '#10+
-  '        join vatcodes vat on vat.VATCode=VATType '#10+
   '        where (invoicenumber> 0) '#10+
   '        group by invoicenumber '#10+
   '       ) il on il.invoicenumber = ih.invoicenumber '#10+
@@ -4571,8 +4570,8 @@ select_GuestsInfoByRoomReservation : string =
 '    ,  rooms.Location '#10+
 '    ,  rooms.Floor '#10+
 '    , Persons.Country '#10+
-'    , RR_Arrival(roomreservations.roomreservaton, false) as Arrival'#10+
-'    , RR_Departure(roomreservations.roomreservaton, false) as Departure'#10+
+'    , RR_Arrival(roomreservations.roomreservation, false) as Arrival'#10+
+'    , RR_Departure(roomreservations.roomreservation, false) as Departure'#10+
 '    , countries.CountryName '#10+
 '    , customers.Surname AS CustomerName '#10+
 '    , customers.PID AS CustomerPID '#10+

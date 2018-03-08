@@ -322,42 +322,6 @@ type
     rptbGroups: TppReport;
     ppParameterList1: TppParameterList;
     dplGroups: TppDBPipeline;
-    dplGroupsppField1: TppField;
-    dplGroupsppField2: TppField;
-    dplGroupsppField3: TppField;
-    dplGroupsppField4: TppField;
-    dplGroupsppField5: TppField;
-    dplGroupsppField6: TppField;
-    dplGroupsppField7: TppField;
-    dplGroupsppField8: TppField;
-    dplGroupsppField9: TppField;
-    dplGroupsppField10: TppField;
-    dplGroupsppField11: TppField;
-    dplGroupsppField12: TppField;
-    dplGroupsppField13: TppField;
-    dplGroupsppField14: TppField;
-    dplGroupsppField15: TppField;
-    dplGroupsppField16: TppField;
-    dplGroupsppField17: TppField;
-    dplGroupsppField18: TppField;
-    dplGroupsppField19: TppField;
-    dplGroupsppField20: TppField;
-    dplGroupsppField21: TppField;
-    dplGroupsppField22: TppField;
-    dplGroupsppField23: TppField;
-    dplGroupsppField24: TppField;
-    dplGroupsppField25: TppField;
-    dplGroupsppField26: TppField;
-    dplGroupsppField27: TppField;
-    dplGroupsppField28: TppField;
-    dplGroupsppField29: TppField;
-    dplGroupsppField30: TppField;
-    dplGroupsppField31: TppField;
-    dplGroupsppField32: TppField;
-    dplGroupsppField33: TppField;
-    dplGroupsppField34: TppField;
-    dplGroupsppField35: TppField;
-    dplGroupsppField36: TppField;
     mDS: TDataSource;
     ppDesignLayers1: TppDesignLayers;
     ppDesignLayer1: TppDesignLayer;
@@ -390,7 +354,6 @@ type
     ppDBText9: TppDBText;
     ppDBText10: TppDBText;
     ppDBText11: TppDBText;
-    ppLine3: TppLine;
     rLabReportName: TppLabel;
     ppLabel9: TppLabel;
     rlabFrom: TppLabel;
@@ -689,6 +652,7 @@ type
     btnCleaningReport: TdxBarLargeButton;
     tmrDateChangeDelay: TTimer;
     hhHintHTMLFormatter: THTMLHint;
+    ppLabel11: TppLabel;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -981,8 +945,6 @@ type
       var VAlign: TVAlignment);
     procedure btnFilterDropdownClick(Sender: TObject);
     procedure grPeriodRooms_NOMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure tvAllReservationsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AText: string);
     procedure btnBreakfastListClick(Sender: TObject);
     procedure btnCleaningReportClick(Sender: TObject);
     procedure tmrDateChangeDelayTimer(Sender: TObject);
@@ -3317,12 +3279,6 @@ procedure TfrmMain.tvAllReservationsAverageRateGetProperties(Sender: TcxCustomGr
   var AProperties: TcxCustomEditProperties);
 begin
   AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
-end;
-
-procedure TfrmMain.tvAllReservationsBreakfastGetDisplayText(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord; var AText: string);
-begin
-  aText := TBreakfastType.FromDBString(aRecord.Values[Sender.Index]).AsReadableString;
 end;
 
 procedure TfrmMain.tvAllReservationsTotalStayRateGetProperties(Sender: TcxCustomGridTableItem;
@@ -8155,7 +8111,11 @@ begin
                   PaymentInvoice, AscIndex, DescIndex,
                   GroupAccount, Room, RoomType, resFlag, CustomerName, isNoRoom, dt, Information, Fax, Tel2, Tel1,
                   GuestName1, PMInfo, PriceType, Currency,
-                  BookingId, Price, Discount, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
+                  BookingId,
+                  Price,
+                  Discount,
+                  rdOBJ.qMT_['AllIsPercentage'],
+                  ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
                   BlockMove, BlockMoveReason, OngoingSale, OngoingRent,
                   OngoingTaxes, rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['InvoiceIndex']);
@@ -8209,7 +8169,10 @@ begin
                   PaymentInvoice, AscIndex, DescIndex,
                   GroupAccount, Room, RoomType, resFlag, CustomerName, isNoRoom, dt, Information, Fax, Tel2, Tel1,
                   GuestName1, PMInfo, PriceType, Currency, BookingId,
-                  Price, Discount, ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking, BlockMove,
+                  Price,
+                  Discount,
+                  rdOBJ.qMT_['AllIsPercentage'],
+                  ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking, BlockMove,
                   BlockMoveReason, OngoingSale, OngoingRent, OngoingTaxes,
                   rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['TotalPayment']);
@@ -8509,6 +8472,7 @@ begin
 
   result.Price := resCell.Price;
   result.TotalDiscountAmount := resCell.Discount;
+  result.IsPercentage := resCell.AllIsPercentage;
   result.Information := resCell.Information;
   result.PMInfo := resCell.PMInfo;
   result.PriceType := resCell.PriceType;
@@ -12819,7 +12783,7 @@ begin
             mAllReservations.FieldByName('Room').asString := Room;
             mAllReservations.FieldByName('RoomType').asString := RoomType;
             mAllReservations.FieldByName('Status').asString := status;
-            mAllReservations['Breakfast'] := Breakfast.ToDBString;
+            mAllReservations['Breakfast'] := Breakfast.AsReadableString;
             mAllReservations.FieldByName('BreakfastGuests').asinteger := breakfastguests;
             mAllReservations['NoRoom'] := noRoom;
             mAllReservations.FieldByName('RoomDescription').asString := RoomDescription;
