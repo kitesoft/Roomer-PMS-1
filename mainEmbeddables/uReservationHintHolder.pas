@@ -190,9 +190,10 @@ begin
 
   GetPriceInfo(rri, TotalPrice, TotalDiscount, TotalPriceNetto, PriceNight, DiscountNight, PriceNightNetto);
   // <P align="right">� 123.000,00<br><U>- (10) � 12.300,00</U><br><B>� 11.000,00</B></P>
-  if rri.TotalDiscountAmount <> 0 then
+  if not SameValue(rri.TotalDiscountAmount, 0.00) then
+
   begin
-      if rri.IsPercentage then
+      if rri.IsPercentage and not SameValue(TotalPrice * PriceNight, 0.00) then
       begin
         __hlblTotal.HTMLText.Text := format('<P align="right">%s<br><U>(%s) -%s</U><br><B>%s</B><br></P>',
               [
