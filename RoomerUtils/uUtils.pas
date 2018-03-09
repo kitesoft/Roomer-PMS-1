@@ -162,6 +162,7 @@ function linuxLFCRToWindows(source : String) : String;
 
 function ComponentRunning(aComponent: TComponent): boolean;
 function RunningInMainThread: boolean;
+function RunningInIDE: boolean;
 
 function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
 function IsChildOfParent(aControl: TControl; aParent: TControl): boolean;
@@ -1611,13 +1612,10 @@ begin
   Result := BobJenkinsHash(s[1], Length(s) * SizeOf(s[1]), 0);
 end;
 
-/////////////////////////////////////////////////////////
-//procedure SetSystemDecimalSeparator;
-//begin
-//  SystemDecimalSeparator := TFormatsettings.Create.DecimalSeparator;
-//end;
-//
-//initialization
-//  SetSystemDecimalSeparator;
+function RunningInIDE: boolean;
+begin
+  Result := (DebugHook <> 0) or IsDebuggerPresent;
+end;
+
 
 end.

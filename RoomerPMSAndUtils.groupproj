@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{24D6692F-7A45-4EA3-9B8B-09E262A0A377}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Roomer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\UpgradeDaemon\RoomerUpgradeDaemon.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Roomer">
+        <MSBuild Projects="Roomer.dproj"/>
+    </Target>
+    <Target Name="Roomer:Clean">
+        <MSBuild Projects="Roomer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Roomer:Make">
+        <MSBuild Projects="Roomer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RoomerUpgradeDaemon">
+        <MSBuild Projects="Utils\UpgradeDaemon\RoomerUpgradeDaemon.dproj"/>
+    </Target>
+    <Target Name="RoomerUpgradeDaemon:Clean">
+        <MSBuild Projects="Utils\UpgradeDaemon\RoomerUpgradeDaemon.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RoomerUpgradeDaemon:Make">
+        <MSBuild Projects="Utils\UpgradeDaemon\RoomerUpgradeDaemon.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Roomer;RoomerUpgradeDaemon"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Roomer:Clean;RoomerUpgradeDaemon:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Roomer:Make;RoomerUpgradeDaemon:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
