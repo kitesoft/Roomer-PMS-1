@@ -359,7 +359,7 @@ var
 begin
   SWindowClassName := 'TWIN86FC02AB-D85A-4529-B732-C3D890A0C422';
   {$IFDEF rmMONITOR_LEAKAGE}
-    ReportMemoryLeaksOnShutdown := DebugHook <> 0;
+    ReportMemoryLeaksOnShutdown := RunningInIDE;
   {$ENDIF rmMONITOR_LEAKAGE}
   Application.MainformOnTaskbar := True;
   Application.Initialize;
@@ -380,9 +380,12 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
-    TSplashFormManager.UpdateProgress('Loading forms...');
+    TSplashFormManager.UpdateProgress('Starting application...');
+
+    RoomerVersionManagement.Active := NOT FileExists(ChangeFileExt(Application.ExeName, '-SharedResource.True')) and not TRoomerVersionInfo.IsDebug;
+    RoomerVersionManagement.Prepare;
 
     Application.CreateForm(TDImages, DImages);
     Application.CreateForm(TfrmMain, frmMain);

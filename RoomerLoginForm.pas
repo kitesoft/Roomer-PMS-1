@@ -27,6 +27,7 @@ type
     lblServerProblem: TsLabel;
     timTopmostOff: TTimer;
     tmrCheckConnection: TTimer;
+    btDownload: TsButton;
     procedure btLoginClick(Sender: TObject);
     procedure btCancelClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -35,6 +36,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormActivate(Sender: TObject);
     procedure tmrCheckConnectionTimer(Sender: TObject);
+    procedure btDownloadClick(Sender: TObject);
   private
     { Private declarations }
     FNoInternet: boolean;
@@ -81,7 +83,10 @@ uses uUtils,
      uAboutRoomer,
      uSqlUtils,
      cmpRoomerDataSet,
-     hData;
+     hData
+     , uVersionManagement
+     , ShellApi
+     ;
 
 function AskUserForCredentials(var aUsername: String; var aPassword: String; var aHotelId : String; aLastMessage : String; AuthValueIndex : Integer = -1): TLoginFormResult;
 
@@ -230,6 +235,21 @@ begin
     lblServerProblem.Caption := cPlatformUnreachable + cOfflineMessage
   else
     lblServerProblem.Caption := '';
+
+  btDownload.Enabled := not lOffline;
+end;
+
+procedure TfrmRoomerLoginForm.btDownloadClick(Sender: TObject);
+var
+  lURL: string;
+begin
+  if RoomerVersionManagement.Active then
+    RoomerVersionManagement.ForceUpdate
+  else
+  begin
+    lUrl := cRoomerStoreBase;
+    ShellExecute(0, 'open', PChar(lUrl), nil, nil, SW_SHOWNORMAL);
+  end;
 end;
 
 procedure TfrmRoomerLoginForm.btLoginClick(Sender: TObject);

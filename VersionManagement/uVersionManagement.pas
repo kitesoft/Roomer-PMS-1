@@ -19,15 +19,12 @@ type
     EndDateTime : TDateTime;
   end;
 
-  TOnAskUpgrade = procedure(const Text : String; const version : String; forced : Boolean; var upgrade : Boolean) of Object;
-
   TRoomerVersionManagement = class
   private
     httpCLient: TRoomerHttpClient;
     timer : TTimer;
     FileDependencyManager: TFileDependencymanager;
     RoomerUpgradeDaemonPath : String;
-    FOnAskUpgrade: TOnAskUpgrade;
 
     VersionRec : TVersionRec;
     lastCounter : Integer;
@@ -35,6 +32,7 @@ type
     RoomerLogger : TRoomerLogger;
 
     PortToUse : Integer;
+    FActive: boolean;
 
     procedure OnTimer(Sender: TObject);
     procedure Start(initialStart : Boolean = False);
@@ -48,7 +46,6 @@ type
     procedure openDaemon;
     procedure CloseDaemon;
     {$HINTS ON}
-    function newVersionAvailable(force : Boolean = false) : Boolean;
     procedure updateNow(force : boolean = false);
     procedure BreakDownVersionString(sStr: String);
     procedure PerformUpdateIfAvailable(initialStart : Boolean = False);
@@ -57,16 +54,20 @@ type
     function FindServicePort : integer;
     function GetURIPort(SourceURI : String) : String;
     procedure startEngine;
+    function AskUpgrade(const Text : String; const version : String; forced : Boolean): Boolean;
   public
-    VersionManagerActive : Boolean;
 
     constructor Create;
     destructor Destroy; override;
 
+    function IsNewVersionAvailable(force : Boolean = false) : Boolean;
     procedure Prepare;
     procedure ForceUpdate;
-    property OnAskUpgrade : TOnAskUpgrade read FOnAskUpgrade write FOnAskUpgrade;
+
+    property Active: boolean read FActive write FActive;
   end;
+
+function RoomerVersionManagement: TRoomerVersionManagement;
 
 implementation
 
@@ -84,7 +85,8 @@ uses uD,
      PrjConst,
      uRoomerVersionInfo,
      uSocketHelpers,
-     UITypes
+     UITypes,
+     VCL.StdCtrls
     ;
 
 const SECOND = 1000;
@@ -109,25 +111,22 @@ const SECOND = 1000;
       URI_UPGRADE_DAEMON_CHECK_UPGRADE = URI_UPGRADE_DAEMON + 'CheckForUpgrade/%s';
       URI_UPGRADE_DAEMON_UPDATE_NOW = URI_UPGRADE_DAEMON + 'UpdateNow/%s/%s/%s/%s';
 
-{ TRoomerVersionManagement }
+
+var
+  gRoomerVersionManagement: TRoomerVersionManagement;
+
+function RoomerVersionManagement: TRoomerVersionManagement;
+begin
+  result := gRoomerVersionManagement;
+end;
 
 
 constructor TRoomerVersionManagement.Create;
 begin
   PortToUse := 0;
-  VersionManagerActive := NOT FileExists(ChangeFileExt(Application.ExeName, '-SharedResource.True'));
   RoomerLogger := ActivateRoomerLogger(ClassName);
   lastCounter := MAX_COUNT_FOR_NOTIFICATION;
   httpCLient := TRoomerHttpClient.Create(nil);
-//  httpCLient.InternetOptions := [
-//                                 wHttpIo_No_cache_write,
-//                                 wHttpIo_No_cookies,
-//                                 wHttpIo_No_ui,
-//                                 wHttpIo_Pragma_nocache
-//                                ];
-//  httpClient.ConnectTimeout := HTTP_CONNECT_TIME_OUT;
-//  httpClient.ReceiveTimeout := HTTP_TRANSFER_TIME_OUT;
-//  httpClient.SendTimeout := HTTP_TRANSFER_TIME_OUT;
   FileDependencyManager := TFileDependencymanager.Create;
 
   RoomerUpgradeDaemonPath := TPath.Combine(RoomerAppDataPath, cUpgradeDaemon);
@@ -135,7 +134,6 @@ begin
   timer := TTimer.Create(nil);
   timer.Enabled := False;
   timer.OnTimer := OnTimer;
-
 end;
 
 destructor TRoomerVersionManagement.Destroy;
@@ -152,7 +150,7 @@ procedure TRoomerVersionManagement.ForceUpdate;
 begin
   Stop;
   try
-    if newVersionAvailable(true) then
+    if IsNewVersionAvailable(true) then
       updateNow(true)
 //    else
 //      CheckIfUpgradeExists;
@@ -184,12 +182,9 @@ begin
 end;
 
 procedure TRoomerVersionManagement.makeSureUpgradeDaemonIsActive;
-{$IFNDEF DEBUG}
 var UpgradeActive : Boolean;
-{$ENDIF}
 begin
-{$IFNDEF DEBUG}
-  if VersionManagerActive then
+  if Active then
     begin
     UpgradeActive := doesUpgradeWindowExist;
     if UpgradeActive AND FileDependencyManager.doesNewUpgradeDemonExist(RoomerUpgradeDaemonPath) then
@@ -200,7 +195,6 @@ begin
       PortToUse := FindServicePort;
     end;
   end;
-{$ENDIF}
 end;
 
 procedure TRoomerVersionManagement.BreakDownVersionString(sStr : String);
@@ -232,7 +226,7 @@ begin
   end;
 end;
 
-function TRoomerVersionManagement.newVersionAvailable(force : Boolean = false): Boolean;
+function TRoomerVersionManagement.IsNewVersionAvailable(force : Boolean = false): Boolean;
 var answer, exePath : String;
     uri : String;
 begin
@@ -259,7 +253,7 @@ procedure TRoomerVersionManagement.OnTimer(Sender: TObject);
 begin
   Stop;
   try
-    if newVersionAvailable then
+    if IsNewVersionAvailable then
       updateNow
 //    else
 //      CheckIfUpgradeExists;
@@ -285,7 +279,7 @@ procedure TRoomerVersionManagement.PerformUpdateIfAvailable(initialStart : Boole
 begin
   Stop;
   try
-    if newVersionAvailable then
+    if IsNewVersionAvailable then
       updateNow
     else
     if initialStart then
@@ -303,10 +297,8 @@ end;
 
 procedure TRoomerVersionManagement.startEngine;
 begin
-{$IFNDEF DEBUG}
-  if VersionManagerActive then
+  if Active then
     activateDaemon;
-{$ENDIF}
 end;
 
 procedure TRoomerVersionManagement.CheckIfUpgradeExists;
@@ -322,7 +314,7 @@ begin
 end;
 
 procedure TRoomerVersionManagement.updateNow(force : boolean = false);
-var forced, upgrade : Boolean;
+var forced: Boolean;
     s, msg : String;
     h, m : Integer;
 
@@ -352,28 +344,20 @@ begin
     if forced OR
        (lastCounter > MAX_COUNT_FOR_NOTIFICATION) then
     begin
-      if Assigned(FOnAskUpgrade) then
+      if forced then
+        msg := format(GetTranslatedText('shTx_VersionManagement_ForceNewVersion'), [VersionRec.Version,
+               GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow')])
+      else
       begin
-        upgrade := True;
-        if forced then
-          msg := format(GetTranslatedText('shTx_VersionManagement_ForceNewVersion'), [VersionRec.Version,
-                 GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow')])
-        else begin
-//          GetHoursAndMinutes(VersionRec.TTL, h, m);
-          GetHoursAndMinutes(MinutesBetween(VersionRec.EndDateTime,Now), h, m);
-          msg := format(GetTranslatedText('shTx_VersionManagement_NewVersionAvailable'), [VersionRec.Version,
-                 h,
-                 m,
-                 GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'),
-                 GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater')])
-        end;
-        RoomerLogger.AddToLog('Asking user: ' + msg);
-        FOnAskUpgrade(msg, VersionRec.Version, forced, upgrade);
-        if forced OR upgrade then
-          update
-//        else
-//          CheckIfUpgradeExists;
+        GetHoursAndMinutes(MinutesBetween(VersionRec.EndDateTime,Now), h, m);
+        msg := format(GetTranslatedText('shTx_VersionManagement_NewVersionAvailable'), [VersionRec.Version,
+               h,
+               m,
+               GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'),
+               GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater')])
       end;
+      if forced OR AskUpgrade(msg, VersionRec.Version, forced) then
+        update;
       lastCounter := 0;
     end;
   end;
@@ -423,7 +407,7 @@ begin
    end else
    begin
      PortToUse := 0;
-     ExecuteFile(Application.MainForm.Handle, exePath, '', []); // [eoElevate]);
+     ExecuteFile(Application.Handle, exePath, '', []); // [eoElevate]);
      RoomerLogger.AddToLog('Daemon opened.');
      sleep(2000);
    end;
@@ -466,5 +450,45 @@ begin
     result := PortToUse;
 end;
 
+function TRoomerVersionManagement.AskUpgrade(const Text : String; const version : String; forced : Boolean): Boolean;
+var
+  Buttons: TMsgDlgButtons;
+  Dialog : TForm;
 
+    procedure SetButtonCaption(const CurrentButtonCaption, NewButtonCaption : String);
+    var lButton: TButton;
+    begin
+      With Dialog do
+      begin
+        lButton := TButton(FindComponent(CurrentButtonCaption));
+        if lButton <> nil then
+          lButton.Caption := NewButtonCaption;
+      end;
+    end;
+
+begin
+  RoomerLogger.AddToLog('Asking user: ' + Text);
+  if NOT forced then
+    Buttons := [mbOK,mbCancel]
+  else
+    Buttons := [mbOK];
+
+  Dialog := CreateMessageDialog(text, mtConfirmation, Buttons);
+  with Dialog do
+  try
+    SetButtonCaption('OK', GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'));
+    SetButtonCaption('Cancel', GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater'));
+
+    Position := poScreenCenter;
+    Result := ShowModal = mrOk;
+  finally
+    Free;
+  end;
+end;
+
+initialization
+  gRoomerVersionManagement := TRoomerVersionManagement.Create;
+
+finalization
+  gRoomerVersionManagement.Free;
 end.
