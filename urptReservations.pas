@@ -975,10 +975,10 @@ begin
     s := s+'   , rv.dtCreated '#10;
     s := s+'   , cust.surName AS CustomerName'#10;
     s := s+'   , chnl.Name AS ChannelName'#10;
-    s := s+'   , (SELECT count(ID) FROM persons WHERE persons.reservation=rv.reservation) AS GuestCount '#10;
-    s := s+'   , (SELECT count(ID) FROM roomreservations WHERE roomreservations.reservation=rv.reservation) AS RoomCount '#10;
+    s := s+'   , (SELECT count(person) FROM persons WHERE persons.reservation=rv.reservation) AS GuestCount '#10;
+    s := s+'   , (SELECT count(roomreservation) FROM roomreservations WHERE roomreservations.reservation=rv.reservation) AS RoomCount '#10;
 
-    s := s+'   , (SELECT count(ID) FROM roomsdate WHERE roomsdate.reservation=rv.reservation  AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) AS TotalNights '#10;
+    s := s+'   , (SELECT count(roomreservation) FROM roomsdate WHERE roomsdate.reservation=rv.reservation  AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+'))) AS TotalNights '#10;
 
     s := s+'   , (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1) AS Currency  '#10;
     s := s+'   , (SELECT Avalue FROM currencies WHERE currency= (SELECT currency FROM roomsdate WHERE roomsdate.reservation=rv.reservation AND (roomsdate.ResFlag not in('+quotedstr('X')+','+quotedstr('C')+')) LIMIT 1)) AS Currencyrate  '#10;
@@ -1025,7 +1025,7 @@ begin
     s := s+'  , RR_Arrival(roomreservation, false) as Arrival '#10;
     s := s+'  , RR_Departure(roomreservation, false) as Departure '#10;
     s := s+' , (SELECT name FROM persons WHERE RoomReservation=rr.RoomReservation AND MainName LIMIT 1) AS GuestName '#10;
-    s := s+' , (SELECT count(ID) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
+    s := s+' , (SELECT count(person) FROM persons WHERE persons.roomreservation=rr.roomreservation) AS GuestCount '#10;
     s := s+' ,rr.Status '#10;
     s := s+' ,rr.GroupAccount '#10;
     s := s+' ,rr.Breakfast '#10;
