@@ -334,8 +334,8 @@ begin
        '		 SELECT DATE(pdd.date) AS ADate, '#10 +
        '				COUNT(rd.id) AS soldRooms, '#10 +
        '				SUM(CASE WHEN rd.paid '#10 +
-       '				      -- the invoiced price for one day, negative if creditted '#10 +
-       '				      THEN (SELECT sum(price * sign(number)) from invoicelines il where il.invoicenumber > 0 and il.roomreservationalias = rd.roomreservation and il.itemid= c.RoomRentItem) '#10 +
+       '				      -- invoiced amount (i.e. price) for one day (discount subtracted), negative if creditted '#10 +
+       '				      THEN (SELECT sum(price * sign(number)) from invoicelines il where il.invoicenumber > 0 and il.roomreservationalias = rd.roomreservation and il.itemid in (c.RoomRentItem, c.DiscountItem)) '#10 +
        '				      ELSE IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate) * curr.aValue '#10 +
        '				    END) as Revenue, '#10 +
        '				SUM(CASE WHEN rd.paid '#10 +
