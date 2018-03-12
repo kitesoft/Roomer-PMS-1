@@ -599,6 +599,7 @@ type
     isPercentage: boolean;
     showDiscount: boolean;
     Paid: boolean;
+    Invoicenumber: integer;
     Currency: string;
   end;
 
@@ -3018,6 +3019,7 @@ begin
     isPercentage := true;
     showDiscount := true;
     Paid := false;
+    Invoicenumber := -1;
     Currency := g.qNativeCurrency;
 
     // ctrlGetString('NativeCurrency', Connection,loglevel,logpath);
@@ -4113,6 +4115,7 @@ begin
   s := s + '    ,isPercentage ' + #10;
   s := s + '    ,showDiscount ' + #10;
   s := s + '    ,Paid ' + #10;
+  s := s + '    ,Invoicenumber ' + #10;
   s := s + '    ,Currency ' + #10;
   s := s + ' ) ' + #10;
   s := s + ' VALUES ' + #10;
@@ -4140,6 +4143,7 @@ begin
   s := s + '  , ' + _db(theData.isPercentage) + #10;
   s := s + '  , ' + _db(theData.showDiscount) + #10;
   s := s + '  , ' + _db(theData.Paid) + #10;
+  s := s + '  , ' + _db(theData.Invoicenumber) + #10;
   s := s + '  , ' + _db(theData.Currency) + #10;
   s := s + ' ) ';
   result := s;

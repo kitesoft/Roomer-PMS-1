@@ -435,6 +435,7 @@ begin
               if paidCount > 0 then
               begin
                 rec.Paid := true;
+                rec.Invoicenumber := rd_.FieldByName('Invoicenumber').asInteger;
                 dec(paidCount);
               end
               else
@@ -450,10 +451,6 @@ begin
                 s := s + '     resFlag  = ' + _db(status) + ' ' + #10;
                 s := s + '     , Room  = ' + _db(Room) + ' ' + #10;
                 s := s + '     , isNoRoom = ' + _db(isNoRoom) + ' ' + #10;
-                if rec.Paid then
-                  s := s + '     , Paid  = 1' + #10
-                else
-                  s := s + '     , Paid  = 0' + #10;
                 s := s + ' WHERE ' + #10;
                 s := s + '       (roomreservation= ' + _db(RoomReservation) + ') and (Adate=' + _db(sDate) +
                   ') ' + #10;
