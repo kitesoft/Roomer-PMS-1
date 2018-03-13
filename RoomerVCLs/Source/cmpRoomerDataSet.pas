@@ -772,6 +772,8 @@ var
   Stream: TStringStream;
   _roomerClient: TRoomerHttpClient;
 
+var
+  retries: Integer;
 begin
   AssertOnlineMode;
   _roomerClient := CreateRoomerClient(true);
@@ -782,7 +784,16 @@ begin
     Stream := TStringStream.Create(Data, TEncoding.UTF8);
     try
       Stream.Position := 0;
-      Result := String(_roomerClient.Post(AnsiString(url), Stream));
+      for retries := 1 to 3 do
+      begin
+        try
+          Result := String(_roomerClient.Post(AnsiString(url), Stream));
+          Break;
+        except
+          if retries = 3 then
+            raise;
+        end;
+      end;
     finally
       Stream.Free;
     end;
@@ -796,6 +807,8 @@ var
   Stream: TStringStream;
   _roomerClient: TRoomerHttpClient;
 
+var
+  retries: Integer;
 begin
   AssertOnlineMode;
   _roomerClient := CreateRoomerClient(true);
@@ -806,7 +819,16 @@ begin
     Stream := TStringStream.Create(Data, TEncoding.UTF8);
     try
       Stream.Position := 0;
-      Result := String(_roomerClient.Put(AnsiString(url), Stream));
+      for retries := 1 to 3 do
+      begin
+        try
+          Result := String(_roomerClient.Put(AnsiString(url), Stream));
+          Break;
+        except
+          if retries = 3 then
+            raise;
+        end;
+      end;
     finally
       Stream.Free;
     end;
@@ -819,6 +841,8 @@ function TRoomerDataSet.GetAsString(const url: String; const contentType: String
 var
   _roomerClient: TRoomerHttpClient;
   SavedTimeout : Integer;
+var
+  retries: Integer;
 begin
   if NOT force then
     AssertOnlineMode;
@@ -829,13 +853,21 @@ begin
     else
       _roomerClient.contentType := contentType;
     _roomerClient.AcceptEncoding := 'UTF-8';
-
-    SavedTimeout := _roomerClient.ConnectTimeout;
-    _roomerClient.ConnectTimeout := ConnectTimeout;
-    try
-      Result := String(_roomerClient.Get(AnsiString(url)));
-    finally
-      _roomerClient.ConnectTimeout := SavedTimeout;
+    for retries := 1 to 3 do
+    begin
+      try
+        SavedTimeout := _roomerClient.ConnectTimeout;
+        _roomerClient.ConnectTimeout := ConnectTimeout;
+        try
+          Result := String(_roomerClient.Get(AnsiString(url)));
+          Break;
+        finally
+          _roomerClient.ConnectTimeout := SavedTimeout;
+        end;
+      except
+        if (retries = 3) OR (NOT retry) then
+          raise;
+      end;
     end;
   finally
     FreeAndNil(_roomerClient);
@@ -918,8 +950,16 @@ begin
       _roomerClient.contentType := '*/*;charset=utf-8'
     else
       _roomerClient.contentType := contentType;
-
-    Result := string(_roomerClient.Post(AnsiString(url), Data));
+    // for retries := 1 to 3 do
+    // begin
+    try
+      Result := string(_roomerClient.Post(AnsiString(url), Data));
+      // Break;
+    except
+      // if retries = 3 then
+      raise;
+    end;
+    // end;
   finally
     FreeAndNil(_roomerClient);
   end;
@@ -957,11 +997,21 @@ end;
 function TRoomerDataSet.DeleteAsString(const url: String): String;
 var
   _roomerClient: TRoomerHttpClient;
+  retries: Integer;
 begin
   _roomerClient := CreateRoomerClient(true);
   try
     _roomerClient.contentType := '';
-    Result := String(_roomerClient.Delete(AnsiString(url)));
+    for retries := 1 to 3 do
+    begin
+      try
+        Result := String(_roomerClient.Delete(AnsiString(url)));
+        Break;
+      except
+        if retries = 3 then
+          raise;
+      end;
+    end;
   finally
     FreeAndNil(_roomerClient);
   end;
@@ -970,6 +1020,7 @@ end;
 function TRoomerDataSet.DownloadFile(aRoomerClient: TRoomerHttpClient; const url, filename: String): boolean;
 var
   Stream: TFileStream;
+  retries: Integer;
 {$IFNDEF USE_INDY}
   aResponseContentHeader: TALHTTPResponseHeader;
 {$ENDIF}
@@ -986,7 +1037,16 @@ begin
       aRoomerClient.handleRedirects := true; // Handle redirects
       aRoomerClient.Get(url, Stream);
 {$ELSE}
-      aRoomerClient.Get(AnsiString(url), Stream, aResponseContentHeader);
+      for retries := 1 to 3 do
+      begin
+        try
+          aRoomerClient.Get(AnsiString(url), Stream, aResponseContentHeader);
+          Break;
+        except
+          if retries = 3 then
+            raise;
+        end;
+      end;
 {$ENDIF}
       Result := true;
     except
@@ -1003,8 +1063,13 @@ end;
 
 function TRoomerDataSet.downloadUrlAsString(url: String; loggingInOut: Integer = 0; { 0/1/2 = neither/login/logout }
   SetLastAccess: boolean = true; contentType: String = ''; RaiseException: boolean = false): String;
+var
+  doRetry: boolean;
 begin
+  doRetry := true;
+  while doRetry do
     try
+      doRetry := false;
       Result := GetAsString(url, contentType);
       if SetLastAccess then
         FLastAccess := now;
@@ -1027,6 +1092,7 @@ begin
           if (loggingInOut = 0) then
           begin
             DoSessionExpired;
+            doRetry := NOT Application.Terminated;
           end
           else if (loggingInOut = 1) then
           begin
@@ -1081,21 +1147,34 @@ end;
 function TRoomerDataSet.downloadUrlAsStringUsingPost(url: String; Data: String; SetLastAccess: boolean = true;
   loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
   ; contentType: String = ''): String;
+var
+  doRetry: boolean;
 begin
-  try
-    Result := PostAsString(url, Data, contentType);
-    if SetLastAccess then
-      FLastAccess := now;
-    exit;
-  except
-    on E: EALHTTPClientException
-      do
+  doRetry := true;
+  while doRetry do
+    try
+      doRetry := false;
+      Result := PostAsString(url, Data, contentType);
+      if SetLastAccess then
+        FLastAccess := now;
+      exit;
+    except
+      on E:
+{$IFDEF USE_INDY}
+        Exception
+{$ELSE}
+        EALHTTPClientException
+{$ENDIF}
+        do
       begin
+{$IFDEF USE_INDY}
+{$ELSE}
         if (E.StatusCode = 0) OR (E.StatusCode = 401) then
         begin
           if (loggingInOut = 0) then
           begin
             DoSessionExpired;
+            doRetry := NOT Application.Terminated;
           end
           else if (loggingInOut = 1) then
           begin
@@ -1117,19 +1196,25 @@ begin
           raise Exception.Create(format('Error during communication with server (GET): [%d] %s',
             [E.StatusCode, E.Message]));
         end;
+{$ENDIF}
       end;
       on E: Exception do
       begin
         raise Exception.Create(format('Error during communication with server (POST): %s', [E.Message]));
       end;
-  end;
+    end;
 end;
 
 function TRoomerDataSet.downloadUrlAsStringUsingPostThreaded(const url: String; const Data: String; SetLastAccess: boolean = true;
   loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
   ; const contentType: String = ''): String;
+var
+  doRetry: boolean;
 begin
+  doRetry := true;
+  while doRetry do
     try
+      doRetry := false;
       Result := PostAsString(url, Data, contentType);
       if SetLastAccess then
         FLastAccess := now;
@@ -1156,8 +1241,13 @@ end;
 function TRoomerDataSet.downloadUrlAsStringUsingPostAsync(url: String; Data: String; SetLastAccess: boolean = true;
   loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
   ; contentType: String = ''): String;
+var
+  doRetry: boolean;
 begin
+  doRetry := true;
+  while doRetry do
     try
+      doRetry := false;
       Result := PostAsStringAsync(url, Data, contentType);
       if SetLastAccess then
         FLastAccess := now;
@@ -1170,6 +1260,7 @@ begin
           if (loggingInOut = 0) then
           begin
             DoSessionExpired;
+            doRetry := NOT Application.Terminated;
           end
           else if (loggingInOut = 1) then
           begin
@@ -1202,8 +1293,13 @@ end;
 function TRoomerDataSet.downloadUrlAsStringUsingPut(const url: String; const Data: String; SetLastAccess: boolean = true;
   loggingInOut: Integer = 0 { 0/1/2 = neither/login/logout }
   ; const contentType: String = ''; retryOnError: boolean = true): String;
+var
+  doRetry: boolean;
 begin
+  doRetry := true;
+  while doRetry do
     try
+      doRetry := false;
       Result := PutAsString(url, Data, contentType, retryOnError);
       if SetLastAccess then
         FLastAccess := now;
@@ -1224,6 +1320,7 @@ begin
           if (loggingInOut = 0) then
           begin
             DoSessionExpired;
+            doRetry := NOT Application.Terminated;
           end
           else if (loggingInOut = 1) then
           begin
