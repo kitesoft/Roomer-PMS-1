@@ -9,7 +9,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -10
+  Font.Height = -15
   Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsStayOnTop
@@ -21,7 +21,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 12
+  TextHeight = 18
   object lbHotel: TLabel
     Left = 94
     Top = 124
@@ -33,12 +33,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Margins.Bottom = 2
     Alignment = taRightJustify
     Caption = 'Hotel Code:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
   end
   object lbUsername: TLabel
     Left = 98
@@ -51,12 +45,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Margins.Bottom = 2
     Alignment = taRightJustify
     Caption = 'Username:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
   end
   object lbPassword: TLabel
     Left = 104
@@ -69,12 +57,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Margins.Bottom = 2
     Alignment = taRightJustify
     Caption = 'Password:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
   end
   object imgRoomer: TImage
     Left = 0
@@ -373,13 +355,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Margins.Top = 2
     Margins.Right = 2
     Margins.Bottom = 2
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = []
     MaxLength = 5
-    ParentFont = False
     TabOrder = 0
   end
   object edtUsername: TEdit
@@ -391,13 +367,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Margins.Top = 2
     Margins.Right = 2
     Margins.Bottom = 2
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = []
     MaxLength = 10
-    ParentFont = False
     TabOrder = 1
   end
   object edtPassword: TEdit
@@ -409,13 +379,7 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
     Margins.Top = 2
     Margins.Right = 2
     Margins.Bottom = 2
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = []
     MaxLength = 64
-    ParentFont = False
     PasswordChar = '*'
     TabOrder = 2
   end
@@ -489,7 +453,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       TabOrder = 2
       OnClick = btDownloadClick
       SkinData.SkinSection = 'BUTTON'
-      ExplicitLeft = 327
     end
   end
   object StoreLogin: TcxPropertiesStore
