@@ -107,8 +107,8 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
       object chkActive: TsCheckBox
         Left = 100
         Top = 30
-        Width = 109
-        Height = 17
+        Width = 101
+        Height = 20
         Caption = 'Show active only'
         Checked = True
         State = cbChecked
@@ -136,18 +136,20 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
       end
     end
   end
-  inherited pnlClient: TsPanel
-    inherited grData: TcxGrid
-      inherited tvData: TcxGridDBBandedTableView
-        Styles.Content = nil
-        Styles.ContentEven = nil
-        Styles.ContentOdd = nil
-        Styles.Selection = nil
-        Styles.Footer = nil
-        Styles.Group = nil
-        Styles.GroupSummary = nil
-        Styles.Header = nil
-        Styles.Preview = nil
+  inherited pcClient: TsPageControl
+    inherited tsMain: TsTabSheet
+      inherited grData: TcxGrid
+        inherited tvData: TcxGridDBBandedTableView
+          Styles.Content = nil
+          Styles.ContentEven = nil
+          Styles.ContentOdd = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Group = nil
+          Styles.GroupSummary = nil
+          Styles.Header = nil
+          Styles.Preview = nil
+        end
       end
     end
   end
@@ -189,7 +191,6 @@ inherited frmBaseRoomerEditGridForm: TfrmBaseRoomerEditGridForm
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43112.381352962960000000
-      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end

@@ -16,7 +16,7 @@ uses
   dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd,
   dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers,
   dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, sLabel, sEdit, sCheckBox,
-  Vcl.Buttons, sSpeedButton, Vcl.Menus, dxCore, uRoomerGridExporters, dxPScxPivotGridLnk
+  Vcl.Buttons, sSpeedButton, Vcl.Menus, dxCore, uRoomerGridExporters, dxPScxPivotGridLnk, sPageControl
   ;
 
 type
@@ -43,6 +43,8 @@ type
     acAllowGridEdit: TAction;
     grPrinter: TdxComponentPrinter;
     prLink_grData: TdxGridReportLink;
+    pcCLient: TsPageControl;
+    tsMain: TsTabSheet;
     procedure acPrintExecute(Sender: TObject);
     procedure tvDataCellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
       AButton: TMouseButton; AShift: TShiftState; var AHandled: Boolean);
@@ -69,6 +71,7 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure DoUpdateControls; override;
     function HasData: boolean;
+    function ActiveGrid: TcxGrid;
     property FormMode: TRoomerGridFormMode read FFormMode;
     property GridExporter: TRoomerGridExporters read FGridExporter;
   public
@@ -90,14 +93,23 @@ implementation
 
 uses
   PrjConst
-  ;
+  , uUtils;
 
 { TfrmBaseRoomerGridForm }
 
 procedure TfrmBaseRoomerGridForm.Loaded;
+var
+  i: integer;
+  lGrid: TcxGrid;
 begin
   inherited;
-  AddViewColumnPropsToStore(grData);
+
+  for i := 0 to pcCLient.PageCount-1 do
+  begin
+    lGrid := FindFirstChildControlOfType(pcCLient.Pages[i], tcxGrid) as TcxGrid;
+    if assigned(lGrid) then
+      AddViewColumnPropsToStore(lGrid);
+  end;
   InitializeGridProperties;
 end;
 
@@ -198,9 +210,15 @@ end;
 procedure TfrmBaseRoomerGridForm.acPrintExecute(Sender: TObject);
 begin
   inherited;
+  prLink_grData.Component := ActiveGrid;
   grPrinter.PrintTitle := caption;
-  prLink_grData.ReportTitle.Text := caption;
+  prLink_grData.ReportTitle.Text := Caption;
   grPrinter.Preview(true, prLink_grData);
+end;
+
+function TfrmBaseRoomerGridForm.ActiveGrid: TcxGrid;
+begin
+  Result := FindFirstChildControlOfType(pcClient.ActivePage, TcxGrid) as TcxGrid;
 end;
 
 procedure TfrmBaseRoomerGridForm.AddViewColumnPropsToStore(aGrid: TcxGrid);

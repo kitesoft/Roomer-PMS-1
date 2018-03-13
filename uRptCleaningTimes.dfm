@@ -47,20 +47,22 @@ inherited frmCleaningTimes: TfrmCleaningTimes
       BevelOuter = bvNone
       TabOrder = 0
       SkinData.SkinSection = 'PANEL'
-      object btnExcel: TsButton
+      object btnExport: TsButton
         AlignWithMargins = True
-        Left = 3
+        Left = 726
         Top = 3
         Width = 128
         Height = 35
-        Align = alLeft
+        Align = alRight
         Caption = 'Export'
         DropDownMenu = pmnuExport
         ImageIndex = 115
         Images = DImages.PngImageList1
         Style = bsSplitButton
         TabOrder = 0
+        OnClick = btnExportClick
         SkinData.SkinSection = 'BUTTON'
+        ExplicitLeft = 3
       end
     end
     object gbxSelectDates: TsGroupBox
@@ -163,95 +165,172 @@ inherited frmCleaningTimes: TfrmCleaningTimes
       SkinData.SkinSection = 'BUTTON'
     end
   end
-  inherited pnlClient: TsPanel
+  inherited pcClient: TsPageControl
     Top = 129
     Width = 857
     Height = 394
-    TabOrder = 2
+    ActivePage = tsHistory
     ExplicitTop = 129
     ExplicitWidth = 857
     ExplicitHeight = 394
-    inherited grData: TcxGrid
-      Width = 855
-      Height = 392
-      ExplicitWidth = 855
-      ExplicitHeight = 392
-      inherited tvData: TcxGridDBBandedTableView
-        Navigator.Visible = False
-        DataController.Summary.DefaultGroupSummaryItems = <
-          item
-            Kind = skAverage
-            Position = spFooter
-            Column = tvDataDurationInMinutes
-          end>
-        DataController.Summary.FooterSummaryItems = <
-          item
-            Kind = skAverage
-            Column = tvDataDurationInMinutes
-          end>
-        OptionsView.Footer = True
-        OptionsView.GroupByBox = True
-        Styles.Content = nil
-        Styles.ContentEven = nil
-        Styles.ContentOdd = nil
-        Styles.Selection = nil
-        Styles.Footer = nil
-        Styles.Group = nil
-        Styles.GroupSummary = nil
-        Styles.Header = nil
-        Styles.Preview = nil
-        object tvDataLocation: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Location'
-          Width = 95
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
+    inherited tsMain: TsTabSheet
+      Caption = 'Cleaning times'
+      TabVisible = True
+      ExplicitTop = 27
+      ExplicitWidth = 849
+      ExplicitHeight = 363
+      inherited grData: TcxGrid
+        Width = 849
+        Height = 349
+        ExplicitWidth = 849
+        ExplicitHeight = 363
+        inherited tvData: TcxGridDBBandedTableView
+          Styles.Content = nil
+          Styles.ContentEven = nil
+          Styles.ContentOdd = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Group = nil
+          Styles.GroupSummary = nil
+          Styles.Header = nil
+          Styles.Preview = nil
+          object tvDataLocation: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Location'
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvdataRoom: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Room'
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvdataRoomtype: TcxGridDBBandedColumn
+            Caption = 'Roomtype'
+            DataBinding.FieldName = 'RoomType'
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvdataStaffmember: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Staffmember'
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvDataStarttime: TcxGridDBBandedColumn
+            Caption = 'StartTime'
+            DataBinding.FieldName = 'startTime'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvDataEndTime: TcxGridDBBandedColumn
+            Caption = 'EndTime'
+            DataBinding.FieldName = 'EndTime'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvDataDuration: TcxGridDBBandedColumn
+            Caption = 'Duration (min)'
+            DataBinding.FieldName = 'DurationInMinutes'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
         end
-        object tvDataRoom: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Room'
-          Width = 95
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
+      end
+    end
+    object tsHistory: TsTabSheet
+      Caption = 'Cleaning History'
+      ExplicitLeft = 3
+      ExplicitTop = 28
+      ExplicitHeight = 360
+      object grHistory: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 849
+        Height = 349
+        Align = alClient
+        TabOrder = 0
+        LookAndFeel.NativeStyle = False
+        ExplicitHeight = 363
+        object tvHistory: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.PriorPage.Visible = False
+          Navigator.Buttons.NextPage.Visible = False
+          Navigator.Buttons.Refresh.Visible = False
+          Navigator.Buttons.SaveBookmark.Visible = False
+          Navigator.Buttons.GotoBookmark.Visible = False
+          Navigator.Buttons.Filter.Visible = False
+          FilterBox.Visible = fvNever
+          OnCellDblClick = tvDataCellDblClick
+          DataController.DataSource = dsHistory
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.FocusCellOnTab = True
+          OptionsData.Deleting = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          Styles.StyleSheet = cxssRoomerGridBandedTableView
+          Bands = <
+            item
+              Width = 108
+            end>
+          object tvHistoryLocation: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Location'
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvHistoryRoom: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Room'
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvHistoryroomtype: TcxGridDBBandedColumn
+            Caption = 'Roomtype'
+            DataBinding.FieldName = 'roomtype'
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvHistorystatusChangedBy: TcxGridDBBandedColumn
+            Caption = 'Staffmember'
+            DataBinding.FieldName = 'statusChangedBy'
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvHistorylogtime: TcxGridDBBandedColumn
+            Caption = 'Logtime'
+            DataBinding.FieldName = 'logtime'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvHistorystatusChangedTo: TcxGridDBBandedColumn
+            Caption = 'Status Changed To'
+            DataBinding.FieldName = 'statusChangedTo'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
         end
-        object tvDataroomtype: TcxGridDBBandedColumn
-          Caption = 'RoomType'
-          DataBinding.FieldName = 'roomtype'
-          Width = 95
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvDatastartTime: TcxGridDBBandedColumn
-          Caption = 'Start Time'
-          DataBinding.FieldName = 'startTime'
-          Width = 155
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvDataendTime: TcxGridDBBandedColumn
-          Caption = 'End Time'
-          DataBinding.FieldName = 'endTime'
-          Width = 151
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object tvDataDurationInMinutes: TcxGridDBBandedColumn
-          Caption = 'Duration (min)'
-          DataBinding.FieldName = 'DurationInMinutes'
-          Width = 106
-          Position.BandIndex = 0
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object tvDataStaffmember: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Staffmember'
-          Width = 156
-          Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
+        object lvHistory: TcxGridLevel
+          GridView = tvHistory
         end
       end
     end
@@ -276,8 +355,8 @@ inherited frmCleaningTimes: TfrmCleaningTimes
   end
   inherited dsData: TDataSource
     DataSet = kbmCleaningTimes
-    Left = 320
-    Top = 424
+    Left = 328
+    Top = 360
   end
   inherited alGridActions: TActionList
     Top = 216
@@ -361,6 +440,72 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     Top = 216
     object Print1: TMenuItem
       Action = acPrint
+    end
+  end
+  object dsHistory: TDataSource
+    DataSet = kbmHistory
+    Left = 328
+    Top = 424
+  end
+  object kbmHistory: TkbmMemTable
+    DesignActivation = True
+    AttachedAutoRefresh = True
+    AttachMaxCount = 1
+    FieldDefs = <
+      item
+        Name = 'Room'
+        DataType = ftString
+        Size = 10
+      end
+      item
+        Name = 'GuestName'
+        DataType = ftString
+        Size = 100
+      end
+      item
+        Name = 'NumGuests'
+        DataType = ftInteger
+      end
+      item
+        Name = 'RoomerRoomReservationID'
+        DataType = ftInteger
+      end>
+    IndexDefs = <>
+    SortOptions = []
+    PersistentBackup = False
+    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
+    LoadedCompletely = False
+    SavedCompletely = False
+    FilterOptions = []
+    Version = '7.22.00 Standard Edition'
+    LanguageID = 0
+    SortID = 0
+    SubLanguageID = 1
+    LocaleID = 1024
+    Left = 416
+    Top = 423
+    object kbmHistoryLocation: TWideStringField
+      FieldName = 'Location'
+      Size = 10
+    end
+    object kbmHistoryRoom: TWideStringField
+      FieldName = 'Room'
+      Size = 10
+    end
+    object kbmHistoryRoomtype: TWideStringField
+      FieldName = 'roomtype'
+      Size = 10
+    end
+    object kbmHistoryStaffmember: TWideStringField
+      FieldName = 'statusChangedBy'
+      Size = 15
+    end
+    object kbmHistoryLogtime: TDateTimeField
+      FieldName = 'logtime'
+    end
+    object kbmHistorystatusChangedTo: TWideStringField
+      FieldName = 'statusChangedTo'
+      Size = 35
     end
   end
 end
