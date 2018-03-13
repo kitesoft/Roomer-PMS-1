@@ -75,127 +75,119 @@ inherited frmCurrencies: TfrmCurrencies
       Height = 48
       ExplicitWidth = 847
       ExplicitHeight = 48
-      inherited btnClear: TsSpeedButton
-      end
-      inherited chkActive: TsCheckBox
-      end
-      inherited edFilter: TsEdit
-      end
     end
   end
-  inherited pnlClient: TsPanel
+  inherited pcClient: TsPageControl
     Top = 89
     Width = 847
     Height = 366
     ExplicitTop = 89
     ExplicitWidth = 847
     ExplicitHeight = 366
-    inherited grData: TcxGrid
-      Width = 845
-      Height = 364
-      ExplicitWidth = 845
-      ExplicitHeight = 364
-      inherited tvData: TcxGridDBBandedTableView
-        DataController.Options = [dcoAssignMasterDetailKeys, dcoSaveExpanding]
-        OptionsData.Deleting = True
-        OptionsData.Editing = True
-        OptionsData.Inserting = True
-        Styles.Content = nil
-        Styles.ContentEven = nil
-        Styles.ContentOdd = nil
-        Styles.Selection = nil
-        Styles.Footer = nil
-        Styles.Group = nil
-        Styles.GroupSummary = nil
-        Styles.Header = nil
-        Styles.Preview = nil
-        object tvDataRecId: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RecId'
-          Visible = False
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvDataCurrency: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Currency'
-          Width = 67
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvDataDescription: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Description'
-          Width = 224
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvDataactive: TcxGridDBBandedColumn
-          Caption = 'Active'
-          DataBinding.FieldName = 'active'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          HeaderAlignmentHorz = taCenter
-          Width = 66
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvDataAValue: TcxGridDBBandedColumn
-          Caption = 'Rate'
-          DataBinding.FieldName = 'AValue'
-          PropertiesClassName = 'TcxCalcEditProperties'
-          HeaderAlignmentHorz = taRightJustify
-          Width = 75
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object tvDataCurrencySign: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CurrencySign'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          HeaderAlignmentHorz = taRightJustify
-          Width = 96
-          Position.BandIndex = 0
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object tvDatadisplayformat: TcxGridDBBandedColumn
-          Caption = 'Displayformat'
-          DataBinding.FieldName = 'displayformat'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          HeaderAlignmentHorz = taRightJustify
-          Width = 138
-          Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object tvDatadecimals: TcxGridDBBandedColumn
-          Caption = 'Decimals'
-          DataBinding.FieldName = 'decimals'
-          HeaderAlignmentHorz = taRightJustify
-          Width = 72
-          Position.BandIndex = 0
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object tvDataID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ID'
-          Visible = False
-          Width = 54
-          Position.BandIndex = 0
-          Position.ColIndex = 8
-          Position.RowIndex = 0
-        end
-        object tvDataSellValue: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'SellValue'
-          Visible = False
-          Width = 53
-          Position.BandIndex = 0
-          Position.ColIndex = 9
-          Position.RowIndex = 0
+    inherited tsMain: TsTabSheet
+      inherited grData: TcxGrid
+        Width = 839
+        Height = 356
+        ExplicitWidth = 839
+        ExplicitHeight = 356
+        inherited tvData: TcxGridDBBandedTableView
+          Styles.Content = nil
+          Styles.ContentEven = nil
+          Styles.ContentOdd = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Group = nil
+          Styles.GroupSummary = nil
+          Styles.Header = nil
+          Styles.Preview = nil
+          object tvDataRecId: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'RecId'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvDataCurrency: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Currency'
+            Width = 67
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvDataDescription: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Description'
+            Width = 224
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvDataactive: TcxGridDBBandedColumn
+            Caption = 'Active'
+            DataBinding.FieldName = 'active'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Properties.Alignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            Width = 66
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvDataAValue: TcxGridDBBandedColumn
+            Caption = 'Rate'
+            DataBinding.FieldName = 'AValue'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            HeaderAlignmentHorz = taRightJustify
+            Width = 75
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvDataCurrencySign: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'CurrencySign'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.Alignment.Horz = taRightJustify
+            HeaderAlignmentHorz = taRightJustify
+            Width = 96
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvDatadisplayformat: TcxGridDBBandedColumn
+            Caption = 'Displayformat'
+            DataBinding.FieldName = 'displayformat'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.Alignment.Horz = taRightJustify
+            HeaderAlignmentHorz = taRightJustify
+            Width = 138
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object tvDatadecimals: TcxGridDBBandedColumn
+            Caption = 'Decimals'
+            DataBinding.FieldName = 'decimals'
+            HeaderAlignmentHorz = taRightJustify
+            Width = 72
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object tvDataID: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ID'
+            Visible = False
+            Width = 54
+            Position.BandIndex = 0
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object tvDataSellValue: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'SellValue'
+            Visible = False
+            Width = 53
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
         end
       end
     end
@@ -297,7 +289,7 @@ inherited frmCurrencies: TfrmCurrencies
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43108.585563333330000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end

@@ -36,7 +36,6 @@ inherited frmGroupGuests: TfrmGroupGuests
   inherited pnlTop: TsPanel
     Width = 1128
     Height = 154
-    TabOrder = 3
     ExplicitWidth = 1128
     ExplicitHeight = 154
     object pnlSelection: TsPanel
@@ -190,475 +189,122 @@ inherited frmGroupGuests: TfrmGroupGuests
       end
     end
   end
-  inherited pnlClient: TsPanel
+  inherited pcClient: TsPageControl
     Top = 154
     Width = 1128
     Height = 437
-    TabOrder = 2
     ExplicitTop = 154
     ExplicitWidth = 1128
     ExplicitHeight = 437
-    object splClient: TsSplitter [0]
-      Left = 1
-      Top = 330
-      Width = 1126
-      Height = 6
-      Cursor = crVSplit
-      Align = alBottom
-      Color = clActiveCaption
-      ParentColor = False
-      ExplicitTop = 1
-      ExplicitWidth = 335
-    end
-    inherited grData: TcxGrid
-      Width = 1126
-      Height = 329
-      ExplicitWidth = 1126
-      ExplicitHeight = 329
-      inherited tvData: TcxGridDBBandedTableView
-        DataController.KeyFieldNames = 'RoomReservation'
-        DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
-        OptionsData.Editing = True
-        OptionsView.BandHeaders = False
-        Styles.Content = nil
-        Styles.ContentEven = nil
-        Styles.ContentOdd = nil
-        Styles.Selection = nil
-        Styles.Footer = nil
-        Styles.Group = nil
-        Styles.GroupSummary = nil
-        Styles.Header = nil
-        Styles.Preview = nil
-        Bands = <
-          item
-          end>
-        object tvRoomsRecId: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RecId'
-          Visible = False
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvRoomsRoomReservation: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RoomReservation'
-          Visible = False
-          Width = 85
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvRoomsRoom: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Room'
-          Options.Editing = False
-          Width = 50
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvRoomsBreakfast: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Breakfast'
-          OnGetDisplayText = tvRoomsBreakfastGetDisplayText
-          Options.Editing = False
-          Width = 87
-          Position.BandIndex = 0
-          Position.ColIndex = 9
-          Position.RowIndex = 0
-        end
-        object tvRoomsrrArrival: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Arrival'
-          Options.Editing = False
-          Width = 61
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvRoomsrrDeparture: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Departure'
-          Options.Editing = False
-          Width = 61
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object tvRoomsGuestName: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'GuestName'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Width = 145
-          Position.BandIndex = 0
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object tvRoomsnumGuests: TcxGridDBBandedColumn
-          Caption = 'Nr of Guests'
-          DataBinding.FieldName = 'numGuests'
-          Width = 95
-          Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object tvRoomsRoomDescription: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RoomDescription'
-          Options.Editing = False
-          Width = 108
-          Position.BandIndex = 0
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object tvRoomsStatusText: TcxGridDBBandedColumn
-          Caption = 'Status'
-          DataBinding.FieldName = 'status'
-          OnGetDisplayText = tvRoomsStatusTextGetDisplayText
-          Options.Editing = False
-          Width = 120
-          Position.BandIndex = 0
-          Position.ColIndex = 8
-          Position.RowIndex = 0
-        end
-        object tvRoomsroomDetails: TcxGridDBBandedColumn
-          Caption = 'Room Details'
-          DataBinding.FieldName = 'roomDetails'
-          Options.Editing = False
-          Width = 202
-          Position.BandIndex = 0
-          Position.ColIndex = 10
-          Position.RowIndex = 0
-        end
-        object tvRoomsRoomType: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RoomType'
-          Options.Editing = False
-          Width = 105
-          Position.BandIndex = 0
-          Position.ColIndex = 11
-          Position.RowIndex = 0
-        end
-      end
-      object tvGuests: TcxGridDBBandedTableView [1]
-        OnDblClick = tvGuestsDblClick
-        Navigator.Buttons.CustomButtons = <>
-        Navigator.InfoPanel.Visible = True
-        FilterBox.Visible = fvNever
-        DataController.DataSource = dsGuests
-        DataController.DetailKeyFieldNames = 'RoomReservation'
-        DataController.KeyFieldNames = 'Id'
-        DataController.MasterKeyFieldNames = 'RoomReservation'
-        DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoImmediatePost]
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        OptionsBehavior.FocusCellOnTab = True
-        OptionsBehavior.GoToNextCellOnEnter = True
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Inserting = False
-        OptionsView.GroupByBox = False
-        OptionsView.Indicator = True
-        OptionsView.BandHeaderEndEllipsis = True
-        Styles.StyleSheet = cxssRoomerGridBandedTableView
-        Bands = <
-          item
-            Caption = 'Main'
-            Width = 381
+    inherited tsMain: TsTabSheet
+      inherited grData: TcxGrid
+        Width = 1120
+        Height = 427
+        ExplicitWidth = 1120
+        ExplicitHeight = 427
+        inherited tvData: TcxGridDBBandedTableView
+          Styles.Content = nil
+          Styles.ContentEven = nil
+          Styles.ContentOdd = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Group = nil
+          Styles.GroupSummary = nil
+          Styles.Header = nil
+          Styles.Preview = nil
+          object tvRoomsRoomReservation: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'RoomReservation'
+            Visible = False
+            Width = 85
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          item
-            Caption = 'Address'
-            Width = 706
+          object tvRoomsRoom: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Room'
+            Options.Editing = False
+            Width = 50
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
-          item
-            Caption = 'Contact'
+          object tvRoomsBreakfast: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Breakfast'
+            OnGetDisplayText = tvRoomsBreakfastGetDisplayText
+            Options.Editing = False
+            Width = 87
+            Position.BandIndex = 0
+            Position.ColIndex = 8
+            Position.RowIndex = 0
           end
-          item
-            Caption = 'Other'
-            Width = 541
-          end>
-        object tvguestsRoomreservation: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RoomReservation'
-          Visible = False
-          Options.Editing = False
-          Width = 540
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
+          object tvRoomsrrArrival: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Arrival'
+            Options.Editing = False
+            Width = 61
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvRoomsrrDeparture: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Departure'
+            Options.Editing = False
+            Width = 61
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvRoomsGuestName: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'GuestName'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Width = 145
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvRoomsnumGuests: TcxGridDBBandedColumn
+            Caption = 'Nr of Guests'
+            DataBinding.FieldName = 'numGuests'
+            Width = 95
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvRoomsRoomDescription: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'RoomDescription'
+            Options.Editing = False
+            Width = 108
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object tvRoomsStatusText: TcxGridDBBandedColumn
+            Caption = 'Status'
+            DataBinding.FieldName = 'status'
+            OnGetDisplayText = tvRoomsStatusTextGetDisplayText
+            Options.Editing = False
+            Width = 120
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object tvRoomsroomDetails: TcxGridDBBandedColumn
+            Caption = 'Room Details'
+            DataBinding.FieldName = 'roomDetails'
+            Options.Editing = False
+            Width = 202
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object tvRoomsRoomType: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'RoomType'
+            Options.Editing = False
+            Width = 105
+            Position.BandIndex = 0
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
         end
-        object tvGueststitle: TcxGridDBBandedColumn
-          Caption = 'Title'
-          DataBinding.FieldName = 'title'
-          Width = 45
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvGuestsname: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'name'
-          MinWidth = 226
-          Options.HorzSizing = False
-          Width = 226
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvGuestsMainName: TcxGridDBBandedColumn
-          Caption = 'Mainguest'
-          DataBinding.FieldName = 'MainName'
-          MinWidth = 40
-          Options.Editing = False
-          SortIndex = 0
-          SortOrder = soDescending
-          Width = 93
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvGuestsTel1: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Tel1'
-          Width = 100
-          Position.BandIndex = 2
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvGuestsTel2: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Tel2'
-          Width = 100
-          Position.BandIndex = 2
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvGuestsFax: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Fax'
-          Width = 100
-          Position.BandIndex = 2
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvGuestsEmail: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Email'
-          Width = 142
-          Position.BandIndex = 2
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvGuestsAddress1: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Address1'
-          Width = 147
-          Position.BandIndex = 1
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvGuestsAddress2: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Address2'
-          Width = 147
-          Position.BandIndex = 1
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvGuestsAddress3: TcxGridDBBandedColumn
-          Caption = 'Zip code'
-          DataBinding.FieldName = 'Address3'
-          Width = 93
-          Position.BandIndex = 1
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvGuestsAddress4: TcxGridDBBandedColumn
-          Caption = 'City'
-          DataBinding.FieldName = 'Address4'
-          Width = 94
-          Position.BandIndex = 1
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvGuestsState: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'State'
-          Width = 84
-          Position.BandIndex = 1
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object tvGuestsCountry: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Country'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.CharCase = ecUpperCase
-          Properties.OnButtonClick = tvGuestsCountryPropertiesButtonClick
-          Properties.OnValidate = tvGuestsCountryPropertiesValidate
-          Width = 74
-          Position.BandIndex = 1
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object tvGuestsNationality: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Nationality'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.CharCase = ecUpperCase
-          Properties.OnButtonClick = tvGuestsNationalityPropertiesButtonClick
-          Properties.OnValidate = tvGuestsNationalityPropertiesValidate
-          Width = 67
-          Position.BandIndex = 1
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object tvGuestsCustomer: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Customer'
-          Options.Editing = False
-          Width = 80
-          Position.BandIndex = 3
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object tvGuestsPID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PID'
-          Options.Editing = False
-          Width = 65
-          Position.BandIndex = 3
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object tvGuestsDateOfBirth: TcxGridDBBandedColumn
-          Caption = 'Date of Birth'
-          DataBinding.FieldName = 'DateOfBirth'
-          Width = 65
-          Position.BandIndex = 3
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object tvGuestsPersonalIdentificationId: TcxGridDBBandedColumn
-          Caption = 'Personal ID number'
-          DataBinding.FieldName = 'PersonalIdentificationId'
-          Width = 65
-          Position.BandIndex = 3
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object tvGuestsSocialSecurityNumber: TcxGridDBBandedColumn
-          Caption = 'Social Security Number'
-          DataBinding.FieldName = 'SocialSecurityNumber'
-          Width = 65
-          Position.BandIndex = 3
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvGuestsId: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Id'
-          Visible = False
-          Options.Editing = False
-          Position.BandIndex = 3
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvGuestsPerson: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Person'
-          Visible = False
-          Options.Editing = False
-          Position.BandIndex = 3
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvGuestsPersonsProfilesId: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PersonsProfilesId'
-          Visible = False
-          Options.Editing = False
-          Position.BandIndex = 3
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvGuestsRecId: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RecId'
-          Visible = False
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-      end
-      inherited lvData: TcxGridLevel
-        object lvGuests: TcxGridLevel
-          GridView = tvGuests
-          Options.DetailFrameColor = clCream
-        end
-      end
-    end
-    object pnlNotes: TsPanel
-      Left = 1
-      Top = 336
-      Width = 1126
-      Height = 100
-      Align = alBottom
-      TabOrder = 1
-      object lblReservationNotes: TsLabel
-        Left = 5
-        Top = 4
-        Width = 93
-        Height = 13
-        Caption = 'Reservation Notes:'
-      end
-      object lblRoomNotes: TsLabel
-        Left = 507
-        Top = 4
-        Width = 62
-        Height = 13
-        Caption = 'Room Notes:'
-      end
-      object memReservationPMInfo: TsMemo
-        AlignWithMargins = True
-        Left = 255
-        Top = 21
-        Width = 245
-        Height = 75
-        Margins.Top = 20
-        Align = alLeft
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        ReadOnly = True
-        TabOrder = 0
-      end
-      object memRoomNotes: TDBMemo
-        AlignWithMargins = True
-        Left = 506
-        Top = 21
-        Width = 616
-        Height = 75
-        Margins.Top = 20
-        Align = alClient
-        Color = clWhite
-        DataField = 'RoomNotes'
-        DataSource = dsData
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
-      end
-      object memReservationInformation: TsMemo
-        AlignWithMargins = True
-        Left = 4
-        Top = 21
-        Width = 245
-        Height = 75
-        Margins.Top = 20
-        Align = alLeft
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        ReadOnly = True
-        TabOrder = 2
       end
     end
   end
@@ -708,7 +354,7 @@ inherited frmGroupGuests: TfrmGroupGuests
     Top = 208
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43112.424664120370000000
-      AssignedFormatValues = []
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

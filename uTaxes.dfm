@@ -49,257 +49,257 @@ inherited frmTaxes: TfrmTaxes
     inherited pnlFilter: TsPanel
       Width = 1112
       Height = 54
-      ExplicitTop = 43
       ExplicitWidth = 1112
-      ExplicitHeight = 44
+      ExplicitHeight = 54
     end
   end
-  inherited pnlClient: TsPanel
+  inherited pcClient: TsPageControl
     Top = 95
     Width = 1112
     Height = 363
-    ExplicitTop = 85
+    ExplicitTop = 95
     ExplicitWidth = 1112
-    ExplicitHeight = 373
-    inherited grData: TcxGrid
-      Width = 1110
-      Height = 361
-      ExplicitWidth = 1110
-      ExplicitHeight = 371
-      inherited tvData: TcxGridDBBandedTableView
-        OptionsView.ColumnAutoWidth = False
-        Styles.Content = nil
-        Styles.ContentEven = nil
-        Styles.ContentOdd = nil
-        Styles.Selection = nil
-        Styles.Footer = nil
-        Styles.Group = nil
-        Styles.GroupSummary = nil
-        Styles.Header = nil
-        Styles.Preview = nil
-        object tvDataRecId: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RecId'
-          Visible = False
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvDataID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ID'
-          Visible = False
-          Width = 23
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvDataValid_From: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Valid_From'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.MinDate = 2.000000000000000000
-          Properties.OnValidate = tvDataValid_FromPropertiesValidate
-          MinWidth = 100
-          Width = 102
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvDataValid_To: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Valid_To'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.MinDate = 2.000000000000000000
-          Properties.OnValidate = tvDataValid_ToPropertiesValidate
-          MinWidth = 100
-          Width = 100
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object __tvDataProbe_Date: TcxGridDBBandedColumn
-          Caption = 'Probe Date'
-          DataBinding.FieldName = 'Probe_Date'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'INVOICEDATE'
-            'STAYDATE')
-          MinWidth = 80
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvDataDescription: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Description'
-          MinWidth = 200
-          Width = 224
-          Position.BandIndex = 0
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object tvDataAmount: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Amount'
-          PropertiesClassName = 'TcxCalcEditProperties'
-          OnGetProperties = tvDataAmountGetProperties
-          MinWidth = 75
-          Width = 75
-          Position.BandIndex = 0
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object tvDataTax_Type: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Tax_Type'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'FIXED_AMOUNT'
-            'PERCENTAGE')
-          Properties.MaxLength = 30
-          MinWidth = 75
-          Width = 103
-          Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object tvDataTax_Base: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Tax_Base'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'ROOM_NIGHT'
-            'GUEST_NIGHT')
-          Properties.MaxLength = 30
-          Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
-          MinWidth = 75
-          Width = 97
-          Position.BandIndex = 0
-          Position.ColIndex = 9
-          Position.RowIndex = 0
-        end
-        object tvDataTime_Due: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Time_Due'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'PREPAID'
-            'CHECKOUT')
-          MinWidth = 75
-          Width = 122
-          Position.BandIndex = 0
-          Position.ColIndex = 10
-          Position.RowIndex = 0
-        end
-        object tvDataReTaxable: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ReTaxable'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'FALSE'
-            'TRUE')
-          MinWidth = 75
-          Width = 122
-          Position.BandIndex = 0
-          Position.ColIndex = 11
-          Position.RowIndex = 0
-        end
-        object tvDataTaxChildren: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'TaxChildren'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'FALSE'
-            'TRUE')
-          MinWidth = 75
-          Width = 75
-          Position.BandIndex = 0
-          Position.ColIndex = 16
-          Position.RowIndex = 0
-        end
-        object tvDataBooking_Item_Id: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Booking_Item_Id'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.OnButtonClick = tvDataBooking_Item_IdPropertiesButtonClick
-          Visible = False
-          Width = 122
-          Position.BandIndex = 0
-          Position.ColIndex = 12
-          Position.RowIndex = 0
-        end
-        object tvDataHotel_Id: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Hotel_Id'
-          Visible = False
-          Width = 20
-          Position.BandIndex = 0
-          Position.ColIndex = 13
-          Position.RowIndex = 0
-        end
-        object tvDataBooking_Item: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Booking_Item'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.OnButtonClick = tvDataBooking_Item_IdPropertiesButtonClick
-          Properties.OnValidate = tvDataBooking_ItemPropertiesValidate
-          MinWidth = 100
-          Width = 100
-          Position.BandIndex = 0
-          Position.ColIndex = 8
-          Position.RowIndex = 0
-        end
-        object tvDataIncl_Excl: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Incl_Excl'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'EXCLUDED'
-            'INCLUDED'
-            'PER_CUSTOMER')
-          Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
-          MinWidth = 75
-          Width = 75
-          Position.BandIndex = 0
-          Position.ColIndex = 14
-          Position.RowIndex = 0
-        end
-        object tvDataNetto_Amount_Based: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Netto_Amount_Based'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'FALSE'
-            'TRUE')
-          MinWidth = 130
-          Width = 130
-          Position.BandIndex = 0
-          Position.ColIndex = 15
-          Position.RowIndex = 0
-        end
-        object tvDataAfter_discount: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'After_discount'
-          PropertiesClassName = 'TcxComboBoxProperties'
-          Properties.DropDownListStyle = lsFixedList
-          Properties.Items.Strings = (
-            'FALSE'
-            'TRUE')
-          MinWidth = 100
-          Width = 130
-          Position.BandIndex = 0
-          Position.ColIndex = 17
-          Position.RowIndex = 0
-        end
-        object tvDataValue_Formula: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'Value_Formula'
-          MinWidth = 75
-          Width = 75
-          Position.BandIndex = 0
-          Position.ColIndex = 18
-          Position.RowIndex = 0
+    ExplicitHeight = 363
+    inherited tsMain: TsTabSheet
+      inherited grData: TcxGrid
+        Width = 1104
+        Height = 353
+        ExplicitWidth = 1104
+        ExplicitHeight = 353
+        inherited tvData: TcxGridDBBandedTableView
+          Styles.Content = nil
+          Styles.ContentEven = nil
+          Styles.ContentOdd = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Group = nil
+          Styles.GroupSummary = nil
+          Styles.Header = nil
+          Styles.Preview = nil
+          object tvDataRecId: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'RecId'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvDataID: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ID'
+            Visible = False
+            Width = 23
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvDataValid_From: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Valid_From'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.MinDate = 2.000000000000000000
+            Properties.OnValidate = tvDataValid_FromPropertiesValidate
+            MinWidth = 100
+            Width = 102
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvDataValid_To: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Valid_To'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.MinDate = 2.000000000000000000
+            Properties.OnValidate = tvDataValid_ToPropertiesValidate
+            MinWidth = 100
+            Width = 100
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object __tvDataProbe_Date: TcxGridDBBandedColumn
+            Caption = 'Probe Date'
+            DataBinding.FieldName = 'Probe_Date'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'INVOICEDATE'
+              'STAYDATE')
+            MinWidth = 80
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvDataDescription: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Description'
+            MinWidth = 200
+            Width = 224
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvDataAmount: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            OnGetProperties = tvDataAmountGetProperties
+            MinWidth = 75
+            Width = 75
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object tvDataTax_Type: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Tax_Type'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'FIXED_AMOUNT'
+              'PERCENTAGE')
+            Properties.MaxLength = 30
+            MinWidth = 75
+            Width = 103
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object tvDataTax_Base: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Tax_Base'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'ROOM_NIGHT'
+              'GUEST_NIGHT')
+            Properties.MaxLength = 30
+            Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
+            MinWidth = 75
+            Width = 97
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object tvDataTime_Due: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Time_Due'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'PREPAID'
+              'CHECKOUT')
+            MinWidth = 75
+            Width = 122
+            Position.BandIndex = 0
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object tvDataReTaxable: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ReTaxable'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'FALSE'
+              'TRUE')
+            MinWidth = 75
+            Width = 122
+            Position.BandIndex = 0
+            Position.ColIndex = 11
+            Position.RowIndex = 0
+          end
+          object tvDataTaxChildren: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'TaxChildren'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'FALSE'
+              'TRUE')
+            MinWidth = 75
+            Width = 75
+            Position.BandIndex = 0
+            Position.ColIndex = 16
+            Position.RowIndex = 0
+          end
+          object tvDataBooking_Item_Id: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Booking_Item_Id'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.OnButtonClick = tvDataBooking_Item_IdPropertiesButtonClick
+            Visible = False
+            Width = 122
+            Position.BandIndex = 0
+            Position.ColIndex = 12
+            Position.RowIndex = 0
+          end
+          object tvDataHotel_Id: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Hotel_Id'
+            Visible = False
+            Width = 20
+            Position.BandIndex = 0
+            Position.ColIndex = 13
+            Position.RowIndex = 0
+          end
+          object tvDataBooking_Item: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Booking_Item'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.OnButtonClick = tvDataBooking_Item_IdPropertiesButtonClick
+            Properties.OnValidate = tvDataBooking_ItemPropertiesValidate
+            MinWidth = 100
+            Width = 100
+            Position.BandIndex = 0
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object tvDataIncl_Excl: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Incl_Excl'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'EXCLUDED'
+              'INCLUDED'
+              'PER_CUSTOMER')
+            Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
+            MinWidth = 75
+            Width = 75
+            Position.BandIndex = 0
+            Position.ColIndex = 14
+            Position.RowIndex = 0
+          end
+          object tvDataNetto_Amount_Based: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Netto_Amount_Based'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'FALSE'
+              'TRUE')
+            MinWidth = 130
+            Width = 130
+            Position.BandIndex = 0
+            Position.ColIndex = 15
+            Position.RowIndex = 0
+          end
+          object tvDataAfter_discount: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'After_discount'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              'FALSE'
+              'TRUE')
+            MinWidth = 100
+            Width = 130
+            Position.BandIndex = 0
+            Position.ColIndex = 17
+            Position.RowIndex = 0
+          end
+          object tvDataValue_Formula: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Value_Formula'
+            MinWidth = 75
+            Width = 75
+            Position.BandIndex = 0
+            Position.ColIndex = 18
+            Position.RowIndex = 0
+          end
         end
       end
     end
@@ -329,6 +329,7 @@ inherited frmTaxes: TfrmTaxes
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43119.436669074070000000
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end

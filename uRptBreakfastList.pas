@@ -16,7 +16,7 @@ uses
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
   , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton, cxCalc, cxMemo,
-  uRoomerGridForm, System.Actions, Vcl.ActnList  ;
+  uRoomerGridForm, System.Actions, Vcl.ActnList, sPageControl  ;
 
 type
   TfrmBreakfastList = class(TfrmBaseRoomerGridForm)

@@ -20,7 +20,7 @@ inherited frmStaffComm: TfrmStaffComm
   inherited pnlButtons: TsPanel
     Top = 600
     Width = 648
-    ExplicitTop = 568
+    ExplicitTop = 600
     ExplicitWidth = 648
     inherited btnOK: TsButton
       Left = 332
@@ -37,12 +37,12 @@ inherited frmStaffComm: TfrmStaffComm
   end
   inherited pnlTop: TsPanel
     Width = 648
-    Height = 105
+    Height = 83
     ExplicitWidth = 648
-    ExplicitHeight = 105
+    ExplicitHeight = 83
     object cLabFilter: TsLabel
       Left = 19
-      Top = 42
+      Top = 34
       Width = 31
       Height = 13
       Alignment = taRightJustify
@@ -56,7 +56,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object btnClear: TsSpeedButton
       Left = 273
-      Top = 39
+      Top = 31
       Width = 63
       Height = 21
       Caption = 'Clear'
@@ -67,7 +67,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object btnDelete: TsButton
       Left = 199
-      Top = 8
+      Top = 0
       Width = 90
       Height = 25
       Caption = 'Delete'
@@ -79,7 +79,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object btnOther: TsButton
       Left = 295
-      Top = 8
+      Top = 0
       Width = 135
       Height = 25
       Caption = 'Other actions'
@@ -92,7 +92,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object edFilter: TsEdit
       Left = 56
-      Top = 39
+      Top = 31
       Width = 215
       Height = 21
       Color = clWhite
@@ -108,7 +108,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object btnInsert: TsButton
       Left = 6
-      Top = 8
+      Top = 0
       Width = 90
       Height = 25
       Hint = 'Add new record'
@@ -123,7 +123,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object btnEdit: TsButton
       Left = 102
-      Top = 8
+      Top = 0
       Width = 91
       Height = 25
       Hint = 'Edit current record'
@@ -138,7 +138,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object dtDate: TsDateEdit
       Left = 82
-      Top = 70
+      Top = 62
       Width = 96
       Height = 21
       AutoSize = False
@@ -161,7 +161,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object btNextDay: TsBitBtn
       Left = 179
-      Top = 70
+      Top = 62
       Width = 25
       Height = 21
       TabOrder = 7
@@ -171,7 +171,7 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object btnPeviousDay: TsBitBtn
       Left = 55
-      Top = 70
+      Top = 62
       Width = 25
       Height = 21
       TabOrder = 5
@@ -181,9 +181,9 @@ inherited frmStaffComm: TfrmStaffComm
     end
     object chkShowAllNotes: TsCheckBox
       Left = 273
-      Top = 71
-      Width = 169
-      Height = 17
+      Top = 63
+      Width = 161
+      Height = 20
       Caption = 'Show all notes as of this date'
       TabOrder = 8
       OnClick = dtDateChange
@@ -191,94 +191,92 @@ inherited frmStaffComm: TfrmStaffComm
       ImgUnchecked = 0
     end
   end
-  inherited pnlClient: TsPanel
-    Top = 105
+  inherited pcClient: TsPageControl
+    Top = 83
     Width = 648
-    Height = 495
-    inherited grData: TcxGrid
-      Top = 105
-      Width = 648
-      Height = 495
-      ExplicitTop = 103
-      ExplicitWidth = 648
-      ExplicitHeight = 463
-      inherited tvData: TcxGridDBBandedTableView
-        DataController.Filter.OnChanged = tvDataDataControllerFilterChanged
-        DataController.OnSortingChanged = tvDataDataControllerSortingChanged
-        OptionsSelection.CellSelect = False
-        OptionsSelection.MultiSelect = True
-        OptionsView.CellAutoHeight = True
-        Styles.Content = nil
-        Styles.ContentEven = nil
-        Styles.ContentOdd = nil
-        Styles.Selection = nil
-        Styles.Footer = nil
-        Styles.Group = nil
-        Styles.GroupSummary = nil
-        Styles.Header = nil
-        Styles.Preview = nil
-        object tvDatadate: TcxGridDBBandedColumn
-          Caption = 'Action Date'
-          DataBinding.FieldName = 'date'
-          Width = 77
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object tvDatanotes: TcxGridDBBandedColumn
-          Caption = 'Notes'
-          DataBinding.FieldName = 'notes'
-          PropertiesClassName = 'TcxMemoProperties'
-          Width = 280
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object tvDataaction: TcxGridDBBandedColumn
-          Caption = 'Action'
-          DataBinding.FieldName = 'action'
-          OnGetDisplayText = tvData2actionGetDisplayText
-          Width = 108
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object tvDatalastChangedBy: TcxGridDBBandedColumn
-          Caption = 'Last changed by'
-          DataBinding.FieldName = 'lastChangedBy'
-          Width = 103
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object tvDatalastUpdate: TcxGridDBBandedColumn
-          Caption = 'Last Update'
-          DataBinding.FieldName = 'lastUpdate'
-          Width = 78
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object tvDataRecId: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RecId'
-          Visible = False
-          Position.BandIndex = 0
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object tvDataID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ID'
-          Visible = False
-          Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object tvDatauser: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'user'
-          Visible = False
-          Position.BandIndex = 0
-          Position.ColIndex = 7
-          Position.RowIndex = 0
+    Height = 517
+    ExplicitTop = 83
+    ExplicitWidth = 648
+    ExplicitHeight = 517
+    inherited tsMain: TsTabSheet
+      inherited grData: TcxGrid
+        Width = 640
+        Height = 507
+        ExplicitWidth = 640
+        ExplicitHeight = 507
+        inherited tvData: TcxGridDBBandedTableView
+          Styles.Content = nil
+          Styles.ContentEven = nil
+          Styles.ContentOdd = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Group = nil
+          Styles.GroupSummary = nil
+          Styles.Header = nil
+          Styles.Preview = nil
+          object tvDatadate: TcxGridDBBandedColumn
+            Caption = 'Action Date'
+            DataBinding.FieldName = 'date'
+            Width = 77
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvDatanotes: TcxGridDBBandedColumn
+            Caption = 'Notes'
+            DataBinding.FieldName = 'notes'
+            PropertiesClassName = 'TcxMemoProperties'
+            Width = 280
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvDataaction: TcxGridDBBandedColumn
+            Caption = 'Action'
+            DataBinding.FieldName = 'action'
+            OnGetDisplayText = tvData2actionGetDisplayText
+            Width = 108
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvDatalastChangedBy: TcxGridDBBandedColumn
+            Caption = 'Last changed by'
+            DataBinding.FieldName = 'lastChangedBy'
+            Width = 103
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvDatalastUpdate: TcxGridDBBandedColumn
+            Caption = 'Last Update'
+            DataBinding.FieldName = 'lastUpdate'
+            Width = 78
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvDataRecId: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'RecId'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvDataID: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ID'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object tvDatauser: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'user'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
         end
       end
     end
@@ -301,7 +299,7 @@ inherited frmStaffComm: TfrmStaffComm
   inherited grPrinter: TdxComponentPrinter
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43131.436258391200000000
-      AssignedFormatValues = []
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
