@@ -177,6 +177,9 @@ end;
 
 function SQLToGUID(const aGUID: string): string;
 begin
+  if aGUID.IsEmpty then
+    Exit;
+
   Result := aGUID;
   if not Result.StartsWith('{') then
     Result := '{' + Result;
