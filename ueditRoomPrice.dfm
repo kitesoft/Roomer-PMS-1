@@ -193,6 +193,10 @@ inherited frmEditRoomPrice: TfrmEditRoomPrice
         inherited pnlLookup: TsPanel
           Width = 171
           ExplicitWidth = 171
+          inherited lblDescription: TsLabel
+            Width = 78
+            Height = 20
+          end
         end
       end
     end
