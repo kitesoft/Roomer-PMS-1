@@ -580,7 +580,6 @@ type
     tvRoomRatesisPaid: TcxGridDBColumn;
     tvRoomRatesDiscountAmount: TcxGridDBColumn;
     tvRoomRatesCurrency: TcxGridDBColumn;
-    tvRoomRatesCurrencyRate: TcxGridDBColumn;
     tvRoomRatesRentAmount: TcxGridDBColumn;
     tvRoomRatesNativeAmount: TcxGridDBColumn;
     lvRoomRes: TcxGridLevel;
@@ -641,7 +640,6 @@ type
     procedure btnEditRateAllRoomsClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure mSelectRoomsNewRecord(DataSet: TDataSet);
-    procedure tvSelectRoomsRoomPropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
     procedure tvSelectTypeSelectedPropertiesEditValueChanged(Sender: TObject);
     procedure mSelectTypesCalcFields(DataSet: TDataSet);
     procedure tvSelectRoomsSelectPropertiesEditValueChanged(Sender: TObject);
@@ -682,7 +680,6 @@ type
     procedure edContactPersonEnter(Sender: TObject);
     procedure edContactPersonExit(Sender: TObject);
     procedure cbxChannelsCloseUp(Sender: TObject);
-    procedure tvRoomResRatePlanCodePropertiesCloseUp(Sender: TObject);
     procedure tvRoomResRatePlanCodePropertiesEditValueChanged(Sender: TObject);
     procedure tvSelectTypeNoRoomsPropertiesChange(Sender: TObject);
     procedure tvSelectTypeNoRoomsStylesGetContentStyle(Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
@@ -708,6 +705,9 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure tvRoomResIsPercentagePropertiesEditValueChanged(Sender: TObject);
     procedure pgcMainPageChanging(Sender: TObject; NewPage: TsTabSheet; var AllowChange: Boolean);
+    procedure tvRoomResRoomRatePropertiesEditValueChanged(Sender: TObject);
+    procedure tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AProperties: TcxCustomEditProperties);
   private
     { Private declarations }
     zCustomerChanged: boolean;
@@ -745,7 +745,7 @@ type
     procedure SetAllAsNoRoom(doNextPage: boolean = true);
 
     procedure ApplyRateToOther(RoomReservation: integer; RoomType: string);
-    procedure ApplyNettoRateToNullPrice(NewRate: double; RoomReservation: integer; RoomType: string);
+    procedure ApplyGrossRateToNullPrice(aNewGrossRate: double; RoomReservation: integer; RoomType: string);
 
     procedure getSelectRooms;
     procedure InitSelectRooms;
@@ -757,7 +757,7 @@ type
     procedure GetPrices;
 
     function doAutoSelect(RoomType: string; NumRooms: integer; PriorityRule: string): integer;
-    procedure CalcOnePrice(RoomReservation: integer; NewRate: double = 0);
+    procedure CalcOnePrice(RoomReservation: integer; NewGrossRate: double = 0);
 
     procedure SetOutOfOrderBlocking(const Value: boolean);
     procedure FillQuickFind;
@@ -1042,10 +1042,8 @@ begin
   end;
 end;
 
-procedure TfrmMakeReservationQuick.ApplyNettoRateToNullPrice(NewRate: double; RoomReservation: integer;
+procedure TfrmMakeReservationQuick.ApplyGrossRateToNullPrice(aNewGrossRate: double; RoomReservation: integer;
   RoomType: string);
-var
-  currentRoomReservation: integer;
 begin
   mRoomRates.DisableControls;
   mRoomRes.DisableControls;
@@ -1053,24 +1051,15 @@ begin
     mRoomRes.First;
     while not mRoomRes.eof do
     begin
-      if RoomType <> '' then
+      if (RoomType <> '') and (mRoomResRoomType.AsString <> RoomType) then
       begin
-        if (mRoomResRoomType.AsString <> RoomType) then
-        begin
-          mRoomRes.next;
-          continue;
-        end;
+        mRoomRes.next;
+        continue;
       end;
-      if
-        (mRoomResRoomReservation.AsInteger <> RoomReservation)
-      then
-      begin
-        currentRoomReservation := mRoomResRoomReservation.AsInteger;
-        if mRoomResAvragePrice.AsFloat = 0 then
-        begin
-          CalcOnePrice(currentRoomReservation, NewRate);
-        end;
-      end;
+
+      if (mRoomResRoomReservation.AsInteger <> RoomReservation) and (mRoomResRoomRate.AsFloat = 0) then
+          CalcOnePrice(mRoomResRoomReservation.AsInteger, aNewGrossRate);
+
       mRoomRes.next;
     end;
     mRoomRes.Locate('roomReservation', RoomReservation, []);
@@ -1424,10 +1413,78 @@ begin
   aProperties := FCurrentCurrency.GetcxEditPropertiesKeepEvents(aProperties);
 end;
 
+procedure TfrmMakeReservationQuick.tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
+begin
+  if (aRecord.Values[tvRoomRatesisPercentage.index] = 0) then
+    aProperties := FCurrentCurrency.GetcxEditProperties;
+end;
+
 procedure TfrmMakeReservationQuick.tvRoomRatesNativeAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   aProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditPropertiesKeepEvents(AProperties);
+end;
+
+procedure TfrmMakeReservationQuick.tvRoomResDiscountPropertiesEditValueChanged(Sender: TObject);
+var
+  RoomReservation: integer;
+  oldDiscount: double;
+  NewDiscount: Double;
+begin
+  RoomReservation := mRoomResRoomReservation.AsInteger;
+  oldDiscount := mRoomResDiscount.AsFloat;
+  mRoomRes.post;
+  NewDiscount := mRoomResDiscount.AsFloat;
+
+  if not SameValue(oldDiscount, NewDiscount) then
+    CalcOnePrice(RoomReservation, mRoomResRoomRate.AsFloat);
+
+end;
+
+
+procedure TfrmMakeReservationQuick.tvRoomResIsPercentagePropertiesEditValueChanged(Sender: TObject);
+var
+  RoomReservation: integer;
+  oldIsPercentage: boolean;
+  newIsPercentage: boolean;
+begin
+  RoomReservation := mRoomResRoomReservation.AsInteger;
+  oldIsPercentage := mRoomResIsPercentage.AsBoolean;
+
+  mRoomRes.post;
+  newIsPercentage := mRoomResIsPercentage.AsBoolean;
+
+  if oldIsPercentage <> newIsPercentage then
+    CalcOnePrice(RoomReservation, mRoomResRoomRate.AsFloat);
+
+end;
+
+
+procedure TfrmMakeReservationQuick.tvRoomResRoomRatePropertiesEditValueChanged(Sender: TObject);
+var
+  RoomReservation: integer;
+  RoomType: string;
+  oldRate: double;
+  NewGrossRate: Double;
+begin
+  RoomReservation := mRoomResRoomReservation.AsInteger;
+  oldRate := mRoomResRoomRate.AsFloat;
+  RoomType := mRoomResRoomType.AsString;
+
+  mRoomRes.post;
+  NewGrossRate := mRoomResRoomRate.AsFloat;
+
+  if not SameValue(oldRate, NewGrossRate) then
+  begin
+    // remove selected channel as Grossrate is not based on that anymore
+    cbxChannels.ItemIndex := 0;
+    CalcOnePrice(RoomReservation, NewGrossRate);
+  end;
+
+  if chkAutoUpdateNullPrice.Checked then
+    ApplyGrossRateToNullPrice(NewGrossRate, RoomReservation, RoomType);
+
 end;
 
 procedure TfrmMakeReservationQuick.tvRoomResAvragePricePropertiesEditValueChanged(Sender: TObject);
@@ -1439,19 +1496,31 @@ var
 begin
   RoomReservation := mRoomResRoomReservation.AsInteger;
   oldRate := mRoomResavragePrice.AsFloat;
-  RoomType := mRoomResRoomType.AsString;
-
   mRoomRes.post;
-  NewNettoRate := mRoomResavragePrice.AsFloat;
+  newNettoRate := mRoomResavragePrice.AsFloat;
 
-  if oldRate <> NewNettoRate then
+  if not SameValue(oldRate, NewNettoRate) then
   begin
-    CalcOnePrice(RoomReservation, NewNettoRate);
+    mRoomRes.Edit;
+    try
+      if mRoomResIsPercentage.AsBoolean then
+        mRoomResDiscount.AsFloat := 100 * (mRoomResRoomRate.AsFloat - newNettoRate) / mRoomResRoomRate.AsFloat
+      else
+        mRoomResDiscount.AsFloat := mRoomResRoomRate.AsFloat - newNettoRate;
+
+      mRoomRes.Post;
+    except
+      mRoomRes.Cancel;
+      raise;
+    end;
+
+    CalcOnePrice(RoomReservation, mRoomResRoomRate.AsFloat);
   end;
 
   if chkAutoUpdateNullPrice.Checked then
   begin
-    ApplyNettoRateToNullPrice(NewNettoRate, RoomReservation, RoomType);
+    RoomType := mRoomResRoomType.AsString;
+    ApplyGrossRateToNullPrice(mRoomResRoomRate.AsFloat, RoomReservation, RoomType);
   end;
 end;
 
@@ -1479,20 +1548,9 @@ end;
 procedure TfrmMakeReservationQuick.tvRoomResDiscountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-//  if not aRecord.Values[tvRoomRatesisPercentage.Index] then
-//    aProperties := FCurrentCurrency.GetcxEditProperties;
+  if (aRecord.Values[tvRoomResIsPercentage.index] = 0) then
+    aProperties := FCurrentCurrency.GetcxEditPropertiesKeepEvents(aProperties);
 end;
-
-procedure TfrmMakeReservationQuick.tvRoomResDiscountPropertiesEditValueChanged(Sender: TObject);
-begin
-//
-end;
-
-procedure TfrmMakeReservationQuick.tvRoomResIsPercentagePropertiesEditValueChanged(Sender: TObject);
-begin
-//
-end;
-
 
 procedure TfrmMakeReservationQuick.FormatTextToShortFormat(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
@@ -1589,9 +1647,6 @@ begin
       begin
         mRoomRes.edit;
         try
-//          mRoomResAvragePrice.AsFloat := RoomPrice;
-//          mRoomResAvrageDiscount.AsFloat := 0;
-//          mRoomResRateCount.AsInteger := 1;
           mRoomResPackagePrice.AsFloat := itemPrice;
           mRoomResPackage.AsString := package;
           mRoomRes.post;
@@ -1640,8 +1695,6 @@ var
   ADate: TDate;
   Rate: double;
   dayCount: integer;
-  rateTotal: TAmount;
-  rateAverage: TAmount;
   lChannelCurrencyCode: string;
   channelId: integer;
 begin
@@ -1658,35 +1711,24 @@ begin
       Arrival := mRoomResarrival.AsDateTime;
       Departure := mRoomResdeparture.AsDateTime;
       dayCount := trunc(Departure) - trunc(Arrival);
-      rateTotal := TAmount.Create(0, FCurrentCurrency.CurrencyCode);
 
-      for ii := 0 to dayCount - 1 do
-      begin
-        ADate := Arrival + ii;
-        if mRoomRates.Locate('Roomreservation;RateDate', VarArrayOf([RoomReservation, ADate]), []) then
+      if FDynamicRates.active then
+        for ii := 0 to dayCount - 1 do
         begin
-          if FDynamicRates.active AND
-            FDynamicRates.findRateByRateCode(aDate, mRoomRes['Guests'], rateId, Rate, lChannelCurrencyCode) then
+          ADate := Arrival + ii;
+          if mRoomRates.Locate('Roomreservation;RateDate', VarArrayOf([RoomReservation, ADate]), []) then
           begin
-            // Rate acuired, convert to selected currency
-            Rate := RoomerCurrencyManager.ConvertAmount(TAmount.Create(Rate, lChannelCurrencyCode), FCurrentCurrency.CurrencyCode);
-            rateTotal := rateTotal + TAmount.Create(Rate, lChannelCurrencyCode);
+            if FDynamicRates.findRateByRateCode(aDate, mRoomRes['Guests'], rateId, Rate, lChannelCurrencyCode) then
+            begin
+              // Rate acuired, convert to selected currency
+              Rate := RoomerCurrencyManager.ConvertAmount(TAmount.Create(Rate, lChannelCurrencyCode), FCurrentCurrency.CurrencyCode);
 
-            mRoomRates.edit;
-            mRoomRatesRate.AsFloat := Rate;
-            mRoomRates.post;
-          end;
+              mRoomRates.edit;
+              mRoomRatesRate.AsFloat := Rate;
+              mRoomRates.post;
+            end;
+          end
         end;
-      end;
-
-      rateAverage := rateTotal / dayCount;
-
-//      mRoomRes.edit;
-//      mRoomResAvragePrice.AsFloat := rateAverage;
-//      mRoomResRateCount.AsFloat := 1;
-//      mRoomResManualChannelId.AsInteger := channelId;
-//      mRoomResratePlanCode.AsString := rateId;
-//      mRoomRes.post;
 
       UpdateRatesInRoomRes(RoomReservation, channelId, rateId);
 
@@ -1698,29 +1740,20 @@ begin
   end;
 end;
 
-procedure TfrmMakeReservationQuick.tvRoomResRatePlanCodePropertiesCloseUp(Sender: TObject);
-var
-  lItems: TStrings;
-begin
-  if mRoomRes.Eof then
-    Exit;
-
-  lItems := (tvRoomResRatePlanCode.Properties AS TcxComboBoxProperties).Items;
-  if (lItems.Count > 0) and  (TcxComboBox(Sender).ItemIndex > 0) then
-      SetOnePrice(mRoomRes['RoomReservation'], lItems[TcxComboBox(Sender).ItemIndex]);
-end;
-
 procedure TfrmMakeReservationQuick.tvRoomResRatePlanCodePropertiesEditValueChanged(Sender: TObject);
 begin
   if NOT mRoomRes.eof then
   begin
-    mRoomRes.edit;
     TcxComboBox(Sender).ItemIndex := (tvRoomResRatePlanCode.Properties AS TcxComboBoxProperties)
       .Items.IndexOf(TcxComboBox(Sender).Text);
     if TcxComboBox(Sender).ItemIndex >= 0 then
+    begin
+      mRoomRes.edit;
       mRoomRes['ratePlanCode'] := (tvRoomResRatePlanCode.Properties AS TcxComboBoxProperties)
         .Items[TcxComboBox(Sender).ItemIndex];
-    mRoomRes.post;
+      mRoomRes.post;
+      SetOnePrice(mRoomRes['RoomReservation'], mRoomResRatePlanCode.asString);
+    end;
   end;
 end;
 
@@ -1775,19 +1808,6 @@ end;
 /// ////////////////////////////////////////////////////////////////////////////////////////
 // SelectRooms grid and table
 /// ////////////////////////////////////////////////////////////////////////////////////////
-
-procedure TfrmMakeReservationQuick.tvSelectRoomsRoomPropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
-begin
-  if not mSelectRoomsSelect.AsBoolean then
-    exit;
-
-  mSelectRooms.edit;
-
-  if mSelectRoomsRoom.AsString = '' then
-    mSelectRoomsRoom.AsString := mSelectRoomstmp.AsString
-  else
-    mSelectRoomsRoom.AsString := '';
-end;
 
 procedure TfrmMakeReservationQuick.tvSelectRoomsSelectPropertiesEditValueChanged(Sender: TObject);
 var
@@ -3325,6 +3345,8 @@ begin
         mRoomResInfantCount.AsInteger := infantCount;
         mRoomResPriceCode.AsString := PriceCode;
         mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
+        mRoomResIsPercentage.AsBoolean := (cbxIsRoomResDiscountPrec.itemIndex = 0);
+        mRoomResDiscount.AsFloat := edRoomResDiscount.Value;
         if chkContactIsGuest.Checked AND (Trim(edContactPerson1.Text) <> '') then
           mRoomResMainGuest.AsString := edContactPerson1.Text
         else if (Trim(edtPortfolio.Text) <> '') then
@@ -3562,7 +3584,6 @@ end;
 
 procedure TfrmMakeReservationQuick.GetPrices;
 var
-  lstPrices: TstringList;
   RoomReservation: integer;
 
   i, ii: integer;
@@ -3705,12 +3726,15 @@ var
   channelId: integer;
   lRateCurrency: string;
 begin
+
+  if mRoomRes.IsEmpty then
+    Exit;
+
   channelId := 0;
   if cbxChannels.ItemIndex > 0 then
     channelId := integer(cbxChannels.Items.Objects[cbxChannels.ItemIndex]);
   isPaid := false;
   mRoomRes.DisableControls;
-  lstPrices := TstringList.Create;
   lstRoomTypes := TstringList.Create;
 
   rateSet := createNewDataSet;
@@ -3720,20 +3744,17 @@ begin
     lstRoomTypes.Duplicates := dupIgnore;
 
     mRoomRes.First;
-    if not mRoomRes.eof then
+    FirstArrival := mRoomResArrival.AsDateTime;
+    LastDeparture := mRoomResdeparture.AsDateTime;
+    while not mRoomRes.eof do
     begin
-      FirstArrival := mRoomResArrival.AsDateTime;
-      LastDeparture := mRoomResdeparture.AsDateTime;
-      while not mRoomRes.eof do
-      begin
-        if mRoomResArrival.AsDateTime < FirstArrival then
-          FirstArrival := mRoomResArrival.AsDateTime;
-        if mRoomResDeparture.AsDateTime > LastDeparture then
-          LastDeparture := mRoomResDeparture.AsDateTime;
-        RoomType := mRoomResRoomType.AsString;
-        lstRoomTypes.Add(_db(RoomType));
-        mRoomRes.next;
-      end;
+      if mRoomResArrival.AsDateTime < FirstArrival then
+        FirstArrival := mRoomResArrival.AsDateTime;
+      if mRoomResDeparture.AsDateTime > LastDeparture then
+        LastDeparture := mRoomResDeparture.AsDateTime;
+      RoomType := mRoomResRoomType.AsString;
+      lstRoomTypes.Add(_db(RoomType));
+      mRoomRes.next;
     end;
 
     s := '';
@@ -3773,13 +3794,6 @@ begin
     s := s + '  , currency '#10;
     s := s + '  , DateCount '#10;
 
-    lstPrices.Sorted := true;
-    lstPrices.Duplicates := dupIgnore;
-
-    Discount := edRoomResDiscount.Value;
-    ShowDiscount := true;
-    isPercentage := cbxIsRoomResDiscountPrec.ItemIndex = 0;
-
     PriceCode := fraPriceCodePanel.Code;
     priceID := hData.PriceCode_ID(PriceCode);
 
@@ -3818,6 +3832,9 @@ begin
       Guests := mRoomResGuests.AsInteger;
       childrenCount := mRoomResChildrenCount.AsInteger;
       infantCount := mRoomResinfantCount.AsInteger;
+      Discount := mRoomResDiscount.AsFloat;
+      ShowDiscount := true;
+      isPercentage := mRoomResIsPercentage.AsBoolean;
 
       dayCount := trunc(Departure) - trunc(Arrival);
 
@@ -3825,7 +3842,6 @@ begin
       rateId := '';
       rateTotal := 0;
       discountTotal := 0;
-      lstPrices.Clear;
       for ii := 0 to dayCount - 1 do
       begin
         if FDynamicRates.active AND
@@ -3872,7 +3888,6 @@ begin
           raise;
         end;
 
-        lstPrices.Add(floatTostr(RentAmount));
         rateTotal := rateTotal + RentAmount;
         discountTotal := discountTotal + Discount;
         ADate := ADate + 1
@@ -3880,49 +3895,18 @@ begin
 
       UpdateRatesInRoomRes(Roomreservation, channelId, rateId);
 
-//      rateAvrage := 0;
-//      discountAvrage := 0;
-//      if dayCount <> 0 then
-//      begin
-//        rateAvrage := rateTotal / dayCount;
-//        discountAvrage := discountTotal / dayCount
-//      end;
-//      RateCount := lstPrices.Count;
-//      mRoomRes.edit;
-//      try
-//        mRoomResAvragePrice.AsFloat := rateAvrage;
-//        mRoomResRateCount.AsFloat := RateCount;
-//        mRoomResRoomRate.AsFloat := Rate;
-//
-//        if mRoomResIsPercentage.AsBoolean then
-//          mRoomResDiscount.AsFloat := discountAvrage / rateAvrage * 100
-//        else
-//          mRoomResDiscount.AsFloat := discountTotal;
-//
-//        mRoomResAvrageDiscount.AsFloat := discountAvrage;
-//
-//        mRoomResManualChannelId.AsInteger := channelId;
-//        mRoomResratePlanCode.AsString := rateId;
-//        mRoomRes.post;
-//      except
-//        mRoomRes.Cancel;
-//        raise;
-//      end;
       mRoomRes.next;
     end;
   finally
     FreeAndNil(rateSet);
-    FreeAndNil(lstPrices);
     FreeAndNil(lstRoomTypes);
     mRoomRes.First;
     mRoomRes.EnableControls;
   end;
 end;
 
-procedure TfrmMakeReservationQuick.CalcOnePrice(RoomReservation: integer; NewRate: double = 0);
+procedure TfrmMakeReservationQuick.CalcOnePrice(RoomReservation: integer; NewGrossRate: double = 0);
 var
-  lstPrices: TstringList;
-
   i, ii: integer;
 
   room: string;
@@ -3941,23 +3925,15 @@ var
   priceID: integer;
   PriceCode: string;
 
-  rateTotal: double;
-  rateAverage: double;
-
-  discountTotal: double;
-  discountAverage: double;
-
   dayCount: integer;
   ADate: TDateTime;
 
-  RateDate: TDate;
   Rate: double;
 
   isPercentage: boolean;
   isPaid: boolean;
 
   Discount: double;
-  ShowDiscount: boolean;
   found: boolean;
 
   rateId: String;
@@ -3967,154 +3943,119 @@ begin
   channelId := 0;
   if cbxChannels.ItemIndex > 0 then
     channelId := integer(cbxChannels.Items.Objects[cbxChannels.ItemIndex]);
+
   isPaid := false;
-  lstPrices := TstringList.Create;
-  try
-    lstPrices.Sorted := true;
-    lstPrices.Duplicates := dupIgnore;
 
-    ShowDiscount := true;
-    isPercentage := cbxIsRoomResDiscountPrec.ItemIndex = 0;
+  if mRoomRes.Locate('roomreservation', RoomReservation, []) then
+  begin
 
-    if mRoomRes.Locate('roomreservation', RoomReservation, []) then
-    begin
-
-      repeat
-        found := mRoomRates.Locate('roomreservation', RoomReservation, []);
-        if found then
-        begin
-          mRoomRates.Delete;
-        end;
-      until not found;
-
-      i := FNewReservation.newRoomReservations.FindRoomFromRoomReservation(RoomReservation, 0);
-      FNewReservation.newRoomReservations.RoomItemsList[i].Rates.RateItemsList.Clear;
-
-      room := mRoomResroom.AsString;
-      Arrival := mRoomResarrival.AsDateTime;
-      Departure := mRoomResdeparture.AsDateTime;
-      RoomType := mRoomResRoomType.AsString;
-      RoomTypeDescription := mRoomResRoomTypeDescription.AsString;
-      RoomDescription := mRoomResRoomDescription.AsString;
-      Guests := mRoomResGuests.AsInteger;
-      childrenCount := mRoomResChildrenCount.AsInteger;
-      infantCount := mRoomResinfantCount.AsInteger;
-      Discount := mRoomResavrageDiscount.AsFloat;
-
-      PriceCode := fraPriceCodePanel.Code;
-      priceID := hData.PriceCode_ID(PriceCode);
-
-      dayCount := trunc(Departure) - trunc(Arrival);
-      ADate := trunc(Arrival);
-      rateId := '';
-      rateTotal := 0;
-      discountTotal := 0;
-      lstPrices.Clear;
-      for ii := 0 to dayCount - 1 do
+    repeat
+      found := mRoomRates.Locate('roomreservation', RoomReservation, []);
+      if found then
       begin
-        if (NewRate <> 0) then
+        mRoomRates.Delete;
+      end;
+    until not found;
+
+    i := FNewReservation.newRoomReservations.FindRoomFromRoomReservation(RoomReservation, 0);
+    FNewReservation.newRoomReservations.RoomItemsList[i].Rates.RateItemsList.Clear;
+
+    room := mRoomResroom.AsString;
+    Arrival := mRoomResarrival.AsDateTime;
+    Departure := mRoomResdeparture.AsDateTime;
+    RoomType := mRoomResRoomType.AsString;
+    RoomTypeDescription := mRoomResRoomTypeDescription.AsString;
+    RoomDescription := mRoomResRoomDescription.AsString;
+    Guests := mRoomResGuests.AsInteger;
+    childrenCount := mRoomResChildrenCount.AsInteger;
+    infantCount := mRoomResinfantCount.AsInteger;
+
+    isPercentage := mRoomResIsPercentage.AsBoolean;
+    Discount := mRoomResDiscount.AsFloat;
+
+    PriceCode := fraPriceCodePanel.Code;
+    priceID := hData.PriceCode_ID(PriceCode);
+
+    dayCount := trunc(Departure) - trunc(Arrival);
+    ADate := trunc(Arrival);
+    rateId := '';
+    for ii := 0 to dayCount - 1 do
+    begin
+      if (NewGrossRate <> 0) then
+      begin
+        Rate := NewGrossRate;
+      end
+      else
+      begin
+        if FDynamicRates.active AND
+          FDynamicRates.findRateForRoomType(trunc(Arrival) + ii, RoomType, mRoomRes['Guests'], Rate, rateId, lRateCurrency) then
         begin
-          Rate := NewRate;
-          Discount := 0;
+          // Rate acuired
+          Rate := RoomerCurrencyManager.ConvertAmount(TAmount.Create(Rate, lRateCurrency), FCurrentCurrency.CurrencyCode);
         end
         else
         begin
-          if FDynamicRates.active AND
-            FDynamicRates.findRateForRoomType(trunc(Arrival) + ii, RoomType, mRoomRes['Guests'], Rate, rateId, lRateCurrency) then
-          begin
-            // Rate acuired
-            Rate := RoomerCurrencyManager.ConvertAmount(Tamount.Create(Rate, lRateCurrency), FCurrentCurrency.CurrencyCode);
-          end
-          else
-          begin
-            Rate := FNewReservation.newRoomReservations.RoomItemsList[i].Rates.GetDayRate
-              (RoomType
-              , room
-              , ADate
-              , Guests
-              , childrenCount
-              , infantCount
-              , FCurrentCurrency.CurrencyCode
-              , priceID
-              , Discount
-              , ShowDiscount
-              , isPercentage
-              , isPaid
-              , false
-
-              );
-          end;
+          Rate := FNewReservation.newRoomReservations.RoomItemsList[i].Rates.GetDayRate
+            (RoomType
+            , room
+            , ADate
+            , Guests
+            , childrenCount
+            , infantCount
+            , FCurrentCurrency.CurrencyCode
+            , priceID
+            , Discount
+            , True
+            , isPercentage
+            , isPaid
+            , false
+            );
         end;
-
-        if isPercentage then
-          DiscountAmount := Rate * Discount / 100
-        else
-          DiscountAmount := min(Rate, Discount);
-        RentAmount := Rate - DiscountAmount;
-        NativeAmount := RentAmount * FCurrentCurrency.Rate;
-
-        mRoomRates.append;
-        try
-          mRoomRatesReservation.AsInteger := -1;
-          mRoomRatesRoomReservation.AsInteger := RoomReservation;
-          mRoomRatesRoomNumber.AsString := room;
-          mRoomRatesRateDate.AsDateTime := ADate;
-          mRoomRatesPriceCode.AsString := PriceCode;
-          mRoomRatesRate.AsFloat := Rate;
-
-          mRoomRatesDiscount.AsFloat := Discount;
-          mRoomRatesisPercentage.AsBoolean := isPercentage;
-          mRoomRatesShowDiscount.AsBoolean := ShowDiscount;
-          mRoomRatesisPaid.AsBoolean := isPaid;
-          mRoomRatesDiscountAmount.AsFloat := DiscountAmount;
-          mRoomRatesRentAmount.AsFloat := RentAmount;
-          mRoomRatesNativeAmount.AsFloat := NativeAmount;
-          mRoomRatesCurrency.AsString := FCurrentCurrency.CurrencyCode;
-          mRoomRatesCurrencyRate.AsFloat := FCurrentCurrency.rate;
-          mRoomRates.post;
-        except
-          mRoomRates.Cancel;
-          raise;
-        end;
-
-        lstPrices.Add(floatTostr(RentAmount));
-        rateTotal := rateTotal + RentAmount;
-        discountTotal := discountTotal + DiscountAmount;
-        ADate := ADate + 1
       end;
 
-      UpdateRatesInRoomRes(Roomreservation, channelid, rateId);
+      if isPercentage then
+        DiscountAmount := Rate * Discount / 100
+      else
+        DiscountAmount := min(Rate, Discount);
+      RentAmount := Rate - DiscountAmount;
+      NativeAmount := RentAmount * FCurrentCurrency.Rate;
 
-//      rateAverage := 0;
-//      discountAverage := 0;
-//
-//      if dayCount <> 0 then
-//      begin
-//        rateAverage := rateTotal / dayCount;
-//        discountAverage := discountTotal / dayCount
-//      end;
-//      RateCount := lstPrices.Count;
-//      mRoomRes.edit;
-//      try
-//        mRoomResAvragePrice.AsFloat := rateAverage;
-//        mRoomResRateCount.AsFloat := RateCount;
-//        mRoomResAvrageDiscount.AsFloat := discountAverage;
-//
-//        if mRoomResIsPercentage.AsBoolean then
-//          mRoomResDiscount.AsFloat := discountAverage / rateAverage * 100
-//        else
-//          mRoomResDiscount.AsFloat := discountTotal;
-//
-//        mRoomResManualChannelId.AsInteger := channelId;
-//        mRoomResratePlanCode.AsString := rateId;
-//        mRoomRes.post;
-//      except
-//        mRoomRes.Cancel;
-//        raise;
-//      end;
+      mRoomRates.append;
+      try
+        mRoomRatesReservation.AsInteger := -1;
+        mRoomRatesRoomReservation.AsInteger := RoomReservation;
+        mRoomRatesRoomNumber.AsString := room;
+        mRoomRatesRateDate.AsDateTime := ADate;
+        mRoomRatesPriceCode.AsString := PriceCode;
+        mRoomRatesRate.AsFloat := Rate;
+
+        if SameValue(RentAmount, 0) then
+        begin // If rentamount is zero than fallback to settings on first page
+          mRoomRatesDiscount.AsFloat := edRoomResDiscount.Value;
+          mRoomRatesisPercentage.AsBoolean := cbxIsRoomResDiscountPrec.ItemIndex = 0;
+        end
+        else
+        begin
+          mRoomRatesDiscount.AsFloat := Discount;
+          mRoomRatesisPercentage.AsBoolean := isPercentage;
+        end;
+        mRoomRatesShowDiscount.AsBoolean := True;
+        mRoomRatesisPaid.AsBoolean := isPaid;
+        mRoomRatesDiscountAmount.AsFloat := DiscountAmount;
+        mRoomRatesRentAmount.AsFloat := RentAmount;
+        mRoomRatesNativeAmount.AsFloat := NativeAmount;
+        mRoomRatesCurrency.AsString := FCurrentCurrency.CurrencyCode;
+        mRoomRatesCurrencyRate.AsFloat := FCurrentCurrency.rate;
+        mRoomRates.post;
+      except
+        mRoomRates.Cancel;
+        raise;
+      end;
+
+      ADate := ADate + 1
     end;
-  finally
-    FreeAndNil(lstPrices);
+
+    UpdateRatesInRoomRes(Roomreservation, channelid, rateId);
   end;
 end;
 
@@ -4600,15 +4541,21 @@ begin
           mRoomResAvragePrice.AsFloat := lRoomRentTotal / lRateCount;
           mRoomResRoomRate.AsFloat := lRoomRateTotal / lRateCount;
 
-          if (lAllIsSamePercentage and (lSamePercentage > 0)) then
+          if lRoomRateTotal <> TAmount.ZERO then
+            if (lAllIsSamePercentage and (lSamePercentage > 0)) then
+            begin
+              mRoomResIsPercentage.AsBoolean := true;
+              mRoomResDiscount.AsFloat := lSamePercentage;
+            end
+            else
+            begin
+              mRoomResIsPercentage.AsBoolean := False;
+              mRoomResDiscount.AsFloat := lDiscountAmountTotal / lRateCount
+            end
+          else // no roomrate set, show discounts as set on first tab
           begin
-            mRoomResIsPercentage.AsBoolean := true;
-            mRoomResDiscount.AsFloat := lSamePercentage;
-          end
-          else
-          begin
-            mRoomResIsPercentage.AsBoolean := false;
-            mRoomResDiscount.AsFloat := lDiscountAmountTotal / lRateCount;
+            mRoomResIsPercentage.AsBoolean := cbxIsRoomResDiscountPrec.ItemIndex = 0;
+            mRoomResDiscount.AsFloat := edRoomResDiscount.Value;
           end;
 
           mRoomResAvrageDiscount.AsFloat := lDiscountAmountTotal / lRateCount;

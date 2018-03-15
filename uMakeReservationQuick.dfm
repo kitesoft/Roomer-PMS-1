@@ -324,7 +324,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
     Top = 0
     Width = 1317
     Height = 577
-    ActivePage = tabRoomRates
+    ActivePage = tabSelectType
     Align = alClient
     TabOrder = 2
     OnChange = pgcMainChange
@@ -2244,7 +2244,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
               Column = tvSelectTypeRoomsSelected
             end>
           DataController.Summary.SummaryGroups = <>
-          OptionsView.CellAutoHeight = True
+          OptionsBehavior.FocusCellOnTab = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -2507,16 +2507,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           end
           object tvSelectRoomsRoom: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Room'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                ImageIndex = 48
-                Hint = 'Set as No-Room'
-                Kind = bkEllipsis
-              end>
-            Properties.ViewStyle = vsHideCursor
-            Properties.OnButtonClick = tvSelectRoomsRoomPropertiesButtonClick
+            PropertiesClassName = 'TcxTextEditProperties'
             Options.ShowEditButtons = isebAlways
             Width = 94
             Position.BandIndex = 0
@@ -3156,19 +3147,20 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             Properties.DropDownListStyle = lsFixedList
             Properties.Items.Strings = (
               '')
-            Properties.OnCloseUp = tvRoomResRatePlanCodePropertiesCloseUp
             Properties.OnEditValueChanged = tvRoomResRatePlanCodePropertiesEditValueChanged
             Width = 67
           end
           object tvRoomResRoomRate: TcxGridDBColumn
             DataBinding.FieldName = 'RoomRate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.OnEditValueChanged = tvRoomResRoomRatePropertiesEditValueChanged
             OnGetProperties = tvRoomResGetCurrencyProperties
           end
           object tvRoomResDiscount: TcxGridDBColumn
             DataBinding.FieldName = 'Discount'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0.0 %'
+            Properties.OnEditValueChanged = tvRoomResDiscountPropertiesEditValueChanged
             OnGetProperties = tvRoomResDiscountGetProperties
           end
           object tvRoomResIsPercentage: TcxGridDBColumn
@@ -3177,7 +3169,7 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
             PropertiesClassName = 'TcxCheckBoxProperties'
             Properties.OnEditValueChanged = tvRoomResIsPercentagePropertiesEditValueChanged
             HeaderAlignmentHorz = taCenter
-            Width = 67
+            Width = 40
           end
           object tvRoomResAvragePrice: TcxGridDBColumn
             Caption = 'Netto Rate'
@@ -3344,6 +3336,9 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           end
           object tvRoomRatesDiscount: TcxGridDBColumn
             DataBinding.FieldName = 'Discount'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0.0 %'
+            OnGetProperties = tvRoomRatesDiscountGetProperties
           end
           object tvRoomRatesisPercentage: TcxGridDBColumn
             Caption = 'is %'
@@ -3362,13 +3357,11 @@ object frmMakeReservationQuick: TfrmMakeReservationQuick
           object tvRoomRatesDiscountAmount: TcxGridDBColumn
             Caption = 'Total discount'
             DataBinding.FieldName = 'DiscountAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvRoomResGetCurrencyProperties
           end
           object tvRoomRatesCurrency: TcxGridDBColumn
             DataBinding.FieldName = 'Currency'
-          end
-          object tvRoomRatesCurrencyRate: TcxGridDBColumn
-            Caption = 'Currency Rate'
-            DataBinding.FieldName = 'CurrencyRate'
           end
           object tvRoomRatesRentAmount: TcxGridDBColumn
             Caption = 'Total Rent'
