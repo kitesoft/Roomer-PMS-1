@@ -76,11 +76,11 @@ type
     tvPayGroupsCashBook: TcxGridDBColumn;
     gbxConnectionSettings: TsGroupBox;
     gbxBookkeeping: TsGroupBox;
-    sLabel8: TsLabel;
-    sLabel12: TsLabel;
-    sLabel13: TsLabel;
-    sLabel14: TsLabel;
-    sLabel15: TsLabel;
+    lbReceivablesLedger: TsLabel;
+    lbReceivableBalanceAccount: TsLabel;
+    lbTexPreceedingInvoice: TsLabel;
+    lbTextSucceedingInvoiceNumber: TsLabel;
+    lbCurrency: TsLabel;
     edSalesCode: TsEdit;
     edReceivableAccount: TsEdit;
     edPreInvoiceNumber: TsEdit;
@@ -89,8 +89,8 @@ type
     lbServiceUrl: TsLabel;
     lbUsername: TsLabel;
     lbPassword: TsLabel;
-    sLabel5: TsLabel;
-    sLabel6: TsLabel;
+    lbOrg: TsLabel;
+    lbOffice: TsLabel;
     cbxActive: TsCheckBox;
     __edServiceUrl: TsEdit;
     edUsername: TsEdit;
@@ -98,17 +98,17 @@ type
     edOrg: TsEdit;
     edOffice: TsEdit;
     gbMappingResources: TsGroupBox;
-    sLabel7: TsLabel;
+    lbCustomersMappingResource: TsLabel;
     edCustomersList: TsEdit;
-    sLabel9: TsLabel;
+    lbSystemName: TsLabel;
     edSystemName: TsEdit;
-    sLabel10: TsLabel;
+    lbItemsMappingResource: TsLabel;
     edItemsList: TsEdit;
-    sLabel11: TsLabel;
+    lbVatsMappingResource: TsLabel;
     edVatList: TsEdit;
-    sLabel17: TsLabel;
+    lbCashBookssMappingResource: TsLabel;
     edCashBookList: TsEdit;
-    sLabel18: TsLabel;
+    lbPayGroupsMappingResource: TsLabel;
     edPaygroupList: TsEdit;
     pnlFinanceSystem: TsPanel;
     sLabel1: TsLabel;
@@ -257,6 +257,8 @@ begin
   gbxBookkeeping.Visible := cbxSystemSelection.ItemIndex > 0;
 
   gbMappingResources.Visible := cbxSystemSelection.ItemIndex IN [2];
+  edSystemName.Visible := cbxSystemSelection.ItemIndex IN [2];
+  lbSystemName.Visible := cbxSystemSelection.ItemIndex IN [2];
 
   gbxConnectionSettings.Top := pnlFinanceSystem.Top + pnlFinanceSystem.Height;
 

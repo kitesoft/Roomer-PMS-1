@@ -13,7 +13,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
   inherited sbStatusBar: TsStatusBar
     Top = 666
     Width = 866
-    ExplicitTop = 659
+    ExplicitTop = 666
     ExplicitWidth = 866
   end
   object pgMain: TsPageControl [1]
@@ -25,10 +25,8 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     Align = alClient
     TabOrder = 0
     OnChange = pgMainChange
-    ExplicitHeight = 616
     object tsSettings: TsTabSheet
       Caption = 'Settings'
-      ExplicitHeight = 588
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -89,7 +87,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel5: TsLabel
+        object lbOrg: TsLabel
           Left = 95
           Top = 75
           Width = 91
@@ -103,7 +101,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel6: TsLabel
+        object lbOffice: TsLabel
           Left = 127
           Top = 101
           Width = 59
@@ -117,7 +115,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel9: TsLabel
+        object lbSystemName: TsLabel
           Left = 118
           Top = 49
           Width = 68
@@ -134,8 +132,8 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         object cbxActive: TsCheckBox
           Left = 200
           Top = 22
-          Width = 58
-          Height = 17
+          Width = 50
+          Height = 20
           Caption = 'Active'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -252,8 +250,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         ParentColor = False
         TabOrder = 1
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 259
-        object sLabel8: TsLabel
+        object lbReceivablesLedger: TsLabel
           Left = 100
           Top = 27
           Width = 94
@@ -267,7 +264,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel12: TsLabel
+        object lbReceivableBalanceAccount: TsLabel
           Left = 57
           Top = 53
           Width = 137
@@ -281,7 +278,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel13: TsLabel
+        object lbTexPreceedingInvoice: TsLabel
           Left = 37
           Top = 79
           Width = 157
@@ -295,7 +292,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel14: TsLabel
+        object lbTextSucceedingInvoiceNumber: TsLabel
           Left = 37
           Top = 105
           Width = 157
@@ -309,7 +306,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel15: TsLabel
+        object lbCurrency: TsLabel
           Left = 146
           Top = 131
           Width = 48
@@ -411,9 +408,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         ParentColor = False
         TabOrder = 2
         SkinData.SkinSection = 'PANEL'
-        ExplicitTop = 424
-        ExplicitHeight = 161
-        object sLabel7: TsLabel
+        object lbCustomersMappingResource: TsLabel
           Left = 123
           Top = 28
           Width = 71
@@ -427,7 +422,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel10: TsLabel
+        object lbItemsMappingResource: TsLabel
           Left = 147
           Top = 54
           Width = 47
@@ -441,7 +436,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel11: TsLabel
+        object lbVatsMappingResource: TsLabel
           Left = 158
           Top = 80
           Width = 36
@@ -455,7 +450,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel17: TsLabel
+        object lbCashBookssMappingResource: TsLabel
           Left = 118
           Top = 132
           Width = 76
@@ -469,7 +464,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
           Font.Name = 'Tahoma'
           Font.Style = []
         end
-        object sLabel18: TsLabel
+        object lbPayGroupsMappingResource: TsLabel
           Left = 125
           Top = 106
           Width = 69
@@ -608,7 +603,6 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     end
     object tsMappings: TsTabSheet
       Caption = 'Mappings'
-      ExplicitHeight = 588
       object tabsMappings: TsTabControl
         AlignWithMargins = True
         Left = 3
@@ -903,7 +897,7 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
   inherited pnlButtons: TsPanel
     Top = 623
     Width = 866
-    ExplicitTop = 616
+    ExplicitTop = 623
     ExplicitWidth = 866
     inherited btnOK: TsButton
       Left = 550
