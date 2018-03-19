@@ -463,7 +463,7 @@ begin
   inherited;
   Error :=  (m_Valid_To.AsDateTime < VarToDateTime(DisplayValue));
   if Error then
-    ErrorText := 'Valid To must be before Valid From ';
+    ErrorText := 'Valid To must be after Valid From ';
 end;
 
 procedure TfrmTaxes.tvDataValid_ToPropertiesValidate(Sender: TObject; var DisplayValue: Variant;
@@ -472,7 +472,7 @@ begin
   inherited;
   Error := (m_Valid_From.AsDateTime > VarToDateTime(DisplayValue));
   if Error then
-    ErrorText := 'Valid From must be after Valid To';
+    ErrorText := 'Valid From must be before Valid To';
 end;
 
 //////////////////////////////////////////////////////////////////////////

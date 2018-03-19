@@ -61,6 +61,10 @@ inherited frmTaxes: TfrmTaxes
     ExplicitWidth = 1112
     ExplicitHeight = 363
     inherited tsMain: TsTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 6
+      ExplicitWidth = 1104
+      ExplicitHeight = 353
       inherited grData: TcxGrid
         Width = 1104
         Height = 353

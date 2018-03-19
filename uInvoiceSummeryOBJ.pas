@@ -1480,7 +1480,7 @@ begin
     '       , Description '#10+
     '       , Price '#10+
     '       , VATType '#10+
-    '       , VATPercentage '#10+
+    '       , ilVATPercentage as VATPercentage'#10+
     '       , Total '#10+
     '       , Revenue '#10+
     '       , TotalWOVat '#10+
