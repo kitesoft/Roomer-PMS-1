@@ -21,16 +21,12 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     Top = 0
     Width = 866
     Height = 623
-    ActivePage = tsMappings
+    ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
     OnChange = pgMainChange
     object tsSettings: TsTabSheet
       Caption = 'Settings'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -136,8 +132,8 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
         object cbxActive: TsCheckBox
           Left = 200
           Top = 22
-          Width = 50
-          Height = 20
+          Width = 58
+          Height = 17
           Caption = 'Active'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText

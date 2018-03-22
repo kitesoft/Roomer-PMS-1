@@ -679,7 +679,7 @@ type
     procedure tvRoomResMainGuestPropertiesButtonClick(Sender: TObject; AButtonIndex: integer);
     procedure edContactPersonEnter(Sender: TObject);
     procedure edContactPersonExit(Sender: TObject);
-    procedure cbxChannelsCloseUp(Sender: TObject);
+    procedure cbxChannelsChange(Sender: TObject);
     procedure tvRoomResRatePlanCodePropertiesEditValueChanged(Sender: TObject);
     procedure tvSelectTypeNoRoomsPropertiesChange(Sender: TObject);
     procedure tvSelectTypeNoRoomsStylesGetContentStyle(Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
@@ -1361,9 +1361,6 @@ begin
     chkExcluteBlocked.Checked := g.qExcluteBlocked;
     chkExcluteNoShow.Checked := g.qExcluteNoshow;
 
-    ShowChannels;
-    fraCustomerPanel.Code := FNewReservation.HomeCustomer.Customer;
-
     if FNewReservation.IsQuick then
     begin
       Caption := GetTranslatedText('shTx_QuickReservation_NewReservationQuick');
@@ -1392,6 +1389,10 @@ begin
     gbxProfileAlert.Visible := False;
 
     edtBreakfastPrice.Value := Item_GetPrice(g.qBreakFastItem);
+
+    ShowChannels;
+    fraCustomerPanel.Code := FNewReservation.HomeCustomer.Customer;
+
     UpdateControls;
 
   finally
@@ -1965,7 +1966,7 @@ begin
       if integer(cbxChannels.Items.Objects[i]) = FNewReservation.HomeCustomer.CustomerRatePlanId then
       begin
         cbxChannels.ItemIndex := i; // cbxChannels.Items.IndexOf(ChannelCode);
-        cbxChannelsCloseUp(nil);
+        cbxChannelsChange(nil);
         Break;
       end;
 end;
@@ -4298,7 +4299,7 @@ begin
   frmdayNotes.memLog.Perform(EM_LINESCROLL, 0, -10)
 end;
 
-procedure TfrmMakeReservationQuick.cbxChannelsCloseUp(Sender: TObject);
+procedure TfrmMakeReservationQuick.cbxChannelsChange(Sender: TObject);
 var
   ChannelCode,
     chManCode: String;
