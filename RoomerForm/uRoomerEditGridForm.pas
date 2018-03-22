@@ -13,7 +13,7 @@ uses
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, Vcl.Menus, dxPSCore, dxPScxCommon, System.Actions, Vcl.ActnList,
   cxGridBandedTableView, cxGridTableView, cxClasses, cxPropertiesStore, Vcl.StdCtrls, sButton, sEdit, sCheckBox, sLabel,
   Vcl.Buttons, sSpeedButton, Vcl.ExtCtrls, sPanel, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridDBBandedTableView, cxGrid, Vcl.ComCtrls, sStatusBar;
+  cxGridDBBandedTableView, cxGrid, Vcl.ComCtrls, sStatusBar, sPageControl;
 
 type
   /// <summary>

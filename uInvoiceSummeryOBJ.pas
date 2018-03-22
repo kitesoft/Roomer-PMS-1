@@ -507,7 +507,9 @@ uses
   , uSqlDefinitions
   , uAppGlobal
   , uSQLUtils
-  , uAmount, uCurrencyConstants;
+  , uAmount
+  , uCurrencyConstants
+  , Math;
 
 // *****************************************************************************
 // TCustInfo - Starts
@@ -883,7 +885,6 @@ function TInvoiceInfo.AddLine(ilID : integer;
 var
   InvoiceLine : TInvoiceLineInfo;
   iLast : integer;
-  VATPercentage : double;
 begin
   iLast := 0;
 
@@ -919,26 +920,8 @@ begin
   InvoiceLine.IsVisibleOnInvoice := VisibleOnInvoice;
 
   InvoiceLine.FItemKind := Item_GetKind(Code);
- (* ikUnknown,ikNormal,ikRoomRent,ikRoomRentDiscount,ikBrekfastInc,ikPhoneUse,ikPayment*)
-
-
-  //InvoiceLine.FItemVATAmount  := calcVSK(InvoiceLine.FTotalPrice, InvoiceLine.FItemInfo.VATPercentage );
-
-  VATPercentage := 0.00;
-  if TotalWOVat <> 0 then
-  begin
-    if NOT glb.LocateSpecificRecordAndGetValue('vatcodes', 'VATCode', VatType, 'VATPercentage', VATPercentage) then
-      try
-        VATPercentage := (VATAmount / TotalWOVat) * 100;
-      except
-        VATPercentage := 0.00;
-      end;
-  end;
 
   result := FLinesList.Add(InvoiceLine);
-
-  AddVAT(VatType, TotalWOVat, TotalPrice, VATPercentage, VATAmount);
-
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -1205,6 +1188,7 @@ var
   TotalPrice : double;
   TotalWOVat : double;
   VATAmount : double;
+  VATPercentage: double;
   VatType : string;
   AccountKey : string;
   importRefrence : string;
@@ -1496,7 +1480,9 @@ begin
     '       , Description '#10+
     '       , Price '#10+
     '       , VATType '#10+
+    '       , ilVATPercentage as VATPercentage'#10+
     '       , Total '#10+
+    '       , Revenue '#10+
     '       , TotalWOVat '#10+
     '       , Vat '#10+
     '       , CurrencyRate '#10+
@@ -1513,7 +1499,7 @@ begin
     '        invoicelines '#10+
     '      WHERE '#10+
     '       (InvoiceNumber = %d) '#10+
-    '       AND (VisibleOnInvoice) '#10+
+//    '       AND (VisibleOnInvoice) '#10+
     '     ORDER BY '#10+
     '       ItemID ';
 
@@ -1524,66 +1510,81 @@ begin
       sumTotal := 0;
       while not rSet.Eof do
       begin
-        inc(index);
-
-        importRefrence := rSet.fieldbyname('importRefrence').asString;
-        importSource := rSet.fieldbyname('importSource').asString;
-        isPackage := rSet.fieldbyname('isPackage').asBoolean;
-        RoomreservationAlias := rSet.fieldbyname('RoomReservationAlias').asinteger;
-        Description := rSet.fieldbyname('Description').asString;
-        if isPackage then
+        if rSet.fieldbyname('VisibleOnInvoice').asBoolean then
         begin
-          Description := StringReplace(Description, '{room}', tempStr,  [rfReplaceAll, rfIgnoreCase]);
-          Description := StringReplace(Description, '{arrival}', FormatDateTime('dd.mm', Arrival), [rfReplaceAll, rfIgnoreCase]);
-          Description := StringReplace(Description, '{departure}', FormatDateTime('dd.mm', Departure), [rfReplaceAll, rfIgnoreCase]);
-          if FIvhPackage = '' then FIvhPackage :=  importSource;
-          if FIvhPackageName = '' then FIvhPackageName := importRefrence;
-          if FIvhPackageText = '' then FIvhPackageText := Package_getRoomDescription(importSource, tempStr, Arrival, Departure);
+          inc(index);
+
+          importRefrence := rSet.fieldbyname('importRefrence').asString;
+          importSource := rSet.fieldbyname('importSource').asString;
+          isPackage := rSet.fieldbyname('isPackage').asBoolean;
+          RoomreservationAlias := rSet.fieldbyname('RoomReservationAlias').asinteger;
+          Description := rSet.fieldbyname('Description').asString;
+          if isPackage then
+          begin
+            Description := StringReplace(Description, '{room}', tempStr,  [rfReplaceAll, rfIgnoreCase]);
+            Description := StringReplace(Description, '{arrival}', FormatDateTime('dd.mm', Arrival), [rfReplaceAll, rfIgnoreCase]);
+            Description := StringReplace(Description, '{departure}', FormatDateTime('dd.mm', Departure), [rfReplaceAll, rfIgnoreCase]);
+            if FIvhPackage = '' then FIvhPackage :=  importSource;
+            if FIvhPackageName = '' then FIvhPackageName := importRefrence;
+            if FIvhPackageText = '' then FIvhPackageText := Package_getRoomDescription(importSource, tempStr, Arrival, Departure);
+          end;
+
+          ilID := rSet.fieldbyname('ID').asInteger;
+          sTmp := rSet.fieldbyname('PurchaseDate').asString;
+          Date := SQLToDate(sTmp);
+
+          LineNo := rSet.fieldbyname('ItemNumber').asInteger;
+          Code := rSet.fieldbyname('ItemID').asString;
+
+
+          Count      := rSet.fieldbyname('Number').AsFloat;
+          Price      := rSet.fieldbyname('Price').AsFloat;
+          TotalPrice := rSet.fieldbyname('Total').AsFLoat;
+          TotalWOVat := rSet.fieldbyname('TotalWOVat').AsFloat;
+          VATAmount  := rSet.fieldbyname('Vat').AsFloat;
+          VatType    := rSet.fieldbyname('VATType').asString;
+          AccountKey := rSet.fieldbyname('ilAccountKey').asString;
+
+          sumTotal := sumTotal+TotalPrice;
+
+          if index = 1 then // TODO: Should be read from the invoicehead record!!!
+          begin
+            FCurrency := rSet.fieldbyname('Currency').asString;
+            FCurrencyRate := rSet.fieldbyname('CurrencyRate').AsFloat;
+            FCurrencyType := getCurrencyType(FCurrency); // ctLocalor ctForeign
+          end;
+
+          AddLine(ilID,
+                  Date,
+                  LineNo,
+                  Code,
+                  Description,
+                  Count,
+                  Price,
+                  TotalPrice,
+                  TotalWOVat,
+                  VATAmount,
+                  VatType,
+                  AccountKey,
+                  importRefrence,
+                  importSource,
+                  ispackage,
+                  RoomreservationAlias,
+                  rSet.fieldByName('visibleOnInvoice').asBoolean // always true but more consistent adding it
+                  );
+
         end;
 
-        ilID := rSet.fieldbyname('ID').asInteger;
-        sTmp := rSet.fieldbyname('PurchaseDate').asString;
-        Date := SQLToDate(sTmp);
-
-        LineNo := rSet.fieldbyname('ItemNumber').asInteger;
-        Code := rSet.fieldbyname('ItemID').asString;
-
-
-        Count      := rSet.fieldbyname('Number').AsFloat;
-        Price      := rSet.fieldbyname('Price').AsFloat;
-        TotalPrice := rSet.fieldbyname('Total').AsFLoat;
-        TotalWOVat := rSet.fieldbyname('TotalWOVat').AsFloat;
-        VATAmount  := rSet.fieldbyname('Vat').AsFloat;
-        VatType    := rSet.fieldbyname('VATType').asString;
-        AccountKey := rSet.fieldbyname('ilAccountKey').asString;
-
-        sumTotal := sumTotal+TotalPrice;
-
-        if index = 1 then // TODO: Should be read from the invoicehead record!!!
+        TotalPrice := rSet.fieldByName('Revenue').asFloat;
+        if not SameValue(TotalPrice, 0) then
         begin
-          FCurrency := rSet.fieldbyname('Currency').asString;
-          FCurrencyRate := rSet.fieldbyname('CurrencyRate').AsFloat;
-          FCurrencyType := getCurrencyType(FCurrency); // ctLocalor ctForeign
-        end;
+          VATPercentage := rSet.fieldByName('VATPercentage').asFloat;
+          VATAmount := TotalPrice / (100 + VATPercentage) * VATPercentage;
+          TotalWOVat := TotalPrice - VATAmount;
 
-        AddLine(ilID,
-                Date,
-                LineNo,
-                Code,
-                Description,
-                Count,
-                Price,
-                TotalPrice,
-                TotalWOVat,
-                VATAmount,
-                VatType,
-                AccountKey,
-                importRefrence,
-                importSource,
-                ispackage,
-                RoomreservationAlias,
-                rSet.fieldByName('visibleOnInvoice').asBoolean // always true but more consistent adding it
-                );
+          // Add vat of all lines, visible and invisible so the correct percentages are used on all items
+          AddVAT(rSet.fieldbyname('VATType').asString, TotalWOVat, TotalPrice, VATPercentage, VATAmount);
+        end;
 
         rSet.Next;
       end;

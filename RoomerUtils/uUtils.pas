@@ -167,6 +167,8 @@ function RunningInIDE: boolean;
 function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
 function IsChildOfParent(aControl: TControl; aParent: TControl): boolean;
 function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
+function FindChildComponentOfType(aComp: TComponent; aClassType: TClass): TComponent;
+function FindFirstChildControlOfType(aParent: TWinControl; aClassType: TClass): TControl;
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
@@ -1594,6 +1596,40 @@ begin
   while Assigned(Result) and (not result.ClassType.InheritsFrom(aClassType)) do
     Result := Result.Owner;
 end;
+
+
+function FindChildComponentOfType(aComp: TComponent; aClassType: TClass): TComponent;
+var
+  lComp: TComponent;
+begin
+  Result := nil;
+  for lComp in aComp do
+    if lComp.ClassType = aClassType then
+    begin
+      Result := lComp;
+      Break;
+    end;
+end;
+
+function FindFirstChildControlOfType(aParent: TWinControl; aClassType: TClass): TControl;
+var
+  lComp: TComponent;
+  i: integer;
+begin
+  Result := nil;
+  for i := 0 to aParent.ControlCount-1 do
+  begin
+    if aParent.Controls[i].InheritsFrom(aClassType) then
+      result := aParent.Controls[i]
+    else
+      if aParent.Controls[i].InheritsFrom(TWinControl) then
+        Result := FindFirstChildCOntrolOfType(TWinControl(aParent.Controls[i]), aClassType);
+
+    if assigned(Result) then
+      Break;
+  end;
+end;
+
 
 constructor TIntValue.Create(value: integer);
 begin

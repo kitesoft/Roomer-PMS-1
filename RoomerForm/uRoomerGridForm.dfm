@@ -41,51 +41,66 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     BevelOuter = bvNone
     TabOrder = 2
   end
-  object pnlClient: TsPanel [3]
+  object pcClient: TsPageControl [3]
     Left = 0
     Top = 97
     Width = 704
     Height = 233
+    ActivePage = tsMain
     Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    Style = tsButtons
+    TabHeight = 35
     TabOrder = 3
-    object grData: TcxGrid
-      Left = 1
-      Top = 1
-      Width = 702
-      Height = 231
-      Align = alClient
-      TabOrder = 0
-      LookAndFeel.NativeStyle = False
-      object tvData: TcxGridDBBandedTableView
-        Navigator.Buttons.CustomButtons = <>
-        Navigator.Buttons.PriorPage.Visible = False
-        Navigator.Buttons.NextPage.Visible = False
-        Navigator.Buttons.Refresh.Visible = False
-        Navigator.Buttons.SaveBookmark.Visible = False
-        Navigator.Buttons.GotoBookmark.Visible = False
-        Navigator.Buttons.Filter.Visible = False
-        Navigator.Visible = True
-        FilterBox.Visible = fvNever
-        OnCellDblClick = tvDataCellDblClick
-        DataController.DataSource = dsData
-        DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        OptionsBehavior.FocusCellOnTab = True
-        OptionsData.Deleting = False
-        OptionsData.Editing = False
-        OptionsData.Inserting = False
-        OptionsView.ColumnAutoWidth = True
-        OptionsView.GroupByBox = False
-        Styles.StyleSheet = cxssRoomerGridBandedTableView
-        Bands = <
-          item
-            Width = 108
-          end>
-      end
-      object lvData: TcxGridLevel
-        GridView = tvData
+    TabPadding = 5
+    SkinData.CustomFont = True
+    object tsMain: TsTabSheet
+      Caption = 'tsMain'
+      TabVisible = False
+      object grData: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 696
+        Height = 223
+        Align = alClient
+        TabOrder = 0
+        LookAndFeel.NativeStyle = False
+        object tvData: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.PriorPage.Visible = False
+          Navigator.Buttons.NextPage.Visible = False
+          Navigator.Buttons.Refresh.Visible = False
+          Navigator.Buttons.SaveBookmark.Visible = False
+          Navigator.Buttons.GotoBookmark.Visible = False
+          Navigator.Buttons.Filter.Visible = False
+          Navigator.Visible = True
+          FilterBox.Visible = fvNever
+          OnCellDblClick = tvDataCellDblClick
+          DataController.DataSource = dsData
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.FocusCellOnTab = True
+          OptionsData.Deleting = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
+          Styles.StyleSheet = cxssRoomerGridBandedTableView
+          Bands = <
+            item
+              Width = 108
+            end>
+        end
+        object lvData: TcxGridLevel
+          GridView = tvData
+        end
       end
     end
   end
@@ -145,6 +160,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -157,7 +173,8 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43122.578221157400000000
+      ReportDocument.CreationDate = 43172.366499386580000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

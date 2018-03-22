@@ -41,15 +41,7 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
       Margins.Top = 5
       Align = alLeft
       Caption = 'Occupancy:'
-      Color = clBackground
-      ParentColor = False
-      ParentFont = False
       Layout = tlCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clInfoBk
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
       UseSkinColor = False
       ExplicitHeight = 20
     end
@@ -63,15 +55,7 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
       Margins.Top = 5
       Align = alLeft
       Caption = 'ADR:'
-      Color = clBackground
-      ParentColor = False
-      ParentFont = False
       Layout = tlCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clInfoBk
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
       UseSkinColor = False
       ExplicitHeight = 20
     end
@@ -85,15 +69,7 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
       Margins.Top = 5
       Align = alLeft
       Caption = 'REVPAR:'
-      Color = clBackground
-      ParentColor = False
-      ParentFont = False
       Layout = tlCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clInfoBk
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
       UseSkinColor = False
       ExplicitHeight = 20
     end
@@ -107,15 +83,7 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
       Margins.Top = 5
       Align = alLeft
       Caption = 'Rooms Sold:'
-      Color = clBackground
-      ParentColor = False
-      ParentFont = False
       Layout = tlCenter
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clInfoBk
-      Font.Height = -15
-      Font.Name = 'Segoe UI'
-      Font.Style = []
       UseSkinColor = False
       ExplicitHeight = 20
     end

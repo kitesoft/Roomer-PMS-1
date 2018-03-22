@@ -16,7 +16,7 @@ uses
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
   , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton, cxCalc, cxMemo,
-  uRoomerGridForm, System.Actions, Vcl.ActnList, cxCalendar  ;
+  uRoomerGridForm, System.Actions, Vcl.ActnList, cxCalendar, sPageControl  ;
 
 type
   TfrmCleaningTimes = class(TfrmBaseRoomerGridForm)
@@ -24,7 +24,7 @@ type
     kbmCleaningTimesfldRoom: TWideStringField;
     kbmCleaningTimesLocation: TWideStringField;
     pnlExportButtons: TsPanel;
-    btnExcel: TsButton;
+    btnExport: TsButton;
     gbxSelectDates: TsGroupBox;
     rbToday: TsRadioButton;
     rbYesterday: TsRadioButton;
@@ -39,18 +39,37 @@ type
     kbmCleaningTimesDurationMinutes: TIntegerField;
     kbmCleaningTimesroomtype: TWideStringField;
     dtDateTo: TsDateEdit;
+    tsHistory: TsTabSheet;
     tvDataLocation: TcxGridDBBandedColumn;
-    tvDataRoom: TcxGridDBBandedColumn;
-    tvDataroomtype: TcxGridDBBandedColumn;
-    tvDatastartTime: TcxGridDBBandedColumn;
-    tvDataendTime: TcxGridDBBandedColumn;
-    tvDataDurationInMinutes: TcxGridDBBandedColumn;
-    tvDataStaffmember: TcxGridDBBandedColumn;
+    tvdataRoom: TcxGridDBBandedColumn;
+    tvdataRoomtype: TcxGridDBBandedColumn;
+    tvdataStaffmember: TcxGridDBBandedColumn;
+    tvDataStarttime: TcxGridDBBandedColumn;
+    tvDataEndTime: TcxGridDBBandedColumn;
+    tvDataDuration: TcxGridDBBandedColumn;
+    grHistory: TcxGrid;
+    tvHistory: TcxGridDBBandedTableView;
+    lvHistory: TcxGridLevel;
+    dsHistory: TDataSource;
+    kbmHistory: TkbmMemTable;
+    kbmHistoryLocation: TWideStringField;
+    kbmHistoryRoom: TWideStringField;
+    kbmHistoryRoomtype: TWideStringField;
+    kbmHistoryStaffmember: TWideStringField;
+    kbmHistoryLogtime: TDateTimeField;
+    kbmHistorystatusChangedTo: TWideStringField;
+    tvHistoryLocation: TcxGridDBBandedColumn;
+    tvHistoryRoom: TcxGridDBBandedColumn;
+    tvHistoryroomtype: TcxGridDBBandedColumn;
+    tvHistorystatusChangedBy: TcxGridDBBandedColumn;
+    tvHistorylogtime: TcxGridDBBandedColumn;
+    tvHistorystatusChangedTo: TcxGridDBBandedColumn;
     procedure btnRefreshClick(Sender: TObject);
     procedure kbmCleaningTimesAfterScroll(DataSet: TDataSet);
     procedure rbYesterdayClick(Sender: TObject);
     procedure rbTodayClick(Sender: TObject);
     procedure rbManualRangeClick(Sender: TObject);
+    procedure btnExportClick(Sender: TObject);
   private
     function ConstructSQL: string;
   protected
@@ -86,7 +105,7 @@ uses
   , uDateTimeHelper, uReservationProfile, uSQLUtils;
 
 const
-  cSQL = 'select '#10 +
+  cSQLCleaningTimes = 'select '#10 +
         '   r.roomtype, '#10 +
         '   r.location, '#10 +
         '   xxx.*, '#10 +
@@ -105,7 +124,21 @@ const
         ' ) xxx '#10 +
         ' join rooms r on r.room=xxx.room '#10 +
         ' where xxx.endtime is not null and xxx.starttime is not null '#10 +
-        ' order by room, date '#10 ;
+        ' order by location, room, date '#10 ;
+
+  cSQLHistory = 'select '#10 +
+        '   r.roomtype '#10 +
+        '   , r.location '#10 +
+        '   , rhCleaning.room '#10 +
+        '   , rhCleaning.statusChangedBy '#10 +
+        '   , rhCleaning.logtime '#10 +
+        '   , m.name as statusChangedTo '#10 +
+        'from '#10 +
+        ' roomcleanstate_history rhCleaning '#10 +
+        ' join rooms r on r.room=rhCleaning.room '#10 +
+        ' join maintenancecodes m on rhCleaning.statusChangedTo = m.code '#10+
+        ' where logtime between %s and %s '#10 +
+        ' order by location, room, logtime '#10 ;
 
 procedure ShowCleaningTimes;
 var
@@ -119,6 +152,19 @@ begin
   end;
 end;
 
+procedure TfrmCleaningTimes.btnExportClick(Sender: TObject);
+var
+  btn: TsButton;
+  pt: TPoint;
+begin
+  btn := (Sender as TsButton);
+  if assigned(btn.DropDownMenu) then
+  begin
+    pt := btn.ClientToScreen(Point(0, btn.ClientHeight));
+    btn.DropDownMenu.Popup(pt.X, pt.Y);
+  end;
+end;
+
 procedure TfrmCleaningTimes.btnRefreshClick(Sender: TObject);
 begin
   RefreshData;
@@ -126,7 +172,10 @@ end;
 
 function TfrmCleaningTimes.ConstructSQL: string;
 begin
-  Result := Format(cSQL, [ 'W', 'R', _db(dtDateFrom.Date), _db(dtDateTo.Date.AddDays(1))]);
+  if ActiveGrid = grData then
+    Result := Format(cSQLCleaningTimes, [ 'W', 'R', _db(dtDateFrom.Date), _db(dtDateTo.Date.AddDays(1))])
+  else if ActiveGrid = grHistory then
+    Result := Format(cSQLHistory, [_db(dtDateFrom.Date), _db(dtDateTo.Date.AddDays(1))]);
   CopyToClipboard(Result);
 end;
 
@@ -171,6 +220,7 @@ begin
   btnRefresh.Enabled := False;
   try
     kbmCleaningTimes.DisableControls;
+    kbmHistory.DisableControls;
     try
       rSet1 := CreateNewDataSet;
       try
@@ -178,17 +228,30 @@ begin
 
         hData.rSet_bySQL(rSet1, s);
         rSet1.First;
-        if not kbmCleaningTimes.Active then
-          kbmCleaningTimes.Open;
-        LoadKbmMemtableFromDataSetQuiet(kbmCleaningTimes,rSet1,[]);
+
+        if ActiveGrid = grData then
+        begin
+          if not kbmCleaningTimes.Active then
+            kbmCleaningTimes.Open;
+          LoadKbmMemtableFromDataSetQuiet(kbmCleaningTimes,rSet1,[]);
+          tvData.ViewData.Expand(True);
+          kbmCleaningTimes.First;
+        end
+        else if ActiveGRid = grHistory then
+        begin
+          if not kbmHistory.Active then
+            kbmHistory.Open;
+          LoadKbmMemtableFromDataSetQuiet(kbmHistory,rSet1,[]);
+          kbmHistory.First;
+        end;
+
       finally
         FreeAndNil(rSet1);
       end;
 
-      tvData.ViewData.Expand(True);
 
-      kbmCleaningTimes.First;
     finally
+      kbmHistory.EnableControls;
       kbmCleaningTimes.EnableControls;
     end;
   finally
@@ -214,7 +277,7 @@ begin
 
   dtDateFrom.Enabled := rbManualRange.Checked;
   dtDateTo.Enabled := rbManualRange.Checked;
-  btnExcel.Enabled := HasData;
+  btnExport.Enabled := HasData;
 end;
 
 
