@@ -21,12 +21,16 @@ inherited FrmFinanceConnect: TFrmFinanceConnect
     Top = 0
     Width = 866
     Height = 623
-    ActivePage = tsSettings
+    ActivePage = tsMappings
     Align = alClient
     TabOrder = 0
     OnChange = pgMainChange
     object tsSettings: TsTabSheet
       Caption = 'Settings'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3

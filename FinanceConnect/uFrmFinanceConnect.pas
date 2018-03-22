@@ -167,7 +167,8 @@ implementation
 uses uAppGlobal,
      uFrmKeyPairSelector,
      uMain,
-     PrjConst
+     PrjConst,
+     uStringUtils
     ;
 
 procedure ManageFinanceConnect(page : TFinanceConnectPageIndex = PAGE_CONFIG; workingTab : TFinanceConnectPageIndex = TAB_CUSTOMERS);
@@ -566,7 +567,7 @@ begin
   keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
   RoomerCode := memCustomersCode.AsString;
   NewValue := memCustomersExternalCode.AsString;
-  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  FinanceConnectService.MapForFinanceConnect(keyPairType, EncodeURIComponent(RoomerCode), EncodeURIComponent(NewValue));
   MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
 end;
 
@@ -578,7 +579,7 @@ begin
   keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
   RoomerCode := memItemsCode.AsString;
   NewValue := memItemsExternalCode.AsString;
-  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  FinanceConnectService.MapForFinanceConnect(keyPairType, EncodeURIComponent(RoomerCode), EncodeURIComponent(NewValue));
   MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
 end;
 
@@ -597,7 +598,7 @@ begin
     RoomerCode := 'BOOK_' + memPayGroupsCode.AsString;
     NewValue := memPayGroupsCashBook.AsString;
   end;
-  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  FinanceConnectService.MapForFinanceConnect(keyPairType, EncodeURIComponent(RoomerCode), EncodeURIComponent(NewValue));
   MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
 end;
 
@@ -609,7 +610,7 @@ begin
   keyPairType := FinanceConnectService.keyPairTypeByIndex(tabsMappings.TabIndex);
   RoomerCode := memVatsCode.AsString;
   NewValue := memVatsExternalCode.AsString;
-  FinanceConnectService.MapForFinanceConnect(keyPairType, RoomerCode, NewValue);
+  FinanceConnectService.MapForFinanceConnect(keyPairType, EncodeURIComponent(RoomerCode), EncodeURIComponent(NewValue));
   MappingsLookupMap.AddOrSetValue(format('%s_%s', [MAPPING_ENTITIES[keyPairType], RoomerCode]), NewValue);
 end;
 
