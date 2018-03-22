@@ -85,19 +85,19 @@ type
     tvStatssoldRooms: TcxGridDBBandedColumn;
     tvStatsrevenue: TcxGridDBBandedColumn;
     tvStatstotalDiscount: TcxGridDBBandedColumn;
-    tvStatsmaxRate: TcxGridDBBandedColumn;
-    tvStatsminRate: TcxGridDBBandedColumn;
-    tvStatsaverageRate: TcxGridDBBandedColumn;
+    tvStatsHighestRate: TcxGridDBBandedColumn;
+    tvStatsLowestRate: TcxGridDBBandedColumn;
+    tvStatsAverage: TcxGridDBBandedColumn;
     tvStatscheckedInToday: TcxGridDBBandedColumn;
     tvStatsremainingArrivals: TcxGridDBBandedColumn;
     tvStatsnoShow: TcxGridDBBandedColumn;
     tvStatsRemainingDepartures: TcxGridDBBandedColumn;
     tvStatsdepartedRooms: TcxGridDBBandedColumn;
     tvStatsInHouse: TcxGridDBBandedColumn;
-    tvStatstotalRooms: TcxGridDBBandedColumn;
+    tvStatsTotalSellableRooms: TcxGridDBBandedColumn;
     tvStatslocalCurrency: TcxGridDBBandedColumn;
     tvStatstotalGuests: TcxGridDBBandedColumn;
-    tvStatsocc: TcxGridDBBandedColumn;
+    tvStatsOccupancy: TcxGridDBBandedColumn;
     tvStatsadr: TcxGridDBBandedColumn;
     tvStatsrevPar: TcxGridDBBandedColumn;
     pageCharts: TsPageControl;
@@ -113,7 +113,6 @@ type
     plStats: TppDBPipeline;
     rptStats: TppReport;
     ppHeaderBand1: TppHeaderBand;
-    ppLine1: TppLine;
     ppLabel4: TppLabel;
     ppLabel5: TppLabel;
     rlabFrom: TppLabel;
@@ -135,25 +134,23 @@ type
     ppLabel1: TppLabel;
     ppDBText1: TppDBText;
     ppLabel2: TppLabel;
-    ppDBText2: TppDBText;
+    redtRevenue: TppDBText;
     ppLabel3: TppLabel;
     ppDBText3: TppDBText;
     ppLabel7: TppLabel;
-    ppDBText4: TppDBText;
+    redtADR: TppDBText;
     ppLabel9: TppLabel;
-    ppDBText5: TppDBText;
+    redtRevPar: TppDBText;
     ppLine3: TppLine;
     ppLine4: TppLine;
-    ppLabel10: TppLabel;
-    ppDBText6: TppDBText;
     ppLabel11: TppLabel;
-    ppDBText7: TppDBText;
+    redtDiscount: TppDBText;
     ppLabel12: TppLabel;
-    ppDBText8: TppDBText;
+    redtMaxRate: TppDBText;
     ppLabel13: TppLabel;
-    ppDBText9: TppDBText;
+    redtMinRate: TppDBText;
     ppLabel14: TppLabel;
-    ppDBText10: TppDBText;
+    redtAverageRate: TppDBText;
     ppLabel15: TppLabel;
     ppDBText11: TppDBText;
     ppLine5: TppLine;
@@ -178,14 +175,14 @@ type
     ppSummaryBand1: TppSummaryBand;
     ppLine7: TppLine;
     ppDBCalc1: TppDBCalc;
-    ppDBCalc2: TppDBCalc;
-    ppDBCalc3: TppDBCalc;
-    ppDBCalc4: TppDBCalc;
-    ppDBCalc5: TppDBCalc;
-    ppDBCalc6: TppDBCalc;
-    ppDBCalc7: TppDBCalc;
-    ppDBCalc8: TppDBCalc;
-    ppDBCalc9: TppDBCalc;
+    edtRevTotal: TppDBCalc;
+    redtOccAvg: TppDBCalc;
+    redtADRAvg: TppDBCalc;
+    redtRevParAvg: TppDBCalc;
+    redtDiscountTotal: TppDBCalc;
+    redtMaxrateMax: TppDBCalc;
+    redtMinRateMin: TppDBCalc;
+    redtAvgRateAvg: TppDBCalc;
     ppDBCalc10: TppDBCalc;
     ppDBCalc12: TppDBCalc;
     ppDBCalc13: TppDBCalc;
@@ -200,6 +197,22 @@ type
     tvStatsExpectedArrivals: TcxGridDBBandedColumn;
     gbxIncludedStates: TsGroupBox;
     clbIncludedStates: TsCheckListBox;
+    rLabCurrency: TppLabel;
+    rLabCurrencyCode: TppLabel;
+    redtFullDate: TppDBText;
+    ppLabel10: TppLabel;
+    ppDBText2: TppDBText;
+    ppLine1: TppLine;
+    ppLabel26: TppLabel;
+    ppDBText4: TppDBText;
+    ppLabel27: TppLabel;
+    ppDBText5: TppDBText;
+    ppLabel28: TppLabel;
+    ppDBText6: TppDBText;
+    ppDBCalc11: TppDBCalc;
+    ppDBCalc18: TppDBCalc;
+    ppDBCalc19: TppDBCalc;
+    ppDBCalc20: TppDBCalc;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure dtDateFromChange(Sender: TObject);
@@ -213,12 +226,14 @@ type
     procedure btnReportClick(Sender: TObject);
     procedure tvStatsHideZeroValues(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
+    procedure ppHeaderBand1BeforePrint(Sender: TObject);
+    procedure tvStatsrevenueGetCellHint(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      ACellViewInfo: TcxGridTableDataCellViewInfo; const AMousePos: TPoint; var AHintText: TCaption;
+      var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
   private
     { Private declarations }
 
     zSetDates : boolean;
-
-
   public
     { Public declarations }
   end;
@@ -276,6 +291,13 @@ begin
     aText := '';
 end;
 
+procedure TfrmRptRoomRentStatistics.tvStatsrevenueGetCellHint(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; ACellViewInfo: TcxGridTableDataCellViewInfo; const AMousePos: TPoint;
+  var AHintText: TCaption; var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
+begin
+//
+end;
+
 procedure TfrmRptRoomRentStatistics.btnGuestsExcelClick(Sender: TObject);
 var
   sFilename : string;
@@ -327,7 +349,7 @@ begin
         kbmStat.FieldByName('minRate').asFloat := lStat.Statistic['MINRATE'].Value;
         kbmStat.FieldByName('averageRate').asFloat := lStat.Statistic['ADR'].Value;
         kbmStat.FieldByName('totalGuests').AsInteger := trunc(lStat.Statistic['GUESTCOUNT'].Value);
-        kbmStat.FieldByName('totalRooms').AsInteger := trunc(lStat.Statistic['TOTALROOMS'].Value);
+        kbmStat.FieldByName('totalSellableRooms').AsInteger := trunc(lStat.Statistic['TOTAL_SELLABLE_ROOMS'].Value);
         kbmStat.FieldByName('oooROoms').AsInteger := trunc(lStat.Statistic['OOOROOMS'].Value);
         kbmStat.FieldByName('soldRooms').AsInteger := trunc(lStat.Statistic['ROOMS_SOLD'].Value);
         kbmStat.FieldByName('inHouse').AsInteger := trunc(lStat.Statistic['IN_HOUSE'].Value);
@@ -442,8 +464,50 @@ begin
     clbIncludedStates.Checked[i] := TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDisabledReservationStates;
   end;
 
-  dtDateFrom.Date := Now.StartOfMonth;
-  dtDateTo.Date := Now.EndOfMonth;
+  zSetDates := false;
+  try
+    cbxMonth.ItemIndex := Now.Month -1;
+    cbxYear.ItemIndex := Now.Year - StrToInt(cbxYear.Items[0]);
+    dtDateFrom.Date := Now.StartOfMonth;
+    dtDateTo.Date := Now.EndOfMonth;
+  finally
+    zSetDates := true;
+  end;
+end;
+
+procedure TfrmRptRoomRentStatistics.ppHeaderBand1BeforePrint(Sender : TObject);
+var
+  s : string;
+  lFormat: string;
+begin
+  rlabFrom.Caption := FormatDateTime('ddddd', dtDateFrom.Date);
+  rlabTo.Caption := FormatDateTime('ddddd', dtDateTo.Date);
+  rLabHotelName.Caption := g.qHotelName;
+  rLabTimeCreated.Caption := 'Created : ' + FormatDateTime('', now);
+  rLabCurrencyCode.Caption := RoomerCurrencyManager.DefaultCurrency;
+
+  s := 'User : ' + g.qUser;
+  if g.qusername <> '' then
+    s := s + ' - ' + g.qusername;
+  rlabUser.Caption := s;
+
+  lFormat := RoomerCurrencyManager.DefaultCurrencyDefinition.DisplayFormat(false);
+  redtRevenue.DisplayFormat := lFormat;
+  redtADR.DisplayFormat := lFormat;
+  redtRevPar.DisplayFormat := lFormat;
+  redtDiscount.DisplayFormat := lFormat;
+  redtMaxRate.DisplayFormat := lFormat;
+  redtMinRate.DisplayFormat := lFormat;
+  redtAverageRate.DisplayFormat := lFormat;
+  edtRevTotal.DisplayFormat := lFormat;
+  redtADRAvg.DisplayFormat := lFormat;
+  redtRevParAvg.DisplayFormat := lFormat;
+  redtDiscountTotal.DisplayFormat := lFormat;
+  redtMaxrateMax.DisplayFormat := lFormat;
+  redtMinRateMin.DisplayFormat := lFormat;
+  redtAvgRateAvg.DisplayFormat := lFormat;
+
+  redtFullDate.DisplayFormat := FormatSettings.ShortDateFormat;
 end;
 
 procedure TfrmRptRoomRentStatistics.sButton2Click(Sender: TObject);

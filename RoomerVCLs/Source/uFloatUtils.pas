@@ -14,14 +14,10 @@ function LocalizedFloatValue(value: String; save: boolean = true): Double;
 function RoundDecimals(value: Double; Decimals: Integer): Double;
 
 /// <summary>
-///   Construct a displayformat string based on the supplied formatSettings
-/// </summary>
-function DefaultCurrencyFormat(aFormatSettings: TFormatSettings): String;
-/// <summary>
 ///   Construct a displayformat string based on the suppied formatSettings, using fixed decimal and thousandsseparator
 ///  This format can be used as a DisplayFormat setting in a TcxCurrencyEditProperties
 /// </summary>
-function cxEditPropertiesCurrencyFormat(aFormatSettings: TFormatSettings): string;
+function DisplayCurrencyFormat(aFormatSettings: TFormatSettings; aAddSymbol: boolean = true): String;
 
 
 implementation
@@ -80,12 +76,15 @@ end;
 
 function AddCurrencySymbol(const Value, CurrSymbol: string; const CurrFormat: Byte): string;
 begin
-  case CurrFormat of
-    0: Result := Format('%s%s', [CurrSymbol, Value]);
-    1: Result := Format('%s%s', [Value, CurrSymbol]);
-    2: Result := Format('%s %s', [CurrSymbol, Value]);
-    3: Result := Format('%s %s', [Value, CurrSymbol]);
-  end;
+  if CurrSymbol.IsEmpty then
+    Result := Value
+  else
+    case CurrFormat of
+      0: Result := Format('%s%s', [CurrSymbol, Value]);
+      1: Result := Format('%s%s', [Value, CurrSymbol]);
+      2: Result := Format('%s %s', [CurrSymbol, Value]);
+      3: Result := Format('%s %s', [Value, CurrSymbol]);
+    end;
 end;
 
 {   0 = '($1)'      4 = '(1$)'      8 = '-1 $'      12 = '$ -1'
@@ -94,35 +93,50 @@ end;
     3 = '$1-'       7 = '1$-'      11 = '$ 1-'      15 = '(1 $)'  }
 function AddNegCurrencySymbol(const Value, CurrSymbol: string; const CurrFormat: Byte): string;
 begin
-  case CurrFormat of
-    0: Result := Format('(%s%s)', [CurrSymbol, Value]);
-    1: Result := Format('-%s%s', [CurrSymbol, Value]);
-    2: Result := Format('%s-%s', [CurrSymbol, Value]);
-    3: Result := Format('%s%s-', [CurrSymbol, Value]);
-    4: Result := Format('(%s%s)', [Value, CurrSymbol]);
-    5: Result := Format('-%s%s', [Value, CurrSymbol]);
-    6: Result := Format('%s-%s', [Value, CurrSymbol]);
-    7: Result := Format('%s%s-', [Value, CurrSymbol]);
-    8: Result := Format('-%s %s', [Value, CurrSymbol]);
-    9: Result := Format('-%s %s', [CurrSymbol, Value]);
-   10: Result := Format('%s %s-', [Value, CurrSymbol]);
-   11: Result := Format('%s %s-', [CurrSymbol, Value]);
-   12: Result := Format('%s %s', [CurrSymbol, Value]);
-   13: Result := Format('%s -%s', [Value, CurrSymbol]);
-   14: Result := Format('(%s- %s)', [CurrSymbol, Value]);
-   15: Result := Format('(%s %s)', [Value, CurrSymbol]);
+  if CurrSymbol.IsEmpty then
+    case CurrFormat of
+      0: Result := Format('(%s)', [ Value]);
+      1: Result := Format('-%s', [Value]);
+      2: Result := Format('-%s', [Value]);
+      3: Result := Format('%s-', [Value]);
+      4: Result := Format('(%s)', [Value]);
+      5: Result := Format('-%s', [Value]);
+      6: Result := Format('%s-', [Value]);
+      7: Result := Format('%s-', [Value]);
+      8: Result := Format('-%s', [Value]);
+      9: Result := Format('- %s', [Value]);
+     10: Result := Format('%s -', [Value]);
+     11: Result := Format('%s-', [Value]);
+     12: Result := Format('-%s', [Value]);
+     13: Result := Format('%s-', [Value]);
+     14: Result := Format('(- %s)', [Value]);
+     15: Result := Format('(%s)', [Value]);
+    end
+  else
+    case CurrFormat of
+      0: Result := Format('(%s%s)', [CurrSymbol, Value]);
+      1: Result := Format('-%s%s', [CurrSymbol, Value]);
+      2: Result := Format('%s-%s', [CurrSymbol, Value]);
+      3: Result := Format('%s%s-', [CurrSymbol, Value]);
+      4: Result := Format('(%s%s)', [Value, CurrSymbol]);
+      5: Result := Format('-%s%s', [Value, CurrSymbol]);
+      6: Result := Format('%s-%s', [Value, CurrSymbol]);
+      7: Result := Format('%s%s-', [Value, CurrSymbol]);
+      8: Result := Format('-%s %s', [Value, CurrSymbol]);
+      9: Result := Format('-%s %s', [CurrSymbol, Value]);
+     10: Result := Format('%s %s-', [Value, CurrSymbol]);
+     11: Result := Format('%s %s-', [CurrSymbol, Value]);
+     12: Result := Format('%s %s', [CurrSymbol, Value]);
+     13: Result := Format('%s -%s', [Value, CurrSymbol]);
+     14: Result := Format('(%s- %s)', [CurrSymbol, Value]);
+     15: Result := Format('(%s %s)', [Value, CurrSymbol]);
   end;
 end;
 
-function cxEditPropertiesCurrencyFormat(aFormatSettings: TFormatSettings): string;
+function DisplayCurrencyFormat(aFormatSettings: TFormatSettings; aAddSymbol: boolean = true): String;
 begin
   aFormatSettings.DecimalSeparator := '.';
   aFormatSettings.ThousandSeparator := ',';
-  Result := DefaultCurrencyFormat(aFormatSettings);
-end;
-
-function DefaultCurrencyFormat(aFormatSettings: TFormatSettings): String;
-begin
 
  if aFormatSettings.CurrencyDecimals > 0 then
    Result := '0' + aFormatSettings.DecimalSeparator + StringOfChar('0', aFormatSettings.CurrencyDecimals)
@@ -131,8 +145,12 @@ begin
 
  Result := aFormatSettings.ThousandSeparator + Result;
 
- Result := AddCurrencySymbol(Result, aFormatSettings.CurrencyString, aFormatSettings.CurrencyFormat)
-        + ';' + AddNegCurrencySymbol(Result, aFormatSettings.CurrencyString, aFormatSettings.NegCurrFormat)
+ if aAddSymbol then
+   Result := AddCurrencySymbol(Result, aFormatSettings.CurrencyString, aFormatSettings.CurrencyFormat)
+          + ';' + AddNegCurrencySymbol(Result, aFormatSettings.CurrencyString, aFormatSettings.NegCurrFormat)
+ else
+   Result := AddCurrencySymbol(Result, '', aFormatSettings.CurrencyFormat)
+          + ';' + AddNegCurrencySymbol(Result, '', aFormatSettings.NegCurrFormat)
 
 end;
 
