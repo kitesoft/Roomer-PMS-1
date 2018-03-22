@@ -9909,7 +9909,7 @@ begin
   s := s + '   Reservation'#10;
   s := s + ' FROM'#10;
   s := s + '   reservations'#10;
-  s := s + ' WHERE'#10;
+  s := s + ' WHERE Status <> ' + _db(STATUS_AWAITING_PAYMENT) + ' AND '#10;
   s := s + '       (dtCreated >=  %s )'#10;
   s := s + '   AND (dtCreated <  %s )'#10;
   s := s + ' ORDER BY Reservation';
@@ -9949,9 +9949,8 @@ begin
     sql := sql + '    Reservation'#10;
     sql := sql + '  FROM'#10;
     sql := sql + '    reservations'#10;
-    sql := sql + '  WHERE'#10;
-    sql := sql +
-      '        ((SELECT ADate FROM roomsdate rd WHERE rd.Reservation = reservations.Reservation AND (rd.ResFlag <> ' +
+    sql := sql + '  WHERE Status <> ' + _db(STATUS_AWAITING_PAYMENT) + ' AND '#10;
+    sql := sql + '        ((SELECT ADate FROM roomsdate rd WHERE rd.Reservation = reservations.Reservation AND (rd.ResFlag <> ' +
       _db(STATUS_DELETED) + ' ) AND (rd.ResFlag <> ' + _db(STATUS_CANCELED) + ' )  ORDER BY ADate LIMIT 1) >=  %s )'#10;
     sql := sql +
       '    AND ((SELECT ADate FROM roomsdate rd WHERE rd.Reservation = reservations.Reservation AND (rd.ResFlag <> ' +
@@ -10169,9 +10168,10 @@ begin
       '    Reservation' +
       '  FROM' +
       '    roomsdate' +
-      '  WHERE' +
+      '  WHERE ' +
       '        (ADate >=  %s )' +
       '    AND (ADate <=  %s )' +
+      '    AND (ResFlag <> ' + _db(STATUS_AWAITING_PAYMENT) + ' ) ' + // **zxhj
       '    AND (ResFlag <> ' + _db(STATUS_DELETED) + ' ) ' + // **zxhj
       '    AND (ResFlag <> ' + _db(STATUS_CANCELED) + ' ) ' + // **zxhj
       '  ORDER BY Reservation';
