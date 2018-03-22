@@ -3,7 +3,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   Top = 0
   Caption = 'Room/Rent Statistics'
   ClientHeight = 643
-  ClientWidth = 1281
+  ClientWidth = 1351
   Color = clBtnFace
   Constraints.MinWidth = 570
   Font.Charset = DEFAULT_CHARSET
@@ -14,7 +14,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   KeyPreview = True
   OldCreateOrder = False
   Position = poOwnerFormCenter
-  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
@@ -23,16 +22,18 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   object Panel3: TsPanel
     Left = 0
     Top = 0
-    Width = 1281
+    Width = 1351
     Height = 89
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
     object cxGroupBox2: TsGroupBox
-      Left = 148
-      Top = 3
+      AlignWithMargins = True
+      Left = 145
+      Top = 4
       Width = 151
-      Height = 78
+      Height = 81
+      Align = alLeft
       Caption = '.. or select month'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -55,6 +56,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        TextHint = 'Choose a month ...'
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -64,22 +67,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         ItemIndex = -1
         ParentFont = False
         TabOrder = 0
-        Text = 'Choose a Month ...'
-        OnCloseUp = cbxMonthCloseUp
+        OnChange = cbxMonthChange
         Items.Strings = (
-          'Choose a Month ...'
-          'January'
-          'February'
-          'March'
-          'April'
-          'may'
-          'June'
-          'July'
-          'august'
-          'September'
-          'October'
-          'November'
-          'December')
+          '')
       end
       object cbxYear: TsComboBox
         Left = 15
@@ -94,6 +84,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        TextHint = 'Choose a year ...'
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -103,24 +95,12 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         ItemIndex = -1
         ParentFont = False
         TabOrder = 1
-        Text = 'Choose a year ...'
-        OnCloseUp = cbxMonthCloseUp
-        Items.Strings = (
-          'Choose year ...'
-          '2011'
-          '2012'
-          '2013'
-          '2014'
-          '2015'
-          '2016'
-          '2017'
-          '2018'
-          '2020')
+        OnChange = cbxMonthChange
       end
     end
     object btnRefresh: TsButton
-      Left = 305
-      Top = 13
+      Left = 749
+      Top = 16
       Width = 118
       Height = 37
       Caption = 'Refresh ALL'
@@ -132,10 +112,12 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       SkinData.SkinSection = 'BUTTON'
     end
     object gbxSelectDates: TsGroupBox
-      Left = 8
-      Top = 3
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
       Width = 135
-      Height = 78
+      Height = 81
+      Align = alLeft
       Caption = 'Select dates'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -190,23 +172,36 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         GlyphMode.Grayed = False
       end
     end
-    object chkCompareLasYear: TsCheckBox
-      Left = 306
-      Top = 56
-      Width = 116
-      Height = 17
-      Caption = 'Compare last year'
+    object gbxIncludedStates: TsGroupBox
+      AlignWithMargins = True
+      Left = 302
+      Top = 4
+      Width = 441
+      Height = 81
+      Align = alLeft
+      Caption = 'Include rooms with status of:'
       TabOrder = 3
-      Visible = False
-      SkinData.SkinSection = 'CHECKBOX'
-      ImgChecked = 0
-      ImgUnchecked = 0
+      object clbIncludedStates: TsCheckListBox
+        Left = 2
+        Top = 15
+        Width = 437
+        Height = 64
+        Align = alClient
+        BorderStyle = bsSingle
+        Columns = 3
+        ItemHeight = 20
+        Items.Strings = (
+          '<auto filled>')
+        TabOrder = 0
+        StyleElements = [seFont, seClient]
+        SkinData.SkinSection = 'GROUPBOX'
+      end
     end
   end
   object sStatusBar1: TsStatusBar
     Left = 0
     Top = 624
-    Width = 1281
+    Width = 1351
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
@@ -214,9 +209,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   object pageMain: TsPageControl
     Left = 0
     Top = 89
-    Width = 1281
+    Width = 1351
     Height = 535
-    ActivePage = tabStatGrid
+    ActivePage = tabGraph
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PAGECONTROL'
@@ -225,7 +220,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       object sPanel1: TsPanel
         Left = 0
         Top = 0
-        Width = 1273
+        Width = 1343
         Height = 43
         Align = alTop
         FullRepaint = False
@@ -248,7 +243,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         end
         object btnReport: TsButton
           AlignWithMargins = True
-          Left = 1141
+          Left = 1211
           Top = 4
           Width = 128
           Height = 35
@@ -265,7 +260,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       object grStat: TcxGrid
         Left = 0
         Top = 43
-        Width = 1273
+        Width = 1343
         Height = 464
         Align = alClient
         TabOrder = 1
@@ -346,7 +341,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             end
             item
               Format = ',0.;-,0.'
-              Kind = skSum
+              Kind = skAverage
               FieldName = 'totalRooms'
               Column = tvStatstotalRooms
             end
@@ -360,7 +355,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
               Format = ',0.;-,0.'
               Kind = skSum
               FieldName = 'occupiedRooms'
-              Column = tvStatsoccupiedRooms
+              Column = tvStatsInHouse
             end
             item
               Format = ',0.;-,0.'
@@ -370,8 +365,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             end
             item
               Format = ',0.;-,0.'
-              FieldName = 'arrivingRooms'
-              Column = tvStatsarrivingRooms
+              FieldName = 'remainingArrivals'
+              Column = tvStatsremainingArrivals
             end
             item
               Format = ',0.;-,0.'
@@ -382,14 +377,19 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             item
               Format = ',0.;-,0.'
               Kind = skSum
-              FieldName = 'departingRooms'
-              Column = tvStatsdepartingRooms
+              FieldName = 'remainingDepartures'
+              Column = tvStatsRemainingDepartures
             end
             item
               Format = ',0.;-,0.'
               Kind = skSum
               FieldName = 'departedRooms'
               Column = tvStatsdepartedRooms
+            end
+            item
+              Format = ',0.;-,0.'
+              Kind = skSum
+              Column = tvStatsooo
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsData.CancelOnExit = False
@@ -403,11 +403,16 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           OptionsView.HeaderAutoHeight = True
           Bands = <
             item
-              Caption = 'Main'
+              Caption = 'Date'
               FixedKind = fkLeft
+              Width = 140
+            end
+            item
+              Caption = 'Main'
             end
             item
               Caption = 'Rate'
+              Width = 504
             end
             item
               Caption = 'Status'
@@ -415,28 +420,75 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           object tvStatsADate: TcxGridDBBandedColumn
             Caption = 'Date'
             DataBinding.FieldName = 'ADate'
+            HeaderAlignmentHorz = taCenter
             Width = 81
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
-          object tvStatssoldRooms: TcxGridDBBandedColumn
-            Caption = 'Sold Rooms'
-            DataBinding.FieldName = 'soldRooms'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
-            Position.ColIndex = 2
+          object tvStatsWeekday: TcxGridDBBandedColumn
+            Caption = 'Weekday'
+            DataBinding.FieldName = 'ADate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'ddd'
+            HeaderAlignmentHorz = taCenter
+            Width = 52
+            Position.BandIndex = 0
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object tvStatsrevenue: TcxGridDBBandedColumn
             Caption = 'Revenue'
             DataBinding.FieldName = 'revenue'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            OnGetProperties = tvStatsrevenueGetProperties
-            HeaderAlignmentHorz = taRightJustify
-            Position.BandIndex = 0
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvStatsocc: TcxGridDBBandedColumn
+            Caption = 'OCC'
+            DataBinding.FieldName = 'occ'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.%;-,0.%'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = 'Occupancy'
+            Position.BandIndex = 1
             Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvStatsadr: TcxGridDBBandedColumn
+            Caption = 'ADR'
+            DataBinding.FieldName = 'adr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = 'Average daily rates'
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvStatsrevPar: TcxGridDBBandedColumn
+            Caption = 'RevPar'
+            DataBinding.FieldName = 'revPar'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = 'Revenue Per Available Room'
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvStatslocalCurrency: TcxGridDBBandedColumn
+            Caption = 'Curr- ency'
+            DataBinding.FieldName = 'currency'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.Alignment.Horz = taRightJustify
+            HeaderAlignmentHorz = taCenter
+            Width = 35
+            Position.BandIndex = 2
+            Position.ColIndex = 0
             Position.RowIndex = 0
           end
           object tvStatstotalDiscount: TcxGridDBBandedColumn
@@ -444,9 +496,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'totalDiscount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.Alignment.Horz = taRightJustify
-            OnGetProperties = tvStatsrevenueGetProperties
-            HeaderAlignmentHorz = taRightJustify
-            Position.BandIndex = 1
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            HeaderAlignmentHorz = taCenter
+            Width = 88
+            Position.BandIndex = 2
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
@@ -455,9 +508,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'maxRate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.Alignment.Horz = taRightJustify
-            OnGetProperties = tvStatsrevenueGetProperties
-            HeaderAlignmentHorz = taRightJustify
-            Position.BandIndex = 1
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            HeaderAlignmentHorz = taCenter
+            Width = 94
+            Position.BandIndex = 2
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
@@ -466,9 +520,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'minRate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.Alignment.Horz = taRightJustify
-            OnGetProperties = tvStatsrevenueGetProperties
-            HeaderAlignmentHorz = taRightJustify
-            Position.BandIndex = 1
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            HeaderAlignmentHorz = taCenter
+            Width = 96
+            Position.BandIndex = 2
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
@@ -477,10 +532,23 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'averageRate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.Alignment.Horz = taRightJustify
-            OnGetProperties = tvStatsrevenueGetProperties
-            HeaderAlignmentHorz = taRightJustify
-            Position.BandIndex = 1
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            HeaderAlignmentHorz = taCenter
+            Width = 94
+            Position.BandIndex = 2
             Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvStatstotalGuests: TcxGridDBBandedColumn
+            Caption = 'Total Guests'
+            DataBinding.FieldName = 'totalGuests'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.'
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Width = 96
+            Position.BandIndex = 2
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object tvStatscheckedInToday: TcxGridDBBandedColumn
@@ -488,33 +556,53 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'checkedInToday'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
-          object tvStatsarrivingRooms: TcxGridDBBandedColumn
-            Caption = 'Arriving Rooms'
-            DataBinding.FieldName = 'arrivingRooms'
+          object tvStatssoldRooms: TcxGridDBBandedColumn
+            Caption = 'Sold Rooms'
+            DataBinding.FieldName = 'soldRooms'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvStatsremainingArrivals: TcxGridDBBandedColumn
+            Caption = 'Remaining Arrivals'
+            DataBinding.FieldName = 'remainingArrivals'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.'
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object tvStatsnoShow: TcxGridDBBandedColumn
+            Caption = 'No Show'
             DataBinding.FieldName = 'noShow'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 6
             Position.RowIndex = 0
           end
-          object tvStatsdepartingRooms: TcxGridDBBandedColumn
-            Caption = 'Departing Rooms'
-            DataBinding.FieldName = 'departingRooms'
+          object tvStatsRemainingDepartures: TcxGridDBBandedColumn
+            Caption = 'Remaining Departures'
+            DataBinding.FieldName = 'remainingDepartures'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 7
             Position.RowIndex = 0
           end
@@ -523,73 +611,32 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'departedRooms'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 8
             Position.RowIndex = 0
           end
-          object tvStatsoccupiedRooms: TcxGridDBBandedColumn
-            Caption = 'Occupied Rooms'
-            DataBinding.FieldName = 'occupiedRooms'
+          object tvStatsInHouse: TcxGridDBBandedColumn
+            Caption = 'In House'
+            DataBinding.FieldName = 'inHouse'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object tvStatstotalRooms: TcxGridDBBandedColumn
-            Caption = 'Tota lRooms'
+            Caption = 'Total Rooms'
             DataBinding.FieldName = 'totalRooms'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object tvStatslocalCurrency: TcxGridDBBandedColumn
-            Caption = 'Curr- ency'
-            DataBinding.FieldName = 'localCurrency'
-            Width = 55
-            Position.BandIndex = 1
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object tvStatstotalGuests: TcxGridDBBandedColumn
-            Caption = 'Total Guests'
-            DataBinding.FieldName = 'totalGuests'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 1
-            Position.ColIndex = 5
-            Position.RowIndex = 0
-          end
-          object tvStatsocc: TcxGridDBBandedColumn
-            Caption = 'OCC'
-            DataBinding.FieldName = 'occ'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.%;-,0.%'
-            HeaderHint = 'Occupancy'
-            Position.BandIndex = 0
-            Position.ColIndex = 2
-            Position.RowIndex = 0
-          end
-          object tvStatsadr: TcxGridDBBandedColumn
-            Caption = 'ADR'
-            DataBinding.FieldName = 'adr'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            OnGetProperties = tvStatsrevenueGetProperties
-            HeaderHint = 'Average daily rates'
-            Position.BandIndex = 0
-            Position.ColIndex = 3
-            Position.RowIndex = 0
-          end
-          object tvStatsrevPar: TcxGridDBBandedColumn
-            Caption = 'Rev Par'
-            DataBinding.FieldName = 'revPar'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            OnGetProperties = tvStatsrevenueGetProperties
-            HeaderHint = 'Revenue Per Available Room'
-            Position.BandIndex = 0
-            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object tvStatsooo: TcxGridDBBandedColumn
@@ -597,8 +644,37 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'oooRooms'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.;-,0.'
-            Position.BandIndex = 2
+            OnGetDisplayText = tvStatsHideZeroValues
+            HeaderAlignmentHorz = taCenter
+            Position.BandIndex = 3
             Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvStatsExpectedDepartures: TcxGridDBBandedColumn
+            Caption = 'Expected Departures'
+            DataBinding.FieldName = 'expectedDepartures'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 3
+            Position.ColIndex = 11
+            Position.RowIndex = 0
+          end
+          object tvStatsArrivedRooms: TcxGridDBBandedColumn
+            Caption = 'Arrived Rooms'
+            DataBinding.FieldName = 'arrivedRooms'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 3
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object tvStatsExpectedArrivals: TcxGridDBBandedColumn
+            Caption = 'Expected Arrivals'
+            DataBinding.FieldName = 'expectedArrivals'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 3
+            Position.ColIndex = 9
             Position.RowIndex = 0
           end
         end
@@ -609,14 +685,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0
-        Width = 1273
+        Width = 1343
         Height = 507
         ActivePage = tabOcc
         Align = alClient
@@ -624,14 +696,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
-            Width = 1265
+            Width = 1335
             Height = 33
             Align = alTop
             TabOrder = 0
@@ -656,7 +724,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           object Chart1: TChart
             Left = 0
             Top = 33
-            Width = 1265
+            Width = 1335
             Height = 446
             Legend.Visible = False
             SubTitle.Font.Color = clBlack
@@ -713,12 +781,25 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DataType = ftDate
       end
       item
-        Name = 'soldRooms'
-        DataType = ftInteger
-      end
-      item
         Name = 'revenue'
         DataType = ftFloat
+      end
+      item
+        Name = 'occ'
+        DataType = ftFloat
+      end
+      item
+        Name = 'adr'
+        DataType = ftFloat
+      end
+      item
+        Name = 'revPar'
+        DataType = ftFloat
+      end
+      item
+        Name = 'currency'
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'totalDiscount'
@@ -737,27 +818,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DataType = ftFloat
       end
       item
-        Name = 'checkedInToday'
-        DataType = ftInteger
-      end
-      item
-        Name = 'arrivingRooms'
-        DataType = ftInteger
-      end
-      item
-        Name = 'noShow'
-        DataType = ftInteger
-      end
-      item
-        Name = 'departingRooms'
-        DataType = ftInteger
-      end
-      item
-        Name = 'departedRooms'
-        DataType = ftInteger
-      end
-      item
-        Name = 'occupiedRooms'
+        Name = 'totalGuests'
         DataType = ftInteger
       end
       item
@@ -765,29 +826,48 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DataType = ftInteger
       end
       item
-        Name = 'localCurrency'
-        DataType = ftWideString
-        Size = 10
-      end
-      item
-        Name = 'totalGuests'
+        Name = 'oooRooms'
         DataType = ftInteger
       end
       item
-        Name = 'oooRooms'
-        DataType = ftFloat
+        Name = 'soldRooms'
+        DataType = ftInteger
       end
       item
-        Name = 'occ'
-        DataType = ftFloat
+        Name = 'inHouse'
+        DataType = ftInteger
       end
       item
-        Name = 'adr'
-        DataType = ftFloat
+        Name = 'checkedInToday'
+        DataType = ftInteger
       end
       item
-        Name = 'revPar'
-        DataType = ftFloat
+        Name = 'remainingArrivals'
+        DataType = ftInteger
+      end
+      item
+        Name = 'noShow'
+        DataType = ftInteger
+      end
+      item
+        Name = 'remainingDepartures'
+        DataType = ftInteger
+      end
+      item
+        Name = 'departedRooms'
+        DataType = ftInteger
+      end
+      item
+        Name = 'expectedArrivals'
+        DataType = ftInteger
+      end
+      item
+        Name = 'arrivedRooms'
+        DataType = ftInteger
+      end
+      item
+        Name = 'expectedDepartures'
+        DataType = ftInteger
       end>
     IndexDefs = <>
     SortOptions = []
@@ -810,8 +890,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Top = 280
   end
   object AdvChartPanesEditorDialog1: TAdvChartPanesEditorDialog
-    Left = 824
-    Top = 32
+    Left = 1032
+    Top = 40
   end
   object FormStore: TcxPropertiesStore
     Components = <
@@ -840,12 +920,25 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DataType = ftDate
       end
       item
-        Name = 'soldRooms'
-        DataType = ftInteger
-      end
-      item
         Name = 'revenue'
         DataType = ftFloat
+      end
+      item
+        Name = 'occ'
+        DataType = ftFloat
+      end
+      item
+        Name = 'adr'
+        DataType = ftFloat
+      end
+      item
+        Name = 'revPar'
+        DataType = ftFloat
+      end
+      item
+        Name = 'currency'
+        DataType = ftWideString
+        Size = 10
       end
       item
         Name = 'totalDiscount'
@@ -864,27 +957,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DataType = ftFloat
       end
       item
-        Name = 'checkedInToday'
-        DataType = ftInteger
-      end
-      item
-        Name = 'arrivingRooms'
-        DataType = ftInteger
-      end
-      item
-        Name = 'noShow'
-        DataType = ftInteger
-      end
-      item
-        Name = 'departingRooms'
-        DataType = ftInteger
-      end
-      item
-        Name = 'departedRooms'
-        DataType = ftInteger
-      end
-      item
-        Name = 'occupiedRooms'
+        Name = 'totalGuests'
         DataType = ftInteger
       end
       item
@@ -892,32 +965,47 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DataType = ftInteger
       end
       item
-        Name = 'localCurrency'
-        DataType = ftWideString
-        Size = 10
-      end
-      item
-        Name = 'totalGuests'
+        Name = 'oooRooms'
         DataType = ftInteger
       end
       item
-        Name = 'ooo'
-        DataType = ftFloat
+        Name = 'soldRooms'
+        DataType = ftInteger
       end
       item
-        Name = 'occ'
-        DataType = ftFloat
+        Name = 'inHouse'
+        DataType = ftInteger
       end
       item
-        Name = 'adr'
-        DataType = ftFloat
+        Name = 'checkedInToday'
+        DataType = ftInteger
       end
       item
-        Name = 'revPar'
-        DataType = ftFloat
+        Name = 'remainingArrivals'
+        DataType = ftInteger
       end
       item
-        Name = 'oooRooms'
+        Name = 'noShow'
+        DataType = ftInteger
+      end
+      item
+        Name = 'remainingDepartures'
+        DataType = ftInteger
+      end
+      item
+        Name = 'departedRooms'
+        DataType = ftInteger
+      end
+      item
+        Name = 'expectedArrivals'
+        DataType = ftInteger
+      end
+      item
+        Name = 'arrivedRooms'
+        DataType = ftInteger
+      end
+      item
+        Name = 'expectedDepartures'
         DataType = ftInteger
       end>
     IndexDefs = <>
@@ -955,17 +1043,17 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField2: TppField
       Alignment = taRightJustify
-      FieldAlias = 'soldRooms'
-      FieldName = 'soldRooms'
+      FieldAlias = 'revenue'
+      FieldName = 'revenue'
       FieldLength = 0
-      DataType = dtInteger
+      DataType = dtDouble
       DisplayWidth = 10
       Position = 1
     end
     object plStatsppField3: TppField
       Alignment = taRightJustify
-      FieldAlias = 'revenue'
-      FieldName = 'revenue'
+      FieldAlias = 'occ'
+      FieldName = 'occ'
       FieldLength = 0
       DataType = dtDouble
       DisplayWidth = 10
@@ -973,8 +1061,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField4: TppField
       Alignment = taRightJustify
-      FieldAlias = 'totalDiscount'
-      FieldName = 'totalDiscount'
+      FieldAlias = 'adr'
+      FieldName = 'adr'
       FieldLength = 0
       DataType = dtDouble
       DisplayWidth = 10
@@ -982,26 +1070,24 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField5: TppField
       Alignment = taRightJustify
-      FieldAlias = 'maxRate'
-      FieldName = 'maxRate'
+      FieldAlias = 'revPar'
+      FieldName = 'revPar'
       FieldLength = 0
       DataType = dtDouble
       DisplayWidth = 10
       Position = 4
     end
     object plStatsppField6: TppField
-      Alignment = taRightJustify
-      FieldAlias = 'minRate'
-      FieldName = 'minRate'
-      FieldLength = 0
-      DataType = dtDouble
+      FieldAlias = 'currency'
+      FieldName = 'currency'
+      FieldLength = 10
       DisplayWidth = 10
       Position = 5
     end
     object plStatsppField7: TppField
       Alignment = taRightJustify
-      FieldAlias = 'averageRate'
-      FieldName = 'averageRate'
+      FieldAlias = 'totalDiscount'
+      FieldName = 'totalDiscount'
       FieldLength = 0
       DataType = dtDouble
       DisplayWidth = 10
@@ -1009,35 +1095,35 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField8: TppField
       Alignment = taRightJustify
-      FieldAlias = 'checkedInToday'
-      FieldName = 'checkedInToday'
+      FieldAlias = 'maxRate'
+      FieldName = 'maxRate'
       FieldLength = 0
-      DataType = dtInteger
+      DataType = dtDouble
       DisplayWidth = 10
       Position = 7
     end
     object plStatsppField9: TppField
       Alignment = taRightJustify
-      FieldAlias = 'arrivingRooms'
-      FieldName = 'arrivingRooms'
+      FieldAlias = 'minRate'
+      FieldName = 'minRate'
       FieldLength = 0
-      DataType = dtInteger
+      DataType = dtDouble
       DisplayWidth = 10
       Position = 8
     end
     object plStatsppField10: TppField
       Alignment = taRightJustify
-      FieldAlias = 'noShow'
-      FieldName = 'noShow'
+      FieldAlias = 'averageRate'
+      FieldName = 'averageRate'
       FieldLength = 0
-      DataType = dtInteger
+      DataType = dtDouble
       DisplayWidth = 10
       Position = 9
     end
     object plStatsppField11: TppField
       Alignment = taRightJustify
-      FieldAlias = 'departingRooms'
-      FieldName = 'departingRooms'
+      FieldAlias = 'totalGuests'
+      FieldName = 'totalGuests'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1045,8 +1131,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField12: TppField
       Alignment = taRightJustify
-      FieldAlias = 'departedRooms'
-      FieldName = 'departedRooms'
+      FieldAlias = 'totalRooms'
+      FieldName = 'totalRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1054,8 +1140,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField13: TppField
       Alignment = taRightJustify
-      FieldAlias = 'occupiedRooms'
-      FieldName = 'occupiedRooms'
+      FieldAlias = 'oooRooms'
+      FieldName = 'oooRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1063,24 +1149,26 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField14: TppField
       Alignment = taRightJustify
-      FieldAlias = 'totalRooms'
-      FieldName = 'totalRooms'
+      FieldAlias = 'soldRooms'
+      FieldName = 'soldRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
       Position = 13
     end
     object plStatsppField15: TppField
-      FieldAlias = 'localCurrency'
-      FieldName = 'localCurrency'
-      FieldLength = 10
+      Alignment = taRightJustify
+      FieldAlias = 'inHouse'
+      FieldName = 'inHouse'
+      FieldLength = 0
+      DataType = dtInteger
       DisplayWidth = 10
       Position = 14
     end
     object plStatsppField16: TppField
       Alignment = taRightJustify
-      FieldAlias = 'totalGuests'
-      FieldName = 'totalGuests'
+      FieldAlias = 'checkedInToday'
+      FieldName = 'checkedInToday'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1088,39 +1176,66 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField17: TppField
       Alignment = taRightJustify
-      FieldAlias = 'ooo'
-      FieldName = 'ooo'
+      FieldAlias = 'remainingArrivals'
+      FieldName = 'remainingArrivals'
       FieldLength = 0
-      DataType = dtDouble
+      DataType = dtInteger
       DisplayWidth = 10
       Position = 16
     end
     object plStatsppField18: TppField
       Alignment = taRightJustify
-      FieldAlias = 'occ'
-      FieldName = 'occ'
+      FieldAlias = 'noShow'
+      FieldName = 'noShow'
       FieldLength = 0
-      DataType = dtDouble
+      DataType = dtInteger
       DisplayWidth = 10
       Position = 17
     end
     object plStatsppField19: TppField
       Alignment = taRightJustify
-      FieldAlias = 'adr'
-      FieldName = 'adr'
+      FieldAlias = 'remainingDepartures'
+      FieldName = 'remainingDepartures'
       FieldLength = 0
-      DataType = dtDouble
+      DataType = dtInteger
       DisplayWidth = 10
       Position = 18
     end
     object plStatsppField20: TppField
       Alignment = taRightJustify
-      FieldAlias = 'revPar'
-      FieldName = 'revPar'
+      FieldAlias = 'departedRooms'
+      FieldName = 'departedRooms'
       FieldLength = 0
-      DataType = dtDouble
+      DataType = dtInteger
       DisplayWidth = 10
       Position = 19
+    end
+    object plStatsppField21: TppField
+      Alignment = taRightJustify
+      FieldAlias = 'expectedArrivals'
+      FieldName = 'expectedArrivals'
+      FieldLength = 0
+      DataType = dtInteger
+      DisplayWidth = 10
+      Position = 20
+    end
+    object plStatsppField22: TppField
+      Alignment = taRightJustify
+      FieldAlias = 'arrivedRooms'
+      FieldName = 'arrivedRooms'
+      FieldLength = 0
+      DataType = dtInteger
+      DisplayWidth = 10
+      Position = 21
+    end
+    object plStatsppField23: TppField
+      Alignment = taRightJustify
+      FieldAlias = 'expectedDepartures'
+      FieldName = 'expectedDepartures'
+      FieldLength = 0
+      DataType = dtInteger
+      DisplayWidth = 10
+      Position = 22
     end
   end
   object rptStats: TppReport
