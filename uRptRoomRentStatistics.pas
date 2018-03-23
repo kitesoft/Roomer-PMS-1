@@ -54,7 +54,8 @@ uses
   dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinValentine,
   dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, ppDB, ppDBPipe, ppParameter, ppDesignLayer, ppVar, ppBands,
-  ppCtrls, ppPrnabl, ppClass, ppCache, ppComm, ppRelatv, ppProd, ppReport
+  ppCtrls, ppPrnabl, ppClass, ppCache, ppComm, ppRelatv, ppProd, ppReport, cxCalendar, sListBox, sCheckListBox,
+  cxTextEdit
 
   ;
 
@@ -84,22 +85,20 @@ type
     tvStatssoldRooms: TcxGridDBBandedColumn;
     tvStatsrevenue: TcxGridDBBandedColumn;
     tvStatstotalDiscount: TcxGridDBBandedColumn;
-    tvStatsmaxRate: TcxGridDBBandedColumn;
-    tvStatsminRate: TcxGridDBBandedColumn;
-    tvStatsaverageRate: TcxGridDBBandedColumn;
+    tvStatsHighestRate: TcxGridDBBandedColumn;
+    tvStatsLowestRate: TcxGridDBBandedColumn;
     tvStatscheckedInToday: TcxGridDBBandedColumn;
-    tvStatsarrivingRooms: TcxGridDBBandedColumn;
+    tvStatsremainingArrivals: TcxGridDBBandedColumn;
     tvStatsnoShow: TcxGridDBBandedColumn;
-    tvStatsdepartingRooms: TcxGridDBBandedColumn;
+    tvStatsRemainingDepartures: TcxGridDBBandedColumn;
     tvStatsdepartedRooms: TcxGridDBBandedColumn;
-    tvStatsoccupiedRooms: TcxGridDBBandedColumn;
-    tvStatstotalRooms: TcxGridDBBandedColumn;
+    tvStatsInHouse: TcxGridDBBandedColumn;
+    tvStatsTotalSellableRooms: TcxGridDBBandedColumn;
     tvStatslocalCurrency: TcxGridDBBandedColumn;
     tvStatstotalGuests: TcxGridDBBandedColumn;
-    tvStatsocc: TcxGridDBBandedColumn;
+    tvStatsOccupancy: TcxGridDBBandedColumn;
     tvStatsadr: TcxGridDBBandedColumn;
     tvStatsrevPar: TcxGridDBBandedColumn;
-    chkCompareLasYear: TsCheckBox;
     pageCharts: TsPageControl;
     tabOcc: TsTabSheet;
     sPanel2: TsPanel;
@@ -113,7 +112,6 @@ type
     plStats: TppDBPipeline;
     rptStats: TppReport;
     ppHeaderBand1: TppHeaderBand;
-    ppLine1: TppLine;
     ppLabel4: TppLabel;
     ppLabel5: TppLabel;
     rlabFrom: TppLabel;
@@ -135,25 +133,21 @@ type
     ppLabel1: TppLabel;
     ppDBText1: TppDBText;
     ppLabel2: TppLabel;
-    ppDBText2: TppDBText;
+    redtRevenue: TppDBText;
     ppLabel3: TppLabel;
     ppDBText3: TppDBText;
     ppLabel7: TppLabel;
-    ppDBText4: TppDBText;
+    redtADR: TppDBText;
     ppLabel9: TppLabel;
-    ppDBText5: TppDBText;
+    redtRevPar: TppDBText;
     ppLine3: TppLine;
     ppLine4: TppLine;
-    ppLabel10: TppLabel;
-    ppDBText6: TppDBText;
     ppLabel11: TppLabel;
-    ppDBText7: TppDBText;
+    redtDiscount: TppDBText;
     ppLabel12: TppLabel;
-    ppDBText8: TppDBText;
+    redtMaxRate: TppDBText;
     ppLabel13: TppLabel;
-    ppDBText9: TppDBText;
-    ppLabel14: TppLabel;
-    ppDBText10: TppDBText;
+    redtMinRate: TppDBText;
     ppLabel15: TppLabel;
     ppDBText11: TppDBText;
     ppLine5: TppLine;
@@ -178,14 +172,10 @@ type
     ppSummaryBand1: TppSummaryBand;
     ppLine7: TppLine;
     ppDBCalc1: TppDBCalc;
-    ppDBCalc2: TppDBCalc;
-    ppDBCalc3: TppDBCalc;
-    ppDBCalc4: TppDBCalc;
-    ppDBCalc5: TppDBCalc;
-    ppDBCalc6: TppDBCalc;
-    ppDBCalc7: TppDBCalc;
-    ppDBCalc8: TppDBCalc;
-    ppDBCalc9: TppDBCalc;
+    edtRevTotal: TppDBCalc;
+    redtDiscountTotal: TppDBCalc;
+    redtMaxrateMax: TppDBCalc;
+    redtMinRateMin: TppDBCalc;
     ppDBCalc10: TppDBCalc;
     ppDBCalc12: TppDBCalc;
     ppDBCalc13: TppDBCalc;
@@ -194,29 +184,58 @@ type
     ppDBCalc16: TppDBCalc;
     ppDBCalc17: TppDBCalc;
     tvStatsooo: TcxGridDBBandedColumn;
+    tvStatsWeekday: TcxGridDBBandedColumn;
+    tvStatsExpectedDepartures: TcxGridDBBandedColumn;
+    tvStatsArrivedRooms: TcxGridDBBandedColumn;
+    tvStatsExpectedArrivals: TcxGridDBBandedColumn;
+    gbxIncludedStates: TsGroupBox;
+    clbIncludedStates: TsCheckListBox;
+    rLabCurrency: TppLabel;
+    rLabCurrencyCode: TppLabel;
+    redtFullDate: TppDBText;
+    ppLabel10: TppLabel;
+    ppDBText2: TppDBText;
+    ppLine1: TppLine;
+    ppLabel26: TppLabel;
+    ppDBText4: TppDBText;
+    ppLabel27: TppLabel;
+    ppDBText5: TppDBText;
+    ppLabel28: TppLabel;
+    ppDBText6: TppDBText;
+    ppDBCalc11: TppDBCalc;
+    ppDBCalc18: TppDBCalc;
+    ppDBCalc19: TppDBCalc;
+    ppDBCalc20: TppDBCalc;
+    ppDBCalc2: TppDBCalc;
+    redtOccSummary: TppLabel;
+    redtADRSummary: TppLabel;
+    redtRevParSummary: TppLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure dtDateFromChange(Sender: TObject);
-    procedure cbxMonthCloseUp(Sender: TObject);
+    procedure cbxMonthChange(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnGuestsExcelClick(Sender: TObject);
-    procedure tvStatsrevenueGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+    procedure tvStatsGetDefaultCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure sButton2Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnReportClick(Sender: TObject);
+    procedure tvStatsHideZeroValues(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure ppHeaderBand1BeforePrint(Sender: TObject);
+    procedure tvStatsrevenueGetCellHint(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      ACellViewInfo: TcxGridTableDataCellViewInfo; const AMousePos: TPoint; var AHintText: TCaption;
+      var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
+    procedure tvStatsDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
+    procedure rptStatsBeforePrint(Sender: TObject);
   private
     { Private declarations }
 
-    zDateFrom : Tdate;
-    zDateTo   : Tdate;
-    zYear     : integer;
-    zMonth    : integer;
     zSetDates : boolean;
-
-
-    procedure ShowData;
+    function GetSummaryValueOrZero(aColumn: TcxGridDBBandedColumn): variant;
+    procedure SetSummaryValue(aColumn: TcxGridDBBandedColumn; aValue: Variant);
+    function GetSummaryText(aColumn: TcxGridDBBandedColumn): string;
   public
     { Public declarations }
   end;
@@ -233,7 +252,21 @@ uses
   uDimages,
   uRoomerDefinitions,
   uReservationStateDefinitions,
-  uRptbViewer, uSQLUtils;
+  uRptbViewer
+  , uSQLUtils
+  , uHotelStatisticsAPI
+  , uHotelStatistics
+  , uRoomerCurrencymanager
+  , uDateTimeHelper
+  , DateUtils
+  ;
+
+const
+  cSelectableReservationStates : TReservationStateSet = [TReservationState.rsReservation, TReservationState.rsGuests, TReservationState.rsDeparted,
+                                                         TReservationState.rsAllotment, TReservationState.rsBlocked, TReservationState.rsNoShow,
+                                                         TReservationState.rsOptionalBooking, TReservationState.rsWaitingList];
+
+  cDisabledReservationStates  : TReservationStateSet = [TReservationState.rsReservation, TReservationState.rsGuests, TReservationState.rsDeparted];
 
 function ShowRoomRentStatistics : boolean;
 var
@@ -247,31 +280,99 @@ begin
   end;
 end;
 
-procedure TfrmRptRoomRentStatistics.ShowData;
+
+function TfrmRptRoomRentStatistics.GetSummaryValueOrZero(aColumn: TcxGridDBBandedColumn): variant;
 var
-  y, m, d : word;
-  lastDay : integer;
+  idx: integer;
 begin
-  decodeDate(now, y, m, d);
-  zYear := y;
-  zMonth := m;
-  cbxMonth.ItemIndex := zMonth;
+  with tvStats.Datacontroller.Summary do
+  begin
+    idx := FooterSummaryItems.IndexOfItemLink(aColumn);
+    if (idx < 0) or VarIsNull(FooterSummaryValues[idx]) then
+      Result := 0
+    else
+      result := FooterSummaryValues[idx];
+  end;
+end;
 
-  cbxYear.ItemIndex := cbxYear.Items.IndexOf(inttostr(zYear));
+function TfrmRptRoomRentStatistics.GetSummaryText(aColumn: TcxGridDBBandedColumn): string;
+var
+  idx: integer;
+begin
+  with tvStats.Datacontroller.Summary do
+  begin
+    idx := FooterSummaryItems.IndexOfItemLink(aColumn);
+    if (idx < 0)  then
+      Result := ''
+    else
+      Result := FooterSummaryTexts[idx];
+  end;
+end;
 
-  zDateFrom := encodeDate(y, m, 1);
-  lastDay := DaysInMonth(y, m);
-  zDateTo := encodeDate(y, m, lastDay);
-  dtDateFrom.Date := zDateFrom;
-  dtDateTo.Date := zDateTo;
-  zSetDates := true;
+procedure TfrmRptRoomRentStatistics.SetSummaryValue(aColumn: TcxGridDBBandedColumn; aValue: Variant);
+var
+  idx: integer;
+begin
+  with tvStats.Datacontroller.Summary do
+  begin
+    idx := FooterSummaryItems.IndexOfItemLink(aColumn);
+    if (idx < 0) or VarIsNull(aValue) then
+      FooterSummaryValues[idx] := 0
+    else
+      FooterSummaryValues[idx] := aValue;
+  end;
 end;
 
 
-procedure TfrmRptRoomRentStatistics.tvStatsrevenueGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+procedure TfrmRptRoomRentStatistics.tvStatsDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
+var
+  lSoldRooms: integer;
+  lSellableRooms: integer;
+  lRevenue: double;
+
+begin
+
+  lRevenue :=  GetSummaryValueOrZero(tvStatsrevenue);
+  lSellableRooms := GetSummaryValueOrZero(tvStatsTotalSellableRooms);
+  lSoldRooms := GetSummaryValueOrZero(tvStatssoldRooms);
+
+  if lSellableRooms <> 0 then
+  begin
+    SetSummaryValue(tvStatsOccupancy, 100 * lSoldRooms / lSellableRooms);
+    SetSummaryValue(tvStatsrevPar, lRevenue / lSellableRooms);
+  end
+  else
+  begin
+    SetSummaryValue(tvStatsOccupancy, 0);
+    SetSummaryValue(tvStatsrevPar, 0);
+  end;
+
+  // ADR
+  if lSoldRooms <> 0 then
+    SetSummaryValue(tvStatsadr, lRevenue / lSoldRooms)
+  else
+    SetSummaryValue(tvStatsadr, 0);
+
+end;
+
+procedure TfrmRptRoomRentStatistics.tvStatsGetDefaultCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  AProperties := d.getCurrencyProperties(g.qNativeCurrency);
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
+end;
+
+procedure TfrmRptRoomRentStatistics.tvStatsHideZeroValues(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  if aRecord.Values[Sender.Index] = 0 then
+    aText := '';
+end;
+
+procedure TfrmRptRoomRentStatistics.tvStatsrevenueGetCellHint(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; ACellViewInfo: TcxGridTableDataCellViewInfo; const AMousePos: TPoint;
+  var AHintText: TCaption; var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
+begin
+//
 end;
 
 procedure TfrmRptRoomRentStatistics.btnGuestsExcelClick(Sender: TObject);
@@ -287,176 +388,71 @@ end;
 
 procedure TfrmRptRoomRentStatistics.btnRefreshClick(Sender: TObject);
 var
-  s    : string;
-  rset1: TRoomerDataset;
-  ExecutionPlan : TRoomerExecutionPlan;
-
+  lAPICaller: THotelStatisticsMobileAPICaller;
+  lStatistics: THotelStatisticsList;
+  lStat: TSingleDateStatistics;
+  lExcludedReservationStates: TReservationStateSet;
+  i: integer;
 begin
-  ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+
+  kbmStat.DisableControls;
+  lAPICaller := THotelStatisticsMobileAPICaller.Create;
+  lStatistics := THotelStatisticsList.Create;
   try
-
-  s := 'SELECT id, pd.date '#10+
-       '  , DATE(IFNULL(ADate, pd.date)) AS ADate '#10+
-       '  , soldRooms as soldRooms '#10+
-       '  , revenue '#10+
-       '  , occ '#10+
-       '  , adr '#10+
-       '  , revPar '#10+
-       '  , totalDiscount '#10+
-       '  , maxRate '#10+
-       '  , minRate '#10+
-       '  , averageRate '#10 +
-       '  , checkedInToday '#10+
-       '  , arrivingRooms '#10+
-       '  , noShow '#10+
-       '  , departingRooms '#10+
-       '  , departedRooms '#10+
-       '  , occupiedRooms '#10+
-       '  , totalRooms - OOORooms as totalRooms '#10+
-       '  , OOORooms '#10+
-       '  , totalGuests, '#10 +
-       '  (SELECT NativeCurrency FROM control LIMIT 1) AS localCurrency '#10 +
-       'FROM predefineddates pd '#10 +
-       'LEFT OUTER JOIN '#10 +
-       ' ( '#10 +
-       '	 SELECT baseData1.*, '#10 +
-       '     CASE WHEN (totalrooms - OOORooms) <> 0 '#10 +
-       '			 THEN soldRooms/(totalRooms - OOORooms)*100 '#10 +
-       '       ELSE 0 '#10 +
-       '     END AS occ, '#10 +
-       '			revenue/soldRooms AS adr, '#10 +
-       '     CASE WHEN (totalrooms - OOORooms) <> 0 '#10 +
-       '			 THEN revenue/(totalRooms - OOORooms) '#10+
-       '       ELSE 0 '#10+
-       '     END as RevPar '#10 +
-       ' '#10 +
-       '	 FROM ( '#10 +
-       '		 SELECT DATE(pdd.date) AS ADate, '#10 +
-       '				COUNT(rd.id) AS soldRooms, '#10 +
-       '				SUM(IF(rd.Discount > 0, RoomRate - IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), RoomRate) * IFNULL(ih.ihCurrencyRate, curr.AValue)) AS Revenue, '#10 +
-       '				SUM(IF(rd.Discount > 0, IF(isPercentage, RoomRate * rd.Discount / 100, rd.Discount), 0) * IFNULL(ih.ihCurrencyRate, curr.AValue)) as TotalDiscount, '#10 +
-       '				MAX(RoomRate * curr.AValue) AS maxRate, '#10 +
-       '				MIN(RoomRate * curr.AValue) AS minRate, '#10 +
-       '				AVG(RoomRate * curr.AValue) AS averageRate, '#10 +
-       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '				  LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '				  WHERE rd.adate=pdd.date AND rd.ResFlag=''G'' and RR_Arrival(rd.roomreservation, false)=pdd.date '#10 +
-       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS checkedInToday, '#10+
-       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '				  LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '				  WHERE rd.adate=pdd.date AND rd.ResFlag=''P'' and RR_Arrival(rd.roomreservation, false)=pdd.date '#10 +
-       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS arrivingRooms, '#10+
-       '        (SELECT count(rd.id) from roomsdate rd '#10+
-       '					 LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '           WHERE rd.aDate = pdd.date and rd.ResFlag = ''N'' '#10+
-       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) as NoShow, '#10+
-       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '					LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''G''and RR_Departure(rd.roomreservation, false) = pdd.date '#10 +
-       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS departingRooms, '#10+
-       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '					LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''D''and RR_Departure(rd.roomreservation, false) = pdd.date '#10 +
-       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS departedRooms, '#10+
-       '				(SELECT COUNT(rd2.id) FROM roomsdate rd2 '#10 +
-       '					LEFT JOIN rooms r on r.room=rd2.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '					WHERE ADate=pdd.date AND ResFlag=''G'' '#10 +
-       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) AS occupiedRooms, '#10+
-       '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 +
-       '				SUM((SELECT COUNT(id) FROM persons WHERE RoomReservation=rd.RoomReservation)) AS totalGuests, '#10 +
-       '				(SELECT COUNT(rd2.room) '#10 +
-       '				  FROM roomsdate rd2 '#10 +
-       '				  LEFT JOIN rooms rm2 on rm2.room = rd2.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden '#10 +
-       '				  JOIN reservations r on r.reservation = rd2.reservation and r.outOfOrderBlocking '#10 +
-       '				  where rd2.aDate = rd.aDate'#10 +
-       '               AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or rm2.room is not null) '#10+
-       '				 ) AS OOORooms '#10 +
-       '		 FROM predefineddates pdd '#10 +
-       '		 JOIN roomsdate rd on pdd.date=rd.ADate AND (NOT rd.ResFlag IN (''X'',''C'',''O'')) '#10 +
-       '		 LEFT JOIN rooms rm on rm.room = rd.room AND rm.active AND rm.statistics AND NOT rm.hidden and rm.wildcard=0  '#10 +
-        '    LEFT JOIN (SELECT RoomReservation, InvoiceNumber, ihCurrency, ihCurrencyRate FROM invoiceheads ih WHERE ih.InvoiceNumber > 0) ih ON ih.InvoiceNumber=rd.InvoiceNumber '#10+
-       '		 JOIN reservations r on r.Reservation=rd.Reservation AND r.outOfOrderBlocking=0 '#10 +
-       '     JOIN control c '#10 +
-       '		 JOIN currencies curr on curr.Currency=rd.Currency '#10 +
-       '		 WHERE '#10 +
-       '				((pdd.date>=%s AND pdd.date<=%s)) '#10 +
-       '		    AND (SUBSTR(rd.room, 1, 1) = ''<'' OR rm.room is not null) '#10 +
-       '		 GROUP BY pdd.date '#10 +
-       '		 ORDER BY pdd.date '#10 +
-       '		 ) baseData1 '#10 +
-       '	UNION '#10 +
-       '	 SELECT baseData2.*, '#10 +
-       '			CAST(0.00 AS DECIMAL) AS occ, '#10 +
-       '			CAST(0.00 AS DECIMAL) AS adr, '#10 +
-       '			CAST(0.00 AS DECIMAL) AS revPar '#10 +
-       '	 FROM ( '#10 +
-       '		 SELECT DATE(pdd.date) AS ADate, '#10 +
-       '				CAST(0 AS SIGNED) AS soldRooms, '#10 +
-       '				CAST(0.00 AS DECIMAL) AS revenue, '#10 +
-       '				CAST(0.00 AS DECIMAL) AS totalDiscount, '#10 +
-       '				CAST(0.00 AS DECIMAL) AS maxRate, '#10 +
-       '				CAST(0.00 AS DECIMAL) AS minRate, '#10 +
-       '				CAST(0.00 AS DECIMAL) AS averageRate, '#10 +
-       '				CAST(0 AS SIGNED) AS checkedInToday, '#10 +
-       '				CAST(0 AS SIGNED) AS arrivingRooms, '#10 +
-       '        (SELECT count(rd.id) from roomsdate rd '#10+
-       '					 LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '           WHERE rd.aDate = pdd.date and rd.ResFlag = ''N'' '#10+
-       '                AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or r.room is not null)) as NoShow, '#10+
-       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '					LEFT JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''G''and RR_Departure(rd.roomreservation, false) = pdd.date '#10+
-       '                AND (SUBSTR(rd.room, 1, 1) = ''<'' OR r.room is not null)) AS departingRooms, '#10 +
-       '				(SELECT COUNT(rd.id) FROM roomsdate rd '#10 +
-       '					JOIN rooms r on r.room=rd.room and r.wildcard=0 and r.active=1 and statistics=1 and hidden=0 '#10 +
-       '          WHERE rd.aDate = DATE_ADD(pdd.date, INTERVAL -1 DAY) AND rd.ResFlag=''D''and RR_Departure(rd.roomreservation, false) = pdd.date '#10+
-       '                AND (SUBSTR(rd.room, 1, 1) = ''<'' OR r.room is not null)) AS departedRooms, '#10 +
-       '				CAST(0 AS SIGNED) AS occupiedRooms, '#10 +
-       '				(SELECT COUNT(id) FROM rooms WHERE hidden=0 AND Active=1 AND Statistics=1 AND wildCard=0) AS totalRooms, '#10 +
-       '				CAST(0 AS SIGNED) AS totalGuests, '#10 +
-       '				CAST(0 AS SIGNED) AS oooRooms '#10 +
-       '		 FROM predefineddates pdd '#10 +
-       '		 WHERE '#10 +
-       '				((pdd.date>=%s AND pdd.date<=%s)) '#10 +
-       '		 AND ISNULL((SELECT id FROM roomsdate WHERE ADate=pdd.date AND NOT(ResFlag IN (''X'',''C'')) LIMIT 1)) '#10 +
-       '		 GROUP BY pdd.date '#10 +
-       '		 ORDER BY pdd.date '#10 +
-       '		 ) baseData2 '#10 +
-       '	) AllData '#10 +
-       ' on DATE(pd.date) = AllData.aDate '#10 +
-       ' WHERE '#10 +
-       '	((pd.date>=%s AND pd.date<=%s)) '#10 +
-       ' ORDER BY date ';
-
-    s := format(s, [_db(zDateFrom,true), _db(zDateTo,true),
-                    _db(zDateFrom,true), _db(zDateTo,true),
-                    _db(zDateFrom,true), _db(zDateTo,true)]);
-    ExecutionPlan.AddQuery(s);
-    CopyToClipboard(s);
-    //////////////////// Execute!
-
-
     screen.Cursor := crHourGlass;
-    kbmStat.DisableControls;
-    try
-      ExecutionPlan.Execute(ptQuery);
 
-      //////////////////// RoomsDate
-      rSet1 := ExecutionPlan.Results[0];
+    kbmStat.Close;
+    kbmStat.Open;
 
-      if kbmStat.Active then kbmStat.Close;
-      kbmStat.open;
-      LoadKbmMemtableFromDataSetQuiet(kbmStat,rSet1,[]);
-      kbmStat.First;
+    lExcludedReservationStates := cAllReservationStatesSet;
+    for i:= 0 to clbIncludedStates.Items.Count-1 do
+      if clbIncludedStates.Checked[i] then
+        Exclude(lExcludedReservationStates, TReservationState(Integer(clbIncludedStates.Items.Objects[i])));
 
-    finally
-      screen.cursor := crDefault;
-      kbmStat.EnableControls;
+    lAPICaller.GetRoomRentStatistics(dtDateFrom.Date, dtDateTo.Date, lExcludedReservationStates, lStatistics);
+
+    for lStat in lStatistics.StatisticsPerDateList do
+    begin
+      kbmStat.Append;
+      try
+        kbmStat.FieldByName('ADate').AsDateTime := lStat.Date;
+        kbmStat.FieldByName('revenue').asFloat := lStat.Statistic['REVENUE'].Value;
+        kbmStat.FieldByName('occ').asFloat := lStat.Statistic['OCCUPANCY'].Value;
+        kbmStat.FieldByName('adr').asFloat := lStat.Statistic['ADR'].Value;
+        kbmStat.FieldByName('revPar').asFloat := lStat.Statistic['REVPAR'].Value;
+        kbmStat.FieldByName('currency').asString := RoomerCurrencyManager.DefaultCurrency;
+        kbmStat.FieldByName('totalDiscount').asFloat := lStat.Statistic['DISCOUNT'].Value;
+        kbmStat.FieldByName('maxRate').asFloat := lStat.Statistic['MAXRATE'].Value;
+        kbmStat.FieldByName('minRate').asFloat := lStat.Statistic['MINRATE'].Value;
+        kbmStat.FieldByName('totalGuests').AsInteger := trunc(lStat.Statistic['GUESTCOUNT'].Value);
+        kbmStat.FieldByName('totalSellableRooms').AsInteger := trunc(lStat.Statistic['TOTAL_SELLABLE_ROOMS'].Value);
+        kbmStat.FieldByName('oooROoms').AsInteger := trunc(lStat.Statistic['OOOROOMS'].Value);
+        kbmStat.FieldByName('soldRooms').AsInteger := trunc(lStat.Statistic['ROOMS_SOLD'].Value);
+        kbmStat.FieldByName('inHouse').AsInteger := trunc(lStat.Statistic['IN_HOUSE'].Value);
+        kbmStat.FieldByName('checkedInToday').AsInteger := trunc(lStat.Statistic['CHECKED_IN_TODAY'].Value);
+        kbmStat.FieldByName('remainingArrivals').AsInteger := trunc(lStat.Statistic['REMAINING_ARRIVALS'].Value);
+        kbmStat.FieldByName('noShow').AsInteger := trunc(lStat.Statistic['NOSHOWS'].Value);
+        kbmStat.FieldByName('remainingDepartures').AsInteger := trunc(lStat.Statistic['REMAINING_DEPARTURES'].Value);
+        kbmStat.FieldByName('departedRooms').AsInteger := trunc(lStat.Statistic['DEPARTED_ROOMS'].Value);
+        kbmStat.FieldByName('expectedArrivals').AsInteger := trunc(lStat.Statistic['EXPECTED_ARRIVALS'].Value);
+        kbmStat.FieldByName('arrivedRooms').AsInteger := trunc(lStat.Statistic['ARRIVED_ROOMS'].Value);
+        kbmStat.FieldByName('expectedDepartures').AsInteger := trunc(lStat.Statistic['EXPECTED_DEPARTURES'].Value);
+
+        kbmStat.Post;
+      except
+        kbmStat.Cancel;
+        raise;
+      end;
+
     end;
-  finally
-    ExecutionPlan.Free;
-  end;
+    kbmStat.First;
 
+  finally
+    lAPICaller.Free;
+    lStatistics.Free;
+    Screen.Cursor := crDefault;
+    kbmStat.EnableControls;
+  end;
 
 
 end;
@@ -487,52 +483,42 @@ begin
   end;
 end;
 
-procedure TfrmRptRoomRentStatistics.cbxMonthCloseUp(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.cbxMonthChange(Sender: TObject);
 var
   y, m : word;
-  lastDay : integer;
-
 begin
-  if cbxYear.ItemIndex < 1 then
+  if cbxYear.ItemIndex < 0 then
     exit;
-  if cbxMonth.ItemIndex < 1 then
+  if cbxMonth.ItemIndex < 0 then
     exit;
   zSetDates := false;
-  y := StrToInt(cbxYear.Items[cbxYear.ItemIndex]);
-//  y := cbxYear.ItemIndex + 2010;
-  m := cbxMonth.ItemIndex;
+  try
+    y := StrToInt(cbxYear.Items[cbxYear.ItemIndex]);
+    m := cbxMonth.ItemIndex+1;
 
-  zDateFrom := encodeDate(y, m, 1);
-  lastDay := DaysInMonth(y, m);
-  zDateTo := encodeDate(y, m, lastDay);
-  dtDateFrom.Date := zDateFrom;
-  dtDateTo.Date := zDateTo;
-  zSetDates := true;
+    dtDateFrom.Date := encodeDate(y, m, 1);
+    dtDateTo.Date := dtDateFrom.Date.EndOfMonth;
+  finally
+    zSetDates := true;
+  end;
+
 end;
 
 procedure TfrmRptRoomRentStatistics.dtDateFromChange(Sender: TObject);
 begin
   if zSetDates then
   begin
-    zDateFrom := dtDateFrom.Date;
-    zDateTo := dtDateTo.Date;
-
-    cbxYear.ItemIndex := 0;
-    cbxMonth.ItemIndex := 0;
+    cbxYear.ItemIndex := -1;
+    cbxMonth.ItemIndex := -1;
   end;
-end;
-
-procedure TfrmRptRoomRentStatistics.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  //**
 end;
 
 procedure TfrmRptRoomRentStatistics.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
-  glb.fillListWithMonthsLong(cbxMonth.Items, 1);
-  glb.fillListWithYears(cbxYear.Items, 1, False);
+  glb.fillListWithMonthsLong(cbxMonth.Items, 0);
+  glb.fillListWithYears(cbxYear.Items, 0, False);
 end;
 
 procedure TfrmRptRoomRentStatistics.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -542,10 +528,67 @@ begin
 end;
 
 procedure TfrmRptRoomRentStatistics.FormShow(Sender: TObject);
+var
+  i: integer;
 begin
-  //**
   _restoreForm(self);
-  showdata;
+
+  cSelectableReservationStates.AsStrings(clbIncludedStates.Items);
+  for i := 0 to clbIncludedStates.Items.Count-1 do
+  begin
+    clbIncludedStates.ItemEnabled[i] := not (TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDisabledReservationStates);
+    clbIncludedStates.Checked[i] := TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDisabledReservationStates;
+  end;
+
+  zSetDates := false;
+  try
+    cbxMonth.ItemIndex := Now.Month -1;
+    cbxYear.ItemIndex := Now.Year - StrToInt(cbxYear.Items[0]);
+    dtDateFrom.Date := Now.StartOfMonth;
+    dtDateTo.Date := Now.EndOfMonth;
+  finally
+    zSetDates := true;
+  end;
+end;
+
+procedure TfrmRptRoomRentStatistics.ppHeaderBand1BeforePrint(Sender : TObject);
+var
+  s : string;
+begin
+  rlabFrom.Caption := FormatDateTime('ddddd', dtDateFrom.Date);
+  rlabTo.Caption := FormatDateTime('ddddd', dtDateTo.Date);
+  rLabHotelName.Caption := g.qHotelName;
+  rLabTimeCreated.Caption := 'Created : ' + FormatDateTime('', now);
+  rLabCurrencyCode.Caption := RoomerCurrencyManager.DefaultCurrency;
+
+  s := 'User : ' + g.qUser;
+  if g.qusername <> '' then
+    s := s + ' - ' + g.qusername;
+  rlabUser.Caption := s;
+
+end;
+
+procedure TfrmRptRoomRentStatistics.rptStatsBeforePrint(Sender: TObject);
+var
+  lFormat: string;
+begin
+  lFormat := RoomerCurrencyManager.DefaultCurrencyDefinition.DisplayFormat(false);
+  redtRevenue.DisplayFormat := lFormat;
+  redtADR.DisplayFormat := lFormat;
+  redtRevPar.DisplayFormat := lFormat;
+  redtDiscount.DisplayFormat := lFormat;
+  redtMaxRate.DisplayFormat := lFormat;
+  redtMinRate.DisplayFormat := lFormat;
+  edtRevTotal.DisplayFormat := lFormat;
+  redtDiscountTotal.DisplayFormat := lFormat;
+  redtMaxrateMax.DisplayFormat := lFormat;
+  redtMinRateMin.DisplayFormat := lFormat;
+
+  redtFullDate.DisplayFormat := FormatSettings.ShortDateFormat;
+
+  redtOccSummary.Text := GetSummaryText(tvStatsOccupancy);
+  redtADRSummary.Text := GetSummaryText(tvStatsadr);
+  redtRevParSummary.Text := GetSummaryText(tvStatsrevPar);
 end;
 
 procedure TfrmRptRoomRentStatistics.sButton2Click(Sender: TObject);

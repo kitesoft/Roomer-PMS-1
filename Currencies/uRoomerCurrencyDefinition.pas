@@ -95,13 +95,12 @@ begin
   with TcxCurrencyEditProperties(aProperties) do
   begin
     DecimalPlaces  := CurrencyFormatSettings.CurrencyDecimals;
-    DisplayFormat  := cxEditPropertiesCurrencyFormat(CurrencyFormatSettings);
+    DisplayFormat  := DisplayCurrencyFormat(CurrencyFormatSettings);
   end;
   if aProperties is TcxCalcEditProperties then
   with TcxCalcEditProperties(aProperties) do
   begin
-//    DecimalPlaces  := CurrencyFormatSettings.CurrencyDecimals;
-    DisplayFormat  := cxEditPropertiesCurrencyFormat(CurrencyFormatSettings);
+    DisplayFormat  := DisplayCurrencyFormat(CurrencyFormatSettings);
   end;
 end;
 

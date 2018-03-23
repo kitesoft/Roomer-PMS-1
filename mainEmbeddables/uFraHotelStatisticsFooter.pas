@@ -43,7 +43,7 @@ uses
   uHotelStatisticsAPI
   , uDateTimeHelper
   , uAppGlobal
-  , uRoomerCurrencymanager;
+  , uRoomerCurrencymanager, uD;
 
 
 {$R *.dfm}
@@ -93,7 +93,8 @@ end;
 
 procedure TfraHotelStatisticsFooter.RefreshStats;
 begin
-  THotelStatisticsMobileAPICallerThreaded.GetHotelStatistics(FDate, FDate.AddDays(1), UpdateControlsFromStats);
+  if d.RoomerMainDataset.LoggedIn then
+    THotelStatisticsMobileAPICallerThreaded.GetHotelStatistics(FDate, FDate.AddDays(1), UpdateControlsFromStats);
 end;
 
 procedure TfraHotelStatisticsFooter.SetBackgroundColor(aColor: TColor);

@@ -7,6 +7,7 @@ uses
   , uMobileAPI
   , uHotelStatistics
   , Classes
+  , uReservationStateDefinitions
   ;
 
 type
@@ -23,6 +24,7 @@ type
     ///   Implementation of /service/hotelstatistics mobile api endpoint, returning a THotelStatisticsList
     /// </summary>
     procedure GetHotelStatistics(aFromDate: TDateTime; aToDate: TDateTime; aStatistics: THotelStatisticsList);
+    procedure GetRoomRentStatistics(aFromDate: TDateTime; aToDate: TDateTime; aExcludedStates: TReservationStateSet; aStatistics: THotelStatisticsList);
   end;
 
 
@@ -35,6 +37,7 @@ type
     ///   Note that the provided List will be destroyed after returning from the call to aOnCompletionHandler
     /// </summary>
     class procedure GetHotelStatistics(aFromDate: TDateTime; aToDate: TDateTime; aOnCompletionHandler: THotelStatisticsNotifyEvent);
+//    class procedure GetRoomRentStatistics(aFromDate: TDateTime; aToDate: TDateTime; aOnCompletionHandler: THotelStatisticsNotifyEvent);
   end;
 
 implementation
@@ -70,6 +73,32 @@ begin
   end;
 end;
 
+
+procedure THotelStatisticsMobileAPICaller.GetRoomRentStatistics(aFromDate, aToDate: TDateTime;
+  aExcludedStates: TReservationStateSet; aStatistics: THotelStatisticsList);
+var
+  lResponse: string;
+  lURI: string;
+const
+  cRoomRentStatsURI = '/roomrent';
+begin
+  Assert(assigned(aStatistics));
+  try
+    lURI := getURI + cRoomRentStatsURI + '/' + dateToSqlString(aFromDate) + '/' + dateToSqlString(aToDate.AddDays(1));
+    if aExcludedStates <> [] then
+      lURI := lURI + '?excludedStates=' + aExcludedStates.asChars;
+
+    lResponse := d.roomerMainDataSet.downloadRoomerUrlAsString(lURI);
+
+    aStatistics.LoadFromXML(lResponse);
+  except
+    on E: Exception do
+    begin
+      aStatistics.Clear;
+      raise EHotelStatisticsAPIException.CreateFmt('Error while retrieving roomrentstatistics [%s]', [E.Message]);
+    end;
+  end;
+end;
 
 function THotelStatisticsMobileAPICaller.getURI: string;
 begin

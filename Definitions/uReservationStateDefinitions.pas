@@ -50,7 +50,10 @@ type
   );
 
     TReservationStateSet = set of TReservationState;
-
+  const
+      cAllReservationStatesSet: TReservationStateSet = [ rsReservation, rsGuests, rsDeparted, rsOptionalBooking, rsAllotment, rsNoShow, rsBlocked, rsCancelled, rsAwaitingPayment,
+                                                             rsAwaitingPayConfirm, rsWaitingList];
+  type
     TReservationStateHelper = record helper for TReservationState
   private
     public
@@ -128,9 +131,18 @@ type
 
     TReservationStateSetHelper = record helper for TReservationStateSet
       /// <summary>
-      ///   Returns a string containing a set definition as used in SQL statements, i.e. ('P, 'C')
+      ///   Returns a string containing a set Reservationstates as used in SQL statements, i.e. ('P, 'C')
       /// </summary>
       function AsSQLString: string;
+      /// <summary>
+      ///   Returns a string containing a set ReservationsStates as a concatination of single charactes, i.e. 'PC'
+      /// </summary>
+      function AsChars: string;
+      /// <summary>
+      ///   Fill a TStrings with translated descriptions in order of enumeration. Can by used to populate a TCombobox.<br />
+      ///  The objects list of aItemList will contain the ord() of the state cast to an TObject
+      /// </summary>
+      procedure AsStrings(aItemList: TStrings);
     end;
 
 const
@@ -457,6 +469,14 @@ end;
 
 { TReservationStateSetHelper }
 
+function TReservationStateSetHelper.AsChars: string;
+var
+  stat: TReservationState;
+begin
+  for stat in Self do
+    Result := Result + stat.AsStatusChar;
+end;
+
 function TReservationStateSetHelper.AsSQLString: string;
 var
   lStr: TStringList;
@@ -471,6 +491,20 @@ begin
     Result := '(' + lStr.DelimitedText +')';
   finally
     lStr.Free;
+  end;
+end;
+
+procedure TReservationStateSetHelper.AsStrings(aItemList: TStrings);
+var
+  s: TReservationState;
+begin
+  aItemList.BeginUpdate;
+  try
+    aItemList.Clear;
+    for s in Self do
+      aItemList.AddObject(s.AsReadableString, TObject(ord(s)));
+  finally
+    aItemList.EndUpdate;
   end;
 end;
 

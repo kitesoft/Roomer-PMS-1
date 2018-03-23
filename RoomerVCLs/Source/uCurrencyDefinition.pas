@@ -68,6 +68,10 @@ type
     ///   Returns a formatted string with the currency description and the exchange rate, used to display active currency in i.e. a labelcaption
     /// </summary>
     function ShortDescription: string; virtual;
+    /// <summary>
+    ///   Returns a DisplayformatString that can be used in grids and reports
+    /// </summary>
+    function DisplayFormat(aInclCurrencySymbol: boolean): string;
   end;
 
   TCurrencyDefinitionClass = class of TCurrencyDefinition;
@@ -94,6 +98,11 @@ constructor TCurrencyDefinition.Create(const aCurrencyCode: string; aCurID: inte
 begin
   Create(aCurrencyCode);
   FId := aCurId;
+end;
+
+function TCurrencyDefinition.DisplayFormat(aInclCurrencySymbol: boolean): string;
+begin
+  Result := DisplayCurrencyFormat(FFormatSettings, aInclCurrencySymbol);
 end;
 
 constructor TCurrencyDefinition.Create(const aCurrencyCode: string);
