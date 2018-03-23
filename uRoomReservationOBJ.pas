@@ -291,49 +291,49 @@ begin
 
       if Assigned(rExtraSet) then
       begin
-        s := 'SELECT ADate, ' +
-             '    Room, ' +
-             '    RoomType, ' +
-             '    RoomReservation, ' +
-             '    Reservation, ' +
-             '    ResFlag, ' +
-             '    Information, ' +
-             '    OutOfOrderBlocking, ' +
-             '    BlockMove, ' +
-             '    BlockMoveReason, ' +
-             '    TotalPayment, ' +
-             '    TotalNoRent, ' +
-             '    (IF(CityTaxIncl, 0, ' +
-             ' 	  IF(taxPercentage, taxBaseAmount * taxAmount / 100, taxAmount) * ' +
-             ' 		  IF(taxRoomNight, 1, ' +
-             ' 			  IF(taxGuest, NumGuests, ' +
-             ' 			    IF(taxGuestNight, NumGuests /  NumNights, ' +
+        s := 'SELECT ADate, '#10 +
+             '    Room, '#10 +
+             '    RoomType, '#10 +
+             '    RoomReservation, '#10 +
+             '    Reservation, '#10 +
+             '    ResFlag, '#10 +
+             '    Information, '#10 +
+             '    OutOfOrderBlocking, '#10 +
+             '    BlockMove, '#10 +
+             '    BlockMoveReason, '#10 +
+             '    TotalPayment, '#10 +
+             '    TotalNoRent, '#10 +
+             '    (IF(CityTaxIncl, 0, '#10 +
+             ' 	  IF(taxPercentage, taxBaseAmount * taxAmount / 100, taxAmount) * '#10 +
+             ' 		  IF(taxRoomNight, 1, '#10 +
+             ' 			  IF(taxGuest, NumGuests, '#10 +
+             ' 			    IF(taxGuestNight, NumGuests /  NumNights, '#10 +
              ' 				    IF(taxBooking, 1 / NumNights, 1 ) '+
-             '              ) ' +
-             '            ) ' +
-             '          ) ' +
-//             ' 	      ) / CurrencyRate) * numNights AS totalTaxes, ' +
-             ' 	      ) * CurrencyRate ) * numNights AS totalTaxes, ' +
-             '    TotalRent, ' +
-             '    Guarantee, ' +
-             '    InvoiceIndex, ' +
-             '    Invoices, ' +
-             '    RoomClass, ' +
-             '    Fax, ' +
-             '    BookingId, ' +
-             '    PMInfo, ' +
-             '    Tel2, ' +
-             '    Tel1, ' +
-             '    NumGuests, ' +
-             '    MainName, ' +
-             '    Price, ' +
-             '    Discount, ' +
-             '    to_bool(allIsPercentage) as AllIsPercentage, ' +
-             '    PriceType, ' +
-             '    Currency, ' +
-             '    ItemsOnInvoice ' +
-             ' ' +
-             'FROM ( ' +
+             '              ) '#10 +
+             '            ) '#10 +
+             '          ) '#10 +
+//             ' 	      ) / CurrencyRate) * numNights AS totalTaxes, '#10 +
+             ' 	      ) * CurrencyRate ) * numNights AS totalTaxes, '#10 +
+             '    TotalRent, '#10 +
+             '    Guarantee, '#10 +
+             '    InvoiceIndex, '#10 +
+             '    Invoices, '#10 +
+             '    RoomClass, '#10 +
+             '    Fax, '#10 +
+             '    BookingId, '#10 +
+             '    PMInfo, '#10 +
+             '    Tel2, '#10 +
+             '    Tel1, '#10 +
+             '    NumGuests, '#10 +
+             '    MainName, '#10 +
+             '    Price, '#10 +
+             '    Discount, '#10 +
+             '    to_bool(allIsPercentage) as AllIsPercentage, '#10 +
+             '    PriceType, '#10 +
+             '    Currency, '#10 +
+             '    ItemsOnInvoice '#10 +
+             ' '#10 +
+             'FROM ( '#10 +
 
              'SELECT ';
         s := s + ' ADate ';

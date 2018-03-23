@@ -349,7 +349,8 @@ uses
   uMobileAPI in 'MobileAPI\uMobileAPI.pas',
   uRoomservicesStatus in 'Roomservices\uRoomservicesStatus.pas',
   uRptCleaningTimes in 'uRptCleaningTimes.pas',
-  uConnectionsHagstofaService in 'Connections\uConnectionsHagstofaService.pas';
+  uConnectionsHagstofaService in 'Connections\uConnectionsHagstofaService.pas',
+  uReservationTaxesAPI in 'MobileAPI\uReservationTaxesAPI.pas';
 
 {$R *.RES}
 

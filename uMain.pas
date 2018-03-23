@@ -653,6 +653,8 @@ type
     tmrDateChangeDelay: TTimer;
     hhHintHTMLFormatter: THTMLHint;
     ppLabel11: TppLabel;
+    dxBarButton10: TdxBarButton;
+    btnTestTaxesAPI: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -948,6 +950,7 @@ type
     procedure btnBreakfastListClick(Sender: TObject);
     procedure btnCleaningReportClick(Sender: TObject);
     procedure tmrDateChangeDelayTimer(Sender: TObject);
+    procedure btnTestTaxesAPIClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1608,7 +1611,8 @@ uses
     , uFinanceTransactionReport
     , uDailyTotalsReport
     , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
-  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes, uVersionManagement;
+  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes, uVersionManagement
+  , uReservationTaxesAPI;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -10626,6 +10630,20 @@ begin
   LogUserClickedButton(Sender);
   EditTaxes();
   InitializeTaxes;
+end;
+
+procedure TfrmMain.btnTestTaxesAPIClick(Sender: TObject);
+var
+  lCaller: TReservationTaxesAPICaller;
+begin
+
+  lCaller := TReservationTaxesAPICaller.Create;
+  try
+    lCaller.GetRoomResTotalTaxes(203789);
+  finally
+    lCaller.Free;
+  end;
+
 end;
 
 procedure TfrmMain.btnToDayClick(Sender: TObject);
