@@ -188,10 +188,17 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Height = 64
         Align = alClient
         BorderStyle = bsSingle
+        Color = 14540253
         Columns = 3
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 4013373
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ItemHeight = 20
         Items.Strings = (
           '<auto filled>')
+        ParentFont = False
         TabOrder = 0
         StyleElements = [seFont, seClient]
         SkinData.SkinSection = 'GROUPBOX'
@@ -325,7 +332,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
               Format = ',0.00;-,0.00'
               Kind = skAverage
               FieldName = 'averageRate'
-              Column = tvStatsAverage
             end
             item
               Format = ',0.;-,0.'
@@ -359,6 +365,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             end
             item
               Format = ',0.;-,0.'
+              Kind = skSum
               FieldName = 'remainingArrivals'
               Column = tvStatsremainingArrivals
             end
@@ -384,8 +391,25 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
               Format = ',0.;-,0.'
               Kind = skSum
               Column = tvStatsooo
+            end
+            item
+              Kind = skSum
+              Column = tvStatsExpectedArrivals
+            end
+            item
+              Kind = skSum
+              Column = tvStatsArrivedRooms
+            end
+            item
+              Kind = skSum
+              Column = tvStatsExpectedDepartures
+            end
+            item
+              Kind = skSum
+              Column = tvStatsTotalSellableRooms
             end>
           DataController.Summary.SummaryGroups = <>
+          DataController.Summary.OnAfterSummary = tvStatsDataControllerSummaryAfterSummary
           Images = DImages.cxSmallImagesFlat
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
@@ -531,18 +555,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
-          object tvStatsAverage: TcxGridDBBandedColumn
-            Caption = 'Average Rate'
-            DataBinding.FieldName = 'averageRate'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            OnGetProperties = tvStatsGetDefaultCurrencyProperties
-            HeaderAlignmentHorz = taCenter
-            Width = 94
-            Position.BandIndex = 2
-            Position.ColIndex = 4
-            Position.RowIndex = 0
-          end
           object tvStatstotalGuests: TcxGridDBBandedColumn
             Caption = 'Total Guests'
             DataBinding.FieldName = 'totalGuests'
@@ -552,7 +564,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             HeaderAlignmentHorz = taCenter
             Width = 96
             Position.BandIndex = 2
-            Position.ColIndex = 5
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object tvStatscheckedInToday: TcxGridDBBandedColumn
@@ -818,10 +830,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DataType = ftFloat
       end
       item
-        Name = 'averageRate'
-        DataType = ftFloat
-      end
-      item
         Name = 'totalGuests'
         DataType = ftInteger
       end
@@ -954,10 +962,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       item
         Name = 'minRate'
-        DataType = ftFloat
-      end
-      item
-        Name = 'averageRate'
         DataType = ftFloat
       end
       item
@@ -1117,17 +1121,17 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField10: TppField
       Alignment = taRightJustify
-      FieldAlias = 'averageRate'
-      FieldName = 'averageRate'
+      FieldAlias = 'totalGuests'
+      FieldName = 'totalGuests'
       FieldLength = 0
-      DataType = dtDouble
+      DataType = dtInteger
       DisplayWidth = 10
       Position = 9
     end
     object plStatsppField11: TppField
       Alignment = taRightJustify
-      FieldAlias = 'totalGuests'
-      FieldName = 'totalGuests'
+      FieldAlias = 'totalSellableRooms'
+      FieldName = 'totalSellableRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1135,8 +1139,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField12: TppField
       Alignment = taRightJustify
-      FieldAlias = 'totalSellableRooms'
-      FieldName = 'totalSellableRooms'
+      FieldAlias = 'oooRooms'
+      FieldName = 'oooRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1144,8 +1148,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField13: TppField
       Alignment = taRightJustify
-      FieldAlias = 'oooRooms'
-      FieldName = 'oooRooms'
+      FieldAlias = 'soldRooms'
+      FieldName = 'soldRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1153,8 +1157,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField14: TppField
       Alignment = taRightJustify
-      FieldAlias = 'soldRooms'
-      FieldName = 'soldRooms'
+      FieldAlias = 'inHouse'
+      FieldName = 'inHouse'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1162,8 +1166,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField15: TppField
       Alignment = taRightJustify
-      FieldAlias = 'inHouse'
-      FieldName = 'inHouse'
+      FieldAlias = 'checkedInToday'
+      FieldName = 'checkedInToday'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1171,8 +1175,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField16: TppField
       Alignment = taRightJustify
-      FieldAlias = 'checkedInToday'
-      FieldName = 'checkedInToday'
+      FieldAlias = 'remainingArrivals'
+      FieldName = 'remainingArrivals'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1180,8 +1184,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField17: TppField
       Alignment = taRightJustify
-      FieldAlias = 'remainingArrivals'
-      FieldName = 'remainingArrivals'
+      FieldAlias = 'noShow'
+      FieldName = 'noShow'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1189,8 +1193,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField18: TppField
       Alignment = taRightJustify
-      FieldAlias = 'noShow'
-      FieldName = 'noShow'
+      FieldAlias = 'remainingDepartures'
+      FieldName = 'remainingDepartures'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1198,8 +1202,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField19: TppField
       Alignment = taRightJustify
-      FieldAlias = 'remainingDepartures'
-      FieldName = 'remainingDepartures'
+      FieldAlias = 'departedRooms'
+      FieldName = 'departedRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1207,8 +1211,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField20: TppField
       Alignment = taRightJustify
-      FieldAlias = 'departedRooms'
-      FieldName = 'departedRooms'
+      FieldAlias = 'expectedArrivals'
+      FieldName = 'expectedArrivals'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1216,8 +1220,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField21: TppField
       Alignment = taRightJustify
-      FieldAlias = 'expectedArrivals'
-      FieldName = 'expectedArrivals'
+      FieldAlias = 'arrivedRooms'
+      FieldName = 'arrivedRooms'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
@@ -1225,21 +1229,12 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object plStatsppField22: TppField
       Alignment = taRightJustify
-      FieldAlias = 'arrivedRooms'
-      FieldName = 'arrivedRooms'
-      FieldLength = 0
-      DataType = dtInteger
-      DisplayWidth = 10
-      Position = 21
-    end
-    object plStatsppField23: TppField
-      Alignment = taRightJustify
       FieldAlias = 'expectedDepartures'
       FieldName = 'expectedDepartures'
       FieldLength = 0
       DataType = dtInteger
       DisplayWidth = 10
-      Position = 22
+      Position = 21
     end
   end
   object rptStats: TppReport
@@ -1262,6 +1257,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     AllowPrintToArchive = True
     AllowPrintToFile = True
     ArchiveFileName = '($MyDocuments)\ReportArchive.raf'
+    BeforePrint = rptStatsBeforePrint
     DeviceType = 'Screen'
     DefaultFileDeviceType = 'PDF'
     EmailSettings.ReportFormat = 'PDF'
@@ -1457,9 +1453,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taCentered
         Transparent = True
         mmHeight = 3260
-        mmLeft = 1588
+        mmLeft = 794
         mmTop = 29369
-        mmWidth = 18521
+        mmWidth = 21167
         BandType = 0
         LayerName = Foreground
       end
@@ -1475,9 +1471,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3260
-        mmLeft = 21431
+        mmLeft = 23283
         mmTop = 29369
-        mmWidth = 15610
+        mmWidth = 18256
         BandType = 0
         LayerName = Foreground
       end
@@ -1493,9 +1489,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3260
-        mmLeft = 37835
+        mmLeft = 42333
         mmTop = 29369
-        mmWidth = 7673
+        mmWidth = 8731
         BandType = 0
         LayerName = Foreground
       end
@@ -1511,7 +1507,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3260
-        mmLeft = 46302
+        mmLeft = 51594
         mmTop = 29369
         mmWidth = 11113
         BandType = 0
@@ -1529,9 +1525,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3260
-        mmLeft = 57944
+        mmLeft = 63236
         mmTop = 29369
-        mmWidth = 11113
+        mmWidth = 12435
         BandType = 0
         LayerName = Foreground
       end
@@ -1540,7 +1536,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Position = lpLeft
         Weight = 0.750000000000000000
         mmHeight = 20902
-        mmLeft = 69850
+        mmLeft = 76465
         mmTop = 14288
         mmWidth = 265
         BandType = 0
@@ -1559,9 +1555,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 70379
+        mmLeft = 77258
         mmTop = 24871
-        mmWidth = 14552
+        mmWidth = 17198
         BandType = 0
         LayerName = Foreground
       end
@@ -1577,9 +1573,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3260
-        mmLeft = 85461
+        mmLeft = 94986
         mmTop = 29369
-        mmWidth = 16404
+        mmWidth = 19050
         BandType = 0
         LayerName = Foreground
       end
@@ -1595,27 +1591,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3260
-        mmLeft = 102394
+        mmLeft = 114829
         mmTop = 29369
-        mmWidth = 16404
-        BandType = 0
-        LayerName = Foreground
-      end
-      object ppLabel14: TppLabel
-        UserName = 'Label14'
-        AutoSize = False
-        Caption = 'Average'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Name = 'Arial'
-        Font.Size = 8
-        Font.Style = []
-        TextAlignment = taRightJustified
-        Transparent = True
-        mmHeight = 3260
-        mmLeft = 119592
-        mmTop = 29369
-        mmWidth = 16404
+        mmWidth = 19050
         BandType = 0
         LayerName = Foreground
       end
@@ -1632,9 +1610,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 136790
+        mmLeft = 135467
         mmTop = 24871
-        mmWidth = 10583
+        mmWidth = 13229
         BandType = 0
         LayerName = Foreground
       end
@@ -1643,7 +1621,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Position = lpLeft
         Weight = 0.750000000000000000
         mmHeight = 20638
-        mmLeft = 147902
+        mmLeft = 149754
         mmTop = 14288
         mmWidth = 265
         BandType = 0
@@ -1662,7 +1640,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 11113
-        mmLeft = 147902
+        mmLeft = 149754
         mmTop = 21431
         mmWidth = 11684
         BandType = 0
@@ -1681,7 +1659,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 160073
+        mmLeft = 161925
         mmTop = 24871
         mmWidth = 11684
         BandType = 0
@@ -1700,7 +1678,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7408
-        mmLeft = 173038
+        mmLeft = 174890
         mmTop = 25135
         mmWidth = 10583
         BandType = 0
@@ -1718,10 +1696,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         WordWrap = True
-        mmHeight = 7673
-        mmLeft = 183886
-        mmTop = 24871
-        mmWidth = 11684
+        mmHeight = 11113
+        mmLeft = 186267
+        mmTop = 21431
+        mmWidth = 11113
         BandType = 0
         LayerName = Foreground
       end
@@ -1738,7 +1716,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 195792
+        mmLeft = 197644
         mmTop = 24871
         mmWidth = 11684
         BandType = 0
@@ -1757,7 +1735,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 207698
+        mmLeft = 209550
         mmTop = 24871
         mmWidth = 11684
         BandType = 0
@@ -1776,7 +1754,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 219605
+        mmLeft = 221457
         mmTop = 24871
         mmWidth = 11684
         BandType = 0
@@ -1794,9 +1772,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taCentered
         Transparent = True
         mmHeight = 4191
-        mmLeft = 794
+        mmLeft = 1323
         mmTop = 16140
-        mmWidth = 69321
+        mmWidth = 75406
         BandType = 0
         LayerName = Foreground
       end
@@ -1812,9 +1790,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taCentered
         Transparent = True
         mmHeight = 4191
-        mmLeft = 69850
+        mmLeft = 76465
         mmTop = 16140
-        mmWidth = 78317
+        mmWidth = 73554
         BandType = 0
         LayerName = Foreground
       end
@@ -1830,7 +1808,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taCentered
         Transparent = True
         mmHeight = 4233
-        mmLeft = 147902
+        mmLeft = 149754
         mmTop = 16140
         mmWidth = 135732
         BandType = 0
@@ -1881,7 +1859,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 231511
+        mmLeft = 233363
         mmTop = 24871
         mmWidth = 11684
         BandType = 0
@@ -1911,7 +1889,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 243417
+        mmLeft = 245269
         mmTop = 24871
         mmWidth = 11684
         BandType = 0
@@ -1930,7 +1908,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         WordWrap = True
         mmHeight = 7673
-        mmLeft = 255588
+        mmLeft = 257440
         mmTop = 24871
         mmWidth = 11684
         BandType = 0
@@ -1977,9 +1955,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3175
-        mmLeft = 21431
+        mmLeft = 23283
         mmTop = 0
-        mmWidth = 15610
+        mmWidth = 18256
         BandType = 4
         LayerName = Foreground
       end
@@ -1997,9 +1975,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 37835
+        mmLeft = 42333
         mmTop = 0
-        mmWidth = 7673
+        mmWidth = 8731
         BandType = 4
         LayerName = Foreground
       end
@@ -2017,7 +1995,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 46302
+        mmLeft = 51594
         mmTop = 0
         mmWidth = 11113
         BandType = 4
@@ -2037,9 +2015,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 57944
+        mmLeft = 63236
         mmTop = 0
-        mmWidth = 11113
+        mmWidth = 12435
         BandType = 4
         LayerName = Foreground
       end
@@ -2049,7 +2027,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Position = lpLeft
         Weight = 0.750000000000000000
         mmHeight = 4763
-        mmLeft = 69850
+        mmLeft = 76465
         mmTop = 0
         mmWidth = 265
         BandType = 4
@@ -2069,9 +2047,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 70379
+        mmLeft = 77258
         mmTop = 0
-        mmWidth = 14552
+        mmWidth = 17198
         BandType = 4
         LayerName = Foreground
       end
@@ -2089,9 +2067,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 85461
+        mmLeft = 94986
         mmTop = 0
-        mmWidth = 16404
+        mmWidth = 19050
         BandType = 4
         LayerName = Foreground
       end
@@ -2109,34 +2087,15 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 102394
+        mmLeft = 114829
         mmTop = 0
-        mmWidth = 16404
-        BandType = 4
-        LayerName = Foreground
-      end
-      object redtAverageRate: TppDBText
-        UserName = 'redtAverageRate'
-        DataField = 'averageRate'
-        DataPipeline = plStats
-        DisplayFormat = '$#,0.00;-$#,0.00'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Name = 'Arial'
-        Font.Size = 8
-        Font.Style = []
-        TextAlignment = taRightJustified
-        Transparent = True
-        DataPipelineName = 'plStats'
-        mmHeight = 3260
-        mmLeft = 119592
-        mmTop = 0
-        mmWidth = 16404
+        mmWidth = 19050
         BandType = 4
         LayerName = Foreground
       end
       object ppDBText11: TppDBText
         UserName = 'DBText11'
+        BlankWhenZero = True
         DataField = 'totalGuests'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2149,9 +2108,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 136790
+        mmLeft = 135467
         mmTop = 0
-        mmWidth = 10584
+        mmWidth = 13229
         BandType = 4
         LayerName = Foreground
       end
@@ -2161,7 +2120,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Position = lpLeft
         Weight = 0.750000000000000000
         mmHeight = 4763
-        mmLeft = 147902
+        mmLeft = 149754
         mmTop = 0
         mmWidth = 265
         BandType = 4
@@ -2169,6 +2128,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText12: TppDBText
         UserName = 'DBText12'
+        BlankWhenZero = True
         DataField = 'totalSellableRooms'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2181,7 +2141,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 148961
+        mmLeft = 150813
         mmTop = 0
         mmWidth = 10584
         BandType = 4
@@ -2189,6 +2149,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText13: TppDBText
         UserName = 'DBText13'
+        BlankWhenZero = True
         DataField = 'soldRooms'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2201,7 +2162,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 161132
+        mmLeft = 162984
         mmTop = 0
         mmWidth = 10584
         BandType = 4
@@ -2209,6 +2170,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText14: TppDBText
         UserName = 'DBText14'
+        BlankWhenZero = True
         DataField = 'inHouse'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2221,7 +2183,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 173038
+        mmLeft = 174890
         mmTop = 0
         mmWidth = 10584
         BandType = 4
@@ -2229,6 +2191,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText15: TppDBText
         UserName = 'DBText15'
+        BlankWhenZero = True
         DataField = 'checkedInToday'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2241,7 +2204,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 184944
+        mmLeft = 186796
         mmTop = 0
         mmWidth = 10584
         BandType = 4
@@ -2249,6 +2212,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText16: TppDBText
         UserName = 'DBText16'
+        BlankWhenZero = True
         DataField = 'remainingArrivals'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2261,7 +2225,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 196850
+        mmLeft = 198702
         mmTop = 0
         mmWidth = 10584
         BandType = 4
@@ -2269,6 +2233,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText17: TppDBText
         UserName = 'DBText17'
+        BlankWhenZero = True
         DataField = 'noShow'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2281,7 +2246,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 208757
+        mmLeft = 210609
         mmTop = 0
         mmWidth = 10584
         BandType = 4
@@ -2289,6 +2254,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText18: TppDBText
         UserName = 'DBText18'
+        BlankWhenZero = True
         DataField = 'remainingDepartures'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2301,7 +2267,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 220663
+        mmLeft = 222515
         mmTop = 0
         mmWidth = 10584
         BandType = 4
@@ -2320,7 +2286,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3175
-        mmLeft = 1588
+        mmLeft = 794
         mmTop = 0
         mmWidth = 7144
         BandType = 4
@@ -2339,14 +2305,15 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3175
-        mmLeft = 8996
+        mmLeft = 7938
         mmTop = 0
-        mmWidth = 11906
+        mmWidth = 14552
         BandType = 4
         LayerName = Foreground
       end
       object ppDBText2: TppDBText
         UserName = 'DBText2'
+        BlankWhenZero = True
         DataField = 'departedRooms'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2359,7 +2326,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3175
-        mmLeft = 232569
+        mmLeft = 234421
         mmTop = 0
         mmWidth = 10583
         BandType = 4
@@ -2367,6 +2334,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText4: TppDBText
         UserName = 'DBText4'
+        BlankWhenZero = True
         DataField = 'expectedArrivals'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2379,7 +2347,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3175
-        mmLeft = 244475
+        mmLeft = 246328
         mmTop = 0
         mmWidth = 10583
         BandType = 4
@@ -2387,6 +2355,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText5: TppDBText
         UserName = 'DBText5'
+        BlankWhenZero = True
         DataField = 'arrivedRooms'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2399,7 +2368,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3175
-        mmLeft = 256646
+        mmLeft = 258498
         mmTop = 0
         mmWidth = 10583
         BandType = 4
@@ -2407,6 +2376,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
       object ppDBText6: TppDBText
         UserName = 'DBText6'
+        BlankWhenZero = True
         DataField = 'expectedDepartures'
         DataPipeline = plStats
         DisplayFormat = '#,0;-#,0'
@@ -2442,7 +2412,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3704
-        mmLeft = 13229
+        mmLeft = 11642
         mmTop = 2117
         mmWidth = 7938
         BandType = 8
@@ -2459,7 +2429,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TextAlignment = taRightJustified
         Transparent = True
         mmHeight = 3704
-        mmLeft = 2910
+        mmLeft = 1323
         mmTop = 2117
         mmWidth = 9260
         BandType = 8
@@ -2507,7 +2477,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DBCalcType = dcCount
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 2117
+        mmLeft = 794
         mmTop = 794
         mmWidth = 18256
         BandType = 7
@@ -2527,72 +2497,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 20638
+        mmLeft = 20902
         mmTop = 794
-        mmWidth = 15346
-        BandType = 7
-        LayerName = Foreground
-      end
-      object redtOccAvg: TppDBCalc
-        UserName = 'redtOccAvg'
-        DataField = 'occ'
-        DataPipeline = plStats
-        DisplayFormat = '0 %'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Name = 'Arial'
-        Font.Size = 8
-        Font.Style = []
-        TextAlignment = taRightJustified
-        Transparent = True
-        DBCalcType = dcAverage
-        DataPipelineName = 'plStats'
-        mmHeight = 3260
-        mmLeft = 37042
-        mmTop = 794
-        mmWidth = 7673
-        BandType = 7
-        LayerName = Foreground
-      end
-      object redtADRAvg: TppDBCalc
-        UserName = 'redtADRAvg'
-        DataField = 'adr'
-        DataPipeline = plStats
-        DisplayFormat = '$#,0.00;-$#,0.00'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Name = 'Arial'
-        Font.Size = 8
-        Font.Style = []
-        TextAlignment = taRightJustified
-        Transparent = True
-        DBCalcType = dcAverage
-        DataPipelineName = 'plStats'
-        mmHeight = 3260
-        mmLeft = 46038
-        mmTop = 794
-        mmWidth = 10583
-        BandType = 7
-        LayerName = Foreground
-      end
-      object redtRevParAvg: TppDBCalc
-        UserName = 'redtRevParAvg'
-        DataField = 'revpar'
-        DataPipeline = plStats
-        DisplayFormat = '$#,0.00;-$#,0.00'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Name = 'Arial'
-        Font.Size = 8
-        Font.Style = []
-        TextAlignment = taRightJustified
-        Transparent = True
-        DBCalcType = dcAverage
-        DataPipelineName = 'plStats'
-        mmHeight = 3260
-        mmLeft = 57150
-        mmTop = 794
-        mmWidth = 11113
+        mmWidth = 19579
         BandType = 7
         LayerName = Foreground
       end
@@ -2610,9 +2517,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 69586
+        mmLeft = 76465
         mmTop = 794
-        mmWidth = 14552
+        mmWidth = 17198
         BandType = 7
         LayerName = Foreground
       end
@@ -2631,9 +2538,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DBCalcType = dcMaximum
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 84667
+        mmLeft = 94192
         mmTop = 794
-        mmWidth = 16404
+        mmWidth = 19050
         BandType = 7
         LayerName = Foreground
       end
@@ -2652,30 +2559,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         DBCalcType = dcMinimum
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 101600
+        mmLeft = 114036
         mmTop = 794
-        mmWidth = 16404
-        BandType = 7
-        LayerName = Foreground
-      end
-      object redtAvgRateAvg: TppDBCalc
-        UserName = 'redtAvgRateAvg'
-        DataField = 'averagerate'
-        DataPipeline = plStats
-        DisplayFormat = '#,0.00;-#,0.00'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Name = 'Arial'
-        Font.Size = 8
-        Font.Style = []
-        TextAlignment = taRightJustified
-        Transparent = True
-        DBCalcType = dcAverage
-        DataPipelineName = 'plStats'
-        mmHeight = 3260
-        mmLeft = 118798
-        mmTop = 794
-        mmWidth = 16404
+        mmWidth = 19050
         BandType = 7
         LayerName = Foreground
       end
@@ -2693,9 +2579,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 135996
+        mmLeft = 134673
         mmTop = 794
-        mmWidth = 10583
+        mmWidth = 13229
         BandType = 7
         LayerName = Foreground
       end
@@ -2713,7 +2599,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 161132
+        mmLeft = 162984
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2733,7 +2619,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 173038
+        mmLeft = 174890
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2753,7 +2639,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 184944
+        mmLeft = 186796
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2773,7 +2659,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 196850
+        mmLeft = 198702
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2793,7 +2679,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 208757
+        mmLeft = 210609
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2813,7 +2699,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 220663
+        mmLeft = 222515
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2833,7 +2719,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 232569
+        mmLeft = 234421
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2853,7 +2739,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 244475
+        mmLeft = 246328
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2873,7 +2759,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Transparent = True
         DataPipelineName = 'plStats'
         mmHeight = 3260
-        mmLeft = 256646
+        mmLeft = 258498
         mmTop = 794
         mmWidth = 10583
         BandType = 7
@@ -2896,6 +2782,80 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         mmLeft = 271728
         mmTop = 794
         mmWidth = 10583
+        BandType = 7
+        LayerName = Foreground
+      end
+      object ppDBCalc2: TppDBCalc
+        UserName = 'DBCalc2'
+        DataField = 'totalSellableRooms'
+        DataPipeline = plStats
+        DisplayFormat = '#,0;-#,0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Name = 'Arial'
+        Font.Size = 8
+        Font.Style = []
+        TextAlignment = taRightJustified
+        Transparent = True
+        DataPipelineName = 'plStats'
+        mmHeight = 3175
+        mmLeft = 150813
+        mmTop = 794
+        mmWidth = 10583
+        BandType = 7
+        LayerName = Foreground
+      end
+      object redtOccSummary: TppLabel
+        UserName = 'redtOccSummary'
+        AutoSize = False
+        Caption = 'Occ'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Name = 'Arial'
+        Font.Size = 8
+        Font.Style = []
+        TextAlignment = taRightJustified
+        Transparent = True
+        mmHeight = 3175
+        mmLeft = 42333
+        mmTop = 794
+        mmWidth = 8731
+        BandType = 7
+        LayerName = Foreground
+      end
+      object redtADRSummary: TppLabel
+        UserName = 'redtOccSummary1'
+        AutoSize = False
+        Caption = 'adr'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Name = 'Arial'
+        Font.Size = 8
+        Font.Style = []
+        TextAlignment = taRightJustified
+        Transparent = True
+        mmHeight = 3175
+        mmLeft = 51594
+        mmTop = 794
+        mmWidth = 11113
+        BandType = 7
+        LayerName = Foreground
+      end
+      object redtRevParSummary: TppLabel
+        UserName = 'redtOccSummary2'
+        AutoSize = False
+        Caption = 'revpar'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Name = 'Arial'
+        Font.Size = 8
+        Font.Style = []
+        TextAlignment = taRightJustified
+        Transparent = True
+        mmHeight = 3175
+        mmLeft = 63236
+        mmTop = 794
+        mmWidth = 12435
         BandType = 7
         LayerName = Foreground
       end

@@ -87,7 +87,6 @@ type
     tvStatstotalDiscount: TcxGridDBBandedColumn;
     tvStatsHighestRate: TcxGridDBBandedColumn;
     tvStatsLowestRate: TcxGridDBBandedColumn;
-    tvStatsAverage: TcxGridDBBandedColumn;
     tvStatscheckedInToday: TcxGridDBBandedColumn;
     tvStatsremainingArrivals: TcxGridDBBandedColumn;
     tvStatsnoShow: TcxGridDBBandedColumn;
@@ -149,8 +148,6 @@ type
     redtMaxRate: TppDBText;
     ppLabel13: TppLabel;
     redtMinRate: TppDBText;
-    ppLabel14: TppLabel;
-    redtAverageRate: TppDBText;
     ppLabel15: TppLabel;
     ppDBText11: TppDBText;
     ppLine5: TppLine;
@@ -176,13 +173,9 @@ type
     ppLine7: TppLine;
     ppDBCalc1: TppDBCalc;
     edtRevTotal: TppDBCalc;
-    redtOccAvg: TppDBCalc;
-    redtADRAvg: TppDBCalc;
-    redtRevParAvg: TppDBCalc;
     redtDiscountTotal: TppDBCalc;
     redtMaxrateMax: TppDBCalc;
     redtMinRateMin: TppDBCalc;
-    redtAvgRateAvg: TppDBCalc;
     ppDBCalc10: TppDBCalc;
     ppDBCalc12: TppDBCalc;
     ppDBCalc13: TppDBCalc;
@@ -213,6 +206,10 @@ type
     ppDBCalc18: TppDBCalc;
     ppDBCalc19: TppDBCalc;
     ppDBCalc20: TppDBCalc;
+    ppDBCalc2: TppDBCalc;
+    redtOccSummary: TppLabel;
+    redtADRSummary: TppLabel;
+    redtRevParSummary: TppLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure dtDateFromChange(Sender: TObject);
@@ -230,10 +227,15 @@ type
     procedure tvStatsrevenueGetCellHint(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       ACellViewInfo: TcxGridTableDataCellViewInfo; const AMousePos: TPoint; var AHintText: TCaption;
       var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
+    procedure tvStatsDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
+    procedure rptStatsBeforePrint(Sender: TObject);
   private
     { Private declarations }
 
     zSetDates : boolean;
+    function GetSummaryValueOrZero(aColumn: TcxGridDBBandedColumn): variant;
+    procedure SetSummaryValue(aColumn: TcxGridDBBandedColumn; aValue: Variant);
+    function GetSummaryText(aColumn: TcxGridDBBandedColumn): string;
   public
     { Public declarations }
   end;
@@ -276,6 +278,81 @@ begin
   finally
     frm.Free;
   end;
+end;
+
+
+function TfrmRptRoomRentStatistics.GetSummaryValueOrZero(aColumn: TcxGridDBBandedColumn): variant;
+var
+  idx: integer;
+begin
+  with tvStats.Datacontroller.Summary do
+  begin
+    idx := FooterSummaryItems.IndexOfItemLink(aColumn);
+    if (idx < 0) or VarIsNull(FooterSummaryValues[idx]) then
+      Result := 0
+    else
+      result := FooterSummaryValues[idx];
+  end;
+end;
+
+function TfrmRptRoomRentStatistics.GetSummaryText(aColumn: TcxGridDBBandedColumn): string;
+var
+  idx: integer;
+begin
+  with tvStats.Datacontroller.Summary do
+  begin
+    idx := FooterSummaryItems.IndexOfItemLink(aColumn);
+    if (idx < 0)  then
+      Result := ''
+    else
+      Result := FooterSummaryTexts[idx];
+  end;
+end;
+
+procedure TfrmRptRoomRentStatistics.SetSummaryValue(aColumn: TcxGridDBBandedColumn; aValue: Variant);
+var
+  idx: integer;
+begin
+  with tvStats.Datacontroller.Summary do
+  begin
+    idx := FooterSummaryItems.IndexOfItemLink(aColumn);
+    if (idx < 0) or VarIsNull(aValue) then
+      FooterSummaryValues[idx] := 0
+    else
+      FooterSummaryValues[idx] := aValue;
+  end;
+end;
+
+
+procedure TfrmRptRoomRentStatistics.tvStatsDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
+var
+  lSoldRooms: integer;
+  lSellableRooms: integer;
+  lRevenue: double;
+
+begin
+
+  lRevenue :=  GetSummaryValueOrZero(tvStatsrevenue);
+  lSellableRooms := GetSummaryValueOrZero(tvStatsTotalSellableRooms);
+  lSoldRooms := GetSummaryValueOrZero(tvStatssoldRooms);
+
+  if lSellableRooms <> 0 then
+  begin
+    SetSummaryValue(tvStatsOccupancy, 100 * lSoldRooms / lSellableRooms);
+    SetSummaryValue(tvStatsrevPar, lRevenue / lSellableRooms);
+  end
+  else
+  begin
+    SetSummaryValue(tvStatsOccupancy, 0);
+    SetSummaryValue(tvStatsrevPar, 0);
+  end;
+
+  // ADR
+  if lSoldRooms <> 0 then
+    SetSummaryValue(tvStatsadr, lRevenue / lSoldRooms)
+  else
+    SetSummaryValue(tvStatsadr, 0);
+
 end;
 
 procedure TfrmRptRoomRentStatistics.tvStatsGetDefaultCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -347,7 +424,6 @@ begin
         kbmStat.FieldByName('totalDiscount').asFloat := lStat.Statistic['DISCOUNT'].Value;
         kbmStat.FieldByName('maxRate').asFloat := lStat.Statistic['MAXRATE'].Value;
         kbmStat.FieldByName('minRate').asFloat := lStat.Statistic['MINRATE'].Value;
-        kbmStat.FieldByName('averageRate').asFloat := lStat.Statistic['ADR'].Value;
         kbmStat.FieldByName('totalGuests').AsInteger := trunc(lStat.Statistic['GUESTCOUNT'].Value);
         kbmStat.FieldByName('totalSellableRooms').AsInteger := trunc(lStat.Statistic['TOTAL_SELLABLE_ROOMS'].Value);
         kbmStat.FieldByName('oooROoms').AsInteger := trunc(lStat.Statistic['OOOROOMS'].Value);
@@ -478,7 +554,6 @@ end;
 procedure TfrmRptRoomRentStatistics.ppHeaderBand1BeforePrint(Sender : TObject);
 var
   s : string;
-  lFormat: string;
 begin
   rlabFrom.Caption := FormatDateTime('ddddd', dtDateFrom.Date);
   rlabTo.Caption := FormatDateTime('ddddd', dtDateTo.Date);
@@ -491,6 +566,12 @@ begin
     s := s + ' - ' + g.qusername;
   rlabUser.Caption := s;
 
+end;
+
+procedure TfrmRptRoomRentStatistics.rptStatsBeforePrint(Sender: TObject);
+var
+  lFormat: string;
+begin
   lFormat := RoomerCurrencyManager.DefaultCurrencyDefinition.DisplayFormat(false);
   redtRevenue.DisplayFormat := lFormat;
   redtADR.DisplayFormat := lFormat;
@@ -498,16 +579,16 @@ begin
   redtDiscount.DisplayFormat := lFormat;
   redtMaxRate.DisplayFormat := lFormat;
   redtMinRate.DisplayFormat := lFormat;
-  redtAverageRate.DisplayFormat := lFormat;
   edtRevTotal.DisplayFormat := lFormat;
-  redtADRAvg.DisplayFormat := lFormat;
-  redtRevParAvg.DisplayFormat := lFormat;
   redtDiscountTotal.DisplayFormat := lFormat;
   redtMaxrateMax.DisplayFormat := lFormat;
   redtMinRateMin.DisplayFormat := lFormat;
-  redtAvgRateAvg.DisplayFormat := lFormat;
 
   redtFullDate.DisplayFormat := FormatSettings.ShortDateFormat;
+
+  redtOccSummary.Text := GetSummaryText(tvStatsOccupancy);
+  redtADRSummary.Text := GetSummaryText(tvStatsadr);
+  redtRevParSummary.Text := GetSummaryText(tvStatsrevPar);
 end;
 
 procedure TfrmRptRoomRentStatistics.sButton2Click(Sender: TObject);
