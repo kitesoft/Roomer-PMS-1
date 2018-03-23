@@ -10320,7 +10320,7 @@ end;
 procedure TfrmMain.btnReDownloadRoomerClick(Sender: TObject);
 begin
 {$IFNDEF DEBUG}
-  if RoomerVersionManagement.VersionManagerActive then
+  if RoomerVersionManagement.Active then
   begin
     LoginCancelled := true;
     RoomerVersionManagement.ForceUpdate;

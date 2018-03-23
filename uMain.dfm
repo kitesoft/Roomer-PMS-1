@@ -1289,6 +1289,7 @@ object frmMain: TfrmMain
             OnMoved = splitPeriodMoved
             Color = 6842472
             ParentColor = False
+            ExplicitTop = 167
           end
           object pnlPeriodNoRooms: TsPanel
             Left = 0
