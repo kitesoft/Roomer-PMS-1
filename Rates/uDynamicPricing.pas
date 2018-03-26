@@ -265,7 +265,7 @@ uses
   , uChannelManager
   , UITypes
   , uRoomerLanguage
-  , XmlUtils, uSQLUtils;
+  , XmlUtils, uSQLUtils, uVCLUtils;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////
 // unit global functions

@@ -49,7 +49,7 @@ implementation
 
 {$R *.dfm}
 
-uses uD, uRoomerLanguage, uAppGlobal, uUtils;
+uses uD, uRoomerLanguage, uAppGlobal, uUtils, uVCLUtils;
 
 procedure MergeGuestPortfolios(Data : TRoomerDataset; id1, id2 : Integer);
 var _frmMergePortfolios: TfrmMergePortfolios;

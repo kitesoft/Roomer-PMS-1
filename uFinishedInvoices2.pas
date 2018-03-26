@@ -263,7 +263,7 @@ uses
   , uResourceManagement
   , uSQLUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.DFM}
 

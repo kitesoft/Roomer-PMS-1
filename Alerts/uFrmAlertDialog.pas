@@ -34,7 +34,7 @@ implementation
 
 {$R *.dfm}
 
-uses uRoomerLanguage, uAppGlobal, uUtils;
+uses uRoomerLanguage, uAppGlobal, uUtils, uVCLUtils;
 
 procedure ShowAlert(Alert : TAlert);
 var _FrmAlertDialog: TFrmAlertDialog;

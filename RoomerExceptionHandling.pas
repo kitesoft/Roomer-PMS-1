@@ -54,7 +54,7 @@ uses
     Classes
     , uRoomerExceptions
     , JclDebug, JclHookExcept, TypInfo
-    , uSplashRoomer
+//    , uSplashRoomer
     , VCL.Forms
     , IOUtils
     , uUtils
@@ -140,11 +140,11 @@ begin
   if FLogStackTrace then
     LogStackTrace(E, ExceptAddr, E is EOSError);
 
-  try
-    TSplashFormManager.TryHideForm;
-  except
-  end;
-
+//  try
+//    TSplashFormManager.TryHideForm;
+//  except
+//  end;
+//
   if (E is EDivByZero) or (E is ERangeError) or (E is ERoomerOfflineAssertionException) or
     (E is EInvalidPointer) or
     (E is EInvalidOp) or (E is EAbstractError) or (E is EIntOverflow) or (E is EAccessViolation) or (E is EControlC) or

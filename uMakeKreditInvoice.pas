@@ -208,7 +208,7 @@ uses
   , uSQLUtils
   , uInvoiceDefinitions
   , ufrmInvoiceEdit
-  , uFinanceConnectService;
+  , uFinanceConnectService, uVCLUtils;
 
 
 function MakeKreditInvoice(number : integer; var createNew : boolean) : boolean;

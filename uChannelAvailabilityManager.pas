@@ -638,7 +638,7 @@ uses ioUtils, uMain, uDateUtils, uStringUtils, _glob, uAppGlobal, PrjConst,
   , Math
   , uRoomerCurrencymanager, uAmount, uCurrencyConstants
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 const
   BODY_START = '<body bgcolor="#0000FF"><font bgcolor="#0000FF" color="#FFFFFF">';

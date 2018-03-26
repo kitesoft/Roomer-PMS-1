@@ -695,7 +695,6 @@ uses
   dbTables,
   uMain,
   uFileDependencyManager,
-  uCreditPrompt,
   uFinishedInvoices2,
   uD,
   ueditRoomPrice,
@@ -729,7 +728,7 @@ uses
   , uPMSSettings
   , uRoomerCurrencymanager
   , uAddAccommodation
-  , uCurrencyDefinition, uBreakfastTypeDefinitions;
+  , uCurrencyDefinition, uBreakfastTypeDefinitions, uVCLUtils;
 
 {$R *.DFM}
 

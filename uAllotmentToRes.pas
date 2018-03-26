@@ -513,7 +513,7 @@ uses
   uSQLUtils,
   DateUtils
   , Generics.Collections
-  ;
+  , uVCLUtils;
 
 const
   cCountFixedRows = 2;

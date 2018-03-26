@@ -73,6 +73,10 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object SheetMain: TsTabSheet
       Caption = 'Customer'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxAddress: TsGroupBox
         Left = 0
         Top = 291
@@ -218,8 +222,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 272
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 124
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -710,8 +712,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 272
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 125
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -742,8 +742,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 272
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 125
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -774,8 +772,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 272
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 125
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -806,8 +802,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             ExplicitWidth = 272
             inherited lblDescription: TsLabel
               Left = 148
-              Width = 125
-              Height = 20
               ExplicitLeft = 148
             end
             inherited edCode: TsEdit
@@ -856,6 +850,10 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object SheetExtra: TsTabSheet
       Caption = 'More'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         Left = 0
         Top = 0
@@ -888,6 +886,10 @@ object frmCustomerEdit2: TfrmCustomerEdit2
     end
     object tabDepartments: TsTabSheet
       Caption = 'Departments'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sSplitter1: TsSplitter
         Left = 185
         Top = 0
@@ -947,7 +949,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel6: TsLabel
             Left = 0
             Top = 35
-            Width = 185
+            Width = 75
             Height = 13
             Align = alBottom
             Caption = 'Departments'
@@ -957,7 +959,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
-            ExplicitWidth = 75
           end
           object btnAddDepartment: TsButton
             AlignWithMargins = True
@@ -1067,7 +1068,7 @@ object frmCustomerEdit2: TfrmCustomerEdit2
           object sLabel7: TsLabel
             Left = 0
             Top = 35
-            Width = 263
+            Width = 50
             Height = 13
             Align = alBottom
             Caption = 'Contacts'
@@ -1077,7 +1078,6 @@ object frmCustomerEdit2: TfrmCustomerEdit2
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = [fsBold]
-            ExplicitWidth = 50
           end
           object btnAddContact: TsButton
             AlignWithMargins = True

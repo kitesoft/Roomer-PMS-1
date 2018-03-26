@@ -310,7 +310,7 @@ uses
   , ufrmInvoiceEdit
   , uInvoiceDefinitions
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 {$R *.dfm}

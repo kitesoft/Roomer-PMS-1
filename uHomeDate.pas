@@ -47,7 +47,7 @@ implementation
 uses
   uMain, uAppGlobal, uDImages, uUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

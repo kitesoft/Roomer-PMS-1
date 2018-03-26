@@ -281,7 +281,7 @@ uses
   , u2dMatrix
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

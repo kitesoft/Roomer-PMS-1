@@ -152,7 +152,7 @@ uses
   , uDImages
   , UITypes, uSQLUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

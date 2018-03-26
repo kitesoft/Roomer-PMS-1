@@ -55,7 +55,7 @@ implementation
 
 {$R *.dfm}
 
-uses uRoomerLanguage, uAppGlobal, uUtils;
+uses uRoomerLanguage, uAppGlobal, uUtils, uVCLUtils;
 
 function EditCustomerDepartment(CustomerDepartment : TCustomerDepartment) : Boolean;
 var _FrmCustomerDepartmentEdit: TFrmCustomerDepartmentEdit;

@@ -444,10 +444,10 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     SkinData.SkinSection = 'PANEL'
     object lblCleaningNotes: TsLabelFX
       AlignWithMargins = True
-      Left = 2
-      Top = 2
-      Width = 275
-      Height = 19
+      Left = 3
+      Top = 3
+      Width = 271
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -466,8 +466,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
     end
     object shpCleaningNotes: TShape
       Left = 179
@@ -558,7 +558,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Left = 3
       Top = 3
       Width = 271
-      Height = 19
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -577,11 +577,11 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 275
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 267
     end
     object shpLostAndFound: TShape
       Left = 179
@@ -599,7 +599,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     object mmoLostAndFound: TsMemo
       AlignWithMargins = True
       Left = 3
-      Top = 26
+      Top = 22
       Width = 271
       Height = 32
       Margins.Left = 2
@@ -627,6 +627,7 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       BoundLabel.Font.Name = 'Tahoma'
       BoundLabel.Font.Style = []
       SkinData.SkinSection = 'EDIT'
+      ExplicitTop = 26
     end
     object pnlLostAndFound_Button: TsPanel
       Left = 1
@@ -673,10 +674,10 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
     SkinData.SkinSection = 'PANEL'
     object lblMaintenanceNotes: TsLabelFX
       AlignWithMargins = True
-      Left = 2
-      Top = 2
-      Width = 275
-      Height = 19
+      Left = 3
+      Top = 3
+      Width = 271
+      Height = 15
       Cursor = crHandPoint
       Margins.Left = 2
       Margins.Top = 2
@@ -695,8 +696,8 @@ object frmRoomCleanMaintenanceStatus: TfrmRoomCleanMaintenanceStatus
       Angle = 0
       Shadow.Color = clSilver
       Shadow.Distance = 2
-      Shadow.OffsetKeeper.LeftTop = -2
-      Shadow.OffsetKeeper.RightBottom = 6
+      Shadow.OffsetKeeper.LeftTop = -1
+      Shadow.OffsetKeeper.RightBottom = 3
     end
     object shpMaintenanceNotes: TShape
       Left = 179

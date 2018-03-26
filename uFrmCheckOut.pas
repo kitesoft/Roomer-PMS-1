@@ -105,7 +105,7 @@ uses
   , uAppGlobal
   , uUtils
   , Math
-  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager, uCurrencyDefinition;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager, uCurrencyDefinition, uVCLUtils;
 
 procedure CheckoutGuestWithDialog(Reservation, RoomReservation: Integer; RoomNumber: String);
 var

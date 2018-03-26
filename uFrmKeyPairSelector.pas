@@ -44,7 +44,7 @@ implementation
 
 {$R *.dfm}
 
-uses uUtils;
+uses uUtils, uVCLUtils;
 
 function selectFromKeyValuePairs(sCaption, sDefault : String; list : TKeyPairList) : TKeyAndValue;
 var cursorWas : SmallInt;

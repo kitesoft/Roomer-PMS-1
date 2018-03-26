@@ -69,7 +69,7 @@ uses
   , uRoomerDefinitions
   , uReservationStateDefinitions
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 function StatusToColor(status : string;var backColor, fontColor : Tcolor ) : boolean;
 var

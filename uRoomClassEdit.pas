@@ -167,7 +167,7 @@ uses uMultiSelection,
      uRoomerLanguage,
      uFrmResources,
      uResourceManagement
-     , uResourceTypeDefinitions, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions;
+     , uResourceTypeDefinitions, uCalculationTypeDefinitions, uCalculationTypeExtraDefinitions, uVCLUtils;
 
 function openRoomTypeGroupEdit(var theData : recRoomTypeGroupHolder; isInsert : boolean; Rate_Plan_Types : TStrings) : boolean;
 var

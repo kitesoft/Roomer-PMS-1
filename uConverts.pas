@@ -102,7 +102,7 @@ uses
 
   , sLabel
   , sPanel
-  , sStatusBar, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld
+  , sStatusBar, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld, dxPScxPivotGridLnk
 
   ;
 
@@ -213,7 +213,7 @@ uses
   , uDImages
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 {$R *.dfm}

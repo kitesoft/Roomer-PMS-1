@@ -258,7 +258,7 @@ uses
   , uMain
   , uSQLUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 procedure TfrmHouseKeeping.FormDestroy(Sender: TObject);

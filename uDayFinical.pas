@@ -675,7 +675,7 @@ uses
     , ufrmInvoiceEdit
     , uRoomerLanguage
     , uRoomerCurrencymanager
-    , Variants;
+    , Variants, uVCLUtils;
 
 {$R *.dfm}
 

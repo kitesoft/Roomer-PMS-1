@@ -392,6 +392,7 @@ object frmVatCodes: TfrmVatCodes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -404,7 +405,8 @@ object frmVatCodes: TfrmVatCodes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43133.564142858800000000
+      ReportDocument.CreationDate = 43185.570302060190000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

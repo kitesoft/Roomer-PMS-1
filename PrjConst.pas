@@ -27,7 +27,6 @@ uses uAppGlobal,
   uFrmBusyMessage,
   uFinishedInvoices2,
 //  uRoomStatus,
-  uCreditPrompt,
 //  uInvoiceCompress,
   uInvoiceList,
   uConverts,
@@ -1885,7 +1884,6 @@ begin
   TfrmInvoicePayment.Create(nil).Free;
   frmControlData := TfrmControlData.Create(nil); frmControlData.Free; frmControlData := nil;
   frmFinishedInvoices2 := TfrmFinishedInvoices2.Create(nil); frmFinishedInvoices2.Free; frmFinishedInvoices2 := nil;
-  frmCreditPrompt := TfrmCreditPrompt.Create(nil); frmCreditPrompt.Free; frmCreditPrompt := nil;
   frmInvoiceList := TfrmInvoiceList.Create(nil); frmInvoiceList.Free; frmInvoiceList := nil;
   frmConverts := TfrmConverts.Create(nil); frmConverts.Free; frmConverts := nil;
   frmSelLang := TfrmSelLang.Create(nil); frmSelLang.Free; frmSelLang := nil;

@@ -64,7 +64,7 @@ uses uD
   , PrjConst
   , uUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

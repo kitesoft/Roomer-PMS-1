@@ -108,7 +108,7 @@ uses
   , uSQLUtils
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.DFM}
 

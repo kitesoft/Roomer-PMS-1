@@ -316,7 +316,7 @@ uses uRoomerLanguage,
      uFileSystemUtils,
      cxGridExportLink,
      uFinishedInvoices2,
-     uReservationProfile;
+     uReservationProfile, uVCLUtils;
 
 
 function CreateNewGuest(rSet : TRoomerDataset; FromPerson : Integer = -1; FromCustomer : String = '') : Integer;

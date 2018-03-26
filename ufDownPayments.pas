@@ -318,7 +318,7 @@ uses
   , ufrmInvoiceEdit
   , uInvoiceDefinitions
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 procedure AddGroupToReport(aBreakName: String; aDataPipeline: TppDataPipeline;   aReport: TppCustomReport);

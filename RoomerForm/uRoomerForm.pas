@@ -95,7 +95,7 @@ uses
   , PrjConst
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 type
   TRoomerFormBusyStateHelper = record helper for TRoomerFormBusyState

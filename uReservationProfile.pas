@@ -892,7 +892,7 @@ uses
   , uFrmTokenChargeHistory
   , ufrmInvoiceEdit, uInvoiceDefinitions, uMarketDefinitions, uRoomerCurrencymanager
   , uRoomerLanguage
-, uAmount;
+, uAmount, uVCLUtils;
 
 {$R *.DFM}
 

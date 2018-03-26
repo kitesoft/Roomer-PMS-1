@@ -401,8 +401,9 @@ object frmRptBookkeeping: TfrmRptBookkeeping
         SearchFooter.HintFindPrev = 'Find previous occurrence'
         SearchFooter.HintHighlight = 'Highlight occurrences'
         SearchFooter.MatchCaseCaption = 'Match case'
+        SearchFooter.ResultFormat = '(%d of %d)'
         SortSettings.DefaultFormat = ssAutomatic
-        Version = '8.1.2.0'
+        Version = '8.2.4.1'
         WordWrap = False
       end
     end

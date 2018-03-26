@@ -219,7 +219,7 @@ uses
    , uUtils
    , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

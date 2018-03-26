@@ -868,7 +868,7 @@ uses
   , uResourceTypeDefinitions
   , uPMSSettings
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.DFM}
 

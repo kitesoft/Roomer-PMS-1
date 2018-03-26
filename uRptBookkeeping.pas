@@ -136,7 +136,7 @@ uses
   uDateUtils,
   DateUtils,
   PrjConst,
-  uGridUtils;
+  uGridUtils, uVCLUtils;
 
 CONST FINANCE_QUERY = 'SELECT cu.Customer AS CustomerId, cu.Surname AS CustomerName, ' +
                       'il.InvoiceNumber AS InvoiceNumber, ' +

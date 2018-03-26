@@ -151,7 +151,7 @@ uses
   ,uD
   ,PrjConst
   ,uDimages
-  , uReservationStateDefinitions, uSQLUtils;
+  , uReservationStateDefinitions, uSQLUtils, uVCLUtils;
 {$R *.dfm}
 
 

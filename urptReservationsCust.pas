@@ -259,7 +259,7 @@ uses
   , PrjConst
   , uSQLUtils
   , uRoomerLanguage
-  , uBreakfastTypeDefinitions;
+  , uBreakfastTypeDefinitions, uVCLUtils;
 {$R *.dfm}
 
 

@@ -415,6 +415,7 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -427,7 +428,8 @@ object frmChannelPlanCodes: TfrmChannelPlanCodes
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43133.559237511570000000
+      ReportDocument.CreationDate = 43185.563641967590000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

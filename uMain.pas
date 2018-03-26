@@ -1612,7 +1612,7 @@ uses
     , uDailyTotalsReport
     , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
   uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes, uVersionManagement
-  , uReservationTaxesAPI;
+  , uReservationTaxesAPI, uRoomRentTaxReceipt, uVCLUtils;
 
 {$R *.DFM}
 {$R Cursors.res}

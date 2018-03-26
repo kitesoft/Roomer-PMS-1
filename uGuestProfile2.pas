@@ -332,7 +332,7 @@ uses
   , uSQLUtils
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

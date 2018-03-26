@@ -165,7 +165,7 @@ uses
    , uReservationProfile
    , uGuestProfile2
   , uRoomerLanguage
-   , uDImages, uSQLUtils;
+   , uDImages, uSQLUtils, uVCLUtils;
 
 procedure TfrmGuestSearch.btnReservationClick(Sender: TObject);
 var

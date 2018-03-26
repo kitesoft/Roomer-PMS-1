@@ -60,7 +60,7 @@ uses hData,
      uUtils,
      uD,
      uRoomerLanguage,
-     uAppGlobal;
+     uAppGlobal, uVCLUtils;
 
 procedure sendFileAsAttachment(recipient, _caption : String; ExcelFile : String; AllowEditAndSendEmail : Boolean);
 var _FrmEmailExcelSheet: TFrmEmailExcelSheet;

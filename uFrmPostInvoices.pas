@@ -53,7 +53,7 @@ uses ud
     , uFileSystemUtils
     , uResourceManagement
     , uActivityLogs
-    , uResourceTypeDefinitions;
+    , uResourceTypeDefinitions, uVCLUtils;
 
 procedure PostInvoicesToBookKeepingSystem(invoiceList : String);
 var

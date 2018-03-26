@@ -93,7 +93,7 @@ implementation
 
 uses
   PrjConst
-  , uUtils;
+  , uUtils, uVCLUtils;
 
 { TfrmBaseRoomerGridForm }
 

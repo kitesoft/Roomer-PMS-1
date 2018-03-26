@@ -77,7 +77,7 @@ uses
   , uDImages
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 procedure TfrmRoomDateProblem.GridInit;

@@ -224,6 +224,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -701,6 +705,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0
@@ -712,6 +720,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
