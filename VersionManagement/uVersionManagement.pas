@@ -89,27 +89,31 @@ uses uD,
      VCL.StdCtrls
     ;
 
-const SECOND = 1000;
-      MINUTE = 60 * SECOND;
-      FIVE_MINUTES = 5 * MINUTE;
-      TEN_MINUTES = 10 * MINUTE;
+const
+  SECOND = 1000;
+  MINUTE = 60 * SECOND;
+  FIVE_MINUTES = 5 * MINUTE;
+  TEN_MINUTES = 10 * MINUTE;
 
-      HTTP_LOCAL_IP = '127.0.0.1';
-      HTTP_DEFAULT_PORT = 62999;
-      HTTP_DEFAULT_PORT_MIN = 62989;
+  HTTP_LOCAL_IP = '127.0.0.1';
+  HTTP_DEFAULT_PORT = 62999;
+  HTTP_DEFAULT_PORT_MIN = 62989;
 
-      MAX_COUNT_FOR_NOTIFICATION = 6;
-      HTTP_CONNECT_TIME_OUT = 10 * SECOND;
-      HTTP_TRANSFER_TIME_OUT = FIVE_MINUTES;
+  MAX_COUNT_FOR_NOTIFICATION = 6;
+  HTTP_CONNECT_TIME_OUT = 10 * SECOND;
+  HTTP_TRANSFER_TIME_OUT = FIVE_MINUTES;
 
-      URI_UPGRADE_DAEMON = 'http://localhost:{port}/';
-      URI_UPGRADE_DAEMON_WHO_ARE_YOU = URI_UPGRADE_DAEMON + 'WhoAreYou';
-      URI_UPGRADE_DAEMON_CLOSE = URI_UPGRADE_DAEMON + 'Close';
-      URI_UPGRADE_DAEMON_ACTIVE = URI_UPGRADE_DAEMON + 'Active';
-      URI_UPGRADE_DAEMON_ACTIVATE = URI_UPGRADE_DAEMON + 'Activate/%s';
-      URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE = URI_UPGRADE_DAEMON + 'UpgradeAvailable/%s/%s';
-      URI_UPGRADE_DAEMON_CHECK_UPGRADE = URI_UPGRADE_DAEMON + 'CheckForUpgrade/%s';
-      URI_UPGRADE_DAEMON_UPDATE_NOW = URI_UPGRADE_DAEMON + 'UpdateNow/%s/%s/%s/%s';
+  URI_UPGRADE_DAEMON = 'http://localhost:{port}/';
+  URI_UPGRADE_DAEMON_WHO_ARE_YOU = URI_UPGRADE_DAEMON + 'WhoAreYou';
+  URI_UPGRADE_DAEMON_CLOSE = URI_UPGRADE_DAEMON + 'Close';
+  URI_UPGRADE_DAEMON_ACTIVE = URI_UPGRADE_DAEMON + 'Active';
+  URI_UPGRADE_DAEMON_ACTIVATE = URI_UPGRADE_DAEMON + 'Activate/%s';
+  URI_UPGRADE_DAEMON_UPGRADE_AVAILABLE = URI_UPGRADE_DAEMON + 'UpgradeAvailable/%s/%s';
+  URI_UPGRADE_DAEMON_CHECK_UPGRADE = URI_UPGRADE_DAEMON + 'CheckForUpgrade/%s';
+  URI_UPGRADE_DAEMON_UPDATE_NOW = URI_UPGRADE_DAEMON + 'UpdateNow/%s/%s/%s/%s';
+
+  cDisableVersionManagementPostFix = '-SharedResource.True';
+  cDisableVersionManagementAllExecutables = 'Roomer.DisableVersionManagement';
 
 
 var
@@ -123,6 +127,12 @@ end;
 
 constructor TRoomerVersionManagement.Create;
 begin
+{$IFDEF DEBUG}
+  FActive := false;
+{$ELSE}
+  FActive := NOT FileExists(ChangeFileExt(Application.ExeName, cDisableVersionManagementPostFix)) AND
+             NOT FileExists(cDisableVersionManagementAllExecutables);
+{$ENDIF}
   PortToUse := 0;
   RoomerLogger := ActivateRoomerLogger(ClassName);
   lastCounter := MAX_COUNT_FOR_NOTIFICATION;
@@ -398,19 +408,22 @@ end;
 procedure TRoomerVersionManagement.openDaemon;
 var exePath : String;
 begin
-   RoomerLogger.AddToLog('Opening Daemon...');
-   exePath := FileDependencyManager.getRoomerUpgradeDaemonFilePath(RoomerUpgradeDaemonPath);
-   if exePath = '' then
-   begin
-     MessageDlg('Could not find the Roomer Upgrade Daemon!', mtError, [mbOk], 0);
-     RoomerLogger.AddToLog('Daemon Could not be found!');
-   end else
-   begin
-     PortToUse := 0;
-     ExecuteFile(Application.Handle, exePath, '', []); // [eoElevate]);
-     RoomerLogger.AddToLog('Daemon opened.');
-     sleep(2000);
-   end;
+  if Active then
+  begin
+    RoomerLogger.AddToLog('Opening Daemon...');
+    exePath := FileDependencyManager.getRoomerUpgradeDaemonFilePath(RoomerUpgradeDaemonPath);
+    if exePath = '' then
+    begin
+      MessageDlg('Could not find the Roomer Upgrade Daemon!', mtError, [mbOk], 0);
+      RoomerLogger.AddToLog('Daemon Could not be found!');
+    end else
+    begin
+      PortToUse := 0;
+      ExecuteFile(Application.Handle, exePath, '', []); // [eoElevate]);
+      RoomerLogger.AddToLog('Daemon opened.');
+      sleep(2000);
+    end;
+  end;
 end;
 
 function TRoomerVersionManagement.FindServicePort: integer;
