@@ -1939,7 +1939,7 @@ begin
   fraCurrencyPanel.Code := FNewReservation.HomeCustomer.Currency;
   fraPriceCodePanel.Code := FNewReservation.HomeCustomer.PcCode;
 
-  edRoomResDiscount.Value := trunc(FNewReservation.HomeCustomer.DiscountPerc);
+  edRoomResDiscount.Value := FNewReservation.HomeCustomer.DiscountPerc;
   edPID.Text := FNewReservation.HomeCustomer.PID;
   edCustomerName.Text := FNewReservation.HomeCustomer.CustomerName;
   edAddress1.Text := FNewReservation.HomeCustomer.Address1;
@@ -4455,15 +4455,16 @@ begin
   edRoomResDiscount.CurrencyCode := FCurrentCurrency.CurrencyCode;
 
   index := cbxIsRoomResDiscountPrec.ItemIndex;
-  cbxIsRoomResDiscountPrec.Items.Clear;
-  cbxIsRoomResDiscountPrec.Items.Add('%');
-  cbxIsRoomResDiscountPrec.Items.Add(FCurrentCurrency.CurrencyCode);
-  cbxIsRoomResDiscountPrec.ItemIndex := index;
-
-  if index = 0 then
-    edRoomResDiscount.MaxValue := 100
-  else
-    edRoomResDiscount.MaxValue := 99999999;
+  cbxIsRoomResDiscountPrec.Items.BeginUpdate;
+  try
+    cbxIsRoomResDiscountPrec.Items.Clear;
+    cbxIsRoomResDiscountPrec.Items.Add('%');
+    cbxIsRoomResDiscountPrec.Items.Add(FCurrentCurrency.CurrencyCode);
+    cbxIsRoomResDiscountPrec.ItemIndex := index;
+  finally
+    cbxIsRoomResDiscountPrec.Items.EndUpdate;
+  end;
+  UpdateControls;
 
   ActivateNextButton;
 end;
@@ -4543,7 +4544,7 @@ begin
           mRoomResRoomRate.AsFloat := lRoomRateTotal / lRateCount;
 
           if lRoomRateTotal <> TAmount.ZERO then
-            if (lAllIsSamePercentage and (lSamePercentage > 0)) then
+            if (lAllIsSamePercentage and (not SameValue(lSamePercentage, 0.00))) then
             begin
               mRoomResIsPercentage.AsBoolean := true;
               mRoomResDiscount.AsFloat := lSamePercentage;
