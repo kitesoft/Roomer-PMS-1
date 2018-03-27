@@ -185,7 +185,7 @@ begin
   inherited;
   pmnuExport.Items.Add(GridExporter.ExportSubMenu);
   DialogButtons := [mbClose];
-  pcCient.ActivePage := tsMain;
+  pcClient.ActivePage := tsMain;
   RefreshData;
 end;
 
