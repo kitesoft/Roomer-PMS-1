@@ -704,7 +704,6 @@ type
     procedure tvRoomResDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
     procedure tvRoomResIsPercentagePropertiesEditValueChanged(Sender: TObject);
-    procedure pgcMainPageChanging(Sender: TObject; NewPage: TsTabSheet; var AllowChange: Boolean);
     procedure tvRoomResRoomRatePropertiesEditValueChanged(Sender: TObject);
     procedure tvRoomRatesDiscountGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
@@ -2812,24 +2811,17 @@ begin
 
     labTotalRoomsSelected.Caption := inttostr(zTotalRoomsSelected);
 
-    if FNewReservation.IsQuick then
-    begin
-      btnFinish.Enabled := true;
-      memRoomNotes.Enabled := true;
-      clabRoomNotes.Visible := true;
-    end
-    else
-    begin
-      btnFinish.Enabled := false;
-      memRoomNotes.Enabled := false;
-      clabRoomNotes.Visible := false;
+    btnFinish.Enabled := FNewReservation.IsQuick;
+    memRoomNotes.Enabled := FNewReservation.IsQuick;
+    clabRoomNotes.Visible := FNewReservation.IsQuick;
+
+    if not FNewReservation.IsQuick then
       getSelectRooms;
-    end;
 
   end
   else
     if pgcMain.ActivePageIndex = 3 then
-  begin
+    begin
     if not FNewReservation.IsQuick then
     begin
       if ((zTotalSelected > 0) and (zTotalRoomsSelected = 0))
@@ -2843,38 +2835,25 @@ begin
     btnCancel.Enabled := true;
     btnPrevius.Enabled := true;
     btnNext.Enabled := false;
+    btnFinish.Enabled := FNewReservation.IsQuick;
+    memRoomNotes.Enabled := FNewReservation.IsQuick;
+    clabRoomNotes.Visible := FNewReservation.IsQuick;
+
     if FNewReservation.IsQuick then
     begin
-      btnFinish.Enabled := true;
-      memRoomNotes.Enabled := true;
-      clabRoomNotes.Visible := true;
+      if zIsFirstTime and NOT CreateRoomRes_Quick then
+      begin
+        Close;
+        exit;
+      end;
     end
     else
-    begin
-      btnFinish.Enabled := false;
-      memRoomNotes.Enabled := false;
-      clabRoomNotes.Visible := false;
-    end;
-    if FNewReservation.IsQuick then
-    begin
-      if zIsFirstTime then
-        if NOT CreateRoomRes_Quick then
-        begin
-          Close;
-          exit;
-        end;
-    end
-    else
-    begin
       CreateRoomRes_Normal;
-    end;
+
     GetPrices;
   end;
 end;
 
-procedure TfrmMakeReservationQuick.pgcMainPageChanging(Sender: TObject; NewPage: TsTabSheet; var AllowChange: Boolean);
-begin
-end;
 
 // ##############################################################################################################
 // ##############################################################################################################
@@ -3523,6 +3502,9 @@ begin
           mRoomResInfantCount.AsInteger := infantCount;
           mRoomResPriceCode.AsString := PriceCode;
           mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
+
+          mRoomResIsPercentage.AsBoolean := (cbxIsRoomResDiscountPrec.itemIndex = 0);
+          mRoomResDiscount.AsFloat := edRoomResDiscount.Value;
 
           if chkContactIsGuest.Checked AND (Trim(edContactPerson1.Text) <> '') then
             mRoomResMainGuest.AsString := edContactPerson1.Text
