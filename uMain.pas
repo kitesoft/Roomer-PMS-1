@@ -8029,7 +8029,9 @@ begin
           BlockMove := rdOBJ.qMT_.FieldByName('BlockMove').AsBoolean;
           BlockMoveReason := rdOBJ.qMT_.FieldByName('BlockMoveReason').asString;
           OngoingSale := rdOBJ.qMT_.FieldByName('TotalNoRent').AsFloat;
-          OngoingTaxes := rdOBJ.qMT_.FieldByName('TotalTaxes').AsFloat;
+
+          // retrieved later when needed
+//          OngoingTaxes := rdOBJ.qMT_.FieldByName('TotalTaxes').AsFloat;
           OngoingRent := rdOBJ.qMT_.FieldByName('TotalRent').AsFloat;
           dt := rdOBJ.qMT_.FieldByName('rdDate').AsDateTime;
 
@@ -8059,8 +8061,11 @@ begin
                   Discount,
                   rdOBJ.qMT_['AllIsPercentage'],
                   ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
-                  BlockMove, BlockMoveReason, OngoingSale, OngoingRent,
-                  OngoingTaxes, rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
+                  BlockMove, BlockMoveReason,
+                  OngoingSale,
+                  OngoingRent,
+                  -1, //OngoingTaxes,
+                  rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['InvoiceIndex']);
               except
 {$IFDEF DEBUG}
@@ -10635,11 +10640,13 @@ end;
 procedure TfrmMain.btnTestTaxesAPIClick(Sender: TObject);
 var
   lCaller: TReservationTaxesAPICaller;
+  lTaxReceipts: TRoomReservationTaxes;
 begin
 
   lCaller := TReservationTaxesAPICaller.Create;
+  lTaxreceipts := TRoomReservationTaxes.Create;
   try
-    lCaller.GetRoomResTotalTaxes(203789);
+    lCaller.GetRoomResAllTaxes(203789, lTaxReceipts);
   finally
     lCaller.Free;
   end;

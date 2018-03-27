@@ -5,7 +5,7 @@ uses
     cmpRoomerDataset
   , SysUtils
   , uMobileAPI
-  , Classes
+  , Classes, uRoomRentTaxReceipt
   ;
 
 type
@@ -21,7 +21,7 @@ type
     /// <summary>
     ///   Implementation of /service/hotelstatistics mobile api endpoint, returning a THotelStatisticsList
     /// </summary>
-    procedure GetRoomResTotalTaxes(aRoomReservation: integer);
+    procedure GetRoomResAllTaxes(aRoomReservation: integer; aReceiptList: TRoomReservationTaxes);
   end;
 
 
@@ -39,15 +39,19 @@ uses
 
 { TReservationTaxesAPICaller }
 
-procedure TReservationTaxesAPICaller.GetRoomResTotalTaxes(aRoomreservation: integer);
+procedure TReservationTaxesAPICaller.GetRoomResAllTaxes(aRoomreservation: integer; aReceiptList: TRoomReservationTaxes);
 var
   lResponse: string;
 const
-  cRoomResTotalURI = '/roomtotal';
+  cRoomResTotalURI = '/room';
 begin
+  Assert(assigned(aReceiptList));
+
   try
     lResponse := d.roomerMainDataSet.downloadRoomerUrlAsString(getURI + cRoomResTotalURI +
                       '/' + IntToStr(aRoomReservation));
+
+    aReceiptList.LoadFromXML(lResponse);
   except
     on E: Exception do
     begin

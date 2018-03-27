@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{B275BFC1-71F2-45FB-8203-D4A30B283544}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Roomer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Unittests\MobileAPITests\MobileAPItest.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Roomer">
+        <MSBuild Projects="Roomer.dproj"/>
+    </Target>
+    <Target Name="Roomer:Clean">
+        <MSBuild Projects="Roomer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Roomer:Make">
+        <MSBuild Projects="Roomer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MobileAPItest">
+        <MSBuild Projects="Unittests\MobileAPITests\MobileAPItest.dproj"/>
+    </Target>
+    <Target Name="MobileAPItest:Clean">
+        <MSBuild Projects="Unittests\MobileAPITests\MobileAPItest.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MobileAPItest:Make">
+        <MSBuild Projects="Unittests\MobileAPITests\MobileAPItest.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Roomer;MobileAPItest"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Roomer:Clean;MobileAPItest:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Roomer:Make;MobileAPItest:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
