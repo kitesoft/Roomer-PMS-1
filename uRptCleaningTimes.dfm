@@ -62,7 +62,6 @@ inherited frmCleaningTimes: TfrmCleaningTimes
         TabOrder = 0
         OnClick = btnExportClick
         SkinData.SkinSection = 'BUTTON'
-        ExplicitLeft = 3
       end
     end
     object gbxSelectDates: TsGroupBox
@@ -82,8 +81,8 @@ inherited frmCleaningTimes: TfrmCleaningTimes
       object rbToday: TsRadioButton
         Left = 20
         Top = 20
-        Width = 50
-        Height = 20
+        Width = 58
+        Height = 19
         Caption = 'Today'
         Checked = True
         TabOrder = 0
@@ -93,8 +92,8 @@ inherited frmCleaningTimes: TfrmCleaningTimes
       object rbYesterday: TsRadioButton
         Left = 21
         Top = 46
-        Width = 69
-        Height = 20
+        Width = 77
+        Height = 19
         Caption = 'Yesterday'
         TabOrder = 1
         OnClick = rbYesterdayClick
@@ -102,8 +101,8 @@ inherited frmCleaningTimes: TfrmCleaningTimes
       object rbManualRange: TsRadioButton
         Left = 131
         Top = 21
-        Width = 88
-        Height = 20
+        Width = 96
+        Height = 19
         Caption = 'Manual dates:'
         TabOrder = 2
         OnClick = rbManualRangeClick
@@ -169,21 +168,21 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     Top = 129
     Width = 857
     Height = 394
-    ActivePage = tsHistory
+    OnChange = pcClientChange
     ExplicitTop = 129
     ExplicitWidth = 857
     ExplicitHeight = 394
     inherited tsMain: TsTabSheet
       Caption = 'Cleaning times'
       TabVisible = True
-      ExplicitTop = 27
+      ExplicitTop = 41
       ExplicitWidth = 849
-      ExplicitHeight = 363
+      ExplicitHeight = 349
       inherited grData: TcxGrid
         Width = 849
         Height = 349
         ExplicitWidth = 849
-        ExplicitHeight = 363
+        ExplicitHeight = 349
         inherited tvData: TcxGridDBBandedTableView
           Styles.Content = nil
           Styles.ContentEven = nil
@@ -249,9 +248,6 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     end
     object tsHistory: TsTabSheet
       Caption = 'Cleaning History'
-      ExplicitLeft = 3
-      ExplicitTop = 28
-      ExplicitHeight = 360
       object grHistory: TcxGrid
         Left = 0
         Top = 0
@@ -260,7 +256,7 @@ inherited frmCleaningTimes: TfrmCleaningTimes
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 363
+        ExplicitTop = -2
         object tvHistory: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.PriorPage.Visible = False
@@ -365,7 +361,6 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     Top = 216
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43154.649115509260000000
-      AssignedFormatValues = []
       OptionsSize.AutoWidth = True
       OptionsView.ExpandButtons = False
       OptionsView.FilterBar = False

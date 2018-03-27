@@ -33,6 +33,7 @@ type
     procedure ExportToXml;
     property ExportSubMenu: TMenuItem read FmnuExportMenu;
     property Caption: string read FCaption write FCaption;
+    property ActiveGrid: TcxGrid read FGrid write FGrid;
   end;
 
 implementation

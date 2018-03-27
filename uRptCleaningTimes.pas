@@ -70,6 +70,7 @@ type
     procedure rbTodayClick(Sender: TObject);
     procedure rbManualRangeClick(Sender: TObject);
     procedure btnExportClick(Sender: TObject);
+    procedure pcClientChange(Sender: TObject);
   private
     function ConstructSQL: string;
   protected
@@ -184,12 +185,19 @@ begin
   inherited;
   pmnuExport.Items.Add(GridExporter.ExportSubMenu);
   DialogButtons := [mbClose];
+  pcCient.ActivePage := tsMain;
   RefreshData;
 end;
 
 procedure TfrmCleaningTimes.kbmCleaningTimesAfterScroll(DataSet: TDataSet);
 begin
   UpdateControls;
+end;
+
+procedure TfrmCleaningTimes.pcClientChange(Sender: TObject);
+begin
+  inherited;
+  GridExporter.ActiveGrid := ActiveGrid;
 end;
 
 procedure TfrmCleaningTimes.rbManualRangeClick(Sender: TObject);
