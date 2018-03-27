@@ -441,6 +441,7 @@ begin
               else
               begin
                 rec.Paid := false;
+                rec.Invoicenumber := -1;
               end;
               rec.Currency := rd_.FieldByName('Currency').asString;
 
@@ -451,6 +452,8 @@ begin
                 s := s + '     resFlag  = ' + _db(status) + ' ' + #10;
                 s := s + '     , Room  = ' + _db(Room) + ' ' + #10;
                 s := s + '     , isNoRoom = ' + _db(isNoRoom) + ' ' + #10;
+                s := s + '     , Paid = ' + _db(rec.Paid) + ' ' + #10;
+                s := s + '     , invoicenumber = ' + _db(rec.Invoicenumber) + ' ' + #10;
                 s := s + ' WHERE ' + #10;
                 s := s + '       (roomreservation= ' + _db(RoomReservation) + ') and (Adate=' + _db(sDate) +
                   ') ' + #10;
