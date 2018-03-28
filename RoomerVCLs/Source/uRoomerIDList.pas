@@ -26,6 +26,10 @@ type
     ///  Returns the number of integers added to the list
     /// </summary>
     function FillFromString(const aValue: string): integer;
+    /// <summary>
+    ///   Returns a string with all numbers in the list
+    /// </summary>
+    function CommaText: string;
   end;
 
 implementation
@@ -35,6 +39,22 @@ uses
   ;
 
 { TIDList }
+
+function TIDList.CommaText: string;
+var
+  lLst: TStringlist;
+  i: integer;
+begin
+  Result := '';
+  lLst := TStringList.Create;
+  try
+    for i in Self do
+      lLst.Add(IntToStr(i));
+    result := lLst.CommaText;
+  finally
+    lLst.Free;
+  end;
+end;
 
 function TIDList.ExtractNext: integer;
 begin

@@ -186,6 +186,10 @@ TYPE
     destructor Destroy; override;
     property Reservation: integer read FReservation write FReservation;
 
+    /// <summary>
+    ///   Must be unique. If negative then it represent a temporary roomreservation number, not yet created in the database
+    ///  If positive then this is an actual roomreservation number already defined in the database
+    /// </summary>
     property RoomReservation: integer   read getRoomReservation write SetRoomreservation    ;
     property RoomNumber     : string    read getRoomNumber      write SetRoomNumber         ;
     property RoomType       : string    read getRoomType        write SetRoomType           ;
@@ -226,7 +230,15 @@ TYPE
   //
   /// ///////////////////////////////////////////////////////////////////////////
 
-  TnewRoomReservationItemsList = TObjectList<TnewRoomReservationItem>;
+  TnewRoomReservationItemsList = class(TObjectList<TnewRoomReservationItem>)
+  public
+    /// <summary>
+    ///   Returns the lowest (negative) used roomreservationnumber - 1, which can be used as a
+    ///  temporary roomreservationnumber for newRoomReservationItem
+    /// </summary>
+    function GetNewTempRoomResNumber: integer;
+  end;
+
 
   /// ///////////////////////////////////////////////////////////////////////////////////
   /// TSelectedRooms
@@ -1264,7 +1276,6 @@ begin
           begin
             RoomNumber := '<' + inttostr(lNewRoomRes.RoomReservation) + '>';
             isNoRoom := true;
-            { TODO 3 -oHordur -cConvert to XE3 : When creating reservation in quick and room is noRoon then set RoomType to default roomtype }
           end else
           begin
             useInNationalReport := glb.RoomsSet.FieldByName('useInNationalReport').AsBoolean;//GET_useInNationalReport_byRoom(RoomNumber);
@@ -1391,8 +1402,6 @@ begin
             roomsDateData.ADate := sDate;
             RateIndex := lNewRoomRes.FRates.FindRateByDate(ii, 0);
 
-
-
             roomsDateData.isPercentage         := lNewRoomRes.FRates.RateItemsList[RateIndex].GetIsPercentage;   {set value}                                         ;
             roomsDateData.showDiscount         := lNewRoomRes.FRates.RateItemsList[RateIndex].GetShowDiscount;
             roomsDateData.RoomRate             := lNewRoomRes.FRates.RateItemsList[RateIndex].getRate ; {set value}
@@ -1506,75 +1515,6 @@ begin
             end;
           end;
 
-          // no more automatic invoicelines for excluded breakfasts
-//          if lNewRoomRes.hasBreakfast AND (NOT lNewRoomRes.FBreakfastIncluded) then
-//          begin
-//            initInvoiceLineHolderRec(InvoicelineData);
-//            Item := ctrlGetString('BreakFastItem');
-//            ItemInfo := d.Item_Get_Data(Item);
-//
-//            numItems     := numGuests * iDayCount;
-//            Price                 := lNewRoomRes.FBreakfastCost;
-//            itemDescription       := ItemInfo.Description;
-//
-//            Total        := price*numItems;
-//            lRevenue     := Total;
-//
-//            fTmp           := Total / (1 + (ItemInfo.VATPercentage / 100));
-//            Vat            := Total - ftmp;
-//            TotalWOVat     := Total - VAT;
-//
-//            decodedate(now, AYear, AMon, ADay);
-//            invoiceLineData.ItemID          := Item;
-//            invoiceLineData.AutoGen         := _GetCurrentTick;
-//            invoiceLineData.Reservation     := FReservationId;
-//            if lNewRoomRes.FBreakfastCostGroupAccount then
-//              invoiceLineData.RoomReservation := 0
-//            else
-//              invoiceLineData.RoomReservation := lNewRoomRes.RoomReservation;
-//            invoiceLineData.PurchaseDate    := date;
-//            invoiceLineData.InvoiceNumber   := -1;
-//            invoiceLineData.Description     := itemDescription;
-//            invoiceLineData.Price           := Price;
-//            invoiceLineData.Number          := numItems;
-//            invoiceLineData.VATType         := ItemInfo.VATCode;
-//            invoiceLineData.Total           := Total;
-//            invoiceLineData.TotalWOVAT      := totalWOVat;
-//            invoiceLineData.Vat             := VAT;
-//            invoiceLineData.CurrencyRate    := 1;
-//            invoiceLineData.Currency        := g.qNativeCurrency;
-//            invoiceLineData.ReportDate      := now;
-//            invoiceLineData.ReportTime      := '00:00';
-//            invoiceLineData.Persons         := 0;
-//            invoiceLineData.Nights          := 0;
-//            invoiceLineData.AYear           := aYear;
-//            invoiceLineData.AMon            := aMon;
-//            invoiceLineData.ADay            := aDay;
-//            invoiceLineData.ItemCurrency     := g.qNativeCurrency;
-//            invoiceLineData.ItemCurrencyRate := 1.00;
-//            invoiceLineData.Discount           := 0.00;
-//            invoiceLineData.Discount_isPrecent := true;
-//            invoiceLineData.ImportRefrence     := '';
-//            invoiceLineData.ImportSource       := '';
-//            invoiceLineData.Ispackage          := false;
-//            invoiceLineData.InvoiceIndex          := 0;
-//            invoiceLineData.Revenue           := lRevenue;
-//            invoiceLineData.VisibleOnInvoice  := True;
-//            invoicelineData.ilAccountKey      := ItemInfo.AccountKey;
-//            ExecutionPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
-//            //***Add invoice log here
-//               lstInvoiceActivity.add(CreateInvoiceActivityLog(g.quser
-//                                     ,invoiceLineData.Reservation
-//                                     ,invoiceLineData.RoomReservation
-//                                     ,invoiceLineData.SplitNumber
-//                                     ,ADD_LINE
-//                                     ,invoiceLineData.ItemID
-//                                     ,invoiceLineData.Total
-//                                     ,-1
-//                                     ,invoiceLineData.Description));
-//
-//          end;
-
           if lNewRoomRes.FExtraBed AND (NOT lNewRoomRes.FExtraBedIncluded) then
           begin
             glb.LocateSpecificRecordAndGetValue('currencies', 'Currency', Currency, 'AValue', CurrencyRate);
@@ -1582,8 +1522,6 @@ begin
             initInvoiceLineHolderRec(InvoicelineData);
             Item := g.qRoomRentItem;
             itemDescription := GetTranslatedText('shTxExtraBedInvoiceText');
-//            glb.LocateSpecificRecordAndGetValue('items', 'Item', ItemId, 'Description', itemDescription);
-
 
             ItemInfo := d.Item_Get_Data(Item);
             Price        := lNewRoomRes.FExtraBedCost;
@@ -1647,6 +1585,14 @@ begin
           end;
         end; // for 0 to roomcount
 
+        // Remove previously allocated but unused roomreservation records
+        if lstRRIDs.Count > 0 then
+        begin
+          s :=     ' DELETE FROM ROOMRESERVATION '#10;
+          s := s + ' WHERE ROOMRESERVATION IN %s and RESERVATION=0';
+
+          ExecutionPlan.AddExec(Format(s, [_db('(' + lstRRIDs.CommaText) + ')']));
+        end;
 
         if not ExecutionPlan.Execute(ptExec, False, False) then // not Transactional, not Transactional) then
           raise EReservationCreationException.Create(ExecutionPlan.ExecException); // Exception will end trying to create reservation
@@ -2076,6 +2022,17 @@ begin
   Result := 0;
   for lExtra in Self do
     Result := Result + lExtra.TotalPrice;
+end;
+
+{ TnewRoomReservationItemsList }
+
+function TnewRoomReservationItemsList.GetNewTempRoomResNumber: integer;
+var
+  lItem: TnewRoomReservationItem;
+begin
+  Result := -1;
+  for lItem in Self do
+    Result := Min(Result, lItem.RoomReservation - 1);
 end;
 
 end.

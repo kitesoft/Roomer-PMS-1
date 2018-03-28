@@ -3190,7 +3190,6 @@ var
 
   i: integer;
 
-  RoomCount: integer;
   childrenCount: integer;
   infantCount: integer;
 
@@ -3200,8 +3199,6 @@ var
   RoomTypeDescription: string;
   PriceCode: string;
 
-  sID: string;
-  lstIDs: TstringList;
 begin
   RoomReservation := 0;
   FNewReservation.newRoomReservations.RoomItemsList.Clear;
@@ -3254,95 +3251,83 @@ begin
   mExtras.Close;
   mExtras.Open;
 
-  RoomCount := FNewReservation.newRoomReservations.RoomCount;
-
-  lstIDs := TstringList.Create;
-  try
-    sID := RR_GetIDs(RoomCount);
-    _Glob._strTokenToStrings(sID, '|', lstIDs);
-
-    for oSelectedRoomItem in FNewReservation.newRoomReservations.RoomItemsList do
+  for oSelectedRoomItem in FNewReservation.newRoomReservations.RoomItemsList do
+  begin
+    if oSelectedRoomItem.RoomReservation = 0 then
     begin
-      if oSelectedRoomItem.RoomReservation < 1 then
+      RoomReservation := FNewReservation.newRoomReservations.RoomItemsList.GetNewTempRoomResNumber;
+      oSelectedRoomItem.RoomReservation := RoomReservation;
+    end;
+
+    room := oSelectedRoomItem.RoomNumber;
+    if room = '' then
+      room := '<' + inttostr(RoomReservation) + '>';
+
+    Arrival := oSelectedRoomItem.Arrival;
+    Departure := oSelectedRoomItem.Departure;
+    NumberGuests := oSelectedRoomItem.guestCount;
+    childrenCount := oSelectedRoomItem.childrenCount;
+    infantCount := oSelectedRoomItem.infantCount;
+    RoomType := oSelectedRoomItem.RoomType;
+
+    RoomDescription := '';
+    RoomTypeDescription := '';
+
+    if not(zTotalSelected = 0) and (zTotalNoRooms > 0) then
+    begin
+      if mSelectRooms.Locate('RoomType', RoomType, []) then
       begin
-        RoomReservation := strToInt(lstIDs[0]); // RR_SetNewID();
-        lstIds.Delete(0);
-        oSelectedRoomItem.RoomReservation := RoomReservation;
+        RoomDescription := mSelectRoomsDescription.AsString;
+        RoomTypeDescription := mSelectRoomsRoomTypeDescription.AsString;
       end;
+    end;
 
-      room := oSelectedRoomItem.RoomNumber;
-      if room = '' then
-        room := '<' + inttostr(RoomReservation) + '>';
+    if (copy(room, 1, 1)) = '<' then
+    begin
+      // It is noroom
+      // There is no roomdescription
+      // .. Get the roomType Description
+      RoomTypeDescription := glb.GetRoomTypeDescription(RoomType);
+      if NumberGuests = 0 then
+        NumberGuests := glb.GET_RoomTypeNumberGuests_byRoomType(RoomType);
+    end;
 
-      Arrival := oSelectedRoomItem.Arrival;
-      Departure := oSelectedRoomItem.Departure;
-      NumberGuests := oSelectedRoomItem.guestCount;
-      childrenCount := oSelectedRoomItem.childrenCount;
-      infantCount := oSelectedRoomItem.infantCount;
-      RoomType := oSelectedRoomItem.RoomType;
+    mRoomRes.Insert;
+    try
+      mRoomResRoomReservation.AsInteger := RoomReservation;
+      mRoomResroom.AsString := room;
+      mRoomResRoomType.AsString := RoomType;
+      mRoomResGuests.AsInteger := NumberGuests;
+      mRoomResRateCount.AsFloat := 0;
 
-      RoomDescription := '';
-      RoomTypeDescription := '';
+      mRoomResAvragePrice.AsFloat := 0;
+      mRoomResAvrageDiscount.AsFloat := 0;
 
-      if not(zTotalSelected = 0) and (zTotalNoRooms > 0) then
-      begin
-        if mSelectRooms.Locate('RoomType', RoomType, []) then
-        begin
-          RoomDescription := mSelectRoomsDescription.AsString;
-          RoomTypeDescription := mSelectRoomsRoomTypeDescription.AsString;
-        end;
-      end;
+      mRoomResManualChannelId.AsInteger := 0;
+      mRoomResratePlanCode.AsString := '';
 
-      if (copy(room, 1, 1)) = '<' then
-      begin
-        // It is noroom
-        // There is no roomdescription
-        // .. Get the roomType Description
-        RoomTypeDescription := glb.GetRoomTypeDescription(RoomType);
-        if NumberGuests = 0 then
-          NumberGuests := glb.GET_RoomTypeNumberGuests_byRoomType(RoomType);
-      end;
-
-      mRoomRes.Insert;
-      try
-        mRoomResRoomReservation.AsInteger := RoomReservation;
-        mRoomResroom.AsString := room;
-        mRoomResRoomType.AsString := RoomType;
-        mRoomResGuests.AsInteger := NumberGuests;
-        mRoomResRateCount.AsFloat := 0;
-
-        mRoomResAvragePrice.AsFloat := 0;
-        mRoomResAvrageDiscount.AsFloat := 0;
-
-        mRoomResManualChannelId.AsInteger := 0;
-        mRoomResratePlanCode.AsString := '';
-
-        mRoomResRoomDescription.AsString := RoomDescription;
-        mRoomResRoomTypeDescription.AsString := RoomTypeDescription;
-        mRoomResarrival.AsDateTime := Arrival;
-        mRoomResdeparture.AsDateTime := Departure;
-        mRoomResChildrenCount.AsInteger := childrenCount;
-        mRoomResInfantCount.AsInteger := infantCount;
-        mRoomResPriceCode.AsString := PriceCode;
-        mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
-        mRoomResIsPercentage.AsBoolean := (cbxIsRoomResDiscountPrec.itemIndex = 0);
-        mRoomResDiscount.AsFloat := edRoomResDiscount.Value;
-        if chkContactIsGuest.Checked AND (Trim(edContactPerson1.Text) <> '') then
-          mRoomResMainGuest.AsString := edContactPerson1.Text
-        else if (Trim(edtPortfolio.Text) <> '') then
-          mRoomResMainGuest.AsString := edtPortfolio.Text
-        else
-          mRoomResMainGuest.AsString := edReservationName.Text;
-        mRoomRes.post;
-      except
-        mRoomRes.Cancel;
-        raise;
-      end;
-    end; //for
-
-  finally
-    FreeAndNil(lstIDs);
-  end;
+      mRoomResRoomDescription.AsString := RoomDescription;
+      mRoomResRoomTypeDescription.AsString := RoomTypeDescription;
+      mRoomResarrival.AsDateTime := Arrival;
+      mRoomResdeparture.AsDateTime := Departure;
+      mRoomResChildrenCount.AsInteger := childrenCount;
+      mRoomResInfantCount.AsInteger := infantCount;
+      mRoomResPriceCode.AsString := PriceCode;
+      mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
+      mRoomResIsPercentage.AsBoolean := (cbxIsRoomResDiscountPrec.itemIndex = 0);
+      mRoomResDiscount.AsFloat := edRoomResDiscount.Value;
+      if chkContactIsGuest.Checked AND (Trim(edContactPerson1.Text) <> '') then
+        mRoomResMainGuest.AsString := edContactPerson1.Text
+      else if (Trim(edtPortfolio.Text) <> '') then
+        mRoomResMainGuest.AsString := edtPortfolio.Text
+      else
+        mRoomResMainGuest.AsString := edReservationName.Text;
+      mRoomRes.post;
+    except
+      mRoomRes.Cancel;
+      raise;
+    end;
+  end; //for
 
   if mRoomRes.RecordCount > 0 then
   begin
@@ -3379,8 +3364,6 @@ var
 
   defaultGuests: integer;
 
-  sID: string;
-  lstIDs: TstringList;
   sRoomsInList: string;
   sRoomTypes: TStrings;
   sMessage: String;
@@ -3402,106 +3385,100 @@ begin
   mExtras.Open;
   RoomCount := FNewReservation.newRoomReservations.RoomCount;
 
-  lstIDs := TstringList.Create;
-  try
+  sRoomsInList := '';
 
-    sID := RR_GetIDs(RoomCount);
-    _Glob._strTokenToStrings(sID, '|', lstIDs);
-
-    sRoomsInList := '';
-
-    for i := 0 to RoomCount - 1 do
+  for i := 0 to RoomCount - 1 do
+  begin
+    room := FNewReservation.newRoomReservations.RoomItemsList[i].RoomNumber;
+    if room <> '' then
     begin
-      room := FNewReservation.newRoomReservations.RoomItemsList[i].RoomNumber;
-      if room <> '' then
-      begin
-        sRoomsInList := sRoomsInList + _db(room) + ',';
-      end;
+      sRoomsInList := sRoomsInList + _db(room) + ',';
     end;
+  end;
 
-    if sRoomsInList <> '' then
-      Delete(sRoomsInList, length(sRoomsInList), 1);
+  if sRoomsInList <> '' then
+    Delete(sRoomsInList, length(sRoomsInList), 1);
 
-    s := '';
-    s := s + ' SELECT ' + #10;
-    s := s + '     rooms.Room ' + #10;
-    s := s + '   , rooms.Description AS RoomDescription ' + #10;
-    s := s + '   , rooms.RoomType ' + #10;
-    s := s + '   , roomtypes.NumberGuests ' + #10;
-    s := s + '   , roomtypes.Description AS RoomTypeDescription ' + #10;
-    s := s + ' FROM ' + #10;
-    s := s + '   rooms ' + #10;
-    s := s + '   LEFT OUTER JOIN roomtypes ON rooms.RoomType = roomtypes.RoomType ' + #10;
-    s := s + ' WHERE ' + #10;
-    s := s + '   (rooms.Room in (' + sRoomsInList + '))' + #10;
+  s := '';
+  s := s + ' SELECT ' + #10;
+  s := s + '     rooms.Room ' + #10;
+  s := s + '   , rooms.Description AS RoomDescription ' + #10;
+  s := s + '   , rooms.RoomType ' + #10;
+  s := s + '   , roomtypes.NumberGuests ' + #10;
+  s := s + '   , roomtypes.Description AS RoomTypeDescription ' + #10;
+  s := s + ' FROM ' + #10;
+  s := s + '   rooms ' + #10;
+  s := s + '   LEFT OUTER JOIN roomtypes ON rooms.RoomType = roomtypes.RoomType ' + #10;
+  s := s + ' WHERE ' + #10;
+  s := s + '   (rooms.Room in (' + sRoomsInList + '))' + #10;
 
-    ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
-    try
-      ExecutionPlan.AddQuery(s);
-      ExecutionPlan.Execute(ptQuery);
-      rSetRooms := ExecutionPlan.Results[0];
+  ExecutionPlan := d.roomerMainDataSet.CreateExecutionPlan;
+  try
+    ExecutionPlan.AddQuery(s);
+    ExecutionPlan.Execute(ptQuery);
+    rSetRooms := ExecutionPlan.Results[0];
 
-      for i := 0 to FNewReservation.newRoomReservations.RoomItemsList.Count-1 do
+    for i := 0 to FNewReservation.newRoomReservations.RoomItemsList.Count-1 do
+    begin
+      lRoomReservation := FNewReservation.newRoomReservations.RoomItemsList[i];
+      if lRoomReservation.RoomReservation = 0 then
       begin
-        lRoomReservation := FNewReservation.newRoomReservations.RoomItemsList[i];
-        if lRoomReservation.RoomReservation < 1 then
-        begin
-          RoomReservation := strToInt(lstIDs[i]); // RR_SetNewID();
-          lRoomReservation.RoomReservation := RoomReservation;
-        end;
+        RoomReservation := FNewReservation.newRoomReservations.RoomItemsList.GetNewTempRoomResNumber;
+        lRoomReservation.RoomReservation := RoomReservation;
+      end;
 
-        room := lRoomReservation.RoomNumber;
-        if room = '' then
-        begin
-          room := '<' + inttostr(RoomReservation) + '>';
-          RoomType := lRoomReservation.RoomType;
-        end;
+      room := lRoomReservation.RoomNumber;
+      if room = '' then
+      begin
+        room := '<' + inttostr(RoomReservation) + '>';
+        RoomType := lRoomReservation.RoomType;
+      end;
 
-        Arrival := lRoomReservation.Arrival;
-        Departure := lRoomReservation.Departure;
-        childrenCount := lRoomReservation.childrenCount;
-        infantCount := lRoomReservation.infantCount;
+      Arrival := lRoomReservation.Arrival;
+      Departure := lRoomReservation.Departure;
+      childrenCount := lRoomReservation.childrenCount;
+      infantCount := lRoomReservation.infantCount;
 
-        if (copy(room, 1, 1)) <> '<' then
-        begin
-          rSetRooms.Locate('room', room, []);
-          RoomDescription := rSetRooms.FieldByName('RoomDescription').AsString;
-          RoomType := rSetRooms.FieldByName('RoomType').AsString;
-          lRoomReservation.RoomType := RoomType;
-          defaultGuests := rSetRooms.FieldByName('NumberGuests').AsInteger;
-          RoomTypeDescription := rSetRooms.FieldByName('RoomTypeDescription').AsString;
-        end
-        else
-        begin // It is noroom
-          // There is no roomdescription
-          // .. Get the roomType Description
-          RoomTypeDescription := glb.GetRoomTypeDescription(RoomType);
-          defaultGuests := glb.GET_RoomTypeNumberGuests_byRoomType(RoomType);
-        end;
+      if (copy(room, 1, 1)) <> '<' then
+      begin
+        rSetRooms.Locate('room', room, []);
+        RoomDescription := rSetRooms.FieldByName('RoomDescription').AsString;
+        RoomType := rSetRooms.FieldByName('RoomType').AsString;
+        lRoomReservation.RoomType := RoomType;
+        defaultGuests := rSetRooms.FieldByName('NumberGuests').AsInteger;
+        RoomTypeDescription := rSetRooms.FieldByName('RoomTypeDescription').AsString;
+      end
+      else
+      begin // It is noroom
+        // There is no roomdescription
+        // .. Get the roomType Description
+        RoomTypeDescription := glb.GetRoomTypeDescription(RoomType);
+        defaultGuests := glb.GET_RoomTypeNumberGuests_byRoomType(RoomType);
+      end;
 
-        Guests := defaultGuests;
+      Guests := defaultGuests;
 
-        mRoomRes.append;
-        try
-          mRoomResRoomReservation.AsInteger := RoomReservation;
-          mRoomResroom.AsString := room;
-          mRoomResRoomType.AsString := RoomType;
-          mRoomResGuests.AsInteger := Guests;
-          mRoomResAvragePrice.AsFloat := 0;
-          mRoomResRateCount.AsFloat := 0;
-          mRoomResAvrageDiscount.AsFloat := 0;
+      mRoomRes.append;
+      try
+        mRoomResRoomReservation.AsInteger := RoomReservation;
+        mRoomResroom.AsString := room;
+        mRoomResRoomType.AsString := RoomType;
+        mRoomResGuests.AsInteger := Guests;
+        mRoomResAvragePrice.AsFloat := 0;
+        mRoomResRateCount.AsFloat := 0;
+        mRoomResAvrageDiscount.AsFloat := 0;
 
-          mRoomResManualChannelId.AsInteger := 0;
-          mRoomResratePlanCode.AsString := '';
+        mRoomResManualChannelId.AsInteger := 0;
+        mRoomResratePlanCode.AsString := '';
 
-          mRoomResRoomDescription.AsString := RoomDescription;
-          mRoomResRoomTypeDescription.AsString := RoomTypeDescription;
-          mRoomResarrival.AsDateTime := Arrival;
-          mRoomResdeparture.AsDateTime := Departure;
-          mRoomResChildrenCount.AsInteger := childrenCount;
-          mRoomResInfantCount.AsInteger := infantCount;
-          mRoomResPriceCode.AsString := PriceCode;
-          mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
+        mRoomResRoomDescription.AsString := RoomDescription;
+        mRoomResRoomTypeDescription.AsString := RoomTypeDescription;
+        mRoomResarrival.AsDateTime := Arrival;
+        mRoomResdeparture.AsDateTime := Departure;
+        mRoomResChildrenCount.AsInteger := childrenCount;
+        mRoomResInfantCount.AsInteger := infantCount;
+        mRoomResPriceCode.AsString := PriceCode;
+        mRoomResPersonsProfilesId.AsInteger := edtPortfolio.Tag;
 
           mRoomResIsPercentage.AsBoolean := (cbxIsRoomResDiscountPrec.itemIndex = 0);
           mRoomResDiscount.AsFloat := edRoomResDiscount.Value;
@@ -3513,45 +3490,41 @@ begin
           else
             mRoomResMainGuest.AsString := edReservationName.Text;
 
-          mRoomRes.post;
+        mRoomRes.post;
 
-        except
-          mRoomRes.Cancel;
-          raise;
-        end;
+      except
+        mRoomRes.Cancel;
+        raise;
       end;
-      zIsFirstTime := false;
+    end;
+    zIsFirstTime := false;
 
-      if g.qWarnWhenOverbooking then
+    if g.qWarnWhenOverbooking then
+    begin
+      sMessage := '';
+
+      //TODO Improve for roomreservations with different arrival and departure date. which is possible by
+      // selecting cells from the period grid and starting quick reservation
+      AvailabilityPerDay := TAvailabilityPerDay.Create(dtArrival.date, dtDeparture.date, FNewReservation);
+      sRoomTypes := AvailabilityPerDay.Overbookings;
+      try
+        sMessage := sRoomTypes.Text;
+      finally
+        sRoomTypes.Free;
+        AvailabilityPerDay.Free;
+      end;
+      if sMessage <> '' then
       begin
-        sMessage := '';
-
-        //TODO Improve for roomreservations with different arrival and departure date. which is possible by
-        // selecting cells from the period grid and starting quick reservation
-        AvailabilityPerDay := TAvailabilityPerDay.Create(dtArrival.date, dtDeparture.date, FNewReservation);
-        sRoomTypes := AvailabilityPerDay.Overbookings;
-        try
-          sMessage := sRoomTypes.Text;
-        finally
-          sRoomTypes.Free;
-          AvailabilityPerDay.Free;
-        end;
-        if sMessage <> '' then
-        begin
-          s := GetTranslatedText('shTx_Various_WouldCreateOverbooking') +
-            sMessage + #10#10 +
-            GetTranslatedText('shTx_Various_AreYoySureYouWantToContinue');
-          if MessageDlg(s, mtWarning, [mbYes, mbCancel], 0) <> mrYes then
-            Result := false;
-        end;
+        s := GetTranslatedText('shTx_Various_WouldCreateOverbooking') +
+          sMessage + #10#10 +
+          GetTranslatedText('shTx_Various_AreYoySureYouWantToContinue');
+        if MessageDlg(s, mtWarning, [mbYes, mbCancel], 0) <> mrYes then
+          Result := false;
       end;
-
-    finally
-      FreeAndNil(ExecutionPlan);
     end;
 
   finally
-    FreeAndNil(lstIDs);
+    FreeAndNil(ExecutionPlan);
   end;
 end;
 
