@@ -5821,8 +5821,9 @@ begin
     btnRemoveThisRoom.Enabled := false;
   end;
 
-  mnuRegistrationForm.Enabled := Enable AND (NOT OffLineMode);
-
+  //mnuRegistrationForm.Enabled := Enable AND (NOT OffLineMode);
+  S3.Enabled := Enable AND (NOT OffLineMode);
+  F1.Enabled := Enable AND (NOT OffLineMode);
 
   btnRoomInvoice.Enabled := Enable;
   btnGroupInvoice.Enabled := Enable;
