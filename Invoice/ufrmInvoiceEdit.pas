@@ -5258,13 +5258,13 @@ begin
     FInvoiceCurrencyCode := Value
   else
   begin
-    MessageDlg('Unknown currency [%s] found. Using native currency for this invoice.', mtWarning, [mbOK], 0);
+    MessageDlg(Format('Unknown currency [%s] found. Using native currency for this invoice.', [Value]), mtWarning, [mbOK], 0);
     FInvoiceCurrencyCode := RoomerCurrencyManager.DefaultCurrency;
   end;
 
   fraInvoiceCurrency.DisableEvents;
   try
-    fraInvoiceCurrency.Code := Value;
+    fraInvoiceCurrency.Code := FInvoiceCurrencyCode;
   finally
     fraInvoiceCurrency.EnableEvents;
   end;
