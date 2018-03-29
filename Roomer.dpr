@@ -41,7 +41,7 @@ uses
   uRoomReservationOBJ in 'uRoomReservationOBJ.pas',
   uRoomDateProblem in 'uRoomDateProblem.pas' {frmRoomDateProblem},
   uResProblem in 'uResProblem.pas' {frmResProblem},
-  uDayFinical in 'uDayFinical.pas' {frmDayFinical},
+  uRptFinance in 'uRptFinance.pas' {frmRptFinance},
   uConvertGroups in 'uConvertGroups.pas' {frmConvertGroups},
   uInvoiceList2 in 'uInvoiceList2.pas' {frmInvoiceList2},
   uDayNotes in 'uDayNotes.pas' {frmDayNotes},

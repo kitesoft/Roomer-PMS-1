@@ -133,8 +133,8 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         object cbxActive: TsCheckBox
           Left = 198
           Top = 25
-          Width = 58
-          Height = 17
+          Width = 50
+          Height = 20
           Caption = 'Active'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText

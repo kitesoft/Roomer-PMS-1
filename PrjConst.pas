@@ -39,7 +39,7 @@ uses uAppGlobal,
   uRoomDateProblem,
   uResProblem,
 //  uStatisticsForcast,
-  uDayFinical,
+  uRptFinance,
   uConvertGroups,
   uInvoiceList2,
 //  uRptCustomer,
@@ -1891,7 +1891,7 @@ begin
   TfrmMaidActionsEdit.Create(nil).Free;
   frmRoomDateProblem := TfrmRoomDateProblem.Create(nil); frmRoomDateProblem.Free; frmRoomDateProblem := nil;
   TfrmResProblem.Create(nil).Free;
-  TfrmDayFinical.Create(nil).Free;
+  TfrmRptFinance.Create(nil).Free;
   frmConvertGroups := TfrmConvertGroups.Create(nil); frmConvertGroups.Free; frmConvertGroups := nil;
   TfrmInvoiceList2.Create(nil).Free;
   frmChangeRRdates := TfrmChangeRRdates.Create(nil); frmChangeRRdates.Free; frmChangeRRdates := nil;

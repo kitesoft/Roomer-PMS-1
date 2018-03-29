@@ -76,8 +76,11 @@ procedure ShowStatisticsSettings;
 implementation
 
 {$R *.dfm}
-uses uSnapshotService, uD, uRoomerConfirmationDialogs
-     ;
+uses
+    uSnapshotService
+  , uD
+  , uRoomerConfirmationDialogs
+  ;
 
 
 procedure ShowStatisticsSettings;

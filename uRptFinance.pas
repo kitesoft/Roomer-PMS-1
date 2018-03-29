@@ -1,4 +1,4 @@
-unit uDayFinical;
+unit uRptFinance;
 
 interface
 
@@ -90,7 +90,7 @@ uses
     ;
 
 type
-  TfrmDayFinical = class(TForm)
+  TfrmRptFinance = class(TForm)
     LMDStatusBar1: TStatusBar;
     LMDSimplePanel1: TsPanel;
     mainPage: TsPageControl;
@@ -645,7 +645,7 @@ type
 
   end;
 
-  procedure ShowFinancialReport();
+  procedure ShowFinanceReport();
 
 implementation
 
@@ -679,11 +679,11 @@ uses
 
 {$R *.dfm}
 
-procedure ShowFinancialReport();
+procedure ShowFinanceReport();
 var
-  frm: TfrmDayFinical;
+  frm: TfrmRptFinance;
 begin
-  frm := TfrmDayFinical.Create(nil);
+  frm := TfrmRptFinance.Create(nil);
   try
     frm.ShowModal;
   finally
@@ -692,22 +692,22 @@ begin
 
 end;
 
-function TfrmDayFinical.CreateSQLInText(list: TstringList): string;
+function TfrmRptFinance.CreateSQLInText(list: TstringList): string;
 begin
   Result := '(' + list.CommaText + ')'
 end;
 
-procedure TfrmDayFinical.cxButton1Click(Sender: TObject);
+procedure TfrmRptFinance.cxButton1Click(Sender: TObject);
 begin
   tvInvoiceHeads.ViewData.Expand(true);
 end;
 
-procedure TfrmDayFinical.cxButton2Click(Sender: TObject);
+procedure TfrmRptFinance.cxButton2Click(Sender: TObject);
 begin
   tvInvoiceHeads.ViewData.Collapse(true);
 end;
 
-procedure TfrmDayFinical.FormCreate(Sender: TObject);
+procedure TfrmRptFinance.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self);
@@ -726,13 +726,13 @@ begin
 
 end;
 
-procedure TfrmDayFinical.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TfrmRptFinance.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
     Close;
 end;
 
-procedure TfrmDayFinical.FormShow(Sender: TObject);
+procedure TfrmRptFinance.FormShow(Sender: TObject);
 var
   lLocationsList: TSet_Of_Integer;
 begin
@@ -766,7 +766,7 @@ begin
 
 end;
 
-procedure TfrmDayFinical.ClearAllData;
+procedure TfrmRptFinance.ClearAllData;
 begin
 
   if mSums.Active then
@@ -836,7 +836,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.GetAll(clearData: Boolean);
+procedure TfrmRptFinance.GetAll(clearData: Boolean);
 var
   lst: TstringList;
   dateFrom: TDate;
@@ -920,12 +920,12 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.btnRefreshClick(Sender: TObject);
+procedure TfrmRptFinance.btnRefreshClick(Sender: TObject);
 begin
   GetAll(true);
 end;
 
-procedure TfrmDayFinical.chkGetUnconfirmedClick(Sender: TObject);
+procedure TfrmRptFinance.chkGetUnconfirmedClick(Sender: TObject);
 begin
   if zDoChkEvent then
   begin
@@ -944,7 +944,7 @@ begin
 
 end;
 
-procedure TfrmDayFinical.chkOnedayClick(Sender: TObject);
+procedure TfrmRptFinance.chkOnedayClick(Sender: TObject);
 begin
   zIsOneDay := chkOneday.Checked;
   dtDateTo.Visible := not zIsOneDay;
@@ -952,7 +952,7 @@ begin
 end;
 
 
-procedure TfrmDayFinical.GetItemSale;
+procedure TfrmRptFinance.GetItemSale;
 var
   s: string;
   rSet: TRoomerDataSet;
@@ -967,9 +967,9 @@ begin
         ' SELECT ' +
         '     invoicelines.ItemID AS Item ' +
         '   , SUM(invoicelines.Number) AS ItemCount ' +
-        '   , SUM(invoicelines.Total + invoicelines.revenueCorrection) AS Total ' +
-        '   , SUM(invoicelines.Total  + invoicelines.revenueCorrection - (invoicelines.Vat + invoicelines.revenueCorrectionVAT)) AS TotalWoVat ' +
-        '   , SUM(invoicelines.Vat + invoicelines.revenueCorrectionVAT) AS TotalVat ' +
+        '   , SUM(invoicelines.revenue) AS Total ' +
+        '   , SUM(invoicelines.revenue / (invoicelines.ilVatPercentage + 100) * 100) AS TotalWoVat ' +
+        '   , SUM(invoicelines.revenue / (invoicelines.ilVatPercentage + 100) * invoicelines.ilVatPercentage) AS TotalVat ' +
         '   , items.Description ' +
         '   , items.AccountKey ' +
         '   , itemtypes.Itemtype ' +
@@ -1009,7 +1009,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.GetItemTypeSale;
+procedure TfrmRptFinance.GetItemTypeSale;
 var
   s: string;
   rSet: TRoomerDataSet;
@@ -1020,23 +1020,23 @@ begin
     screen.cursor := crHourGlass;
     try
       sql :=
-        ' SELECT ' +
-        '      SUM(il.Number) AS ItemCount ' +
-        '    , SUM(il.Total + il.revenueCorrection) AS Total ' +
-        '    , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
-        '    , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
-        '    , itemtypes.Itemtype ' +
-        '    , itemtypes.Description AS ItemTypeDescription ' +
-        '    , itemtypes.VATCode ' +
-        ' FROM ' +
-        '    itemtypes ' +
-        '       INNER JOIN items ON itemtypes.Itemtype = items.Itemtype ' +
-        '       RIGHT OUTER JOIN invoicelines il ON items.Item = il.ItemID ' +
-        ' WHERE ' +
-        '   (il.InvoiceNumber IN  %s ) ' +
-        ' GROUP BY ' +
-        '     itemtypes.Itemtype ' +
-        '  ,  itemtypes.Description ' +
+        ' SELECT '#10 +
+        '     SUM(il.Number) AS ItemCount '#10 +
+        '   , SUM(il.revenue) AS Total '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * 100) AS TotalWoVat '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * il.ilVatPercentage) AS TotalVat '#10 +
+        '   , itemtypes.Itemtype '#10 +
+        '   , itemtypes.Description AS ItemTypeDescription '#10 +
+        '   , itemtypes.VATCode '#10 +
+        ' FROM '#10 +
+        '    itemtypes '#10 +
+        '       INNER JOIN items ON itemtypes.Itemtype = items.Itemtype '#10 +
+        '       RIGHT OUTER JOIN invoicelines il ON items.Item = il.ItemID '#10 +
+        ' WHERE '#10 +
+        '   (il.InvoiceNumber IN  %s ) '#10 +
+        ' GROUP BY '#10 +
+        '     itemtypes.Itemtype '#10 +
+        '  ,  itemtypes.Description '#10 +
         '  ,  itemtypes.VATCode ';
 
       s := format(sql, [zSQLInText]);
@@ -1058,7 +1058,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.GetItemVATsale;
+procedure TfrmRptFinance.GetItemVATsale;
 var
   s: string;
   rSet: TRoomerDataSet;
@@ -1070,23 +1070,23 @@ begin
     screen.cursor := crHourGlass;
     try
       sql :=
-        ' SELECT ' +
-        '     SUM(il.Number) AS ItemCount ' +
-        '   , SUM(il.Total + il.revenueCorrection) AS Total ' +
-        '   , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
-        '   , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
-        '   , vatcodes.VATCode ' +
-        '   , vatcodes.Description ' +
-        '   , vatcodes.VATPercentage ' +
-        ' FROM ' +
-        '     invoicelines il' +
-        '     LEFT OUTER JOIN vatcodes ON il.VATType = vatcodes.VATCode ' +
-        ' WHERE ' +
-        '   (il.InvoiceNumber IN  %s ) ' +
-        ' GROUP BY ' +
-        '   vatcodes.VATCode ' +
-        ' , vatcodes.Description ' +
-        ' , vatcodes.VATPercentage ';
+        ' SELECT '#10 +
+        '     SUM(il.Number) AS ItemCount '#10 +
+        '   , SUM(il.revenue) AS Total '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * 100) AS TotalWoVat '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * il.ilVatPercentage) AS TotalVat '#10 +
+        '   , vatcodes.VATCode '#10 +
+        '   , vatcodes.Description '#10 +
+        '   , il.ilVatPercentage as VATPercentage '#10 +
+        ' FROM '#10 +
+        '     invoicelines il'#10 +
+        '     LEFT OUTER JOIN vatcodes ON il.VATType = vatcodes.VATCode '#10 +
+        ' WHERE '#10 +
+        '   (il.InvoiceNumber IN  %s ) '#10 +
+        ' GROUP BY '#10 +
+        '   vatcodes.VATCode '#10 +
+        ' , vatcodes.Description '#10 +
+        ' , VATPercentage ';
 
       s := format(sql, [zSQLInText]);
 
@@ -1111,7 +1111,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.GetInvoicelist;
+procedure TfrmRptFinance.GetInvoicelist;
 var
   rSet: TRoomerDataSet;
   s: string;
@@ -1155,9 +1155,9 @@ begin
         '   , il.Description ' +
         '   , il.Price ' +
         '   , il.VATType ' +
-        '   , il.Total + il.revenueCorrection AS AmountWithTax ' +
-        '   , il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat) AS AmountNoTax ' +
-        '   , il.Vat + il.revenueCorrectionVat as AmountTax' +
+        '   , il.revenue AS AmountWithTax' +
+        '   , il.revenue / (il.ilVatPercentage + 100) * 100 AS AmountNoTax ' +
+        '   , il.revenue / (il.ilVatPercentage + 100) * il.ilVatPercentage AS AmountTax' +
         '   , il.Currency ' +
         '   , il.CurrencyRate ' +
         '   , il.ImportRefrence ' +
@@ -1186,7 +1186,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.mInvoiceHeadsCalcFields(DataSet: TDataSet);
+procedure TfrmRptFinance.mInvoiceHeadsCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('isCash').AsBoolean := false;
   DataSet.FieldByName('isKredit').AsBoolean := false;
@@ -1217,7 +1217,7 @@ begin
 
 end;
 
-procedure TfrmDayFinical.mainPageChange(Sender: TObject);
+procedure TfrmRptFinance.mainPageChange(Sender: TObject);
 begin
   (*
 
@@ -1258,19 +1258,19 @@ begin
 
 end;
 
-procedure TfrmDayFinical.GetNativeCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+procedure TfrmRptFinance.GetNativeCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
   aProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
-procedure TfrmDayFinical.tvPaymentscurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
+procedure TfrmRptFinance.tvPaymentscurrencyAmountGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
   aProperties := RoomerCurrencyManager.CurrencyDefinition[VarToStr(aRecord.Values[tvPaymentsCurrency.Index])].GetcxEditProperties;
 end;
 
-procedure TfrmDayFinical.getPayments;
+procedure TfrmRptFinance.getPayments;
 var
   rSet: TRoomerDataSet;
   s: string;
@@ -1335,7 +1335,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.getPaymentType;
+procedure TfrmRptFinance.getPaymentType;
 var
   rSet: TRoomerDataSet;
   s: string;
@@ -1387,7 +1387,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.getPaymentGroup;
+procedure TfrmRptFinance.getPaymentGroup;
 var
   rSet: TRoomerDataSet;
   s: string;
@@ -1437,7 +1437,7 @@ end;
 
 /// /////////////////
 
-procedure TfrmDayFinical.getSums;
+procedure TfrmRptFinance.getSums;
 var
   id: integer;
 
@@ -1495,7 +1495,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.getSums2;
+procedure TfrmRptFinance.getSums2;
 var
   id: integer;
 begin
@@ -1552,7 +1552,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_ihAmountWithTax: double;
+function TfrmRptFinance.getTotal_ihAmountWithTax: double;
 var
   AIndex: integer;
   AValue: variant;
@@ -1565,7 +1565,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_ihAmountWoVAT: double;
+function TfrmRptFinance.getTotal_ihAmountWoVAT: double;
 var
   AIndex: integer;
   AValue: variant;
@@ -1578,7 +1578,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_ihAmountVAT: double;
+function TfrmRptFinance.getTotal_ihAmountVAT: double;
 var
   AIndex: integer;
   AValue: variant;
@@ -1591,7 +1591,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_ihInvoiceCount: integer;
+function TfrmRptFinance.getTotal_ihInvoiceCount: integer;
 var
   AIndex: integer;
   AValue: variant;
@@ -1604,7 +1604,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_PaymentAmount: double;
+function TfrmRptFinance.getTotal_PaymentAmount: double;
 var
   AIndex: integer;
   AValue: variant;
@@ -1617,7 +1617,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_PaymentCount: integer;
+function TfrmRptFinance.getTotal_PaymentCount: integer;
 var
   AIndex: integer;
   AValue: variant;
@@ -1630,7 +1630,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_LodgingNights: integer;
+function TfrmRptFinance.getTotal_LodgingNights: integer;
 var
   AIndex: integer;
   AValue: variant;
@@ -1643,7 +1643,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_LodgingTax: double;
+function TfrmRptFinance.getTotal_LodgingTax: double;
 var
   AIndex: integer;
   AValue: variant;
@@ -1656,7 +1656,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_RoomInvoiceCount: integer;
+function TfrmRptFinance.getTotal_RoomInvoiceCount: integer;
 var
   AIndex: integer;
   AValue: variant;
@@ -1669,7 +1669,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_GroupInvoiceCount: integer;
+function TfrmRptFinance.getTotal_GroupInvoiceCount: integer;
 var
   AIndex: integer;
   AValue: variant;
@@ -1682,7 +1682,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_KeditInvoiceCount: integer;
+function TfrmRptFinance.getTotal_KeditInvoiceCount: integer;
 var
   AIndex: integer;
   AValue: variant;
@@ -1695,7 +1695,7 @@ begin
   end;
 end;
 
-function TfrmDayFinical.getTotal_CashInvoiceCount: integer;
+function TfrmRptFinance.getTotal_CashInvoiceCount: integer;
 var
   AIndex: integer;
   AValue: variant;
@@ -1708,7 +1708,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.getHeader;
+procedure TfrmRptFinance.getHeader;
 var
   dateFrom: TDate;
   dateTo: TDate;
@@ -1807,7 +1807,7 @@ begin
 end;
 
 
-procedure TfrmDayFinical.GridLayoutRestoreAll;
+procedure TfrmRptFinance.GridLayoutRestoreAll;
 begin
   tvInvoiceHeads.RestoreFromIniFile(GetGridsIniFilename);
   tvInvoiceLines.RestoreFromIniFile(GetGridsIniFilename);
@@ -1821,7 +1821,7 @@ begin
   tvSums2.RestoreFromIniFile(GetGridsIniFilename);
 end;
 
-procedure TfrmDayFinical.GridLayoutSaveAll;
+procedure TfrmRptFinance.GridLayoutSaveAll;
 begin
   tvInvoiceHeads.StoreToIniFile(GetGridsIniFilename, false, [], '', '');
   tvInvoiceLines.StoreToIniFile(GetGridsIniFilename, false, [], '', '');
@@ -1835,12 +1835,12 @@ begin
   tvSums2.StoreToIniFile(GetGridsIniFilename, false, [], '', '');
 end;
 
-procedure TfrmDayFinical.GridLayoutSave(tv: TcxGridDBTableView);
+procedure TfrmRptFinance.GridLayoutSave(tv: TcxGridDBTableView);
 begin
   tv.StoreToIniFile(GetGridsIniFilename, true, [], '', '');
 end;
 
-procedure TfrmDayFinical.GridLayoutRestore(tv: TcxGridDBTableView);
+procedure TfrmRptFinance.GridLayoutRestore(tv: TcxGridDBTableView);
 begin
   tvInvoiceHeads.RestoreFromIniFile(GetGridsIniFilename);
 end;
@@ -1849,12 +1849,12 @@ end;
 ///
 ///
 
-procedure TfrmDayFinical.mnuLayoutSaveAllClick(Sender: TObject);
+procedure TfrmRptFinance.mnuLayoutSaveAllClick(Sender: TObject);
 begin
   GridLayoutSaveAll;
 end;
 
-procedure TfrmDayFinical.mnuLayoutSaveCurrentClick(Sender: TObject);
+procedure TfrmRptFinance.mnuLayoutSaveCurrentClick(Sender: TObject);
 begin
   if mainPage.ActivePage = sheetSums then
   begin
@@ -1906,7 +1906,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.mPaymentsCalcFields(DataSet: TDataSet);
+procedure TfrmRptFinance.mPaymentsCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('isCash').AsBoolean := false;
   DataSet.FieldByName('isKredit').AsBoolean := false;
@@ -1936,12 +1936,12 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.mnuLayoutRestoreAllClick(Sender: TObject);
+procedure TfrmRptFinance.mnuLayoutRestoreAllClick(Sender: TObject);
 begin
   GridLayoutRestoreAll
 end;
 
-procedure TfrmDayFinical.mnuLayoutRestoreCurrentClick(Sender: TObject);
+procedure TfrmRptFinance.mnuLayoutRestoreCurrentClick(Sender: TObject);
 begin
   if mainPage.ActivePage = sheetSums then
   begin
@@ -1998,7 +1998,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.btnConfirmClick(Sender: TObject);
+procedure TfrmRptFinance.btnConfirmClick(Sender: TObject);
 var
   s: string;
   iCount: integer;
@@ -2081,7 +2081,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.btnExcel(Sender: TObject);
+procedure TfrmRptFinance.btnExcel(Sender: TObject);
 var
   sFilename: string;
   sPartName: string;
@@ -2158,7 +2158,7 @@ begin
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
-procedure TfrmDayFinical.btnPaymentReportClick(Sender: TObject);
+procedure TfrmRptFinance.btnPaymentReportClick(Sender: TObject);
 var
   aReport: TppReport;
   sortField: string;
@@ -2197,7 +2197,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.btnPrintClick(Sender: TObject);
+procedure TfrmRptFinance.btnPrintClick(Sender: TObject);
 var
   s1, s2: string;
   Title: string;
@@ -2292,7 +2292,7 @@ begin
   end;
 end;
 
-procedure TfrmDayFinical.btnShowGuestsClick(Sender: TObject);
+procedure TfrmRptFinance.btnShowGuestsClick(Sender: TObject);
 var
   Reservation: integer;
   RoomReservation: integer;
@@ -2312,7 +2312,7 @@ begin
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 end;
 
-procedure TfrmDayFinical.btnShowReservationClick(Sender: TObject);
+procedure TfrmRptFinance.btnShowReservationClick(Sender: TObject);
 var
   Reservation: integer;
   RoomReservation: integer;
@@ -2324,7 +2324,7 @@ begin
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 end;
 
-procedure TfrmDayFinical.btnShowSelectedInvoiceClick(Sender: TObject);
+procedure TfrmRptFinance.btnShowSelectedInvoiceClick(Sender: TObject);
 var
   InvoiceNumber: integer;
 begin
@@ -2332,7 +2332,7 @@ begin
     ViewInvoice2(InvoiceNumber, false, false, false, false, '');
 end;
 
-procedure TfrmDayFinical.mnuThisRoomClick(Sender: TObject);
+procedure TfrmRptFinance.mnuThisRoomClick(Sender: TObject);
 var
   Reservation: integer;
   RoomReservation: integer;
@@ -2344,7 +2344,7 @@ begin
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 end;
 
-function TfrmDayFinical.GetInvoiceNumberFromActivePage(var aInvoiceNumber: integer): Boolean;
+function TfrmRptFinance.GetInvoiceNumberFromActivePage(var aInvoiceNumber: integer): Boolean;
 begin
   if mainPage.ActivePage = SheetInvoicelist then
       aInvoiceNumber := mInvoiceHeads.FieldByName('Invoicenumber').AsInteger
@@ -2356,7 +2356,7 @@ begin
   result := aInvoiceNumber <> 0;
 end;
 
-function TfrmDayFinical.GetReservationFromActivePage(var aReservation, aRoomReservation: integer;
+function TfrmRptFinance.GetReservationFromActivePage(var aReservation, aRoomReservation: integer;
   var aGuestName: string): Boolean;
 begin
   result := false;
@@ -2382,7 +2382,7 @@ begin
 
 end;
 
-procedure TfrmDayFinical.mnuThisreservationClick(Sender: TObject);
+procedure TfrmRptFinance.mnuThisreservationClick(Sender: TObject);
 var
   Reservation: integer;
   RoomReservation: integer;
@@ -2393,7 +2393,7 @@ begin
 
 end;
 
-procedure TfrmDayFinical.OpenthisRoom1Click(Sender: TObject);
+procedure TfrmRptFinance.OpenthisRoom1Click(Sender: TObject);
 var
   Reservation: integer;
   RoomReservation: integer;
@@ -2406,7 +2406,7 @@ begin
 
 end;
 
-procedure TfrmDayFinical.OpenGroupInvoice1Click(Sender: TObject);
+procedure TfrmRptFinance.OpenGroupInvoice1Click(Sender: TObject);
 var
   Reservation: integer;
   RoomReservation: integer;
@@ -2418,7 +2418,7 @@ begin
     showmessage(GetTranslatedText('shTx_DayFinical_CashInvoice'));
 end;
 
-procedure TfrmDayFinical.getConfirmGroupClick(Sender: TObject);
+procedure TfrmRptFinance.getConfirmGroupClick(Sender: TObject);
 var
   ConfirmDate: TdateTime;
 begin
@@ -2447,7 +2447,7 @@ begin
   GetAll(true);
 end;
 
-procedure TfrmDayFinical.SwitchToDates;
+procedure TfrmRptFinance.SwitchToDates;
 begin
   // Leave
 
