@@ -76,7 +76,7 @@ procedure ShowStatisticsSettings;
 implementation
 
 {$R *.dfm}
-uses uSnapshotService, uD
+uses uSnapshotService, uD, uRoomerConfirmationDialogs
      ;
 
 
@@ -96,11 +96,14 @@ const SNAPSHOT_SYSTEM_CODE = 'SNAPSHOT';
 procedure TFrmConnectionsStatistics.btnForceFullClick(Sender: TObject);
 begin
   inherited;
+  if openLogin(d.roomerMainDataSet.Username, '', 7) then
+  begin
   Screen.Cursor := crHourGlass;
   try
     ConnectionsStatisticsService.forceExport(etFull);
   finally
     Screen.Cursor := crDefault;
+  end;
   end;
 end;
 

@@ -13,14 +13,14 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
   inherited sbStatusBar: TsStatusBar
     Top = 512
     Width = 771
-    ExplicitTop = 496
+    ExplicitTop = 512
     ExplicitWidth = 771
   end
   inherited pnlButtons: TsPanel
     Top = 469
     Width = 771
     ParentFont = False
-    ExplicitTop = 453
+    ExplicitTop = 469
     ExplicitWidth = 771
     inherited btnOK: TsButton
       Left = 455
@@ -41,7 +41,7 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     Top = 0
     Width = 771
     Height = 469
-    ActivePage = tsHagstofan
+    ActivePage = tsSnapshot
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -50,10 +50,8 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
-    ExplicitHeight = 453
     object tsSnapshot: TsTabSheet
       Caption = 'Snapshot'
-      ExplicitHeight = 422
       object gbxConnectionSettings: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -264,7 +262,6 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     end
     object tsHagstofan: TsTabSheet
       Caption = 'Hagstofan'
-      ExplicitHeight = 422
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 3
@@ -283,7 +280,6 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
         ParentFont = False
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitHeight = 416
         object lbHsId: TsLabel
           Left = 105
           Top = 163
