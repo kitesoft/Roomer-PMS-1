@@ -1,4 +1,4 @@
-object frmDayFinical: TfrmDayFinical
+object frmRptFinance: TfrmRptFinance
   Left = 822
   Top = 210
   Caption = 'Finance Report'
@@ -24,7 +24,6 @@ object frmDayFinical: TfrmDayFinical
     Width = 1195
     Height = 19
     Panels = <>
-    ExplicitWidth = 1122
   end
   object LMDSimplePanel1: TsPanel
     Left = 0
@@ -35,7 +34,6 @@ object frmDayFinical: TfrmDayFinical
     BevelOuter = bvNone
     TabOrder = 1
     SkinData.SkinSection = 'PANEL'
-    ExplicitWidth = 1122
     object labLocations: TsLabel
       AlignWithMargins = True
       Left = 657
@@ -148,8 +146,8 @@ object frmDayFinical: TfrmDayFinical
       object chkOneday: TsCheckBox
         Left = 3
         Top = 60
-        Width = 61
-        Height = 20
+        Width = 69
+        Height = 17
         Caption = 'One day'
         Checked = True
         State = cbChecked
@@ -184,8 +182,8 @@ object frmDayFinical: TfrmDayFinical
       object chkGetUnconfirmed: TsCheckBox
         Left = 21
         Top = 18
-        Width = 99
-        Height = 20
+        Width = 107
+        Height = 17
         Caption = 'Get unconfirmed'
         Enabled = False
         TabOrder = 0
@@ -227,7 +225,6 @@ object frmDayFinical: TfrmDayFinical
       FullRepaint = False
       TabOrder = 4
       SkinData.SkinSection = 'PANEL'
-      ExplicitWidth = 1122
       object cxButton3: TsButton
         AlignWithMargins = True
         Left = 4
@@ -329,8 +326,6 @@ object frmDayFinical: TfrmDayFinical
     TabWidth = 120
     OnChange = mainPageChange
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitTop = 137
-    ExplicitWidth = 1122
     object sheetSums: TsTabSheet
       Caption = 'Sums'
       ImageIndex = 4
@@ -1689,10 +1684,6 @@ object frmDayFinical: TfrmDayFinical
     object sheetPayments: TsTabSheet
       Caption = 'Payments - Invoice'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1114
-      ExplicitHeight = 0
       object Panel5: TsPanel
         Left = 0
         Top = 0
@@ -1701,7 +1692,6 @@ object frmDayFinical: TfrmDayFinical
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1114
         object btnPaymentReport: TsButton
           Left = 1
           Top = 4
@@ -1723,7 +1713,6 @@ object frmDayFinical: TfrmDayFinical
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1114
         object tvPayments: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -2408,7 +2397,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43185.562741284720000000
+      ReportDocument.CreationDate = 43188.471122314810000000
       ReportTitle.TextAlignX = taLeft
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
@@ -2429,7 +2418,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43185.562741319450000000
+      ReportDocument.CreationDate = 43188.471122349540000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
@@ -2469,7 +2458,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43185.562741365740000000
+      ReportDocument.CreationDate = 43188.471122384260000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
@@ -2490,7 +2479,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43185.562741400460000000
+      ReportDocument.CreationDate = 43188.471122407410000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
@@ -2511,7 +2500,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43185.562741435180000000
+      ReportDocument.CreationDate = 43188.471122430560000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
@@ -2532,7 +2521,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43185.562741458340000000
+      ReportDocument.CreationDate = 43188.471122453700000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
@@ -2572,7 +2561,7 @@ object frmDayFinical: TfrmDayFinical
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43185.562741481480000000
+      ReportDocument.CreationDate = 43188.471122476850000000
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end

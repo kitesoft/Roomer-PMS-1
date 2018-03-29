@@ -1498,7 +1498,7 @@ uses
 		, uGuestCheckInForm
     , uFinishedInvoices2
     , uRoomCleanMaintenanceStatus
-    , uDayFinical
+    , uRptFinance
     , uInvoiceList2
 		, uDayNotes
 		, uNationalReport3
@@ -10742,7 +10742,7 @@ end;
 procedure TfrmMain.btnDayFinalClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  ShowFinancialReport;
+  ShowFinanceReport;
 end;
 
 procedure TfrmMain.btnRptCustInvoices2Click(Sender: TObject);
