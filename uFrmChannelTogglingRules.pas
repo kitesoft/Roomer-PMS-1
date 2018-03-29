@@ -153,7 +153,7 @@ uses
   _Glob,
   UITypes
   ,Math
-  ;
+  , uVCLUtils;
 
 resourcestring
   UNKNOWN_INFO = '???';

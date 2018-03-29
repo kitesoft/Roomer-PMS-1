@@ -129,7 +129,7 @@ uses
   uRoomerLanguage
   , uUtils
   , uSQLUtils
-  , UITypes;
+  , UITypes, uVCLUtils;
 
 
 

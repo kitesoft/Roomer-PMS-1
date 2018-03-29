@@ -220,7 +220,7 @@ uses
    uD, uDImages, uUtils
    , UITypes
   , uRoomerLanguage
-   ;
+   , uVCLUtils;
 
 {$R *.dfm}
 

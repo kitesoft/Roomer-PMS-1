@@ -106,7 +106,7 @@ uses
   , UITypes
   , uRoomerVersionInfo, uSQLUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

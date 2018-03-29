@@ -45,7 +45,6 @@ object frmCancelReservation2: TfrmCancelReservation2
       StyleHot.LookAndFeel.NativeStyle = False
       TabOrder = 1
       ExplicitTop = 64
-      ExplicitHeight = 176
       Height = 174
       Width = 549
       object memReason: TcxMemo
@@ -65,7 +64,6 @@ object frmCancelReservation2: TfrmCancelReservation2
         StyleFocused.LookAndFeel.NativeStyle = False
         StyleHot.LookAndFeel.NativeStyle = False
         TabOrder = 0
-        ExplicitHeight = 144
         Height = 142
         Width = 533
       end
@@ -110,7 +108,6 @@ object frmCancelReservation2: TfrmCancelReservation2
         Text = 'cbxReason'
         ExplicitLeft = 17
         ExplicitTop = 17
-        ExplicitWidth = 529
         ExplicitHeight = 21
         Width = 535
       end

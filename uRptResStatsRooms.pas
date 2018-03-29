@@ -287,7 +287,7 @@ uses
   , uDImages
   , uSQLUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 procedure ShowReservationStatistics;

@@ -359,7 +359,7 @@ uses
   , uSQLUtils
   , uRoomerLanguage
   , uRoomerMessageDialog
-  , uConnectionsHagstofaService;
+  , uConnectionsHagstofaService, uVCLUtils;
 
 {$R *.dfm}
 

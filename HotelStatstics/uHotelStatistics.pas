@@ -88,7 +88,7 @@ implementation
 uses
   SysUtils
   , XMLUtils
-  , uRoomerCurrencymanager
+  , uCurrencymanager
   ;
 
 { THotelStatistic }
@@ -96,7 +96,7 @@ uses
 function THotelStatistic.FormattedValue: string;
 begin
   case FUOM of
-    TUnitOfMeasurement.NativeCurrency: Result := RoomerCurrencyManager.DefaultCurrencyDefinition.FormattedValueWithCode(Value);
+    TUnitOfMeasurement.NativeCurrency: Result := CurrencyManager.DefaultCurrencyDefinition.FormattedValueWithCode(Value);
     TUnitOfMeasurement.Percent:        Result := FloatToStrF(Value, ffFixed, 12, 2) + '%';
     TUnitOfMeasurement.NoDimension:    Result := intToStr(Round(Value));
   end;

@@ -154,7 +154,7 @@ uses
   , PrjConst
   , uRoomerLanguage
   , uUtils
-  , uDImages;
+  , uDImages, uVCLUtils;
 
 
 function openStaffMemberEdit(var theData : recStaffMemberHolder; isInsert : boolean) : boolean;

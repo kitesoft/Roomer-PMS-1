@@ -240,7 +240,7 @@ uses
   , UITypes
   , uRoomerGridForm
   , uRoomerLanguage
-;
+, uVCLUtils;
 
 
 

@@ -229,7 +229,7 @@ uses
    uSqlDefinitions
    , UITypes
   , uRoomerLanguage
-   ;
+   , uVCLUtils;
 
 {$R *.dfm}
 

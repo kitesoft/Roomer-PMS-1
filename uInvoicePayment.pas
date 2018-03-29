@@ -176,7 +176,7 @@ uses
    , uFrmManagePCIConnection
   , uFrmTokenChargeHistory
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.DFM}
 

@@ -259,7 +259,7 @@ uses
   , uRoomerCurrencymanager
   , uDateTimeHelper
   , DateUtils
-  ;
+  , uVCLUtils;
 
 const
   cSelectableReservationStates : TReservationStateSet = [TReservationState.rsReservation, TReservationState.rsGuests, TReservationState.rsDeparted,

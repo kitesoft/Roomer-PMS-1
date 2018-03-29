@@ -366,7 +366,7 @@ uses
   , uFinanceConnectService
   , uRoomerCurrencymanager
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 

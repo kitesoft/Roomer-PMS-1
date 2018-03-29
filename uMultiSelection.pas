@@ -62,7 +62,7 @@ implementation
 
 {$R *.dfm}
 
-uses uRoomerLanguage, uUtils, uDImages;
+uses uRoomerLanguage, uUtils, uDImages, uVCLUtils;
 
 
 function SelectItems(Caption: String;

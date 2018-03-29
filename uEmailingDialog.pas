@@ -81,7 +81,7 @@ uses uRoomerLanguage,
     uUtils,
     uFileSystemUtils,
     uResourceManagement
-    ;
+    , uVCLUtils;
 
 function sendFileAsAttachment(recipient, _caption : String; attachments : TStringList; variables : TList<String> = nil) : Boolean;
 var list : TStringList;

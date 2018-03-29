@@ -92,7 +92,7 @@ uses
   , hData
   , uSQLUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 function EditPaymentRequirements(const aRoomTypeGroup: string): boolean;
 var

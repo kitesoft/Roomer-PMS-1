@@ -209,7 +209,7 @@ uses
   , uRoomerLanguage
   , uDImages
   , uReservationProfile
-  , uMain, uSQLUtils, uRoomerCurrencymanager, uBreakfastTypeDefinitions;
+  , uMain, uSQLUtils, uRoomerCurrencymanager, uBreakfastTypeDefinitions, uVCLUtils;
 
 function RptGuests : boolean;
 begin

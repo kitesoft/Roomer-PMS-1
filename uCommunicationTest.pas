@@ -59,7 +59,7 @@ uses uD
      PrjConst,
      uDImages
   , uRoomerLanguage
-     ;
+     , uVCLUtils;
 
 var
   StrTinyTable, StrBiggerTable : String;

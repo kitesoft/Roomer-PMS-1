@@ -122,7 +122,7 @@ function DownloadResource(sourceFilename, destFilename: String): Boolean;
 implementation
 
 uses uD, ActiveX, ComObj, uUtils, Winapi.msxml, Dialogs, hData, PrjConst
-  , Spring.Collections.Lists, uAppGlobal;
+  , Spring.Collections.Lists, uAppGlobal, uVCLUtils;
 
 
 // ------------------ Free-Fall implementations ----------------------

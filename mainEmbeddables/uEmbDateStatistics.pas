@@ -121,7 +121,7 @@ uses
   , uUtils
   , uSQLUtils
   , VCLTee.TeCanvas
-  ;
+  , uVCLUtils;
 
 
 {$R *.dfm}

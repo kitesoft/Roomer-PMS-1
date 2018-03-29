@@ -217,7 +217,7 @@ uses
   , uFrmFinanceConnect
   , uFinanceConnectService
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

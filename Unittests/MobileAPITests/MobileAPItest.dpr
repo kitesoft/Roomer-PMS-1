@@ -19,7 +19,11 @@ uses
   HotelStatisticsTest in 'HotelStatisticsTest.pas',
   uHotelStatistics in '..\..\HotelStatstics\uHotelStatistics.pas',
   uRoomerSchema in '..\..\OpenAPI\schema\uRoomerSchema.pas',
-  XmlUtils in '..\..\RoomerUtils\XmlUtils.pas';
+  XmlUtils in '..\..\RoomerUtils\XmlUtils.pas',
+  ReservationTaxesTest in 'ReservationTaxesTest.pas',
+  RoomerExceptionHandling in '..\..\RoomerExceptionHandling.pas',
+  uUtils in '..\..\RoomerUtils\uUtils.pas',
+  uRoomRentTaxReceipt in '..\..\MobileAPI\uRoomRentTaxReceipt.pas';
 
 {$R *.RES}
 

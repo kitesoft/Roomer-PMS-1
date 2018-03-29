@@ -105,7 +105,7 @@ uses uAppGlobal, uD, uDImages, uSQLUtils, uFrmPayCardView, uTokenHelpers, uFrmCh
     , Math
     , uFloatUtils
     , uRoomerLanguage
-    ;
+    , uVCLUtils;
 
 procedure TfrmDownPayment.btnCancelClick(Sender: TObject);
 begin

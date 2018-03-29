@@ -187,7 +187,7 @@ uses
   , ufrmInvoiceEdit
   , uInvoiceDefinitions
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 {$R *.dfm}
 
 procedure TfrmOpenInvoicesNew.FormCreate(Sender : TObject);

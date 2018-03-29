@@ -43,6 +43,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       SkinData.SkinSection = 'PAGECONTROL'
       object sTabSheet1: TsTabSheet
         Caption = 'Person'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox1: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -378,9 +382,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlLookup: TsPanel
               Width = 325
               ExplicitWidth = 325
-              inherited lblDescription: TsLabel
-                Width = 232
-              end
             end
           end
         end
@@ -704,6 +705,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet7: TsTabSheet
         Caption = 'Contact'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox4: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -1182,9 +1187,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlLookup: TsPanel
               Width = 323
               ExplicitWidth = 323
-              inherited lblDescription: TsLabel
-                Width = 230
-              end
             end
           end
         end
@@ -1480,6 +1482,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet2: TsTabSheet
         Caption = 'Company'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox7: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -1736,9 +1742,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             inherited pnlLookup: TsPanel
               Width = 323
               ExplicitWidth = 323
-              inherited lblDescription: TsLabel
-                Width = 230
-              end
             end
           end
           inline fraCustomer: TfraCustomerPanel
@@ -1749,11 +1752,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
             TabOrder = 8
             ExplicitLeft = 201
             ExplicitTop = 39
-            inherited pnlLookup: TsPanel
-              inherited lblDescription: TsLabel
-                Width = 124
-              end
-            end
           end
         end
         object sGroupBox8: TsGroupBox
@@ -2015,6 +2013,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object sTabSheet4: TsTabSheet
         Caption = 'Preferences'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object sGroupBox11: TsGroupBox
           AlignWithMargins = True
           Left = 10
@@ -2364,6 +2366,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object tabHistory: TsTabSheet
         Caption = 'History'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object grData: TcxGrid
           Left = 0
           Top = 41
@@ -2546,6 +2552,10 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       end
       object tabInvoices: TsTabSheet
         Caption = 'Invoices'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object grInvoices: TcxGrid
           Left = 0
           Top = 41
@@ -2823,7 +2833,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
     Top = 168
     object prLink_grData: TdxGridReportLink
       Component = grData
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 5080
       PrinterPage.GrayShading = True
@@ -2837,7 +2846,6 @@ object frmGuestPortfolio: TfrmGuestPortfolio
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.CreationDate = 41334.495374884260000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

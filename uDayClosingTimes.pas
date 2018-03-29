@@ -104,7 +104,7 @@ uses
   , uDayClosingTimesAPICaller
   , uD
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 procedure EditDayClosingTimes;
 begin

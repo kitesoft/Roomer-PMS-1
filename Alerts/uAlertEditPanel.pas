@@ -36,7 +36,7 @@ implementation
 
 {$R *.dfm}
 
-uses uRoomerLanguage, uAppGlobal, uUtils;
+uses uRoomerLanguage, uAppGlobal, uUtils, uVCLUtils;
 
 procedure TFrmAlertPanel.btnDeleteClick(Sender: TObject);
 var Alert : TAlert;

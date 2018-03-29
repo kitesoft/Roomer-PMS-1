@@ -653,6 +653,8 @@ type
     tmrDateChangeDelay: TTimer;
     hhHintHTMLFormatter: THTMLHint;
     ppLabel11: TppLabel;
+    dxBarButton10: TdxBarButton;
+    btnTestTaxesAPI: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DefaultHandler(var Message); override;
     procedure FormShow(Sender: TObject);
@@ -948,6 +950,7 @@ type
     procedure btnBreakfastListClick(Sender: TObject);
     procedure btnCleaningReportClick(Sender: TObject);
     procedure tmrDateChangeDelayTimer(Sender: TObject);
+    procedure btnTestTaxesAPIClick(Sender: TObject);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -1608,7 +1611,8 @@ uses
     , uFinanceTransactionReport
     , uDailyTotalsReport
     , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
-  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes, uVersionManagement;
+  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes, uVersionManagement
+  , uReservationTaxesAPI, uRoomRentTaxReceipt, uVCLUtils;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -8025,6 +8029,7 @@ begin
           BlockMove := rdOBJ.qMT_.FieldByName('BlockMove').AsBoolean;
           BlockMoveReason := rdOBJ.qMT_.FieldByName('BlockMoveReason').asString;
           OngoingSale := rdOBJ.qMT_.FieldByName('TotalNoRent').AsFloat;
+
           OngoingTaxes := rdOBJ.qMT_.FieldByName('TotalTaxes').AsFloat;
           OngoingRent := rdOBJ.qMT_.FieldByName('TotalRent').AsFloat;
           dt := rdOBJ.qMT_.FieldByName('rdDate').AsDateTime;
@@ -8055,8 +8060,11 @@ begin
                   Discount,
                   rdOBJ.qMT_['AllIsPercentage'],
                   ItemsOnInvoice, numGuests, RoomClass, OutOfOrderBlocking,
-                  BlockMove, BlockMoveReason, OngoingSale, OngoingRent,
-                  OngoingTaxes, rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
+                  BlockMove, BlockMoveReason,
+                  OngoingSale,
+                  OngoingRent,
+                  OngoingTaxes,
+                  rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['InvoiceIndex']);
               except
 {$IFDEF DEBUG}
@@ -10626,6 +10634,22 @@ begin
   LogUserClickedButton(Sender);
   EditTaxes();
   InitializeTaxes;
+end;
+
+procedure TfrmMain.btnTestTaxesAPIClick(Sender: TObject);
+var
+  lCaller: TReservationTaxesAPICaller;
+  lTaxReceipts: TRoomReservationTaxes;
+begin
+
+  lCaller := TReservationTaxesAPICaller.Create;
+  lTaxreceipts := TRoomReservationTaxes.Create;
+  try
+    lCaller.GetRoomResAllTaxes(203789, lTaxReceipts);
+  finally
+    lCaller.Free;
+  end;
+
 end;
 
 procedure TfrmMain.btnToDayClick(Sender: TObject);

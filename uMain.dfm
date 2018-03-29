@@ -5435,6 +5435,10 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
+          ItemName = 'btnTestTaxesAPI'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton9'
         end>
     end
@@ -5636,6 +5640,19 @@ object frmMain: TfrmMain
       OnClick = btnCleaningReportClick
       SyncImageIndex = False
       ImageIndex = 137
+    end
+    object dxBarButton10: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object btnTestTaxesAPI: TdxBarLargeButton
+      Caption = 'Test Taxes api'
+      Category = 0
+      Hint = 'Test Taxes api'
+      Visible = ivAlways
+      OnClick = btnTestTaxesAPIClick
     end
     object mmnuFile: TdxBarSubItem
       Caption = '&File'

@@ -87,7 +87,7 @@ uses PrjConst,
      uG,
      HData,
      uUtils,
-     uStringUtils;
+     uStringUtils, uVCLUtils;
 
 function SendNewReservationConfirmation(ReservationId : Integer) : Boolean;
 var

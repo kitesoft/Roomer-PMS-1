@@ -459,7 +459,7 @@ uses
   , uSQLUtils
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 const WM_LOAD_LAYOUT = WM_User + 401;
       WM_START_LOAD = WM_User + 402;

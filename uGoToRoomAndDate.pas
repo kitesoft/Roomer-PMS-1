@@ -63,7 +63,7 @@ uses
   , uDImages
   , uUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

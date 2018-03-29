@@ -81,6 +81,10 @@ object frmStaffEdit2: TfrmStaffEdit2
     SkinData.SkinSection = 'PAGECONTROL'
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxLoginInfo: TsGroupBox
         Left = 0
         Top = 0
@@ -535,10 +539,6 @@ object frmStaffEdit2: TfrmStaffEdit2
           inherited pnlLookup: TsPanel
             Width = 206
             ExplicitWidth = 206
-            inherited lblDescription: TsLabel
-              Width = 113
-              Height = 20
-            end
           end
         end
       end

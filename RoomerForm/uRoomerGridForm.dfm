@@ -62,6 +62,10 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object tsMain: TsTabSheet
       Caption = 'tsMain'
       TabVisible = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grData: TcxGrid
         Left = 0
         Top = 0

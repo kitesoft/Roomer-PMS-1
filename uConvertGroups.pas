@@ -99,7 +99,7 @@ uses
   , cxGridDBTableView
   , cxClasses
   , cxGridCustomView
-  , cxGrid, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld
+  , cxGrid, dxSkinCaramel, dxSkinCoffee, dxSkinTheAsphaltWorld, dxPScxPivotGridLnk
   ;
 
 type
@@ -209,7 +209,7 @@ uses
   , uDimages
   , UITypes
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

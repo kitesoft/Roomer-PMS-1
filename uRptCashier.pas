@@ -312,7 +312,7 @@ implementation
 
 uses
   uD, uRoomerLanguage, uDimages, uDateUtils, uFrmResources, PrjConst, uGridUtils, uRptbViewer, uReservationProfile, uFinishedInvoices2
-    , uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
+    , uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions, uVCLUtils;
 
 CONST
   FINANCE_QUERY = 'SELECT ' + #10

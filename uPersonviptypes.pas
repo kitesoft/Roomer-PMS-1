@@ -219,7 +219,7 @@ uses
   , uSqlDefinitions
   , uUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.dfm}
 

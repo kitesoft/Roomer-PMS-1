@@ -28,7 +28,6 @@ uses
   uControlData in 'uControlData.pas' {frmControlData},
   uAvailability in 'uAvailability.pas',
   uFinishedInvoices2 in 'uFinishedInvoices2.pas' {frmFinishedInvoices2},
-  uCreditPrompt in 'uCreditPrompt.pas' {frmCreditPrompt},
   uInvoiceList in 'uInvoiceList.pas' {frmInvoiceList},
   uDReportData in 'uDReportData.pas' {DReportData: TDataModule},
   uD in 'uD.pas' {d: TDataModule},
@@ -349,7 +348,10 @@ uses
   uMobileAPI in 'MobileAPI\uMobileAPI.pas',
   uRoomservicesStatus in 'Roomservices\uRoomservicesStatus.pas',
   uRptCleaningTimes in 'uRptCleaningTimes.pas',
-  uConnectionsHagstofaService in 'Connections\uConnectionsHagstofaService.pas';
+  uConnectionsHagstofaService in 'Connections\uConnectionsHagstofaService.pas',
+  uReservationTaxesAPI in 'MobileAPI\uReservationTaxesAPI.pas',
+  uRoomRentTaxReceipt in 'MobileAPI\uRoomRentTaxReceipt.pas',
+  uVCLUtils in 'RoomerUtils\uVCLUtils.pas';
 
 {$R *.RES}
 
@@ -380,7 +382,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-    D.ApplicationId := cOpenAPIApplicationID;
+  D.ApplicationId := cOpenAPIApplicationID;
 
     TSplashFormManager.UpdateProgress('Starting application...');
 

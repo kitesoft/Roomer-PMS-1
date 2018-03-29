@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{E7B1F16A-1840-418D-9D89-FBDE8A0B7B7D}</ProjectGuid>
         <ProjectVersion>14.3</ProjectVersion>
-        <FrameworkType>None</FrameworkType>
+        <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -92,6 +92,10 @@
         <DCCReference Include="..\..\HotelStatstics\uHotelStatistics.pas"/>
         <DCCReference Include="..\..\OpenAPI\schema\uRoomerSchema.pas"/>
         <DCCReference Include="..\..\RoomerUtils\XmlUtils.pas"/>
+        <DCCReference Include="ReservationTaxesTest.pas"/>
+        <DCCReference Include="..\..\RoomerExceptionHandling.pas"/>
+        <DCCReference Include="..\..\RoomerUtils\uUtils.pas"/>
+        <DCCReference Include="..\..\MobileAPI\uRoomRentTaxReceipt.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

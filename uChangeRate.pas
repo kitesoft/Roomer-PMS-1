@@ -84,7 +84,7 @@ uses
    , uUtils
    , UITypes
    , uRoomerLanguage
-   ;
+   , uVCLUtils;
 
 procedure TfrmChangeRate.btnGetFromWebClick(Sender: TObject);
 begin

@@ -755,7 +755,7 @@ uses
     , uFrmCheckOut
     , UITypes
     , uVatCalculator, uTableEntityList, uSQLUtils, uCredentialsAPICaller, ufrmInvoiceEdit,
-    Math, uInvoiceDefinitions, uProvideARoom2, uRoomerCurrencymanager, uRoomServicesAPI;
+    Math, uInvoiceDefinitions, uProvideARoom2, uRoomerCurrencymanager, uRoomServicesAPI, uVCLUtils;
 
 {$R *.dfm}
 

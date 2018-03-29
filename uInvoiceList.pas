@@ -146,7 +146,7 @@ uses
   , uReservationProfile
   , uSQLUtils
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 {$R *.DFM}
 

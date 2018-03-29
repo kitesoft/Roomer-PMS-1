@@ -197,7 +197,7 @@ uses
   , uResourceTypeDefinitions
   , UITypes, uRoomerGridForm, uRoomerCurrencymanager
   , uRoomerLanguage
-  ;
+  , uVCLUtils;
 
 
 function openCustomerEdit(var theData : recCustomerHolder; isInsert : boolean; _financeCustomerList : TKeyPairList = nil) : boolean;

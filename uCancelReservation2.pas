@@ -107,7 +107,7 @@ uses
   uRoomerLanguage,
   PrjConst,
   uDimages
-  ;
+  , uVCLUtils;
 {$R *.dfm}
 
 

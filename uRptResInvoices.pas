@@ -307,7 +307,7 @@ uses
   uRoomerLanguage,
   PrjConst
   , uDImages
-  , DateUtils, uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions;
+  , DateUtils, uSQLUtils, ufrmInvoiceEdit, uInvoiceDefinitions, uVCLUtils;
 
 function RptResInvoices : boolean;
 begin

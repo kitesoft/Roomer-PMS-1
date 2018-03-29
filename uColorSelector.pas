@@ -55,7 +55,7 @@ implementation
 
 {$R *.dfm}
 
-uses ud, uRoomerLanguage, uDImages, uUtils;
+uses ud, uRoomerLanguage, uDImages, uUtils, uVCLUtils;
 
 function OpenColorSelectionDialog(var colorId, colorValue : Integer) : Integer;
 begin

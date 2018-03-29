@@ -30,7 +30,7 @@ implementation
 
 {$R *.dfm}
 
-uses uRoomerLanguage, uUtils;
+uses uRoomerLanguage, uUtils, uVCLUtils;
 
 function EditText2(const Caption: string; var aText: string) : boolean;
 var

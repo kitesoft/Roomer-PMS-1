@@ -86,7 +86,7 @@ uses uUtils,
      hData
      , uVersionManagement
      , ShellApi
-     ;
+     , uVCLUtils;
 
 function AskUserForCredentials(var aUsername: String; var aPassword: String; var aHotelId : String; aLastMessage : String; AuthValueIndex : Integer = -1): TLoginFormResult;
 

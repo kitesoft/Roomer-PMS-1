@@ -48,7 +48,7 @@ implementation
 
 {$R *.DFM}
 
-uses uAppGlobal, uRoomerLanguage, uUtils;
+uses uAppGlobal, uRoomerLanguage, uUtils, uVCLUtils;
 
 procedure TfrmSelLang.FormCreate(Sender: TObject);
 begin

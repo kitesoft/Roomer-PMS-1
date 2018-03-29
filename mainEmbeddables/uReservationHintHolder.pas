@@ -95,7 +95,7 @@ uses clipbrd
   , uRoomerLanguage
   , Math
   , uDateTimeHelper
-  , uCurrencyConstants;
+  , uCurrencyConstants, uVCLUtils;
 
 { TFrmReservationHintHolder }
 

@@ -98,7 +98,7 @@ uses
   , uSQLUtils
   , objRoomList2
   , uRoomerLanguage
-  , uRoomServicesAPI, uRoomservicesStatus, PrjConst;
+  , uRoomServicesAPI, uRoomservicesStatus, PrjConst, uVCLUtils;
 
 {$R *.dfm}
 

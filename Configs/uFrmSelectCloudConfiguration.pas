@@ -32,7 +32,7 @@ implementation
 
 {$R *.dfm}
 
-uses Inifiles, System.IOUtils, uUtils;
+uses Inifiles, System.IOUtils, uUtils, uVCLUtils;
 
 function SelectConfigurationEnvironment(files : TStrings) : String;
 var _FrmSelectCloudConfiguration: TFrmSelectCloudConfiguration;

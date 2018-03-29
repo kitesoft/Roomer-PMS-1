@@ -36,7 +36,7 @@ implementation
 
 {$R *.dfm}
 
-uses uRoomerLanguage, uAppGlobal, uUtils;
+uses uRoomerLanguage, uAppGlobal, uUtils, uVCLUtils;
 
 function AddAlert(_Alert : TAlert) : Boolean;
 var _FrmAlertEdit: TFrmAlertEdit;

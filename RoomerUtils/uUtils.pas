@@ -9,11 +9,11 @@ uses
     Macapi.AppKit
 {$ENDIF}
     , ComCtrls
-    , sRichEdit
-    , vcl.Controls
+//    , sRichEdit
+//    , vcl.Controls
     , System.Classes
     , Dialogs
-    , Vcl.Graphics
+//    , Vcl.Graphics
     , GraphUtil
     , Variants
     , Registry
@@ -24,7 +24,7 @@ uses
     , Data.DB
     , ImgList
     , kbmMemTable
-    , Vcl.Forms
+//    , Vcl.Forms
     , TypInfo
     , Generics.Defaults
     ;
@@ -43,13 +43,11 @@ type
   end;
 
   TMouseBtnType = (_mbLeft, _mbMiddle, _mbRight);
-  TImageFileType = (IFT_BMP, IFT_PNG, IFT_JPG, IFT_GIF);
 
 const
   MOUSE_BTN_VKEYS: Array [TMouseBtnType] of Integer = (VK_LBUTTON, VK_MBUTTON, VK_RBUTTON);
 
 
-procedure SetCloseButtonEnabled(const form : TForm; const Value: Bool);
 function CreateAGUID : String;
 function simpleTextTosimpleHtml(_text : String) : String;
 function ComputerName:String;
@@ -66,15 +64,11 @@ function iif(condition : Boolean; TrueResult : Integer; FalseResult : Integer) :
 function iif(condition : Boolean; TrueResult : Double; FalseResult : Double) : Double; overload;
 function iif(condition : Boolean; TrueResult : Boolean; FalseResult : Boolean) : Boolean; overload;
 
-// Font value back in one line
-function IIF(Condition : Boolean; Alfa, Beta : TFont) : TFont; overload;
 // DateTime value back in one line
 function IIF(Condition : Boolean; Alfa, Beta : TdateTime) : TdateTime; overload;
 
 procedure DuplicateCurrentRow(Dataset:Tdataset);
 
-function GetPixelColourAsColor(const PixelCoords: TPoint): TColor;
-function GetCursorPosForControl(AControl: TWinControl): TPoint;
 procedure DeleteFileWithWildcard(Path: string; files : String);
 procedure GetFileList(FileList: TStrings; Path: string; files : String = '*.*');
 
@@ -91,15 +85,12 @@ function Str2Bool(s : String) : Boolean;
 function Bool2Str(b : Boolean) : String;
 procedure DebugMessage(const Str: string);
 procedure CopyToClipboard(const Str: string; iDelayMs: integer = 500);
-procedure TextToClipboard(const Str: string; iDelayMs: integer = 500);
 function ClipboardText : String;
 function ClipboardHasFormat(format : Word) : Boolean;
-function LoadImageToBitmap(Filename : String) : TBitmap;
-function ResizeImageToNewTempFile(filename : String; maxWidth, maxHeight : Integer; backColor : TColor) : String;
-function DetectImage(const InputFileName: string; BM: TBitmap) : TImageFileType;
-procedure ResizeBitmap(Bitmap: TBitmap; Width, Height: Integer; Background: TColor);
-{$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}function AuthenticateAgainstWindows(login, password, domain: string;
-  var token: THandle; var msg: string): Boolean;{$ENDIF}{$ENDIF}
+
+//{$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}function AuthenticateAgainstWindows(login, password, domain: string;
+//  var token: THandle; var msg: string): Boolean;{$ENDIF}{$ENDIF}
+
 function ParameterByName(name: String): String;
 
 procedure SaveToTextFile(filename, data : String);
@@ -120,9 +111,7 @@ function IsCapsLockOn : Boolean;
 function IsControlKeyPressed: Boolean;
 function IsAltKeyPressed: Boolean;
 function IsShiftKeyPressed: Boolean;
-function GetHTMLColor(cl: TColor; IsBackColor: Boolean = false): string;
-function InverseColor(color: TColor): TColor;
-function TrueInverseColor(color: TColor): TColor;
+
 function StringToHex(S: String): string;
 function HexToString(H: String): String;
 procedure Hex2Bin(HexStr : String; BinStream : TMemoryStream);
@@ -131,14 +120,6 @@ function IsMouseBtnSwapped: Boolean;
 function IsMouseBtnDown(const AMouseBtn: TMouseBtnType): Boolean;
 function IsAnyMouseBtnDown: Boolean;
 function RoundTo(value, smallest_unit : extended) : extended;
-procedure LoadBitmap (il : TImageList; Number : integer; bmp : TBitMap);
-procedure LoadImageFromImageList (il : TImageList;
-        Number : integer;
-        canvas : TCanvas;
-        Location : TPoint;
-        bkColor : TColor;
-        FFColorsToChange : Array of TPoint);
-function HexToTColor(sColor: string): TColor;
 function Capitalize(const s: string): string;
 
 function ConvertToReadableText(s: string): string;
@@ -147,11 +128,7 @@ function ConvertFromEncion(s: string): string;
 
 procedure CloseWindowToRight(handle : THandle);
 procedure OpenWindowFromRight(handle : THandle);
-procedure PlaceFormOnVisibleMonitor(Form : TForm);
 procedure LoadKbmMemtableFromDataSetQuiet(kbmTable : TkbmCustomMemTable; Source:TDataSet; CopyOptions:TkbmMemTableCopyTableOptions);
-
-procedure SetFormTopmostOn(Form : TForm);
-procedure SetFormTopmostOff(Form : TForm);
 
 function GetEnumAsString(enum : PTypeInfo; value : Integer) : String;
 
@@ -164,17 +141,15 @@ function ComponentRunning(aComponent: TComponent): boolean;
 function RunningInMainThread: boolean;
 function RunningInIDE: boolean;
 
-function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
-function IsChildOfParent(aControl: TControl; aParent: TControl): boolean;
 function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
 function FindChildComponentOfType(aComp: TComponent; aClassType: TClass): TComponent;
-function FindFirstChildControlOfType(aParent: TWinControl; aClassType: TClass): TControl;
+
 
 function StringIndexInSet(Selector : string; CaseList: array of string): Integer;
 
 implementation
 
-uses System.SysUtils, clipbrd{$IFNDEF ROOMER_UTIL}{$IFNDEF RBE_BUILD}, PrjConst{$ENDIF}{$ENDIF}, uFloatUtils;
+uses System.SysUtils, clipbrd, uFloatUtils;
 
 function linuxLFCRToWindows(source : String) : String;
 begin
@@ -253,15 +228,6 @@ begin
     result := FalseResult;
 end;
 
-// Font value back in one line
-function IIF(Condition : Boolean; Alfa, Beta : TFont) : TFont;
-begin
-  if Condition then
-    Result := Alfa
-  else
-    Result := Beta;
-end;
-
 // DateTime value back in one line
 function IIF(Condition : Boolean; Alfa, Beta : TdateTime) : TdateTime; overload;
 begin
@@ -271,78 +237,9 @@ begin
     Result := Beta;
 end;
 
-
-procedure LoadRichEditFromString(RichEdit : TsRichEdit; text : AnsiString);
-var stream : TMemoryStream;
-begin
-//First get the data from the database as AnsiString
-// rtfString := sql.FieldByName('rtftext').AsAnsiString;
-
-// Now write the string into a stream
-  stream := TMemoryStream.Create;
-  try
-    stream.Clear;
-    stream.Write(PAnsiChar(text)^, Length(text));
-    stream.Position := 0;
-
-  //Load the stream into the RichEdit
-    RichEdit.PlainText := False;
-    RichEdit.Lines.LoadFromStream(stream);
-  finally
-    stream.Free;
-  end;
-end;
-
-function LoadStringFromRichEdit(RichEdit : TsRichEdit) : AnsiString;
-var stream : TMemoryStream;
-begin
-//First get the data from the database as AnsiString
-// rtfString := sql.FieldByName('rtftext').AsAnsiString;
-
-// Now write the string into a stream
-  stream := TMemoryStream.Create;
-  try
-    RichEdit.Lines.SaveToStream(stream);
-    stream.Position := 0;
-
-    //Read from the stream into an AnsiString (rtfString)
-    if (stream.Size > 0) then begin
-        SetLength(result, stream.Size);
-        if (stream.Read(result[1], stream.Size) <= 0) then
-            raise EStreamError.CreateFmt('End of stream reached with %d bytes left to read.', [stream.Size]);
-    end;
-  finally
-    stream.Free;
-  end;
-end;
-
 function GetEnumAsString(enum : PTypeInfo; value : Integer) : String;
 begin
   result  := GetEnumName(enum,value) ;
-end;
-
-procedure SetFormTopmostOn(Form : TForm);
-begin
-  SetWindowPos(Form.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE); // or SWP_NOACTIVATE );
-end;
-
-procedure SetFormTopmostOff(Form : TForm);
-begin
-  SetWindowPos(Form.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE or SWP_NOACTIVATE );
-end;
-
-procedure SetCloseButtonEnabled(const form : TForm; const Value: Bool);
-var
-  hSysMenu: HMENU;
-begin
-  hSysMenu:= GetSystemMenu(form.Handle, False);
-  if hSysMenu <> 0 then begin
-    if Value then
-      EnableMenuItem(hSysMenu, SC_CLOSE, MF_BYCOMMAND or MF_ENABLED)
-    else
-      EnableMenuItem(hSysMenu, SC_CLOSE, MF_BYCOMMAND or MF_GRAYED);
-    DrawMenuBar(form.Handle);
-  end;
 end;
 
 procedure LoadKbmMemtableFromDataSetQuiet(kbmTable : TkbmCustomMemTable; Source:TDataSet; CopyOptions:TkbmMemTableCopyTableOptions);
@@ -363,11 +260,6 @@ end;
 function RoundTo(value, smallest_unit : extended) : extended;
 begin
   result := Round(value / smallest_unit) * smallest_unit;
-end;
-
-function HexToTColor(sColor: string): TColor;
-begin
-  result := RGB(StrToInt('$' + copy(sColor, 1, 2)), StrToInt('$' + copy(sColor, 3, 2)), StrToInt('$' + copy(sColor, 5, 2)));
 end;
 
 function CreateAGUID : String;
@@ -537,60 +429,6 @@ begin
   result := result;
 end;
 
-procedure LoadBitmap (il : TImageList; Number : integer; bmp : TBitMap);
-var
-  ActiveBitmap : TBitMap;
-begin
-  ActiveBitmap := TBitMap.Create;
-  try
-    il.GetBitmap (Number, ActiveBitmap);
-    bmp.Transparent := true;
-    bmp.Height      := ActiveBitmap.Height;
-    bmp.Width       := ActiveBitmap.Width;
-    bmp.Canvas.Draw (0, 0, ActiveBitmap);
-  finally
-    ActiveBitmap.Free;
-  end
-end;
-
-procedure ChangePixelcolorsOnCanvas(Canvas : TCanvas; Rect : TRect; FromColor, ToColor : TColor);
-var
-  x, y : integer;
-begin
-  for x := Rect.Left to Rect.Right do
-    for y := Rect.Top to Rect.Bottom do
-      if Canvas.Pixels[x, y] = FromColor then
-        Canvas.Pixels[x, y] := ToColor
-end;
-
-procedure LoadImageFromImageList (il : TImageList;
-                Number : integer;
-                canvas : TCanvas;
-                Location : TPoint;
-                bkColor : TColor;
-                FFColorsToChange : Array of TPoint);
-var i : Integer;
-    ARect : TRect;
-begin
-  il.BkColor := bkColor;
-  il.DrawingStyle := dsNormal;
-  il.Draw(Canvas, Location.X, Location.Y, Number);
-  ARect := Rect(Location.X, Location.Y, Location.X + il.Width - 1, Location.Y + il.Height - 1);
-  for i := Low(FFColorsToChange) to High(FFColorsToChange) do
-    ChangePixelcolorsOnCanvas(Canvas, ARect, FFColorsToChange[i].X, FFColorsToChange[i].Y);
-end;
-
-
-// Use this function in a GUI application to return the color
-function GetPixelColourAsColor(const PixelCoords: TPoint): TColor;
-var dc: HDC;
-begin
-  // Get Device Context of windows desktop
-  dc := GetDC(0);
-  // Read the color of the pixel at the given coordinates
-  Result := GetPixel(dc,PixelCoords.X,PixelCoords.Y);
-end;
-
 procedure DuplicateCurrentRow(Dataset:Tdataset);
 var
   aField : Variant;
@@ -712,19 +550,6 @@ var y, m, d : Word;
 begin
   decodeDate(ADate, y, m, d);
   result := d;
-end;
-
-function GetHTMLColor(cl: TColor; IsBackColor: Boolean = false): string;
-var
-  rgbColor: TColorRef;
-begin
-  if IsBackColor then
-    Result := 'bg'
-  else
-    Result := '';
-  rgbColor := ColorToRGB(cl);
-  Result := Result + 'color="#' + Format('%.2x%.2x%.2x',
-    [GetRValue(rgbColor), GetGValue(rgbColor), GetBValue(rgbColor)]) + '"';
 end;
 
 function ParameterByName(name: String): String;
@@ -919,75 +744,46 @@ begin
 {$ENDIF}
 end;
 
-function InverseColor(color: TColor): TColor;
-var
-  rgb_: TColorRef;
-  Function Inv(b: Byte): Byte;
-  Begin
-    if b > 128 Then
-      Result := 0
-    else
-      Result := 255;
-  End;
 
-begin
-  rgb_ := ColorToRGB(color);
-  rgb_ := RGB(Inv(GetRValue(rgb_)), Inv(GetGValue(rgb_)), Inv(GetBValue(rgb_)));
-  Result := rgb_;
-end;
+//{$IFNDEF ROOMER_UTIL}
+//{$IFNDEF RBE_BUILD}
+//function AuthenticateAgainstWindows(login, password, domain: string;
+//  var token: THandle; var msg: string): Boolean;
+//var
+//  error: Integer;
+//begin
+//  Result := false;
+//  msg := '';
+//  if (login = '') then
+//  begin
+//   // msg := 'Please enter a login.';
+//	  msg := GetTranslatedText('shTx_Utils_EnterLogin');
+//    exit;
+//  end;
+//  if (password = '') then
+//  begin
+//   // msg := 'Password can''t be empty.You must enter a password.';
+//	  msg := GetTranslatedText('shTx_Utils_MustEnterPassword');
+//    exit;
+//  end;
+//  Result := LogonUser(PChar(login), PChar(domain), PChar(password),
+//    LOGON32_LOGON_INTERACTIVE, // first check interactive
+//    LOGON32_PROVIDER_DEFAULT, token);
+//  if not Result then
+//  begin
+//    Result := LogonUser(PChar(login), PChar(domain), PChar(password),
+//      LOGON32_LOGON_NETWORK, // then check against network
+//      LOGON32_PROVIDER_DEFAULT, token);
+//  end;
+//  if not Result then
+//  begin
+//    error := GetLastError;
+//    msg := SysErrorMessage(error);
+//  end;
+//end;
+//{$ENDIF}
+//{$ENDIF}
 
-function TrueInverseColor(color: TColor): TColor;
-var
-  rgb_: TColorRef;
-  Function Inv(b: Byte): Byte;
-  Begin
-    Result := 255 - b;
-  End;
-
-begin
-  rgb_ := ColorToRGB(color);
-  rgb_ := RGB(Inv(GetRValue(rgb_)), Inv(GetGValue(rgb_)), Inv(GetBValue(rgb_)));
-  Result := rgb_;
-end;
-
-{$IFNDEF ROOMER_UTIL}
-{$IFNDEF RBE_BUILD}
-function AuthenticateAgainstWindows(login, password, domain: string;
-  var token: THandle; var msg: string): Boolean;
-var
-  error: Integer;
-begin
-  Result := false;
-  msg := '';
-  if (login = '') then
-  begin
-   // msg := 'Please enter a login.';
-	  msg := GetTranslatedText('shTx_Utils_EnterLogin');
-    exit;
-  end;
-  if (password = '') then
-  begin
-   // msg := 'Password can''t be empty.You must enter a password.';
-	  msg := GetTranslatedText('shTx_Utils_MustEnterPassword');
-    exit;
-  end;
-  Result := LogonUser(PChar(login), PChar(domain), PChar(password),
-    LOGON32_LOGON_INTERACTIVE, // first check interactive
-    LOGON32_PROVIDER_DEFAULT, token);
-  if not Result then
-  begin
-    Result := LogonUser(PChar(login), PChar(domain), PChar(password),
-      LOGON32_LOGON_NETWORK, // then check against network
-      LOGON32_PROVIDER_DEFAULT, token);
-  end;
-  if not Result then
-  begin
-    error := GetLastError;
-    msg := SysErrorMessage(error);
-  end;
-end;
-{$ENDIF}
-{$ENDIF}
 function GetCurrentUserName: string;
 const cnMaxUserNameLen = 254;
 var sUserName: string;
@@ -1017,53 +813,10 @@ end;
 
 
 procedure CopyToClipboard(const Str: string; iDelayMs: integer = 500);
-{$IFDEF DEBUG}
-const MaxRetries= 5;
-var   RetryCount: Integer;
-{$ENDIF}
 begin
 {$IFDEF DEBUG}
-  for RetryCount:= 1 to MaxRetries do
-  try
-    Clipboard.AsText:= Str;
-    Break;
-  except
-    on Exception do
-    begin
-      if RetryCount = MaxRetries then
-        {$IFNDEF ROOMER_UTIL}
-		    raise Exception.Create({$IFNDEF RBE_BUILD}GetTranslatedText('shTx_Utils_CannotClipboard'){$ELSE}'Cannot Copy To Clipboard'{$ENDIF})
-        {$ELSE}
-          raise Exception.Create('Cannot set clipboard')
-        {$ENDIF}
-      else
-        Sleep(iDelayMs)
-    end;
-  end;
+  Clipboard.AsText:= Str;
 {$ENDIF}
-end;
-
-procedure TextToClipboard(const Str: string; iDelayMs: integer = 500);
-const MaxRetries= 5;
-var   RetryCount: Integer;
-begin
-  for RetryCount:= 1 to MaxRetries do
-  try
-    Clipboard.AsText:= Str;
-    Break;
-  except
-    on Exception do
-    begin
-      if RetryCount = MaxRetries then
-        {$IFNDEF ROOMER_UTIL}
-		    raise Exception.Create({$IFNDEF RBE_BUILD}GetTranslatedText('shTx_Utils_CannotClipboard'){$ELSE}'Cannot Copy To Clipboard'{$ENDIF})
-        {$ELSE}
-        raise Exception.Create('Cannot set clipboard')
-        {$ENDIF}
-      else
-        Sleep(iDelayMs)
-    end;
-  end;
 end;
 
 function ClipboardText : String;
@@ -1076,147 +829,6 @@ begin
   result := clipboard.HasFormat(format);
 end;
 
-function ResizeImageToNewTempFile(filename : String; maxWidth, maxHeight : Integer; backColor : TColor) : String;
-var Bmp : TBitmap;
-    iWidth, iHeight : Integer;
-    imgType : TImageFileType;
-    oPNGDest: TPNGImage;
-    oJPGDest : TJPegImage;
-    oGIFDest : TGifImage;
-begin
-  Bmp := TBitmap.Create;
-  try
-    imgType := DetectImage(filename, Bmp);
-
-    if maxHeight = -1 then
-      iHeight := Round(Bmp.Height * (maxWidth / Bmp.Width))
-    else
-      iHeight := maxHeight;
-
-    if maxWidth = -1 then
-      iWidth := Round(Bmp.Width * (maxHeight / Bmp.Height))
-    else
-      iWidth := maxWidth;
-
-    ResizeBitmap(Bmp, iWidth, iHeight, BackColor);
-    result := ChangeFileExt(TPath.GetTempFileName, ExtractFileExt(filename));
-
-    case imgType of
-      IFT_BMP: begin
-                   Bmp.SaveToFile(result);
-      end;
-      IFT_PNG: begin
-                 oPNGDest := TPNGImage.Create;
-                 try
-                   oPNGDest.Assign(Bmp);
-                   oPNGDest.SaveToFile(result);
-                 finally
-                   oPNGDest.Free;
-                 end;
-      end;
-      IFT_JPG: begin
-                 oJPGDest := TJPegImage.Create;
-                 try
-                   oJPGDest.Assign(Bmp);
-                   oJPGDest.SaveToFile(result);
-                 finally
-                   oJPGDest.Free;
-                 end;
-      end;
-      IFT_GIF: begin
-                 oGIFDest := TGifImage.Create;
-                 try
-                   oGIFDest.Assign(Bmp);
-                   oGIFDest.SaveToFile(result);
-                 finally
-                   oGIFDest.Free;
-                 end;
-      end;
-    end;
-  finally
-    Bmp.Free;
-  end;
-
-end;
-
-function LoadImageToBitmap(Filename : String) : TBitmap;
-var
-  Picture: TPicture;
-begin
-  Picture := TPicture.Create;
-  try
-    Picture.LoadFromFile(filename);
-    result := TBitmap.Create;
-    result.Width := Picture.Width;
-    result.Height := Picture.Height;
-    result.Canvas.Draw(0, 0, Picture.Graphic);
-  finally
-    Picture.Free;
-  end;
-end;
-
-function DetectImage(const InputFileName: string; BM: TBitmap) : TImageFileType;
-var
-  FS: TFileStream;
-  FirstBytes: AnsiString;
-  Graphic: TGraphic;
-begin
-  Graphic := nil;
-  Result := IFT_BMP;
-  FS := TFileStream.Create(InputFileName, fmOpenRead);
-  try
-    SetLength(FirstBytes, 8);
-    FS.Read(FirstBytes[1], 8);
-    if Copy(FirstBytes, 1, 2) = 'BM' then
-    begin
-      Graphic := TBitmap.Create;
-      result := IFT_BMP;
-    end else
-    if FirstBytes = #137'PNG'#13#10#26#10 then
-    begin
-      Graphic := TPngImage.Create;
-      result := IFT_PNG;
-    end else
-    if Copy(FirstBytes, 1, 3) =  'GIF' then
-    begin
-      Graphic := TGIFImage.Create;
-      result := IFT_GIF;
-    end else
-    if Copy(FirstBytes, 1, 2) = #$FF#$D8 then
-    begin
-      Graphic := TJPEGImage.Create;
-      result := IFT_JPG;
-    end;
-    if Assigned(Graphic) then
-    begin
-      try
-        FS.Seek(0, soFromBeginning);
-        Graphic.LoadFromStream(FS);
-        BM.Assign(Graphic);
-      except
-      end;
-      Graphic.Free;
-    end;
-  finally
-    FS.Free;
-  end;
-end;
-
-procedure ResizeBitmap(Bitmap: TBitmap; Width, Height: Integer; Background: TColor);
-var
-  B: TBitmap;
-begin
-  if assigned(Bitmap) then
-  begin
-    B:= TBitmap.Create;
-    try
-      ScaleImage(Bitmap, B, Width / Bitmap.Width);
-      Bitmap.Assign(B);
-    finally
-      B.Free;
-    end;
-  end;
-end;
 
 function StringToHex(S: String): string;
 var I: Integer;
@@ -1389,15 +1001,6 @@ begin
   end;
 end;
 
-function GetCursorPosForControl(AControl: TWinControl): TPoint;
-var
-  P: TPoint;
-begin
-  GetCursorPos(P);
-  ScreenToClient(AControl.Handle, P );
-  result := P;
-end;
-
 type
   TEncions = packed record
     A: String;
@@ -1538,28 +1141,6 @@ begin
     Result := StringReplace(Result, Encions[i].B, Encions[i].A, [rfReplaceAll, rfIgnoreCase]);
 end;
 
-procedure PlaceFormOnVisibleMonitor(Form : TForm);
-var
-  Monitor: TMonitor;
-const
-  MoveWinThreshold: Byte = 80;
-begin
-  // ...
-  // 1. Some code to restore the last GUI position and dimension
-  // ...
-
-  // 2. Detect the relevant monitor object
-  Monitor := Screen.MonitorFromWindow(Form.Handle);
-  // 3. Now ensure the just positioned window is visible to the user
-  // 3.a. Set minimal visible width
-  if Form.Left > Monitor.Left + Monitor.Width - MoveWinThreshold then
-    Form.Left := Monitor.Left + Monitor.Width - MoveWinThreshold;
-  // 3.b. Set minimal visible height
-  if Form.Top > Monitor.Top + Monitor.Height - MoveWinThreshold then
-    Form.Top := Monitor.Top + Monitor.Height - MoveWinThreshold;
-end;
-
-
 function ComponentRunning(aComponent: TComponent): boolean;
 begin
   Result := (aComponent.ComponentState * [csLoading, csDestroying, csDesigning]) = [];
@@ -1568,26 +1149,6 @@ end;
 function RunningInMainThread: boolean;
 begin
   Result := (GetCurrentThreadId() = MainThreadID);
-end;
-
-function GetParentOfType(aControl: TControl; aClassType: TClass): TControl;
-begin
-  Result := aControl.Parent;
-  while Assigned(Result) and (not result.ClassType.InheritsFrom(aClassType)) do
-    Result := Result.parent;
-end;
-
-function IsChildOfParent(aControl: TControl; aParent: TControl): boolean;
-var
-  ctrl: TControl;
-begin
-  Result := false;
-  ctrl := aControl;
-  while not Result and assigned(ctrl.Parent) do
-  begin
-    Result := ctrl.Parent = aParent;
-    ctrl := ctrl.Parent;
-  end;
 end;
 
 function GetOwnerOfType(aComp: TComponent; aClassType: TClass): TComponent;
@@ -1611,24 +1172,6 @@ begin
     end;
 end;
 
-function FindFirstChildControlOfType(aParent: TWinControl; aClassType: TClass): TControl;
-var
-  lComp: TComponent;
-  i: integer;
-begin
-  Result := nil;
-  for i := 0 to aParent.ControlCount-1 do
-  begin
-    if aParent.Controls[i].InheritsFrom(aClassType) then
-      result := aParent.Controls[i]
-    else
-      if aParent.Controls[i].InheritsFrom(TWinControl) then
-        Result := FindFirstChildCOntrolOfType(TWinControl(aParent.Controls[i]), aClassType);
-
-    if assigned(Result) then
-      Break;
-  end;
-end;
 
 
 constructor TIntValue.Create(value: integer);

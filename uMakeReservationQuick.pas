@@ -829,7 +829,7 @@ uses
  , uMarketDefinitions
  , uRoomerGridForm
   , uRoomerLanguage
- , uBreakfastTypeDefinitions;
+ , uBreakfastTypeDefinitions, uVCLUtils;
 
 {$R *.dfm}
 

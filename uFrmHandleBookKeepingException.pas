@@ -60,7 +60,7 @@ uses hData,
      uCustomers2,
      uItems2,
      uPayTypes,
-     uUtils;
+     uUtils, uVCLUtils;
 
 const ERR_PRODUCT = 'PRODUCT';
       ERR_CUSTOMER = 'CUSTOMER';

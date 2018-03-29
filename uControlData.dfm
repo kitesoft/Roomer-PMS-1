@@ -6546,6 +6546,10 @@ object frmControlData: TfrmControlData
         end
         object AdvTabSheet6: TsTabSheet
           Caption = 'Accounting'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object gbxForceExternalIdCorrectness: TsGroupBox
             AlignWithMargins = True
             Left = 3
@@ -9265,6 +9269,10 @@ object frmControlData: TfrmControlData
             TabOrder = 0
             object tabGuestInformation: TsTabSheet
               Caption = 'Mandatory Guest information'
+              ExplicitLeft = 0
+              ExplicitTop = 0
+              ExplicitWidth = 0
+              ExplicitHeight = 0
               object clbMandatoryFields: TsCheckListBox
                 AlignWithMargins = True
                 Left = 20

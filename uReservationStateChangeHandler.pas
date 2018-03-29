@@ -81,7 +81,7 @@ type
   public
     constructor Create(aReservation, aRoomReservation: integer); overload;
     constructor Create(aRoomresObj: TRoomReservationBasicObj); overload;
-    destructor Destroy;
+    destructor Destroy; override;
     function ChangeIsAllowed(aNewState: TReservationState; aRaiseExceptionOnFail: boolean=false): boolean; override;
 
     property Room: string read FRoom;
