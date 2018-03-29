@@ -366,7 +366,6 @@ var
   '   , ih.OriginalInvoice '#10+
   '   , ih.RoomGuest '#10+
   '   , date(ih.InvoiceDate) AS InvoiceDate '#10+
-//  '   , ih.ihInvoiceDate AS InvoiceDate '#10+
   '   , ih.ihPayDate AS dueDate '#10+
   '   , ih.invRefrence '#10+
   '   , ih.TotalStayTax '#10+
@@ -387,10 +386,8 @@ var
   '     RIGHT JOIN '#10+
   '       (SELECT '#10+
   '          invoicenumber '#10+
-//  '          , sum(Total + revenueCorrection) as Total '#10+
-//  '          , sum(Vat + revenueCorrectionVat) AS TotalVAT '#10+
-  '          , sum(Total) as Total '#10+
-  '          , sum(Vat) AS TotalVAT '#10+
+  '          , sum(revenue) as Total '#10+
+  '          , sum(revenue / (ilVatpercentage + 100) * ilVatpercentage) AS TotalVAT '#10+
   '        from invoicelines '#10+
   '        where (invoicenumber> 0) '#10+
   '        group by invoicenumber '#10+

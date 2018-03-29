@@ -967,9 +967,9 @@ begin
         ' SELECT ' +
         '     invoicelines.ItemID AS Item ' +
         '   , SUM(invoicelines.Number) AS ItemCount ' +
-        '   , SUM(invoicelines.Total + invoicelines.revenueCorrection) AS Total ' +
-        '   , SUM(invoicelines.Total  + invoicelines.revenueCorrection - (invoicelines.Vat + invoicelines.revenueCorrectionVAT)) AS TotalWoVat ' +
-        '   , SUM(invoicelines.Vat + invoicelines.revenueCorrectionVAT) AS TotalVat ' +
+        '   , SUM(invoicelines.revenue) AS Total ' +
+        '   , SUM(invoicelines.revenue / (invoicelines.ilVatPercentage + 100) * 100) AS TotalWoVat ' +
+        '   , SUM(invoicelines.revenue / (invoicelines.ilVatPercentage + 100) * invoicelines.ilVatPercentage) AS TotalVat ' +
         '   , items.Description ' +
         '   , items.AccountKey ' +
         '   , itemtypes.Itemtype ' +
@@ -1020,23 +1020,23 @@ begin
     screen.cursor := crHourGlass;
     try
       sql :=
-        ' SELECT ' +
-        '      SUM(il.Number) AS ItemCount ' +
-        '    , SUM(il.Total + il.revenueCorrection) AS Total ' +
-        '    , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
-        '    , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
-        '    , itemtypes.Itemtype ' +
-        '    , itemtypes.Description AS ItemTypeDescription ' +
-        '    , itemtypes.VATCode ' +
-        ' FROM ' +
-        '    itemtypes ' +
-        '       INNER JOIN items ON itemtypes.Itemtype = items.Itemtype ' +
-        '       RIGHT OUTER JOIN invoicelines il ON items.Item = il.ItemID ' +
-        ' WHERE ' +
-        '   (il.InvoiceNumber IN  %s ) ' +
-        ' GROUP BY ' +
-        '     itemtypes.Itemtype ' +
-        '  ,  itemtypes.Description ' +
+        ' SELECT '#10 +
+        '     SUM(il.Number) AS ItemCount '#10 +
+        '   , SUM(il.revenue) AS Total '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * 100) AS TotalWoVat '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * il.ilVatPercentage) AS TotalVat '#10 +
+        '   , itemtypes.Itemtype '#10 +
+        '   , itemtypes.Description AS ItemTypeDescription '#10 +
+        '   , itemtypes.VATCode '#10 +
+        ' FROM '#10 +
+        '    itemtypes '#10 +
+        '       INNER JOIN items ON itemtypes.Itemtype = items.Itemtype '#10 +
+        '       RIGHT OUTER JOIN invoicelines il ON items.Item = il.ItemID '#10 +
+        ' WHERE '#10 +
+        '   (il.InvoiceNumber IN  %s ) '#10 +
+        ' GROUP BY '#10 +
+        '     itemtypes.Itemtype '#10 +
+        '  ,  itemtypes.Description '#10 +
         '  ,  itemtypes.VATCode ';
 
       s := format(sql, [zSQLInText]);
@@ -1070,23 +1070,23 @@ begin
     screen.cursor := crHourGlass;
     try
       sql :=
-        ' SELECT ' +
-        '     SUM(il.Number) AS ItemCount ' +
-        '   , SUM(il.Total + il.revenueCorrection) AS Total ' +
-        '   , SUM(il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat)) AS TotalWoVat ' +
-        '   , SUM(il.Vat + il.revenueCorrectionVat) AS TotalVat ' +
-        '   , vatcodes.VATCode ' +
-        '   , vatcodes.Description ' +
-        '   , vatcodes.VATPercentage ' +
-        ' FROM ' +
-        '     invoicelines il' +
-        '     LEFT OUTER JOIN vatcodes ON il.VATType = vatcodes.VATCode ' +
-        ' WHERE ' +
-        '   (il.InvoiceNumber IN  %s ) ' +
-        ' GROUP BY ' +
-        '   vatcodes.VATCode ' +
-        ' , vatcodes.Description ' +
-        ' , vatcodes.VATPercentage ';
+        ' SELECT '#10 +
+        '     SUM(il.Number) AS ItemCount '#10 +
+        '   , SUM(il.revenue) AS Total '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * 100) AS TotalWoVat '#10 +
+        '   , SUM(il.revenue / (il.ilVatPercentage + 100) * il.ilVatPercentage) AS TotalVat '#10 +
+        '   , vatcodes.VATCode '#10 +
+        '   , vatcodes.Description '#10 +
+        '   , il.ilVatPercentage as VATPercentage '#10 +
+        ' FROM '#10 +
+        '     invoicelines il'#10 +
+        '     LEFT OUTER JOIN vatcodes ON il.VATType = vatcodes.VATCode '#10 +
+        ' WHERE '#10 +
+        '   (il.InvoiceNumber IN  %s ) '#10 +
+        ' GROUP BY '#10 +
+        '   vatcodes.VATCode '#10 +
+        ' , vatcodes.Description '#10 +
+        ' , VATPercentage ';
 
       s := format(sql, [zSQLInText]);
 
@@ -1155,9 +1155,9 @@ begin
         '   , il.Description ' +
         '   , il.Price ' +
         '   , il.VATType ' +
-        '   , il.Total + il.revenueCorrection AS AmountWithTax ' +
-        '   , il.Total + il.revenueCorrection - (il.Vat + il.revenueCorrectionVat) AS AmountNoTax ' +
-        '   , il.Vat + il.revenueCorrectionVat as AmountTax' +
+        '   , il.revenue AS AmountWithTax' +
+        '   , il.revenue / (il.ilVatPercentage + 100) * 100 AS AmountNoTax ' +
+        '   , il.revenue / (il.ilVatPercentage + 100) * il.ilVatPercentage AS AmountTax' +
         '   , il.Currency ' +
         '   , il.CurrencyRate ' +
         '   , il.ImportRefrence ' +
