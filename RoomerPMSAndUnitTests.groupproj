@@ -3,10 +3,10 @@
         <ProjectGuid>{B275BFC1-71F2-45FB-8203-D4A30B283544}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="Roomer.dproj">
+        <Projects Include="Unittests\MobileAPITests\MobileAPItest.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Unittests\MobileAPITests\MobileAPItest.dproj">
+        <Projects Include="Roomer.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -17,15 +17,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="Roomer">
-        <MSBuild Projects="Roomer.dproj"/>
-    </Target>
-    <Target Name="Roomer:Clean">
-        <MSBuild Projects="Roomer.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Roomer:Make">
-        <MSBuild Projects="Roomer.dproj" Targets="Make"/>
-    </Target>
     <Target Name="MobileAPItest">
         <MSBuild Projects="Unittests\MobileAPITests\MobileAPItest.dproj"/>
     </Target>
@@ -35,14 +26,23 @@
     <Target Name="MobileAPItest:Make">
         <MSBuild Projects="Unittests\MobileAPITests\MobileAPItest.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Roomer">
+        <MSBuild Projects="Roomer.dproj"/>
+    </Target>
+    <Target Name="Roomer:Clean">
+        <MSBuild Projects="Roomer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Roomer:Make">
+        <MSBuild Projects="Roomer.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Roomer;MobileAPItest"/>
+        <CallTarget Targets="MobileAPItest;Roomer"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Roomer:Clean;MobileAPItest:Clean"/>
+        <CallTarget Targets="MobileAPItest:Clean;Roomer:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Roomer:Make;MobileAPItest:Make"/>
+        <CallTarget Targets="MobileAPItest:Make;Roomer:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
