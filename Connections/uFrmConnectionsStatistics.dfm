@@ -262,6 +262,10 @@ inherited FrmConnectionsStatistics: TFrmConnectionsStatistics
     end
     object tsHagstofan: TsTabSheet
       Caption = 'Hagstofan'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sGroupBox1: TsGroupBox
         AlignWithMargins = True
         Left = 3

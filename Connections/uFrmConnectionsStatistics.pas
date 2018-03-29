@@ -94,9 +94,12 @@ end;
 const SNAPSHOT_SYSTEM_CODE = 'SNAPSHOT';
 
 procedure TFrmConnectionsStatistics.btnForceFullClick(Sender: TObject);
+var username, password : String;
 begin
   inherited;
-  if openLogin(d.roomerMainDataSet.Username, '', 7) then
+  username := '';
+  password := '';
+  if openLogin(username, password, 7) then
   begin
   Screen.Cursor := crHourGlass;
   try
