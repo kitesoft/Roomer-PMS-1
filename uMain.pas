@@ -8030,8 +8030,7 @@ begin
           BlockMoveReason := rdOBJ.qMT_.FieldByName('BlockMoveReason').asString;
           OngoingSale := rdOBJ.qMT_.FieldByName('TotalNoRent').AsFloat;
 
-          // retrieved later when needed
-//          OngoingTaxes := rdOBJ.qMT_.FieldByName('TotalTaxes').AsFloat;
+          OngoingTaxes := rdOBJ.qMT_.FieldByName('TotalTaxes').AsFloat;
           OngoingRent := rdOBJ.qMT_.FieldByName('TotalRent').AsFloat;
           dt := rdOBJ.qMT_.FieldByName('rdDate').AsDateTime;
 
@@ -8064,7 +8063,7 @@ begin
                   BlockMove, BlockMoveReason,
                   OngoingSale,
                   OngoingRent,
-                  -1, //OngoingTaxes,
+                  OngoingTaxes,
                   rdOBJ.qMT_['Invoices'], rdOBJ.qMT_['Guarantee'], rdOBJ.qMT_['TotalPayment'],
                   rdOBJ.qMT_['InvoiceIndex']);
               except
