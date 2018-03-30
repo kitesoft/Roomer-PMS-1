@@ -1910,6 +1910,8 @@ end;
 procedure TfrmMakeReservationQuick.UpdateControls;
 begin
   edtBreakfastPrice.Enabled := TBreakfastType.FromItemIndex(cbxBreakfast.ItemIndex) = TBreakFastType.Excluded;
+
+  edRoomResDiscount.DisableCurrencyFormatting := (cbxIsRoomResDiscountPrec.ItemIndex = 0);
   if cbxIsRoomResDiscountPrec.ItemIndex = 0 then
     edRoomResDiscount.MaxValue := 100
   else
