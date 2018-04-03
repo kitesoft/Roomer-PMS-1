@@ -190,7 +190,12 @@ begin
     Properties.Add('Top');
     Properties.Add('Height');
   end;
-  psRoomerBase.RestoreFrom;
+  FUpdatingControls := true;
+  try
+    psRoomerBase.RestoreFrom;
+  finally
+    FUpdatingControls := false;
+  end;
 end;
 
 procedure TfrmBaseRoomerForm.RefreshData;

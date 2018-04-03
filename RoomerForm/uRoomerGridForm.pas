@@ -16,7 +16,8 @@ uses
   dxPSCompsProvider, dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd,
   dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers,
   dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, sLabel, sEdit, sCheckBox,
-  Vcl.Buttons, sSpeedButton, Vcl.Menus, dxCore, uRoomerGridExporters, dxPScxPivotGridLnk, sPageControl
+  Vcl.Buttons, sSpeedButton, Vcl.Menus, dxCore, uRoomerGridExporters, dxPScxPivotGridLnk
+  , sPageControl
   ;
 
 type
