@@ -507,7 +507,7 @@ end;
 
 function TInvoiceLine.GetVatOnRevenue: TAmount;
 begin
-  result := TAmount.Create(_calcVat(TotalRevenue.Value, FVATPercentage), TotalRevenue.CurrencyCode);
+  result := TAmount.Create(_calcVat(TotalRevenue.Value, FVATPercentage), TotalRevenue.CurrencyCode).Rounded;
 end;
 
 function TInvoiceLine.HierarchalDepth: integer;

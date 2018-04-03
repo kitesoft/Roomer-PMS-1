@@ -1579,7 +1579,8 @@ begin
         if not SameValue(TotalPrice, 0) then
         begin
           VATPercentage := rSet.fieldByName('VATPercentage').asFloat;
-          VATAmount := TotalPrice / (100 + VATPercentage) * VATPercentage;
+          // Store rounded vat amount to avoid rounding differences when adding
+          VATAmount := TAmount(TotalPrice / (100 + VATPercentage) * VATPercentage).Rounded;
           TotalWOVat := TotalPrice - VATAmount;
 
           // Add vat of all lines, visible and invisible so the correct percentages are used on all items
