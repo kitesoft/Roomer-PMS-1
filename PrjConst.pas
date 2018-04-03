@@ -1343,6 +1343,8 @@ begin
   constants.Add('shTx_TelPriceGroupsEdit_PriceCodeExists', 'Price code exists - try again');
   constants.Add('shTx_TelPriceGroupsEdit_DescriptionRequired', 'Description is required field');
   constants.Add('shTx_RoomsNotFound_ComingSoon', 'Coming Soon');
+
+  constants.Add('shTx_NoRegistrationFormsToBePrinted', 'No registrationforms to print');
 end;
 
 procedure AddConstants_CLang; // Baettu vid thennan ad vild

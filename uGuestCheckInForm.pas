@@ -381,6 +381,12 @@ var
   lForm: TFrmGuestCheckInForm;
 begin
   result := false;
+  if length(_Roomreservations) = 0 then
+  begin
+    MessageDlg(GetTranslatedText('shTx_NoRegistrationFormsToBePrinted'), mtInformation, [mbOk], 0);
+    Exit;
+  end;
+
   lForm := TFrmGuestCheckInForm.Create(nil);
   try
     sRoomResList := '';

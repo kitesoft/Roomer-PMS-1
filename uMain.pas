@@ -1438,6 +1438,7 @@ type
     function FilteredRoomTypes: TSet_Of_Integer;
     function RoomtypeFilterActive: boolean;
     procedure RefreshFooterStats;
+    function GetDateOfSelectedColumn: TDate;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -2017,7 +2018,7 @@ begin
     rSet := d.roomerMainDataSet.ActivateNewDataset
       (d.roomerMainDataSet.SystemFreeQuery
       (Format(GET_ALL_ROOMRESERVATIONS_ARRIVING_ON_SPECIFIED_DATE_FILTER_RESERVATION_ID,
-      [_DB(uDateUtils.dateToSqlString(now)), _iReservation])));
+      [_DB(uDateUtils.dateToSqlString(GetDateOfSelectedColumn)), _iReservation])));
     try
       PrintRegistrationFormsForSpecifiedRoomReservations(rSet);
     finally
@@ -2032,7 +2033,7 @@ var
 begin
   rSet := d.roomerMainDataSet.ActivateNewDataset
     (d.roomerMainDataSet.SystemFreeQuery(Format(GET_ALL_ROOMRESERVATIONS_ARRIVING_ON_SPECIFIED_DATE,
-    [_DB(uDateUtils.dateToSqlString(now))])));
+    [_DB(uDateUtils.dateToSqlString(GetDateOfSelectedColumn))])));
   try
     PrintRegistrationFormsForSpecifiedRoomReservations(rSet);
   finally
@@ -4464,24 +4465,20 @@ begin
   end;
 end;
 
+function TfrmMain.GetDateOfSelectedColumn: TDate;
+begin
+  Result := dtDate.Date;
+  if (tabsView.TabIndex = 1) and (grPeriodRooms.col >= grPeriodRooms.FixedCols) then
+    Result := Period_ColToDate(grPeriodRooms.col);
+end;
+
 procedure TfrmMain.mnuItemPasteReservationFromClipboardClick(Sender: TObject);
 var
   iReservation: integer;
   Date: TdateTime;
   hotelId: String;
 begin
-  case tabsView.TabIndex of
-    0:
-      Date := dtDate.Date;
-    1:
-      begin
-        if (grPeriodRooms.col < grPeriodRooms.FixedCols) then
-          exit;
-        Date := Period_ColToDate(grPeriodRooms.col);
-      end;
-  else
-    exit;
-  end;
+  Date := GetDateOfSelectedColumn;
 
   if ReservationIdInClipboard(hotelId, iReservation) then
   begin
