@@ -62,10 +62,6 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object tsMain: TsTabSheet
       Caption = 'tsMain'
       TabVisible = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object grData: TcxGrid
         Left = 0
         Top = 0
@@ -164,6 +160,7 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
     object prLink_grData: TdxGridReportLink
       Active = True
       Component = grData
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -176,7 +173,8 @@ inherited frmBaseRoomerGridForm: TfrmBaseRoomerGridForm
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43186.601759641210000000
+      ReportDocument.CreationDate = 43193.529406655090000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

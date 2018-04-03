@@ -888,7 +888,8 @@ procedure TfrmGroupGuests.DoUpdateControls;
 begin
   inherited;
 
-  tvGuests.DataController.Filter.Active := (rgrShow.ItemIndex = 1);
+  if assigned(tvGuests.DataController) then
+    tvGuests.DataController.Filter.Active := (rgrShow.ItemIndex = 1);
 
   //Contact
   tvGuests.Bands[1].Visible := not  chkCompactView.Checked;

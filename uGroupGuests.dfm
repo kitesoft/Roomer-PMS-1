@@ -63,8 +63,8 @@ inherited frmGroupGuests: TfrmGroupGuests
       object chkCompactView: TsCheckBox
         Left = 14
         Top = 80
-        Width = 87
-        Height = 20
+        Width = 95
+        Height = 17
         Caption = 'Compact view'
         Checked = True
         State = cbChecked
@@ -197,6 +197,8 @@ inherited frmGroupGuests: TfrmGroupGuests
     ExplicitWidth = 1128
     ExplicitHeight = 437
     inherited tsMain: TsTabSheet
+      ExplicitWidth = 1120
+      ExplicitHeight = 427
       inherited grData: TcxGrid
         Width = 1120
         Height = 427
@@ -354,7 +356,7 @@ inherited frmGroupGuests: TfrmGroupGuests
     Top = 208
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43112.424664120370000000
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      AssignedFormatValues = []
       BuiltInReportLink = True
     end
   end
