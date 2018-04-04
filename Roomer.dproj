@@ -1045,6 +1045,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="MobileAPI\uReservationTaxesAPI.pas"/>
         <DCCReference Include="MobileAPI\uRoomRentTaxReceipt.pas"/>
         <DCCReference Include="RoomerUtils\uVCLUtils.pas"/>
+        <DCCReference Include="Definitions\uRoomRentStatisticsDefinitions.pas"/>
         <None Include="Roomer.todo"/>
         <None Include="notes.txt"/>
         <None Include="Roomer.inc"/>

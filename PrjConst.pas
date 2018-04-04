@@ -1800,6 +1800,24 @@ begin
   constants.Add('shTx_MarketType_Leisure', 'Leisure');
   constants.Add('shTx_MarketType_Conference', 'Conference');
 
+  constants.Add('shTx_RoomRentComparePeriod_PreviousYear', 'Previous year');
+  constants.Add('shTx_RoomRentComparePeriod_PreviousMonth', 'Previous month');
+  constants.Add('shTx_RoomRentComparePeriod_NextYear', 'Next year');
+  constants.Add('shTx_RoomRentComparePeriod_NextMonth', 'Next month');
+
+  constants.Add('shTx_RoomRentCompareData_Revenue', 'Revenue');
+  constants.Add('shTx_RoomRentCompareData_Occupancy', 'Occupancy');
+  constants.Add('shTx_RoomRentCompareData_ADR', 'ADR');
+  constants.Add('shTx_RoomRentCompareData_RevPar', 'RevPar');
+  constants.Add('shTx_RoomRentCompareData_TotalDiscount', 'Total discount');
+  constants.Add('shTx_RoomRentCompareData_Highestrate', 'Highest rate');
+  constants.Add('shTx_RoomRentCompareData_LowestRate', 'Lowest rate');
+  constants.Add('shTx_RoomRentCompareData_TotalGuests', 'Total guests');
+  constants.Add('shTx_RoomRentCompareData_TotalRooms', 'Total rooms');
+  constants.Add('shTx_RoomRentCompareData_OutOfOrder', 'Out of order');
+  constants.Add('shTx_RoomRentCompareData_SoldRooms', 'Sold rooms');
+
+
   constants.Add('shExportMenuCaption', 'Export grid to');
   constants.Add('shInvoiceAlreadyCredited', 'Creditinvoice for this invoice already exist with number %d');
   constants.Add('shSaveChangesBeforeReloadingData', 'Not all changes have been saved. Save changes before reloading data?');

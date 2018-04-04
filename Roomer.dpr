@@ -351,7 +351,8 @@ uses
   uConnectionsHagstofaService in 'Connections\uConnectionsHagstofaService.pas',
   uReservationTaxesAPI in 'MobileAPI\uReservationTaxesAPI.pas',
   uRoomRentTaxReceipt in 'MobileAPI\uRoomRentTaxReceipt.pas',
-  uVCLUtils in 'RoomerUtils\uVCLUtils.pas';
+  uVCLUtils in 'RoomerUtils\uVCLUtils.pas',
+  uRoomRentStatisticsDefinitions in 'Definitions\uRoomRentStatisticsDefinitions.pas';
 
 {$R *.RES}
 
