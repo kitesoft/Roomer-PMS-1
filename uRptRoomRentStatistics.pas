@@ -60,7 +60,7 @@ uses
   , uRoomRentStatisticsDefinitions, dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider,
   dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv,
   dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
-  dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore
+  dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, htmlhint, dxScreenTip, dxCustomHint, cxHint
   ;
 
 type
@@ -133,7 +133,7 @@ type
     ppDesignLayers1: TppDesignLayers;
     ppDesignLayer1: TppDesignLayer;
     ppParameterList1: TppParameterList;
-    btnReport: TsButton;
+    btnReportStats: TsButton;
     ppLabel1: TppLabel;
     ppDBText1: TppDBText;
     ppLabel2: TppLabel;
@@ -339,7 +339,8 @@ type
     tvComparisonDateBaseDay: TcxGridDBBandedColumn;
     tvComparisonDateDay: TcxGridDBBandedColumn;
     grdPrinter: TdxComponentPrinter;
-    grdPrinterLink1: TdxGridReportLink;
+    grdPrinterLinkComparison: TdxGridReportLink;
+    grdPrinterLinkStats: TdxGridReportLink;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure dtDateChange(Sender: TObject);
@@ -350,21 +351,18 @@ type
       var AProperties: TcxCustomEditProperties);
     procedure sButton2Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure btnReportClick(Sender: TObject);
+    procedure btnComparisonReportClick(Sender: TObject);
     procedure tvStatsHideZeroValues(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
     procedure ppHeaderBand1BeforePrint(Sender: TObject);
-    procedure tvStatsrevenueGetCellHint(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      ACellViewInfo: TcxGridTableDataCellViewInfo; const AMousePos: TPoint; var AHintText: TCaption;
-      var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
     procedure tvStatsDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
     procedure rptStatsBeforePrint(Sender: TObject);
     procedure cbxComparisonPeriodChange(Sender: TObject);
     procedure kbmComparisonCalcFields(DataSet: TDataSet);
     procedure clbComparisonDataSelectionClickCheck(Sender: TObject);
-    procedure rgCompareOnChange(Sender: TObject);
-    procedure tvComparisonDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
     procedure btnComparisonExcelClick(Sender: TObject);
+    procedure tvComparisonDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
+    procedure btnReportStatsClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -373,6 +371,7 @@ type
     FCompareData: TRoomRentCompareDataSet;
     FBaseBandOrigCaption: string;
     FCompareBandOrigCaption: string;
+    FLoadingData: boolean;
 
     function GetFooterSummaryValueOrZero(aColumn: TcxGridDBBandedColumn): variant;
 
@@ -383,7 +382,12 @@ type
     procedure LoadBaseDataInDataset(aStatistics: THotelStatisticsList);
     procedure LoadComparisonDataInDataset(aStatistics: THotelStatisticsList);
     procedure UpdateCompareDataColumns;
-    procedure CalculateComparisonSummaries(ASender: TcxDataSummary);
+    procedure CalculateTvComparisonFooterSummary(RevenueCol, SellableCol, SoldCol, OccCol, RevparCol, AdrCOl: TcxGridDBBandedColumn);
+    procedure CalculateTvComparisonDiffFooterSummary;
+    procedure UpdateControls;
+    procedure SetLoadingData(const Value: boolean);
+
+    property LoadingData: boolean read FLoadingData write SetLoadingData;
   public
     { Public declarations }
   end;
@@ -423,6 +427,7 @@ begin
   frm := TfrmRptRoomRentStatistics.Create(nil);
   try
     Result := frm.ShowModal = mrOk;
+    Screen.Cursor := crDefault;
   finally
     frm.Free;
   end;
@@ -445,6 +450,38 @@ end;
 
 procedure TfrmRptRoomRentStatistics.kbmComparisonCalcFields(DataSet: TDataSet);
 begin
+  if kbmComparisontotalSellableRoomsBase.AsInteger <> 0 then
+  begin
+    kbmComparisonoccBase.asFloat := kbmComparisonsoldRoomsBase.AsInteger / kbmComparisontotalSellableRoomsBase.AsInteger * 100;
+    kbmComparisonrevParBase.asFloat := kbmComparisonrevenueBase.asFloat / kbmComparisontotalSellableRoomsBase.AsInteger;
+  end
+  else
+  begin
+    kbmComparisonoccBase.asFloat := 0;
+    kbmComparisonrevParBase.asFloat := 0;
+  end;
+
+  if kbmComparisonsoldRoomsBase.AsInteger <> 0 then
+    kbmComparisonadrBase.asFloat := kbmComparisonrevenueBase.AsFloat / kbmComparisonsoldRoomsBase.AsInteger
+  else
+    kbmComparisonadrBase.asFloat := 0;
+
+  if kbmComparisontotalSellableRooms.AsInteger <> 0 then
+  begin
+    kbmComparisonocc.asFloat := kbmComparisonsoldRooms.AsInteger / kbmComparisontotalSellableRooms.AsInteger * 100;
+    kbmComparisonrevPar.asFloat := kbmComparisonrevenue.asFloat / kbmComparisontotalSellableRooms.AsInteger;
+  end
+  else
+  begin
+    kbmComparisonocc.asFloat := 0;
+    kbmComparisonrevPar.asFloat := 0;
+  end;
+
+  if kbmComparisonsoldRooms.AsInteger <> 0 then
+    kbmComparisonadr.asFloat := kbmComparisonrevenue.AsFloat / kbmComparisonsoldRooms.AsInteger
+  else
+    kbmComparisonadr.asFloat := 0;
+
   kbmComparisonrevenueDiff.AsFloat := kbmComparisonrevenueBase.AsFloat - kbmComparisonrevenue.AsFloat;
   kbmComparisonOccDiff.AsFloat := kbmComparisonoccBase.AsFloat - kbmComparisonocc.AsFloat;
   kbmComparisonAdrDiff.AsFloat := kbmComparisonadrBase.AsFloat - kbmComparisonadr.AsFloat;
@@ -487,9 +524,63 @@ begin
 end;
 
 
+procedure TfrmRptRoomRentStatistics.SetLoadingData(const Value: boolean);
+begin
+  FLoadingData := Value;
+
+  btnRefresh.Enabled := not FLoadingData;
+  if FLoadingData then
+    Screen.Cursor := crHourGlass
+  else
+    Screen.Cursor := crDefault;
+end;
+
 procedure TfrmRptRoomRentStatistics.tvComparisonDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
 begin
-  CalculateComparisonSummaries(aSender);
+  CalculateTvComparisonFooterSummary(tvComparisonRevenueBase, tvComparisontotalSellableRoomsBase, tvComparisonsoldRoomsBase,
+                                     tvComparisonOccBase, tvComparisonrevParBase, tvComparisonadrBase);
+  CalculateTvComparisonFooterSummary(tvComparisonRevenue, tvComparisontotalSellableRooms, tvComparisonsoldRooms,
+                                     tvComparisonOcc, tvComparisonrevPar, tvComparisonadr);
+
+  CalculateTvComparisonDiffFooterSummary;
+end;
+
+
+procedure TfrmRptRoomRentStatistics.CalculateTvComparisonDiffFooterSummary;
+begin
+  SetFooterSummaryValue(tvComparisonOccDiff, GetFooterSummaryValueOrZero(tvComparisonOccBase) - GetFooterSummaryValueOrZero(tvComparisonOcc));
+  SetFooterSummaryValue(tvComparisonADRDiff, GetFooterSummaryValueOrZero(tvComparisonAdrBase) - GetFooterSummaryValueOrZero(tvComparisonAdr));
+  SetFooterSummaryValue(tvComparisonRevparDiff, GetFooterSummaryValueOrZero(tvComparisonRevParBase) - GetFooterSummaryValueOrZero(tvComparisonrevPar));
+end;
+
+procedure TfrmRptRoomRentStatistics.CalculateTvComparisonFooterSummary(RevenueCol, SellableCol, SoldCol, OccCol, RevparCol, AdrCOl: TcxGridDBBandedColumn);
+var
+  lSoldRooms: integer;
+  lSellableRooms: integer;
+  lRevenue: double;
+
+begin
+  lRevenue :=  GetFooterSummaryValueOrZero(RevenueCol);
+  lSellableRooms := GetFooterSummaryValueOrZero(SellableCol);
+  lSoldRooms := GetFooterSummaryValueOrZero(SoldCol);
+
+  if lSellableRooms <> 0 then
+  begin
+    SetFooterSummaryValue(OccCol, 100 * lSoldRooms / lSellableRooms);
+    SetFooterSummaryValue(RevparCol, lRevenue / lSellableRooms);
+  end
+  else
+  begin
+    SetFooterSummaryValue(OccCol, 0);
+    SetFooterSummaryValue(RevparCol, 0);
+  end;
+
+  // ADR
+  if lSoldRooms <> 0 then
+    SetFooterSummaryValue(AdrCOl, lRevenue / lSoldRooms)
+  else
+    SetFooterSummaryValue(AdrCOl, 0);
+
 end;
 
 procedure TfrmRptRoomRentStatistics.tvStatsDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
@@ -535,13 +626,6 @@ begin
     aText := '';
 end;
 
-procedure TfrmRptRoomRentStatistics.tvStatsrevenueGetCellHint(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord; ACellViewInfo: TcxGridTableDataCellViewInfo; const AMousePos: TPoint;
-  var AHintText: TCaption; var AIsHintMultiLine: Boolean; var AHintTextRect: TRect);
-begin
-//
-end;
-
 procedure TfrmRptRoomRentStatistics.UpdateCompareDataColumns;
 var
   i: integer;
@@ -564,9 +648,31 @@ var
 begin
   dateTimeToString(s, 'yyyymmddhhnn', now);
   sFilename := g.qProgramPath + s + '_StatCompare';
-  ExportGridToExcel(sFilename, grdComparison {grGroupInvoiceSums}, true, true, true);
+  ExportGridToExcel(sFilename, grdComparison, true, true, true);
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
+
+procedure TfrmRptRoomRentStatistics.UpdateControls;
+begin
+  if pcMain.ActivePage = tsComparison then
+  begin
+    tvComparisonDateBaseDay.Visible := rgCompareOn.ItemIndex = 0;
+    tvComparisonDateDay.Visible := rgCompareOn.ItemIndex = 0;
+
+    if rgCompareOn.ItemIndex = 0 then
+    begin
+      TcxCustomDateEditProperties( tvComparisonaDateBase.Properties).DisplayFormat := FormatSettings.ShortDateFormat;
+      TcxCustomDateEditProperties( tvComparisonADate.Properties).DisplayFormat := FormatSettings.ShortDateFormat;
+    end
+    else
+    begin
+      TcxCustomDateEditProperties( tvComparisonaDateBase.Properties).DisplayFormat := 'mmm yyyy';
+      TcxCustomDateEditProperties( tvComparisonaDate.Properties).DisplayFormat := 'mmm yyyy';
+    end;
+  end;
+
+end;
+
 
 procedure TfrmRptRoomRentStatistics.btnGuestsExcelClick(Sender: TObject);
 var
@@ -575,7 +681,7 @@ var
 begin
   dateTimeToString(s, 'yyyymmddhhnn', now);
   sFilename := g.qProgramPath + s + '_StatData';
-  ExportGridToExcel(sFilename, grStat {grGroupInvoiceSums}, true, true, true);
+  ExportGridToExcel(sFilename, grStat, true, true, true);
   ShellExecute(Handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, sw_shownormal);
 end;
 
@@ -588,7 +694,7 @@ const
   cBandCaptionFormat = ' ( %s - %s )';
 begin
 
-  btnRefresh.Enabled := false;
+  LoadingData := true;
 
   lExcludedReservationStates := cAllReservationStatesSet;
   for i:= 0 to clbIncludedStates.Items.Count-1 do
@@ -614,6 +720,14 @@ begin
                                       Format(cBandCaptionFormat, [dtComparisonStart.Text,
                                                                   FormatDateTime(FormatSettings.ShortDateFormat, lCompareToDate)]);
   end;
+
+  UpdateControls;
+
+end;
+
+procedure TfrmRptRoomRentStatistics.btnReportStatsClick(Sender: TObject);
+begin
+  grdPrinter.Print(True, nil, grdPrinterLinkStats);
 end;
 
 procedure TfrmRptRoomRentStatistics.LoadBaseDataInDataset(aStatistics: THotelStatisticsList);
@@ -621,50 +735,57 @@ begin
   dec(FDataLoadingThreads);
   LoadDataInDataset(kbmStat, aStatistics);
   if pcMain.ActivePage = tsComparison then
+  begin
     LoadBaseDataInComparisonDataset(trunc(dtComparisonStart.Date - dtDateFrom.Date));
+    kbmStat.Close; // Avoid display of aggregated data when switching back to stats tab
+  end;
 
-  btnRefresh.Enabled := (FDataLoadingThreads = 0);
+  LoadingData := (FDataLoadingThreads <> 0);
 end;
 
 procedure TfrmRptRoomRentStatistics.LoadComparisonDataInDataset(aStatistics: THotelStatisticsList);
 begin
   dec(FDataLoadingThreads);
   LoadDataInDataset(kbmComparison, aStatistics, true);
-  btnRefresh.Enabled := (FDataLoadingThreads = 0);
+  LoadingData := (FDataLoadingThreads <> 0);
 end;
 
 procedure TfrmRptRoomRentStatistics.LoadDataInDataset(aDataset: TDataSet; aStatistics: THotelStatisticsList; aComparisonFieldsOnly: boolean);
 var
   lStat: TSingleDateStatistics;
+  lGroupByMonth: boolean;
+  lCurrentDate: TDateTime;
 begin
 
   aDataset.DisableControls;
   try
-    screen.Cursor := crHourGlass;
     aDataset.Open;
+
+    lGroupByMonth := (pcMain.ActivePage = tsComparison) and (rgCompareOn.ItemIndex = 1);
 
     for lStat in aStatistics.StatisticsPerDateList do
     begin
-      if aDataset.Locate('aDate', lStat.Date, []) then
+      lCurrentDate := lStat.Date;
+      if lGroupByMonth then
+        lCurrentDate := lCurrentDate.StartOfMonth;
+
+      if aDataset.Locate('aDate', lCurrentDate, []) then
         aDataset.Edit
       else
       begin
         aDataSet.Append;
-        aDataset.FieldByName('ADate').AsDateTime := lStat.Date;
+        aDataset.FieldByName('ADate').AsDateTime := lCurrentDate;
       end;
       try
-        aDataset.FieldByName('revenue').asFloat := lStat.Statistic['REVENUE'].Value;
-        aDataset.FieldByName('occ').asFloat := lStat.Statistic['OCCUPANCY'].Value;
-        aDataset.FieldByName('adr').asFloat := lStat.Statistic['ADR'].Value;
-        aDataset.FieldByName('revPar').asFloat := lStat.Statistic['REVPAR'].Value;
+        aDataset.FieldByName('revenue').asFloat := aDataset.FieldByName('revenue').asFloat  + lStat.Statistic['REVENUE'].Value;
         aDataset.FieldByName('currency').asString := RoomerCurrencyManager.DefaultCurrency;
-        aDataset.FieldByName('totalDiscount').asFloat := lStat.Statistic['DISCOUNT'].Value;
-        aDataset.FieldByName('maxRate').asFloat := lStat.Statistic['MAXRATE'].Value;
-        aDataset.FieldByName('minRate').asFloat := lStat.Statistic['MINRATE'].Value;
-        aDataset.FieldByName('totalGuests').AsInteger := trunc(lStat.Statistic['GUESTCOUNT'].Value);
-        aDataset.FieldByName('totalSellableRooms').AsInteger := trunc(lStat.Statistic['TOTAL_SELLABLE_ROOMS'].Value);
-        aDataset.FieldByName('oooROoms').AsInteger := trunc(lStat.Statistic['OOOROOMS'].Value);
-        aDataset.FieldByName('soldRooms').AsInteger := trunc(lStat.Statistic['ROOMS_SOLD'].Value);
+        aDataset.FieldByName('totalDiscount').asFloat := aDataset.FieldByName('totalDiscount').asFloat + lStat.Statistic['DISCOUNT'].Value;
+        aDataset.FieldByName('maxRate').asFloat := max(aDataset.FieldByName('maxRate').asFloat, lStat.Statistic['MAXRATE'].Value);
+        aDataset.FieldByName('minRate').asFloat := min(aDataset.FieldByName('minRate').asFloat, lStat.Statistic['MINRATE'].Value);
+        aDataset.FieldByName('totalGuests').AsInteger := aDataset.FieldByName('totalGuests').AsInteger + trunc(lStat.Statistic['GUESTCOUNT'].Value);
+        aDataset.FieldByName('totalSellableRooms').AsInteger := aDataset.FieldByName('totalSellableRooms').AsInteger + trunc(lStat.Statistic['TOTAL_SELLABLE_ROOMS'].Value);
+        aDataset.FieldByName('oooROoms').AsInteger := aDataset.FieldByName('oooROoms').AsInteger  + trunc(lStat.Statistic['OOOROOMS'].Value);
+        aDataset.FieldByName('soldRooms').AsInteger := aDataset.FieldByName('soldRooms').AsInteger + trunc(lStat.Statistic['ROOMS_SOLD'].Value);
         if not aComparisonFieldsOnly then
         begin
           aDataset.FieldByName('inHouse').AsInteger := trunc(lStat.Statistic['IN_HOUSE'].Value);
@@ -677,6 +798,24 @@ begin
           aDataset.FieldByName('arrivedRooms').AsInteger := trunc(lStat.Statistic['ARRIVED_ROOMS'].Value);
           aDataset.FieldByName('expectedDepartures').AsInteger := trunc(lStat.Statistic['EXPECTED_DEPARTURES'].Value);
         end;
+        aDataSet.Post;
+
+        aDataset.Edit;
+        if aDataset.FieldByName('totalSellableRooms').AsInteger <> 0 then
+        begin
+          aDataset.FieldByName('occ').asFloat := aDataset.FieldByName('soldRooms').AsInteger / aDataset.FieldByName('totalSellableRooms').AsInteger * 100;
+          aDataset.FieldByName('revPar').asFloat := aDataset.FieldByName('revenue').AsFloat / aDataset.FieldByName('totalSellableRooms').AsInteger;
+        end
+        else
+        begin
+          aDataset.FieldByName('occ').asFloat := 0;
+          aDataset.FieldByName('revPar').asFloat := 0;
+        end;
+
+        if aDataset.FieldByName('soldRooms').AsInteger <> 0 then
+          aDataset.FieldByName('adr').asFloat := aDataset.FieldByName('revenue').AsFloat / aDataset.FieldByName('soldRooms').AsInteger
+        else
+          aDataset.FieldByName('adr').asFloat := 0;
 
         aDataset.Post;
       except
@@ -688,12 +827,14 @@ begin
     aDataset.First;
 
   finally
-    Screen.Cursor := crDefault;
     aDataset.EnableControls;
   end;
 end;
 
 procedure TfrmRptRoomRentStatistics.LoadBaseDataInComparisonDataset(aDaysOffset: integer);
+var
+  lGRoupByMonth: boolean;
+  lCurrentDate: TDateTime;
 begin
   tvComparison.DataController.BeginFullUpdate;
   kbmComparison.DisableControls;
@@ -702,31 +843,33 @@ begin
     if not kbmComparison.Active then
       kbmComparison.Open;
 
+    lGroupByMonth := (pcMain.ActivePage = tsComparison) and (rgCompareOn.ItemIndex = 1);
+
     kbmStat.First;
     while not kbmStat.Eof do
     begin
-      if kbmComparison.Locate('aDate', kbmStat.FieldByName('adate').asDateTime.AddDays(aDaysOffset), []) then
+      lCurrentDate := kbmStat.FieldByName('adate').asDateTime.AddDays(aDaysOffset);
+      if lGroupByMonth then
+        lCurrentDate := lCurrentDate.StartOfMonth;
+
+      if kbmComparison.Locate('aDate', lCurrentDate, []) then
         kbmComparison.Edit
       else
       begin
         kbmComparison.Append;
-        kbmComparisonADate.AsDateTime := kbmStat.FieldByName('adate').asDateTime.AddDays(aDaysOffset);
+        kbmComparisonADate.AsDateTime := lCurrentDate;
       end;
 
       try
-        kbmComparisonaDateBase.AsDateTime :=                      kbmStat.FieldByName('adate').asDateTime;
-        kbmComparisonrevenueBase.asFloat :=                       kbmStat.FieldByName('revenue').asFloat;
-        kbmComparisonoccBase.asFloat :=                           kbmStat.FieldByName('occ').asFloat;
-        kbmComparisonadrBase.asFloat :=                           kbmStat.FieldByName('adr').asFloat;
-        kbmComparisonrevParBase.asFloat :=                        kbmStat.FieldByName('revPar').asFloat;
-        kbmComparisontotalDiscountBase.asFloat :=                 kbmStat.FieldByName('totalDiscount').asFloat;
-        kbmComparisonmaxRateBase.asFloat :=                       kbmStat.FieldByName('maxRate').asFloat;
-        kbmComparisonminRateBase.asFloat :=                       kbmStat.FieldByName('minRate').asFloat;
-        kbmComparisontotalGuestsBase.AsInteger :=                 kbmStat.FieldByName('totalGuests').AsInteger;
-        kbmComparisontotalSellableRoomsBase.AsInteger :=          kbmStat.FieldByName('totalSellableRooms').AsInteger;
-        kbmComparisonoooROomsBase.AsInteger :=                    kbmStat.FieldByName('oooROoms').AsInteger;
-        kbmComparisonsoldRoomsBase.AsInteger :=                   kbmStat.FieldByName('soldRooms').AsInteger;
-
+        kbmComparisonaDateBase.AsDateTime :=                    kbmComparisonaDateBase.AsDateTime + kbmStat.FieldByName('adate').asDateTime;
+        kbmComparisonrevenueBase.asFloat :=                     kbmComparisonrevenueBase.asFloat + kbmStat.FieldByName('revenue').asFloat;
+        kbmComparisontotalDiscountBase.asFloat :=               kbmComparisontotalDiscountBase.asFloat + kbmStat.FieldByName('totalDiscount').asFloat;
+        kbmComparisonmaxRateBase.asFloat :=                     kbmComparisonmaxRateBase.asFloat + kbmStat.FieldByName('maxRate').asFloat;
+        kbmComparisonminRateBase.asFloat :=                     kbmComparisonminRateBase.asFloat + kbmStat.FieldByName('minRate').asFloat;
+        kbmComparisontotalGuestsBase.AsInteger :=               kbmComparisontotalGuestsBase.AsInteger + kbmStat.FieldByName('totalGuests').AsInteger;
+        kbmComparisontotalSellableRoomsBase.AsInteger :=        kbmComparisontotalSellableRoomsBase.AsInteger + kbmStat.FieldByName('totalSellableRooms').AsInteger;
+        kbmComparisonoooROomsBase.AsInteger :=                  kbmComparisonoooROomsBase.AsInteger + kbmStat.FieldByName('oooROoms').AsInteger;
+        kbmComparisonsoldRoomsBase.AsInteger :=                 kbmComparisonsoldRoomsBase.AsInteger +  kbmStat.FieldByName('soldRooms').AsInteger;
         kbmComparison.Post;
       except
         kbmComparison.Cancel;
@@ -744,9 +887,9 @@ begin
   end;
 end;
 
-procedure TfrmRptRoomRentStatistics.btnReportClick(Sender: TObject);
+procedure TfrmRptRoomRentStatistics.btnComparisonReportClick(Sender: TObject);
 begin
-  grdPrinter.Print(True, nil, grdPrinterLink1);
+  grdPrinter.Print(True, nil, grdPrinterLinkComparison);
 end;
 
 procedure TfrmRptRoomRentStatistics.cbxComparisonPeriodChange(Sender: TObject);
@@ -872,6 +1015,7 @@ begin
   FBaseBandOrigCaption := tvComparison.Bands[0].Caption;
   FCompareBandOrigCaption := tvComparison.Bands[1].Caption;
 
+  pcMain.ActivePage := tabStatGrid;
 end;
 
 procedure TfrmRptRoomRentStatistics.ppHeaderBand1BeforePrint(Sender : TObject);
@@ -889,14 +1033,6 @@ begin
     s := s + ' - ' + g.qusername;
   rlabUser.Caption := s;
 
-end;
-
-procedure TfrmRptRoomRentStatistics.rgCompareOnChange(Sender: TObject);
-begin
-  if rgCompareOn.ItemIndex = 1 then
-    tvComparisonaDateBase.GroupIndex := 1
-  else
-    tvComparisonaDateBase.GroupIndex := -1
 end;
 
 procedure TfrmRptRoomRentStatistics.rptStatsBeforePrint(Sender: TObject);
@@ -949,98 +1085,6 @@ begin
 
 end;
 
-
-procedure TfrmRptRoomRentStatistics.CalculateComparisonSummaries(ASender: TcxDataSummary);
-
-    procedure CalcGroupSummary(ADataGroupIndex: Integer);
-    var
-      i: Integer;
-      lRevenueBase, lRevenueCompare: double;
-      lSellableBase, lSoldBase: Integer;
-      lSellableCompare, lSoldCompare: Integer;
-      lSummaryItems : TcxDataGroupSummaryItems;
-      Records: TList;
-
-    begin
-      Records := TList.Create;
-
-      try
-        with ASender, DataController, Groups do
-        begin
-          lSummaryItems := GroupSummaryItems[Level[ADataGroupIndex]];
-          if assigned(lSummaryItems) then
-          begin
-            LoadRecordIndexes(Records, ADataGroupIndex);
-            lRevenueBase := 0.0;
-            lSellableBase := 0;
-            lSoldBase := 0;
-            lRevenueCompare := 0.0;
-            lSellableCompare := 0;
-            lSoldCompare := 0;
-
-            for i := 0 to Records.Count - 1 do
-            begin
-              lRevenueBase := lRevenueBase + Values[Integer(Records[i]), tvComparisonRevenueBase.Index];
-              lSellableBase := lSellableBase + Values[Integer(Records[i]), tvComparisontotalSellableRoomsBase.Index];
-              lSoldBase := lSoldBase + Values[Integer(Records[i]), tvComparisonsoldRoomsBase.Index];
-              lRevenueCompare := lRevenueCompare + Values[Integer(Records[i]), tvComparisonrevenue.Index];
-              lSellableCompare := lSellableCompare + Values[Integer(Records[i]), tvComparisontotalSellableRooms.Index];
-              lSoldCompare := lSoldCompare + Values[Integer(Records[i]), tvComparisonsoldRooms.Index];
-            end;
-
-            if lSellableBase <> 0 then
-            begin
-              GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonOccBase)] := lSoldBase / lSellableBase * 100;
-              GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonrevParBase)] := lRevenueBase / lSellableBase;
-            end;
-            if lSoldBase <> 0 then
-              GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonadrBase)] := lRevenueBase / lSoldBase;
-
-            if lSellableCompare <> 0 then
-            begin
-              GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonocc)] := lSoldCompare / lSellableCompare * 100;
-              GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonrevPar)] := lRevenueCompare / lSellableCompare;
-            end;
-            if lSoldCompare <> 0 then
-              GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonadr)] := lRevenueCompare / lSoldCompare;
-
-
-            GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonOccDiff)] :=
-               GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonOccBase)] - GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonocc)];
-
-            GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonrevParDiff)] :=
-               GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonrevParBase)] - GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonrevPar)];
-
-            GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonadrDiff)] :=
-               GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonadrBase)] - GroupSummaryValues[ADataGroupIndex, lSummaryItems.IndexOfItemLink(tvComparisonadr)];
-          end;
-        end;
-      finally
-        Records.Free;
-      end;
-   end;
-
-    procedure CalcGroupSummariesByDataGroupIndex(ADataGroupIndex: Integer);
-    var
-      i : integer;
-    begin
-      with ASender.DataController.Groups do
-      begin
-        if Level[ADataGroupIndex] >= GroupingItemCount - 1 then
-          Exit;
-
-        for i := 0 to ChildCount[ADataGroupIndex] - 1 do
-          begin
-            CalcGroupSummary(ChildDataGroupIndex[ADataGroupIndex, i]);
-            CalcGroupSummariesByDataGroupIndex(ChildDataGroupIndex[ADataGroupIndex, i]);
-          end;
-      end;
-    end;
-
-begin
-  if (FDataLoadingThreads = 0) and (aSender.DataController.RecordCount > 0) then
-    CalcGroupSummariesByDataGroupIndex(-1);
-end;
 
 end.
 

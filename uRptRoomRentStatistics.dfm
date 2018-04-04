@@ -214,14 +214,13 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
-    ExplicitTop = 626
   end
   object pcMain: TsPageControl
     Left = 0
     Top = 89
     Width = 1459
     Height = 535
-    ActivePage = tabStatGrid
+    ActivePage = tsComparison
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PAGECONTROL'
@@ -251,7 +250,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           OnClick = btnGuestsExcelClick
           SkinData.SkinSection = 'BUTTON'
         end
-        object btnReport: TsButton
+        object btnReportStats: TsButton
           AlignWithMargins = True
           Left = 1319
           Top = 4
@@ -263,8 +262,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           ImageIndex = 118
           Images = DImages.PngImageList1
           TabOrder = 1
-          OnClick = btnReportClick
+          OnClick = btnReportStatsClick
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
       end
       object grStat: TcxGrid
@@ -275,6 +275,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 41
         object tvStat: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = StatDS
@@ -465,7 +466,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Caption = 'Revenue'
             DataBinding.FieldName = 'revenue'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            OnGetCellHint = tvStatsrevenueGetCellHint
             OnGetProperties = tvStatsGetDefaultCurrencyProperties
             HeaderAlignmentHorz = taCenter
             HeaderHint = 'This is the header hint for Revenues'
@@ -506,7 +506,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             PropertiesClassName = 'TcxCurrencyEditProperties'
             OnGetProperties = tvStatsGetDefaultCurrencyProperties
             HeaderAlignmentHorz = taCenter
-            HeaderHint = 'Revenue Per Available Room'
+            HeaderHint = '{RevParDefinition}'
             HeaderImageIndex = 134
             Width = 70
             Position.BandIndex = 1
@@ -810,8 +810,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           Items.Strings = (
             'Show days'
             'Show months')
-          OnChange = rgCompareOnChange
-          ExplicitTop = 2
         end
         object gbxComparisonData: TsGroupBox
           AlignWithMargins = True
@@ -874,8 +872,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             ParentFont = False
             TabOrder = 0
             SkinData.SkinSection = 'GROUPBOX'
-            ExplicitLeft = 0
-            ExplicitTop = 14
           end
         end
         object pnlExportButtons: TsPanel
@@ -913,7 +909,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             ImageIndex = 118
             Images = DImages.PngImageList1
             TabOrder = 1
-            OnClick = btnReportClick
+            OnClick = btnComparisonReportClick
             SkinData.SkinSection = 'BUTTON'
           end
         end
@@ -925,7 +921,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Height = 410
         Align = alClient
         TabOrder = 1
-        ExplicitTop = 95
         object grdComparisonDBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.Summary.DefaultGroupSummaryItems = <>
@@ -1230,13 +1225,13 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
               Column = tvComparisonadrBase
             end
             item
-              Format = '0.00%'
+              Format = '0%'
               Kind = skAverage
               Position = spFooter
               Column = tvComparisonOccBase
             end
             item
-              Format = '0.000%'
+              Format = '0%'
               Kind = skAverage
               Tag = 12
               Column = tvComparisonOccBase
@@ -1378,9 +1373,39 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
               Column = tvComparisonadrBase
             end
             item
-              Format = '0.0%'
+              Format = '0%'
               Kind = skAverage
               Column = tvComparisonOccBase
+            end
+            item
+              Format = '0%'
+              Kind = skAverage
+              Column = tvComparisonocc
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonadr
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonrevPar
+            end
+            item
+              Format = '0%'
+              Kind = skAverage
+              Column = tvComparisonOccDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonAdrDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonRevParDiff
             end>
           DataController.Summary.SummaryGroups = <>
           DataController.Summary.OnAfterSummary = tvComparisonDataControllerSummaryAfterSummary
@@ -1441,7 +1466,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Tag = 2
             DataBinding.FieldName = 'OccBase'
             PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = '0.00%'
+            Properties.DisplayFormat = '0%'
             Position.BandIndex = 0
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -1496,6 +1521,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'totalGuestsBase'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 0
             Position.ColIndex = 9
             Position.RowIndex = 0
@@ -1505,6 +1531,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'totalSellableRoomsBase'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 0
             Position.ColIndex = 10
             Position.RowIndex = 0
@@ -1514,6 +1541,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'oooRoomsBase'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 0
             Position.ColIndex = 11
             Position.RowIndex = 0
@@ -1523,6 +1551,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'soldRoomsBase'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 0
             Position.ColIndex = 12
             Position.RowIndex = 0
@@ -1556,7 +1585,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Tag = 2
             DataBinding.FieldName = 'occ'
             PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = '0.00%'
+            Properties.DisplayFormat = '0%'
             Position.BandIndex = 1
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -1611,6 +1640,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'totalGuests'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 1
             Position.ColIndex = 9
             Position.RowIndex = 0
@@ -1620,6 +1650,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'totalSellableRooms'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 1
             Position.ColIndex = 10
             Position.RowIndex = 0
@@ -1629,6 +1660,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'oooRooms'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 1
             Position.ColIndex = 11
             Position.RowIndex = 0
@@ -1638,6 +1670,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'soldRooms'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 1
             Position.ColIndex = 12
             Position.RowIndex = 0
@@ -1655,7 +1688,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Tag = 2
             DataBinding.FieldName = 'OccDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = '0.00%'
+            Properties.DisplayFormat = '0%'
             Position.BandIndex = 2
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -1673,6 +1706,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Tag = 4
             DataBinding.FieldName = 'RevParDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
             Position.BandIndex = 2
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -1709,6 +1743,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'TotalGuestsDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 2
             Position.ColIndex = 7
             Position.RowIndex = 0
@@ -1718,6 +1753,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'TotalSellableRoomsDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 2
             Position.ColIndex = 8
             Position.RowIndex = 0
@@ -1727,6 +1763,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'OooRoomsDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 2
             Position.ColIndex = 9
             Position.RowIndex = 0
@@ -1736,6 +1773,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             DataBinding.FieldName = 'SoldRoomsDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 2
             Position.ColIndex = 10
             Position.RowIndex = 0
@@ -4044,15 +4082,21 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object kbmComparisonoccBase: TFloatField
       DisplayLabel = 'Occupancy'
+      FieldKind = fkCalculated
       FieldName = 'OccBase'
+      Calculated = True
     end
     object kbmComparisonadrBase: TFloatField
       DisplayLabel = 'ADR'
+      FieldKind = fkCalculated
       FieldName = 'adrBase'
+      Calculated = True
     end
     object kbmComparisonrevParBase: TFloatField
       DisplayLabel = 'RevPar'
+      FieldKind = fkCalculated
       FieldName = 'revParBase'
+      Calculated = True
     end
     object kbmComparisontotalDiscountBase: TFloatField
       DisplayLabel = 'Total Discount'
@@ -4092,15 +4136,21 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object kbmComparisonocc: TFloatField
       DisplayLabel = 'Occupancy'
+      FieldKind = fkCalculated
       FieldName = 'occ'
+      Calculated = True
     end
     object kbmComparisonadr: TFloatField
       DisplayLabel = 'ADR'
+      FieldKind = fkCalculated
       FieldName = 'adr'
+      Calculated = True
     end
     object kbmComparisonrevPar: TFloatField
       DisplayLabel = 'RevPar'
+      FieldKind = fkCalculated
       FieldName = 'revPar'
+      Calculated = True
     end
     object kbmComparisontotalDiscount: TFloatField
       DisplayLabel = 'Total Discount'
@@ -4471,11 +4521,11 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
   end
   object grdPrinter: TdxComponentPrinter
-    CurrentLink = grdPrinterLink1
+    CurrentLink = grdPrinterLinkComparison
     Version = 0
     Left = 856
     Top = 64
-    object grdPrinterLink1: TdxGridReportLink
+    object grdPrinterLinkComparison: TdxGridReportLink
       Active = True
       Component = grdComparison
       PageNumberFormat = pnfNumeral
@@ -4500,12 +4550,13 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43189.567157928240000000
+      ReportDocument.CreationDate = 43194.583583993060000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
       ReportTitle.Font.Name = 'Arial'
       ReportTitle.Font.Style = [fsBold]
+      ReportTitle.Text = 'Roomrent Comparison'
       ShrinkToPageWidth = True
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
@@ -4517,6 +4568,26 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       OptionsFormatting.UseNativeStyles = True
       OptionsView.ExpandButtons = False
       OptionsView.FilterBar = False
+      BuiltInReportLink = True
+    end
+    object grdPrinterLinkStats: TdxGridReportLink
+      Component = grStat
+      PageNumberFormat = pnfNumeral
+      PrinterPage.DMPaper = 9
+      PrinterPage.Footer = 6350
+      PrinterPage.Header = 6350
+      PrinterPage.Margins.Bottom = 12700
+      PrinterPage.Margins.Left = 12700
+      PrinterPage.Margins.Right = 12700
+      PrinterPage.Margins.Top = 12700
+      PrinterPage.PageSize.X = 210000
+      PrinterPage.PageSize.Y = 297000
+      PrinterPage._dxMeasurementUnits_ = 0
+      PrinterPage._dxLastMU_ = 2
+      ReportDocument.Caption = 'Roomrent statistics'
+      ReportDocument.Creator = 'Roomer'
+      ReportTitle.Text = 'Roomrent Statistics'
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

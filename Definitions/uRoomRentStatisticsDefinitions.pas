@@ -33,7 +33,7 @@ type
   end;
 
 
-  TRoomRentCompareData = (Revenue=1, Occupancy, ADR, RevPar, TotalDiscount, HighestRate, LowestRate, TotalGuests, TotalRooms, OutOfOrder, SoldRooms);
+  TRoomRentCompareData = (Revenue=1, Occupancy, ADR, RevPar, TotalDiscount, HighestRate, LowestRate, TotalGuests, SellableRooms, OutOfOrder, SoldRooms);
   TRoomRentCompareDataSet = set of TRoomRentCompareData;
   TRoomRentCompareDataHelper = record helper for TRoomRentCompareData
   public
@@ -109,7 +109,7 @@ begin
     TRoomRentCompareData.HighestRate:   Result := GetTranslatedText('shTx_RoomRentCompareData_Highestrate');
     TRoomRentCompareData.LowestRate:    Result := GetTranslatedText('shTx_RoomRentCompareData_LowestRate');
     TRoomRentCompareData.TotalGuests:   Result := GetTranslatedText('shTx_RoomRentCompareData_TotalGuests');
-    TRoomRentCompareData.TotalRooms:    Result := GetTranslatedText('shTx_RoomRentCompareData_TotalRooms');
+    TRoomRentCompareData.SellableRooms:    Result := GetTranslatedText('shTx_RoomRentCompareData_TotalRooms');
     TRoomRentCompareData.OutOfOrder:    Result := GetTranslatedText('shTx_RoomRentCompareData_OutOfOrder');
     TRoomRentCompareData.SoldRooms:     Result := GetTranslatedText('shTx_RoomRentCompareData_SoldRooms');
   end;
