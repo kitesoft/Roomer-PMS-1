@@ -37,7 +37,7 @@ type
     ///   Note that the provided List will be destroyed after returning from the call to aOnCompletionHandler
     /// </summary>
     class procedure GetHotelStatistics(aFromDate: TDateTime; aToDate: TDateTime; aOnCompletionHandler: THotelStatisticsNotifyEvent);
-//    class procedure GetRoomRentStatistics(aFromDate: TDateTime; aToDate: TDateTime; aOnCompletionHandler: THotelStatisticsNotifyEvent);
+    class procedure GetRoomRentStatistics(aFromDate: TDateTime; aToDate: TDateTime; aExcludedStates: TReservationStateSet; aOnCompletionHandler: THotelStatisticsNotifyEvent);
   end;
 
 implementation
@@ -212,5 +212,36 @@ end;
 //   </item>
 
 
+
+class procedure THotelStatisticsMobileAPICallerThreaded.GetRoomRentStatistics(aFromDate, aToDate: TDateTime;
+  aExcludedStates: TReservationStateSet; aOnCompletionHandler: THotelStatisticsNotifyEvent);
+begin
+  TThread.CreateAnonymousThread(
+    procedure ()
+    var
+      lAPI: THotelStatisticsMobileAPICaller;
+      lStatistics: THotelStatisticsList;
+    begin
+      lStatistics := nil;
+      lAPI := THotelStatisticsMobileAPICaller.Create;
+      try
+        lStatistics := THotelStatisticsList.Create;
+        lAPI.GetRoomRentStatistics(aFromDate, aToDate, aExcludedStates, lStatistics);
+        if assigned(aOnCompletionHandler) then
+        begin
+          TTHread.Synchronize(TThread.CurrentThread,
+            procedure()
+            begin
+              aOnCompletionHandler(lStatistics);
+            end
+            );
+        end;
+      finally
+        lAPI.Free;
+        lStatistics.Free;
+      end;
+    end
+  ).Start;
+end;
 
 end.

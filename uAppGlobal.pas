@@ -111,11 +111,14 @@ Type
                  INB_BOOKING);
 
    TRoomTypesHolder = class( TObject )
-   private
+   strict private
      FRoomType  : string;
      FCount     : integer;
      FNumGuests : integer;
    public
+     property RoomType  : string read FRoomType write FRoomType;
+     property Count     : integer read FCount write FCount;
+     property NumGuests : integer read FNumGuests write FNumGuests;
    end;
 
    TSet_Of_Integer = class
@@ -134,21 +137,21 @@ Type
    end;
 
 {$M+}
-   TGlobalSettings = class( TObject )
-   private
+  TGlobalSettings = class( TObject )
+  private
 
-      FRoomTypes      : TList;
-      FNumAvailType   : TStringList;
-      FRoomFloors     : TList<Integer>;
+     FRoomTypes      : TList<TRoomTypesHolder>;
+     FNumAvailType   : TStringList;
+     FRoomFloors     : TList<Integer>;
 
-    tablesList : TTableDictionary;
-    FPreviousGuestsSet: TRoomerDataSet;
-    FPreviousGuestsReload : TGetSQLDataThreaded;
-    FPmsSettings: TPmsSettings;
+     tablesList : TTableDictionary;
+     FPreviousGuestsSet: TRoomerDataSet;
+     FPreviousGuestsReload : TGetSQLDataThreaded;
+     FPmsSettings: TPmsSettings;
 
-      procedure AddRoomType( sType : string; iNumber, NumGuests : integer );
-      procedure Clear;
-    procedure ClearRoomFloors;
+     procedure AddRoomType( sType : string; iNumber, NumGuests : integer );
+     procedure Clear;
+     procedure ClearRoomFloors;
 //    procedure ClearSingleTable(Table: TRoomerDataSet);
     function GetChannelsSet: TRoomerDataSet;
     function GetControlSet: TRoomerDataSet;
@@ -369,7 +372,7 @@ begin
 
   FRoomFloors := TList<Integer>.Create;
 
-  FRoomTypes    := TList.Create;
+  FRoomTypes    := TList<TRoomTypesHolder>.Create;
   FNumAvailType := TStringlist.create;
 
   FPMSSettings := TPmsSettings.Create(GetPmsSettingsSet);
@@ -678,7 +681,7 @@ var
 begin
   for i := FRoomTypes.count - 1 downto 0 do
   begin
-    TRoomTypesHolder(FRoomTypes[i]).free;
+    FRoomTypes[i].free;
     FRoomTypes.delete(i);
   end;
 end;
@@ -1376,18 +1379,18 @@ begin
   if GetNumberOfItems(sType) = -1 then
   begin
     RoomTypesHolder := TRoomTypesHolder.create;
-    RoomTypesHolder.FRoomType := sType;
-    RoomTypesHolder.FCount := iNumber;
-    RoomTypesHolder.FNumGuests := NumGuests;
+    RoomTypesHolder.RoomType := sType;
+    RoomTypesHolder.Count := iNumber;
+    RoomTypesHolder.NumGuests := NumGuests;
     FRoomTypes.Add( RoomTypesHolder );
   end else
   begin
     for i := 0 to FRoomTypes.count - 1 do
     begin
-      if TRoomTypesHolder( FRoomTypes[ i ] ).FRoomType = sType then
+      if FRoomTypes[i].RoomType = sType then
       begin
-        TRoomTypesHolder( FRoomTypes[ i ] ).FCount := TRoomTypesHolder( FRoomTypes[ i ] ).FCount + iNumber;
-        TRoomTypesHolder( FRoomTypes[ i ] ).FNumGuests := NumGuests;
+        FRoomTypes[i].Count := FRoomTypes[i].Count + iNumber;
+        FRoomTypes[i].NumGuests := NumGuests;
       end;
     end;
   end;
@@ -1414,9 +1417,9 @@ begin
   result := -1;
   for i := 0 to FRoomTypes.count - 1 do
   begin
-    if TRoomTypesHolder( FRoomTypes[ i ] ).FRoomType = aType then
+    if FRoomTypes[i].RoomType = aType then
     begin
-      result := TRoomTypesHolder( FRoomTypes[ i ] ).FCount;
+      result := FRoomTypes[i].Count;
       break;
     end;
   end;
@@ -1464,7 +1467,7 @@ end;
 
 function TGlobalSettings.GetRoomType( iIndex : integer ) : string;
 begin
-  result := TRoomTypesHolder( FRoomTypes[ iIndex ] ).FRoomType;
+  result := FRoomTypes[iIndex].RoomType;
 end;
 
 function TGlobalSettings.GetRoomTypeGroupDescription(Code: String): String;
@@ -1529,9 +1532,9 @@ begin
   result := 1;
   for i := 0 to FRoomTypes.count - 1 do
   begin
-    if TRoomTypesHolder( FRoomTypes[ i ] ).FRoomType = aType then
+    if FRoomTypes[i].RoomType = aType then
     begin
-      result := TRoomTypesHolder( FRoomTypes[ i ] ).FNumGuests;
+      result := FRoomTypes[i].NumGuests;
       break;
     end;
   end;
@@ -1544,9 +1547,9 @@ begin
   result := 0;
   for i := 0 to FRoomTypes.count - 1 do
   begin
-    if TRoomTypesHolder(FRoomTypes[i]).FRoomType = aType then
+    if FRoomTypes[i].RoomType = aType then
     begin
-      result := TRoomTypesHolder( FRoomTypes[ i ] ).FNumGuests * GetNumberOfItems( aType );
+      result := FRoomTypes[i].NumGuests * GetNumberOfItems( aType );
       break;
     end;
   end;
@@ -1596,7 +1599,7 @@ begin
   s := '';
   for i := 0 to FRoomTypes.count - 1 do
   begin
-    s := TRoomTypesHolder(FRoomTypes[i]).FRoomType + '=' +inttostr(GetNumberOfItems(TRoomTypesHolder(FRoomTypes[i]).FRoomType));
+    s := FRoomTypes[i].RoomType + '=' +inttostr(FRoomTypes[i].Count);
     FNumAvailType.add(s);
   end;
 end;

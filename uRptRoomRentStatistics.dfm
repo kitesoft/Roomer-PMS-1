@@ -3,7 +3,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   Top = 0
   Caption = 'Room/Rent Statistics'
   ClientHeight = 643
-  ClientWidth = 1351
+  ClientWidth = 1459
   Color = clBtnFace
   Constraints.MinWidth = 570
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   object Panel3: TsPanel
     Left = 0
     Top = 0
-    Width = 1351
+    Width = 1459
     Height = 89
     Align = alTop
     TabOrder = 0
@@ -99,7 +99,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
     end
     object btnRefresh: TsButton
-      Left = 749
+      Left = 805
       Top = 16
       Width = 118
       Height = 37
@@ -144,7 +144,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         ParentFont = False
         TabOrder = 0
         Text = '  -  -    '
-        OnChange = dtDateFromChange
+        OnChange = dtDateChange
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -166,7 +166,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         ParentFont = False
         TabOrder = 1
         Text = '  -  -    '
-        OnChange = dtDateFromChange
+        OnChange = dtDateChange
         SkinData.SkinSection = 'EDIT'
         GlyphMode.Blend = 0
         GlyphMode.Grayed = False
@@ -176,7 +176,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       AlignWithMargins = True
       Left = 302
       Top = 4
-      Width = 441
+      Width = 493
       Height = 81
       Align = alLeft
       Caption = 'Include rooms with status of:'
@@ -184,9 +184,11 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       object clbIncludedStates: TsCheckListBox
         Left = 2
         Top = 15
-        Width = 437
+        Width = 489
         Height = 64
         Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
         BorderStyle = bsSingle
         Color = 14540253
         Columns = 3
@@ -208,30 +210,26 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
   object sStatusBar1: TsStatusBar
     Left = 0
     Top = 624
-    Width = 1351
+    Width = 1459
     Height = 19
     Panels = <>
     SkinData.SkinSection = 'STATUSBAR'
   end
-  object pageMain: TsPageControl
+  object pcMain: TsPageControl
     Left = 0
     Top = 89
-    Width = 1351
+    Width = 1459
     Height = 535
-    ActivePage = tabStatGrid
+    ActivePage = tsComparison
     Align = alClient
     TabOrder = 2
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
-        Width = 1343
+        Width = 1451
         Height = 43
         Align = alTop
         FullRepaint = False
@@ -252,9 +250,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           OnClick = btnGuestsExcelClick
           SkinData.SkinSection = 'BUTTON'
         end
-        object btnReport: TsButton
+        object btnReportStats: TsButton
           AlignWithMargins = True
-          Left = 1211
+          Left = 1319
           Top = 4
           Width = 128
           Height = 35
@@ -264,18 +262,20 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           ImageIndex = 118
           Images = DImages.PngImageList1
           TabOrder = 1
-          OnClick = btnReportClick
+          OnClick = btnReportStatsClick
           SkinData.SkinSection = 'BUTTON'
+          ExplicitTop = 2
         end
       end
       object grStat: TcxGrid
         Left = 0
         Top = 43
-        Width = 1343
+        Width = 1451
         Height = 464
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 41
         object tvStat: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = StatDS
@@ -420,10 +420,12 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.FooterMultiSummaries = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
+          Styles.StyleSheet = cxssRoomerGridBandedTableView
           Bands = <
             item
               Caption = 'Date'
@@ -464,7 +466,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Caption = 'Revenue'
             DataBinding.FieldName = 'revenue'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            OnGetCellHint = tvStatsrevenueGetCellHint
             OnGetProperties = tvStatsGetDefaultCurrencyProperties
             HeaderAlignmentHorz = taCenter
             HeaderHint = 'This is the header hint for Revenues'
@@ -505,7 +506,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             PropertiesClassName = 'TcxCurrencyEditProperties'
             OnGetProperties = tvStatsGetDefaultCurrencyProperties
             HeaderAlignmentHorz = taCenter
-            HeaderHint = 'Revenue Per Available Room'
+            HeaderHint = '{RevParDefinition}'
             HeaderImageIndex = 134
             Width = 70
             Position.BandIndex = 1
@@ -703,16 +704,1093 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         end
       end
     end
+    object tsComparison: TsTabSheet
+      Caption = 'Comparison'
+      object sPanel3: TsPanel
+        Left = 0
+        Top = 0
+        Width = 1451
+        Height = 97
+        Align = alTop
+        FullRepaint = False
+        TabOrder = 0
+        SkinData.SkinSection = 'PANEL'
+        object gbxComparisonStartDate: TsGroupBox
+          AlignWithMargins = True
+          Left = 4
+          Top = 4
+          Width = 135
+          Height = 89
+          Align = alLeft
+          Caption = 'Select start date'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          SkinData.SkinSection = 'GROUPBOX'
+          object dtComparisonStart: TsDateEdit
+            Left = 12
+            Top = 20
+            Width = 105
+            Height = 21
+            AutoSize = False
+            Color = clWhite
+            EditMask = '!99/99/9999;1; '
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            MaxLength = 10
+            ParentFont = False
+            TabOrder = 0
+            Text = '  -  -    '
+            SkinData.SkinSection = 'EDIT'
+            GlyphMode.Blend = 0
+            GlyphMode.Grayed = False
+          end
+        end
+        object gbxComparisonPeriod: TsGroupBox
+          AlignWithMargins = True
+          Left = 145
+          Top = 4
+          Width = 147
+          Height = 89
+          Align = alLeft
+          Caption = '.. or select same period'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+          SkinData.SkinSection = 'GROUPBOX'
+          object cbxComparisonPeriod: TsComboBox
+            Left = 11
+            Top = 20
+            Width = 121
+            Height = 21
+            Alignment = taLeftJustify
+            BoundLabel.Font.Charset = DEFAULT_CHARSET
+            BoundLabel.Font.Color = clWindowText
+            BoundLabel.Font.Height = -13
+            BoundLabel.Font.Name = 'Tahoma'
+            BoundLabel.Font.Style = []
+            SkinData.SkinSection = 'COMBOBOX'
+            VerticalAlignment = taAlignTop
+            Style = csDropDownList
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ItemIndex = 0
+            ParentFont = False
+            TabOrder = 0
+            OnChange = cbxComparisonPeriodChange
+            Items.Strings = (
+              '')
+          end
+        end
+        object rgCompareOn: TsRadioGroup
+          AlignWithMargins = True
+          Left = 298
+          Top = 4
+          Width = 131
+          Height = 89
+          Align = alLeft
+          Caption = 'Compare'
+          TabOrder = 2
+          ItemIndex = 0
+          Items.Strings = (
+            'Show days'
+            'Show months')
+        end
+        object gbxComparisonData: TsGroupBox
+          AlignWithMargins = True
+          Left = 435
+          Top = 4
+          Width = 356
+          Height = 89
+          Align = alLeft
+          Caption = 'Data to compare'
+          TabOrder = 3
+          object clbComparisonDataSelection: TsCheckListBox
+            Left = 2
+            Top = 15
+            Width = 352
+            Height = 72
+            Align = alClient
+            BevelOuter = bvNone
+            BorderStyle = bsSingle
+            Color = 14540253
+            Columns = 3
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = 4013373
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            Items.Strings = (
+              '<auto filled>')
+            ParentFont = False
+            TabOrder = 0
+            SkinData.SkinSection = 'GROUPBOX'
+            OnClickCheck = clbComparisonDataSelectionClickCheck
+          end
+        end
+        object gbxComparisonRoomTypes: TsGroupBox
+          AlignWithMargins = True
+          Left = 797
+          Top = 4
+          Width = 304
+          Height = 89
+          Align = alLeft
+          Caption = 'Compare on room type'
+          TabOrder = 4
+          object clbCompareRoomTypes: TsCheckListBox
+            Left = 2
+            Top = 15
+            Width = 300
+            Height = 72
+            Align = alClient
+            BevelOuter = bvNone
+            BorderStyle = bsSingle
+            Color = 14540253
+            Columns = 3
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = 4013373
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            Items.Strings = (
+              '<auto filled>')
+            ParentFont = False
+            TabOrder = 0
+            SkinData.SkinSection = 'GROUPBOX'
+          end
+        end
+        object pnlExportButtons: TsPanel
+          Left = 1324
+          Top = 1
+          Width = 126
+          Height = 95
+          Align = alRight
+          BevelOuter = bvNone
+          TabOrder = 5
+          object btnComparisonExcel: TsButton
+            AlignWithMargins = True
+            Left = 10
+            Top = 3
+            Width = 113
+            Height = 35
+            Margins.Left = 10
+            Align = alTop
+            Caption = 'Excel'
+            ImageIndex = 132
+            Images = DImages.PngImageList1
+            TabOrder = 0
+            OnClick = btnComparisonExcelClick
+            SkinData.SkinSection = 'BUTTON'
+          end
+          object btnComparisonReport: TsButton
+            AlignWithMargins = True
+            Left = 10
+            Top = 44
+            Width = 113
+            Height = 35
+            Margins.Left = 10
+            Align = alTop
+            Caption = 'Report'
+            ImageIndex = 118
+            Images = DImages.PngImageList1
+            TabOrder = 1
+            OnClick = btnComparisonReportClick
+            SkinData.SkinSection = 'BUTTON'
+          end
+        end
+      end
+      object grdComparison: TcxGrid
+        Left = 0
+        Top = 97
+        Width = 1451
+        Height = 410
+        Align = alClient
+        TabOrder = 1
+        object grdComparisonDBBandedTableView1: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Bands = <
+            item
+            end>
+        end
+        object tvComparison: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsComparison
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonsoldRoomsBase
+            end
+            item
+              Format = '0'
+              Column = tvComparisonaDateBase
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Column = tvComparisonmaxRateBase
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Column = tvComparisonminRateBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalGuestsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalSellableRoomsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonoooRoomsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisontotalGuestsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisontotalSellableRoomsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonoooRoomsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonsoldRoomsBase
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Position = spFooter
+              Column = tvComparisonmaxRateBase
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Position = spFooter
+              Column = tvComparisonminRateBase
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisontotalDiscountBase
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisontotalDiscountBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonsoldRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonoooRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisontotalSellableRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisontotalGuests
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonsoldRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonoooRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalSellableRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalGuests
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonSoldRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonOooRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonTotalSellableRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonTotalGuestsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonSoldRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonOooRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonTotalSellableRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonTotalGuestsDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Position = spFooter
+              Column = tvComparisonminRate
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Column = tvComparisonminRate
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Position = spFooter
+              Column = tvComparisonmaxRate
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Column = tvComparisonmaxRate
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonRevenueBase
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonRevenueBase
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonrevenue
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonrevenue
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisontotalDiscount
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisontotalDiscount
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonRevenueDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonRevenueDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = tvComparisonTotalDiscountDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonTotalDiscountDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Position = spFooter
+              Column = tvComparisonMaxRateDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Column = tvComparisonMaxRateDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Position = spFooter
+              Column = tvComparisonMinRateDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Column = tvComparisonMinRateDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Position = spFooter
+              Column = tvComparisonrevParBase
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonrevParBase
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Position = spFooter
+              Column = tvComparisonadrBase
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonadrBase
+            end
+            item
+              Format = '0%'
+              Kind = skAverage
+              Position = spFooter
+              Column = tvComparisonOccBase
+            end
+            item
+              Format = '0%'
+              Kind = skAverage
+              Tag = 12
+              Column = tvComparisonOccBase
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonsoldRoomsBase
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Column = tvComparisonmaxRateBase
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Column = tvComparisonminRateBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalGuestsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalSellableRoomsBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonoooRoomsBase
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisontotalDiscountBase
+            end
+            item
+              Format = '0'
+              Kind = skCount
+              Column = tvComparisonaDateBase
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonsoldRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonoooRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalSellableRooms
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisontotalGuests
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonSoldRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonOooRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonTotalSellableRoomsDiff
+            end
+            item
+              Format = '0'
+              Kind = skSum
+              Column = tvComparisonTotalGuestsDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Column = tvComparisonminRate
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Column = tvComparisonmaxRate
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonRevenueBase
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonrevenue
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisontotalDiscount
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonRevenueDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skSum
+              Column = tvComparisonTotalDiscountDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMax
+              Column = tvComparisonMaxRateDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skMin
+              Column = tvComparisonMinRateDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonrevParBase
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonadrBase
+            end
+            item
+              Format = '0%'
+              Kind = skAverage
+              Column = tvComparisonOccBase
+            end
+            item
+              Format = '0%'
+              Kind = skAverage
+              Column = tvComparisonocc
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonadr
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonrevPar
+            end
+            item
+              Format = '0%'
+              Kind = skAverage
+              Column = tvComparisonOccDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonAdrDiff
+            end
+            item
+              Format = '0.00'
+              Kind = skAverage
+              Column = tvComparisonRevParDiff
+            end>
+          DataController.Summary.SummaryGroups = <>
+          DataController.Summary.OnAfterSummary = tvComparisonDataControllerSummaryAfterSummary
+          OptionsBehavior.BandHeaderHints = False
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsSelection.CellSelect = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupFooters = gfVisibleWhenExpanded
+          OptionsView.GroupSummaryLayout = gslAlignWithColumnsAndDistribute
+          OptionsView.HeaderAutoHeight = True
+          Styles.GroupSummary = cxstContent
+          Styles.StyleSheet = cxssRoomerGridBandedTableView
+          Styles.BandBackground = cxstBandHeaderBackground
+          Styles.BandHeader = cxstBandHeader
+          Bands = <
+            item
+              Caption = 'Base data'
+            end
+            item
+              Caption = 'Compared data'
+            end
+            item
+              Caption = 'Difference (1st - 2nd)'
+            end>
+          object tvComparisonDateBaseDay: TcxGridDBBandedColumn
+            Caption = 'Day'
+            DataBinding.FieldName = 'aDateBase'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'ddd'
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvComparisonaDateBase: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'aDateBase'
+            PropertiesClassName = 'TcxDateEditProperties'
+            DateTimeGrouping = dtgByMonth
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvComparisonRevenueBase: TcxGridDBBandedColumn
+            Tag = 1
+            DataBinding.FieldName = 'RevenueBase'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvComparisonOccBase: TcxGridDBBandedColumn
+            Tag = 2
+            DataBinding.FieldName = 'OccBase'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0%'
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvComparisonadrBase: TcxGridDBBandedColumn
+            Tag = 3
+            DataBinding.FieldName = 'adrBase'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvComparisonrevParBase: TcxGridDBBandedColumn
+            Tag = 4
+            DataBinding.FieldName = 'revParBase'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvComparisontotalDiscountBase: TcxGridDBBandedColumn
+            Tag = 5
+            DataBinding.FieldName = 'totalDiscountBase'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object tvComparisonmaxRateBase: TcxGridDBBandedColumn
+            Tag = 6
+            DataBinding.FieldName = 'maxRateBase'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object tvComparisonminRateBase: TcxGridDBBandedColumn
+            Tag = 7
+            DataBinding.FieldName = 'minRateBase'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 0
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object tvComparisontotalGuestsBase: TcxGridDBBandedColumn
+            Tag = 8
+            DataBinding.FieldName = 'totalGuestsBase'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 0
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object tvComparisontotalSellableRoomsBase: TcxGridDBBandedColumn
+            Tag = 9
+            DataBinding.FieldName = 'totalSellableRoomsBase'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 0
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object tvComparisonoooRoomsBase: TcxGridDBBandedColumn
+            Tag = 10
+            DataBinding.FieldName = 'oooRoomsBase'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 0
+            Position.ColIndex = 11
+            Position.RowIndex = 0
+          end
+          object tvComparisonsoldRoomsBase: TcxGridDBBandedColumn
+            Tag = 11
+            DataBinding.FieldName = 'soldRoomsBase'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 0
+            Position.ColIndex = 12
+            Position.RowIndex = 0
+          end
+          object tvComparisonrevenue: TcxGridDBBandedColumn
+            Tag = 1
+            DataBinding.FieldName = 'revenue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvComparisonDateDay: TcxGridDBBandedColumn
+            Caption = 'Day'
+            DataBinding.FieldName = 'ADate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'ddd'
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvComparisonADate: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ADate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvComparisonocc: TcxGridDBBandedColumn
+            Tag = 2
+            DataBinding.FieldName = 'occ'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0%'
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvComparisonadr: TcxGridDBBandedColumn
+            Tag = 3
+            DataBinding.FieldName = 'adr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 1
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvComparisonrevPar: TcxGridDBBandedColumn
+            Tag = 4
+            DataBinding.FieldName = 'revPar'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 1
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvComparisontotalDiscount: TcxGridDBBandedColumn
+            Tag = 5
+            DataBinding.FieldName = 'totalDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 1
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object tvComparisonmaxRate: TcxGridDBBandedColumn
+            Tag = 6
+            DataBinding.FieldName = 'maxRate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 1
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object tvComparisonminRate: TcxGridDBBandedColumn
+            Tag = 7
+            DataBinding.FieldName = 'minRate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 1
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object tvComparisontotalGuests: TcxGridDBBandedColumn
+            Tag = 8
+            DataBinding.FieldName = 'totalGuests'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 1
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object tvComparisontotalSellableRooms: TcxGridDBBandedColumn
+            Tag = 9
+            DataBinding.FieldName = 'totalSellableRooms'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 1
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object tvComparisonoooRooms: TcxGridDBBandedColumn
+            Tag = 10
+            DataBinding.FieldName = 'oooRooms'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 1
+            Position.ColIndex = 11
+            Position.RowIndex = 0
+          end
+          object tvComparisonsoldRooms: TcxGridDBBandedColumn
+            Tag = 11
+            DataBinding.FieldName = 'soldRooms'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 1
+            Position.ColIndex = 12
+            Position.RowIndex = 0
+          end
+          object tvComparisonRevenueDiff: TcxGridDBBandedColumn
+            Tag = 1
+            DataBinding.FieldName = 'RevenueDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 2
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object tvComparisonOccDiff: TcxGridDBBandedColumn
+            Tag = 2
+            DataBinding.FieldName = 'OccDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0%'
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object tvComparisonAdrDiff: TcxGridDBBandedColumn
+            Tag = 3
+            DataBinding.FieldName = 'AdrDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 2
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object tvComparisonRevParDiff: TcxGridDBBandedColumn
+            Tag = 4
+            DataBinding.FieldName = 'RevParDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 2
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object tvComparisonTotalDiscountDiff: TcxGridDBBandedColumn
+            Tag = 5
+            DataBinding.FieldName = 'TotalDiscountDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 2
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object tvComparisonMaxRateDiff: TcxGridDBBandedColumn
+            Tag = 6
+            DataBinding.FieldName = 'MaxRateDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 2
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object tvComparisonMinRateDiff: TcxGridDBBandedColumn
+            Tag = 7
+            DataBinding.FieldName = 'MinRateDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            OnGetProperties = tvStatsGetDefaultCurrencyProperties
+            Position.BandIndex = 2
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object tvComparisonTotalGuestsDiff: TcxGridDBBandedColumn
+            Tag = 8
+            DataBinding.FieldName = 'TotalGuestsDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 2
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object tvComparisonTotalSellableRoomsDiff: TcxGridDBBandedColumn
+            Tag = 9
+            DataBinding.FieldName = 'TotalSellableRoomsDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 2
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object tvComparisonOooRoomsDiff: TcxGridDBBandedColumn
+            Tag = 10
+            DataBinding.FieldName = 'OooRoomsDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 2
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object tvComparisonSoldRoomsDiff: TcxGridDBBandedColumn
+            Tag = 11
+            DataBinding.FieldName = 'SoldRoomsDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '0'
+            OnGetDisplayText = tvStatsHideZeroValues
+            Position.BandIndex = 2
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+        end
+        object lvComparison: TcxGridLevel
+          GridView = tvComparison
+          Options.DetailFrameWidth = 2
+        end
+      end
+    end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0
-        Width = 1343
+        Width = 1451
         Height = 507
         ActivePage = tabOcc
         Align = alClient
@@ -720,14 +1798,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
-            Width = 1335
+            Width = 1443
             Height = 33
             Align = alTop
             TabOrder = 0
@@ -752,7 +1826,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           object Chart1: TChart
             Left = 0
             Top = 33
-            Width = 1335
+            Width = 1443
             Height = 446
             Legend.Visible = False
             SubTitle.Font.Color = clBlack
@@ -905,13 +1979,13 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    Left = 584
-    Top = 280
+    Left = 504
+    Top = 392
   end
   object StatDS: TDataSource
     DataSet = kbmStat
-    Left = 640
-    Top = 280
+    Left = 560
+    Top = 392
   end
   object AdvChartPanesEditorDialog1: TAdvChartPanesEditorDialog
     Left = 1032
@@ -930,8 +2004,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end>
     StorageName = 'Software\Roomer\FormStatus\frmRptManagment'
     StorageType = stRegistry
-    Left = 114
-    Top = 262
+    Left = 1074
+    Top = 6
   end
   object kbmStatReport: TkbmMemTable
     Active = True
@@ -1040,19 +2114,19 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     SortID = 0
     SubLanguageID = 1
     LocaleID = 1024
-    Left = 248
-    Top = 280
+    Left = 216
+    Top = 408
   end
   object dsStatReport: TDataSource
     DataSet = kbmStatReport
-    Left = 328
-    Top = 280
+    Left = 296
+    Top = 408
   end
   object plStats: TppDBPipeline
     DataSource = dsStatReport
     UserName = 'plStats'
-    Left = 336
-    Top = 331
+    Left = 304
+    Top = 459
     object plStatsppField1: TppField
       FieldAlias = 'ADate'
       FieldName = 'ADate'
@@ -1299,8 +2373,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     XLSSettings.Author = 'ReportBuilder'
     XLSSettings.Subject = 'Report'
     XLSSettings.Title = 'Report'
-    Left = 248
-    Top = 331
+    Left = 216
+    Top = 459
     Version = '14.07'
     mmColumnWidth = 284300
     DataPipelineName = 'plStats'
@@ -2880,6 +3954,641 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       end
     end
     object ppParameterList1: TppParameterList
+    end
+  end
+  object kbmComparison: TkbmMemTable
+    DesignActivation = True
+    AttachedAutoRefresh = True
+    AttachMaxCount = 1
+    FieldDefs = <
+      item
+        Name = 'ADate'
+        DataType = ftDate
+      end
+      item
+        Name = 'revenueBase'
+        DataType = ftFloat
+      end
+      item
+        Name = 'occBase'
+        DataType = ftFloat
+      end
+      item
+        Name = 'adrBase'
+        DataType = ftFloat
+      end
+      item
+        Name = 'revParBase'
+        DataType = ftFloat
+      end
+      item
+        Name = 'totalDiscountBase'
+        DataType = ftFloat
+      end
+      item
+        Name = 'maxRateBase'
+        DataType = ftFloat
+      end
+      item
+        Name = 'minRateBase'
+        DataType = ftFloat
+      end
+      item
+        Name = 'totalGuestsBase'
+        DataType = ftInteger
+      end
+      item
+        Name = 'totalSellableRoomsBase'
+        DataType = ftInteger
+      end
+      item
+        Name = 'oooRoomsBase'
+        DataType = ftInteger
+      end
+      item
+        Name = 'soldRoomsBase'
+        DataType = ftInteger
+      end
+      item
+        Name = 'revenue'
+        DataType = ftFloat
+      end
+      item
+        Name = 'occ'
+        DataType = ftFloat
+      end
+      item
+        Name = 'adr'
+        DataType = ftFloat
+      end
+      item
+        Name = 'revPar'
+        DataType = ftFloat
+      end
+      item
+        Name = 'totalDiscount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'maxRate'
+        DataType = ftFloat
+      end
+      item
+        Name = 'minRate'
+        DataType = ftFloat
+      end
+      item
+        Name = 'totalGuests'
+        DataType = ftInteger
+      end
+      item
+        Name = 'totalSellableRooms'
+        DataType = ftInteger
+      end
+      item
+        Name = 'oooRooms'
+        DataType = ftInteger
+      end
+      item
+        Name = 'soldRooms'
+        DataType = ftInteger
+      end>
+    IndexDefs = <>
+    SortOptions = []
+    PersistentBackup = False
+    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
+    LoadedCompletely = False
+    SavedCompletely = False
+    FilterOptions = []
+    Version = '7.22.00 Standard Edition'
+    LanguageID = 0
+    SortID = 0
+    SubLanguageID = 1
+    LocaleID = 1024
+    OnCalcFields = kbmComparisonCalcFields
+    Left = 496
+    Top = 464
+    object kbmComparisonADateBase: TDateField
+      DisplayLabel = 'Date'
+      FieldName = 'aDateBase'
+    end
+    object kbmComparisoncurrency: TWideStringField
+      FieldName = 'Currency'
+      Size = 5
+    end
+    object kbmComparisonrevenueBase: TFloatField
+      DisplayLabel = 'Revenue'
+      FieldName = 'RevenueBase'
+    end
+    object kbmComparisonoccBase: TFloatField
+      DisplayLabel = 'Occupancy'
+      FieldKind = fkCalculated
+      FieldName = 'OccBase'
+      Calculated = True
+    end
+    object kbmComparisonadrBase: TFloatField
+      DisplayLabel = 'ADR'
+      FieldKind = fkCalculated
+      FieldName = 'adrBase'
+      Calculated = True
+    end
+    object kbmComparisonrevParBase: TFloatField
+      DisplayLabel = 'RevPar'
+      FieldKind = fkCalculated
+      FieldName = 'revParBase'
+      Calculated = True
+    end
+    object kbmComparisontotalDiscountBase: TFloatField
+      DisplayLabel = 'Total Discount'
+      FieldName = 'totalDiscountBase'
+    end
+    object kbmComparisonmaxRateBase: TFloatField
+      DisplayLabel = 'Highest Rate'
+      FieldName = 'maxRateBase'
+    end
+    object kbmComparisonminRateBase: TFloatField
+      DisplayLabel = 'Lowest Rate'
+      FieldName = 'minRateBase'
+    end
+    object kbmComparisontotalGuestsBase: TIntegerField
+      DisplayLabel = 'Total Guests'
+      FieldName = 'totalGuestsBase'
+    end
+    object kbmComparisontotalSellableRoomsBase: TIntegerField
+      DisplayLabel = 'Sellable rooms'
+      FieldName = 'totalSellableRoomsBase'
+    end
+    object kbmComparisonoooRoomsBase: TIntegerField
+      DisplayLabel = 'Out of order'
+      FieldName = 'oooRoomsBase'
+    end
+    object kbmComparisonsoldRoomsBase: TIntegerField
+      DisplayLabel = 'Sold Rooms'
+      FieldName = 'soldRoomsBase'
+    end
+    object kbmComparisonrevenue: TFloatField
+      DisplayLabel = 'Revenue'
+      FieldName = 'revenue'
+    end
+    object kbmComparisonADate: TDateField
+      DisplayLabel = 'Date'
+      FieldName = 'ADate'
+    end
+    object kbmComparisonocc: TFloatField
+      DisplayLabel = 'Occupancy'
+      FieldKind = fkCalculated
+      FieldName = 'occ'
+      Calculated = True
+    end
+    object kbmComparisonadr: TFloatField
+      DisplayLabel = 'ADR'
+      FieldKind = fkCalculated
+      FieldName = 'adr'
+      Calculated = True
+    end
+    object kbmComparisonrevPar: TFloatField
+      DisplayLabel = 'RevPar'
+      FieldKind = fkCalculated
+      FieldName = 'revPar'
+      Calculated = True
+    end
+    object kbmComparisontotalDiscount: TFloatField
+      DisplayLabel = 'Total Discount'
+      FieldName = 'totalDiscount'
+    end
+    object kbmComparisonmaxRate: TFloatField
+      DisplayLabel = 'Highest Rate'
+      FieldName = 'maxRate'
+    end
+    object kbmComparisonminRate: TFloatField
+      DisplayLabel = 'Lowest Rate'
+      FieldName = 'minRate'
+    end
+    object kbmComparisontotalGuests: TIntegerField
+      DisplayLabel = 'Total Guests'
+      FieldName = 'totalGuests'
+    end
+    object kbmComparisontotalSellableRooms: TIntegerField
+      DisplayLabel = 'Sellable Rooms'
+      FieldName = 'totalSellableRooms'
+    end
+    object kbmComparisonoooRooms: TIntegerField
+      DisplayLabel = 'Out of Order'
+      FieldName = 'oooRooms'
+    end
+    object kbmComparisonsoldRooms: TIntegerField
+      DisplayLabel = 'Sold Rooms'
+      FieldName = 'soldRooms'
+    end
+    object kbmComparisonrevenueDiff: TFloatField
+      DisplayLabel = 'Revenue'
+      FieldKind = fkCalculated
+      FieldName = 'RevenueDiff'
+      Calculated = True
+    end
+    object kbmComparisonOccDiff: TFloatField
+      DisplayLabel = 'Occupancy'
+      FieldKind = fkCalculated
+      FieldName = 'OccDiff'
+      Calculated = True
+    end
+    object kbmComparisonAdrDiff: TFloatField
+      DisplayLabel = 'ADR'
+      FieldKind = fkCalculated
+      FieldName = 'AdrDiff'
+      Calculated = True
+    end
+    object kbmComparisonRevParDiff: TFloatField
+      DisplayLabel = 'RevPar'
+      FieldKind = fkCalculated
+      FieldName = 'RevParDiff'
+      Calculated = True
+    end
+    object kbmComparisonTotalDiscountDiff: TFloatField
+      DisplayLabel = 'Total Discount'
+      FieldKind = fkCalculated
+      FieldName = 'TotalDiscountDiff'
+      Calculated = True
+    end
+    object kbmComparisonMaxRateDiff: TFloatField
+      DisplayLabel = 'Highest Rate'
+      FieldKind = fkCalculated
+      FieldName = 'MaxRateDiff'
+      Calculated = True
+    end
+    object kbmComparisonMinRateDiff: TFloatField
+      DisplayLabel = 'Lowest Rate'
+      FieldKind = fkCalculated
+      FieldName = 'MinRateDiff'
+      Calculated = True
+    end
+    object kbmComparisonTotalGuestsDiff: TIntegerField
+      DisplayLabel = 'Total Guests'
+      FieldKind = fkCalculated
+      FieldName = 'TotalGuestsDiff'
+      Calculated = True
+    end
+    object kbmComparisonTotalSellableRoomsDiff: TIntegerField
+      DisplayLabel = 'Sellable Rooms'
+      FieldKind = fkCalculated
+      FieldName = 'TotalSellableRoomsDiff'
+      Calculated = True
+    end
+    object kbmComparisonOooRoomsDiff: TIntegerField
+      DisplayLabel = 'Out Of Order'
+      FieldKind = fkCalculated
+      FieldName = 'OooRoomsDiff'
+      Calculated = True
+    end
+    object kbmComparisonSoldRoomsDiff: TIntegerField
+      DisplayLabel = 'Sold Rooms'
+      FieldKind = fkCalculated
+      FieldName = 'SoldRoomsDiff'
+      Calculated = True
+    end
+  end
+  object dsComparison: TDataSource
+    DataSet = kbmComparison
+    Left = 568
+    Top = 464
+  end
+  object cxsrRoomerStyleRepository: TcxStyleRepository
+    Left = 952
+    Top = 16
+    PixelsPerInch = 96
+    object cxstBandHeader: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object cxstCaption: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstCardCaptionRow: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstCardRowCaption: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstContent: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstContentEven: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstContentOdd: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstFilterBar: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstFooter: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object cxstGroup: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object cxstHeader: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+    end
+    object cxstPreview: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
+    object cxstSelection: TcxStyle
+    end
+    object cxstReportBandHeader: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+    end
+    object cxstReportCaption: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -16
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportCardCaptionRow: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportCardRowCaption: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportContent: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clWhite
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportContentEven: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = 16053492
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportContentOdd: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clWhite
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportFilterBar: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportFooter: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+    end
+    object cxstReportGroup: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+    end
+    object cxstReportHeader: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+    end
+    object cxstReportPreview: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clWhite
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstReportSelection: TcxStyle
+      AssignedValues = [svColor, svFont]
+      Color = clBtnFace
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clDefault
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+    end
+    object cxstBandHeaderBackground: TcxStyle
+      AssignedValues = [svColor]
+      Color = clSilver
+    end
+    object dxssRoomerGridReportLink: TdxGridReportLinkStyleSheet
+      Caption = 'Gridprinting Styles'
+      Styles.BandHeader = cxstReportBandHeader
+      Styles.Caption = cxstReportCaption
+      Styles.CardCaptionRow = cxstReportCardCaptionRow
+      Styles.CardRowCaption = cxstReportCardRowCaption
+      Styles.Content = cxstReportContent
+      Styles.ContentEven = cxstReportContentEven
+      Styles.ContentOdd = cxstReportContentOdd
+      Styles.FilterBar = cxstReportFilterBar
+      Styles.Footer = cxstReportFooter
+      Styles.Group = cxstReportGroup
+      Styles.Header = cxstReportHeader
+      Styles.Preview = cxstReportPreview
+      Styles.Selection = cxstReportSelection
+      BuiltIn = True
+    end
+    object cxssRoomerGridTableView: TcxGridTableViewStyleSheet
+      Caption = 'Gridview Styles'
+      Styles.Content = cxstContent
+      Styles.ContentEven = cxstContentEven
+      Styles.ContentOdd = cxstContentOdd
+      Styles.Selection = cxstSelection
+      Styles.Footer = cxstFooter
+      Styles.Group = cxstGroup
+      Styles.GroupSummary = cxstGroup
+      Styles.Header = cxstHeader
+      Styles.Preview = cxstPreview
+      BuiltIn = True
+    end
+    object cxssRoomerGridBandedTableView: TcxGridBandedTableViewStyleSheet
+      Caption = 'cxssRoomerBandedGridTableView'
+      Styles.Content = cxstContent
+      Styles.ContentEven = cxstContentEven
+      Styles.ContentOdd = cxstContentOdd
+      Styles.Selection = cxstSelection
+      Styles.Footer = cxstFooter
+      Styles.Group = cxstGroup
+      Styles.GroupSummary = cxstGroup
+      Styles.Header = cxstHeader
+      Styles.Preview = cxstPreview
+      Styles.BandHeader = cxstBandHeader
+      BuiltIn = True
+    end
+  end
+  object grdPrinter: TdxComponentPrinter
+    CurrentLink = grdPrinterLinkComparison
+    Version = 0
+    Left = 856
+    Top = 64
+    object grdPrinterLinkComparison: TdxGridReportLink
+      Active = True
+      Component = grdComparison
+      PageNumberFormat = pnfNumeral
+      PrinterPage.DMPaper = 9
+      PrinterPage.Footer = 6350
+      PrinterPage.GrayShading = True
+      PrinterPage.Header = 6350
+      PrinterPage.Margins.Bottom = 6350
+      PrinterPage.Margins.Left = 5000
+      PrinterPage.Margins.Right = 5000
+      PrinterPage.Margins.Top = 12700
+      PrinterPage.Orientation = poLandscape
+      PrinterPage.PageFooter.Font.Charset = ANSI_CHARSET
+      PrinterPage.PageFooter.Font.Color = clBlack
+      PrinterPage.PageFooter.Font.Height = -7
+      PrinterPage.PageFooter.Font.Name = 'Arial'
+      PrinterPage.PageFooter.Font.Style = []
+      PrinterPage.PageFooter.RightTitle.Strings = (
+        '[Page # of Pages #]')
+      PrinterPage.PageSize.X = 210000
+      PrinterPage.PageSize.Y = 297000
+      PrinterPage.ScaleMode = smFit
+      PrinterPage._dxMeasurementUnits_ = 2
+      PrinterPage._dxLastMU_ = 2
+      ReportDocument.CreationDate = 43194.583583993060000000
+      ReportTitle.Font.Charset = DEFAULT_CHARSET
+      ReportTitle.Font.Color = clBlack
+      ReportTitle.Font.Height = -19
+      ReportTitle.Font.Name = 'Arial'
+      ReportTitle.Font.Style = [fsBold]
+      ReportTitle.Text = 'Roomrent Comparison'
+      ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+      OptionsFormatting.LookAndFeelKind = lfFlat
+      OptionsFormatting.UseNativeStyles = True
+      OptionsView.ExpandButtons = False
+      OptionsView.FilterBar = False
+      BuiltInReportLink = True
+    end
+    object grdPrinterLinkStats: TdxGridReportLink
+      Component = grStat
+      PageNumberFormat = pnfNumeral
+      PrinterPage.DMPaper = 9
+      PrinterPage.Footer = 6350
+      PrinterPage.Header = 6350
+      PrinterPage.Margins.Bottom = 12700
+      PrinterPage.Margins.Left = 12700
+      PrinterPage.Margins.Right = 12700
+      PrinterPage.Margins.Top = 12700
+      PrinterPage.PageSize.X = 210000
+      PrinterPage.PageSize.Y = 297000
+      PrinterPage._dxMeasurementUnits_ = 0
+      PrinterPage._dxLastMU_ = 2
+      ReportDocument.Caption = 'Roomrent statistics'
+      ReportDocument.Creator = 'Roomer'
+      ReportTitle.Text = 'Roomrent Statistics'
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
+      BuiltInReportLink = True
     end
   end
 end
