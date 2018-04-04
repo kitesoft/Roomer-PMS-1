@@ -849,8 +849,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           Top = 4
           Width = 304
           Height = 89
+          Hint = 'Future extension'
           Align = alLeft
           Caption = 'Compare on room type'
+          Enabled = False
           TabOrder = 4
           object clbCompareRoomTypes: TsCheckListBox
             Left = 2
@@ -4521,7 +4523,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
   end
   object grdPrinter: TdxComponentPrinter
-    CurrentLink = grdPrinterLinkComparison
+    CurrentLink = grdPrinterLinkStats
     Version = 0
     Left = 856
     Top = 64
@@ -4580,13 +4582,16 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.Margins.Left = 12700
       PrinterPage.Margins.Right = 12700
       PrinterPage.Margins.Top = 12700
+      PrinterPage.Orientation = poLandscape
       PrinterPage.PageSize.X = 210000
       PrinterPage.PageSize.Y = 297000
+      PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Roomrent statistics'
       ReportDocument.Creator = 'Roomer'
       ReportTitle.Text = 'Roomrent Statistics'
+      ShrinkToPageWidth = True
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
