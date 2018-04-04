@@ -3,6 +3,9 @@
         <ProjectGuid>{B275BFC1-71F2-45FB-8203-D4A30B283544}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
+        <Projects Include="Unittests\CurrencyTests\CurrencyTests.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Unittests\MobileAPITests\MobileAPItest.dproj">
             <Dependencies/>
         </Projects>
@@ -17,6 +20,15 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
+    <Target Name="CurrencyTests">
+        <MSBuild Projects="Unittests\CurrencyTests\CurrencyTests.dproj"/>
+    </Target>
+    <Target Name="CurrencyTests:Clean">
+        <MSBuild Projects="Unittests\CurrencyTests\CurrencyTests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CurrencyTests:Make">
+        <MSBuild Projects="Unittests\CurrencyTests\CurrencyTests.dproj" Targets="Make"/>
+    </Target>
     <Target Name="MobileAPItest">
         <MSBuild Projects="Unittests\MobileAPITests\MobileAPItest.dproj"/>
     </Target>
@@ -36,13 +48,13 @@
         <MSBuild Projects="Roomer.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="MobileAPItest;Roomer"/>
+        <CallTarget Targets="CurrencyTests;MobileAPItest;Roomer"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="MobileAPItest:Clean;Roomer:Clean"/>
+        <CallTarget Targets="CurrencyTests:Clean;MobileAPItest:Clean;Roomer:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="MobileAPItest:Make;Roomer:Make"/>
+        <CallTarget Targets="CurrencyTests:Make;MobileAPItest:Make;Roomer:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

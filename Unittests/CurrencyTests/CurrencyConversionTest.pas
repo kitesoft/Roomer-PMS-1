@@ -43,7 +43,7 @@ end;
 
 procedure TCurrencyConversionTest.TearDown;
 begin
-  CurrencyManager.ClearCache;
+  CurrencyManager.ClearDefinitions;
 end;
 
 procedure TCurrencyConversionTest.TestConvertToUnknown;

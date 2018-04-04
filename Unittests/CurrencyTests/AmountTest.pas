@@ -162,7 +162,7 @@ end;
 procedure TAmountArtithmeticTests.TearDown;
 begin
   inherited;
-  CurrencyManager.ClearCache;
+  CurrencyManager.ClearDefinitions;
 end;
 
 procedure TAmountArtithmeticTests.TestAdd;
@@ -331,7 +331,7 @@ end;
 procedure TAmountCompareTests.TearDown;
 begin
   inherited;
-  CurrencyManager.ClearCache;
+  CurrencyManager.ClearDefinitions;
 end;
 
 procedure TAmountCompareTests.TestEqual;
