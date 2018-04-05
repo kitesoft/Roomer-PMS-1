@@ -309,7 +309,7 @@ begin
         s := s + '   IF(xxx.useStayTax AND (tax.INCL_EXCL = ''EXCLUDED'' OR (tax.INCL_EXCL = ''PER_CUSTOMER'' AND (SELECT StayTaxIncluted FROM customers WHERE Customer = xxx.Customer LIMIT 1) = 0)), '#10;
         s := s + '      IF(tax.TAX_BASE = ''GUEST_NIGHT'', '#10;
         s := s + '         IF(tax.TAX_TYPE=''PERCENTAGE'', tax.AMOUNT * IF(tax.NETTO_AMOUNT_BASED=''TRUE'', ';
-        s := s + '              (AverageRoomRateNative - IncludedBreakfastPrice * NumGuests) / (1+vc.VATPercentage/100), (AverageRoomRateNative - IncludedBreakfastPrice * NumGuests)) / 100, tax.AMOUNT) * NumNights * NumGuests, '#10;
+        s := s + '              (AverageNetRoomRateNative - IncludedBreakfastPrice * NumGuests) / (1+vc.VATPercentage/100), (AverageNetRoomRateNative - IncludedBreakfastPrice * NumGuests)) / 100, tax.AMOUNT) * NumNights * NumGuests, '#10;
         s := s + '         IF(tax.TAX_TYPE=''PERCENTAGE'', tax.AMOUNT * IF(tax.NETTO_AMOUNT_BASED=''TRUE'', ';
         s := s + '              (TotalRent - IncludedBreakfastPrice * NumGuests * NumNights) / (1+vc.VATPercentage/100), (TotalRent - IncludedBreakfastPrice * NumGuests * NumNights)) / 100, tax.AMOUNT)), '#10;
         s := s + '      0) * IF(TotalRent > 0, 1, 0) AS totalTaxes, '#10;
@@ -398,11 +398,11 @@ begin
         s := s + '                     (NOT rd1.ResFlag IN (''X'' , ''C'', ''W'', ''Z'')) '#10;
         s := s + '                         AND (rd1.RoomReservation = rd.roomReservation)) AS TotalRent, '#10;
         s := s + '             (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '#10;
-        s := s + '             (SELECT AVG(rd1.RoomRate * cu1.AValue) '#10;
+        s := s + '             (SELECT AVG((rd1.RoomRate - IF(rd1.isPercentage, rd1.RoomRate * rd1.Discount / 100, rd1.Discount)) * cu1.AValue) '#10;
         s := s + '                FROM roomsdate rd1 '#10;
         s := s + '                INNER JOIN currencies cu1 ON cu1.Currency = rd1.Currency '#10;
         s := s + '                WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C'')) '#10;
-        s := s + '             ) AS AverageRoomRateNative, '#10;
+        s := s + '             ) AS AverageNetRoomRateNative, '#10;
         s := s + '             rr.PaymentGuaranteeType AS Guarantee, '#10;
         s := s + '             rr.InvoiceIndex AS InvoiceIndex, '#10;
         s := s + '             (SELECT DISTINCT '#10;

@@ -1716,7 +1716,7 @@ begin
   lRoomInfo.Price := aRoomPrice;
   lROomInfo.Currency := aCurrency;
   lRoomInfo.CurrencyRate := RoomerCurrencyManager.CurrencyDefinition[aCurrency].Rate;
-  lRoomInfo.Discount := 0.00;
+  lRoomInfo.DiscountAmount := aDiscountAmount;
   lRoomInfo.Room := aRoom;
   lRoomInfo.NumGuests := aNumGuests;
   lRoomInfo.NumChildren := aNumChildren;
@@ -1749,7 +1749,7 @@ begin
       /// Add an InvoiceLine object for the discount
       AddLine(0, lInvoiceLine, '', lDiscountItem, lDescription, aUnpaidNightCount, -1 * aDiscountAmount, aCurrency,
               lItemInfo.VATCode, aFromDate, True, '', '', false, aNumGuests, lConfirmDate, lConfirmAmount, aRRAlias, _GetCurrentTick);
-      lRoomInfo.Discount := aDiscountAmount * aUnpaidNightCount;
+//      lRoomInfo.Discount := aDiscountAmount * aUnpaidNightCount;
     end;
   end;
 

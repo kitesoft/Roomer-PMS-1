@@ -516,7 +516,7 @@ begin
   begin
     IsPercentage := True;
 
-    baseAmount := TAmount.Create(aInvoiceRoomEntity.Price, aInvoiceRoomEntity.Currency);
+    baseAmount := TAmount.Create(aInvoiceRoomEntity.Price - aInvoiceRoomEntity.DiscountAmount, aInvoiceRoomEntity.Currency);
     if aInvoiceRoomEntity.Breakfast = TBreakfastType.Included then
       baseAmount := TAmount.ZERO.Max(baseAmount - (aInvoiceRoomEntity.BreakfastPrice * aInvoiceRoomEntity.NumGuests));
 

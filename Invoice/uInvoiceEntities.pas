@@ -43,7 +43,7 @@ type
     property Price: double read FPrice write FPrice;
     property Currency: string read FCurrency write FCurrency;
     property CurrencyRate: double read FCurrencyRate write FCurrencyRate;
-    property Discount: double read FDiscount write FDiscount;
+    property DiscountAmount: double read FDiscount write FDiscount;
     property VatPerNight: double read FVatPerNight write FVatPerNight;
     property Breakfast: TBreakfastType read FBreakfast write FBreakfast;
     property BreakfastPrice: TAmount read FBreakfastPrice write FBreakfastPrice;
