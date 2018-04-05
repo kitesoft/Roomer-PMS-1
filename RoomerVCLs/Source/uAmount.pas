@@ -15,12 +15,12 @@ type
 
   ///	<summary>
   ///	  An Amount is a value in a fixed currency.<br />
-  ///  Values are stored as a Currency type, which has 4 fixed decimal places
-  ///   Different amounts can be added or subtracted and will have the currencycode of the first term<br />Mulitplying an amount or
-  ///	  dividing an amount will always return a result of the same currency of the firt factor
+  ///   Values are stored as a Currency type, which has 4 fixed decimal places
+  ///   Different amounts can be added or subtracted and will have the currencycode of the first term<br />
+  ///   Mulitplying an amount or dividing an amount will always return a result of the same currency of the first factor
   ///	  When a value is implicitly converted to an amount, then the native
-  ///	  currency will be used, provided by the TAmountConfigurator
-  ///  Implicitly casting to an Integer is not allowed, to avoid unintentional rounding. Explicit casting to Integer is allowed
+  ///	  currency will be used, provided by the global CurrencyManager
+  ///  Implicitly casting to an Integer is not allowed, to avoid unintentional truncating. Explicit casting to Integer is allowed
   ///	</summary>
   ///	<remarks>
   ///	  <para>
@@ -105,25 +105,43 @@ type
     class operator LessThanOrEqual(a, b: TAmount): boolean;
 
     class operator Negative(a: TAmount): TAmount;
-
+    /// <summary>
+    ///   Returns a string with the rounded and formatted value, using the format settings
+    ///  of the CurrencyDefinition in Currencymanager
+    /// </summary>
     function AsDisplayString: string;
+    /// <summary>
+    ///   Returns a string with the rounded and formatted value, followed by the 3-letter CurrencyCode
+    /// </summary>
     function AsDisplayStringWithCode: string;
     function AsEditString: string;
     function ToCurrency(const aCurrCode: TCurrencyCode): TAmount; overload;
     function ToCurrency(aCurrDef: TCurrencyDefinition): TAmount; overload;
     function ToCurrency(aCurId: integer): TAmount; overload;
+    /// <summary>
+    ///   Convert this amount to the native amount set in CurrencyManager
+    /// </summary>
     function ToNative(): TAmount;
 
+    /// <summary>
+    ///   Returns a TAmount rounded to the number of decimals set for the CurrencyCode in CurrencyManager
+    /// </summary>
     function Rounded(): TAmount;
+    /// <summary>
+    ///   Returns the largest actual value of Self and b
+    /// </summary>
     function Max(b: TAmount): TAmount;
+    /// <summary>
+    ///   Returns the smallest actual value of Self and b
+    /// </summary>
     function Min(b: TAmount): TAmount;
 
     property Value: Currency read FValue;
     property CurrencyCode: TCurrencyCode read FCurCode;
     /// <summary>
-    ///   CurrencyRate to use conversions of this amount. If not set (or set to 0) then the active currencyrate is
-    ///  used form the RoomerCurrencyManager.
-    ///  This can be used to calculation with amounts that are already handled in a different currency at a certain rate
+    ///   CurrencyRate to use conversions of this amount. If not set explicitly (or set to 0) then the active
+    ///   currencyrate is used from the CurrencyManager.
+    ///  This can be used for calculation with amounts that are already handled using a historic currency rate
     /// </summary>
     property CurrencyRate: double read GetCurrencyRate write SetCurrencyRate;
   end;

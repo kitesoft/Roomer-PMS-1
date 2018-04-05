@@ -13,7 +13,7 @@ type
 
   /// <summary>
   ///   Object to handle definitions of currencies and display of amounts in a certain currency <br />
-  ///  This base class is and should not be dependent on any part of Roomer
+  ///  This base class is and should not be dependent on any part of Roomer PMS1
   /// </summary>
   ///	<remarks>
   ///	  <para>
@@ -34,7 +34,7 @@ type
     function GetSymbol: string;
     procedure SetSymbol(const Value: string);
     /// <summary>
-    ///   Construct a displayformat string based on the suppied formatSettings, using fixed decimal and thousandsseparator
+    ///   Construct a displayformat string based on the supplied formatSettings, using fixed decimal and thousandsseparator
     ///  This format can be used as a DisplayFormat setting in a TcxCurrencyEditProperties
     /// </summary>
     function AddCurrencySymbol(const Value, CurrSymbol: string; const CurrFormat: Byte): string;
@@ -92,7 +92,7 @@ uses
 
 constructor TCurrencyDefinition.Create(const aCurrencyCode: TCurrencyCode);
 begin
-  if String(aCurrencyCode).IsEmpty then
+  if String(aCurrencyCode).Trim.IsEmpty then
     raise ECurrencyDefinitionException.Create('Cannot create a currencydefinition with empty currencycode');
   FCode := UpperCase(String(aCurrencyCode));
   FDescription := FCode;
