@@ -115,6 +115,8 @@ type
     function ToNative(): TAmount;
 
     function Rounded(): TAmount;
+    function Max(b: TAmount): TAmount;
+    function Min(b: TAmount): TAmount;
 
     property Value: Currency read FValue;
     property CurrencyCode: TCurrencyCode read FCurCode;
@@ -362,6 +364,22 @@ begin
   Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
+function TAmount.Max(b: TAmount): TAmount;
+begin
+  if (Self >= b) then
+    Result := Self
+  else
+    Result := b;
+end;
+
+function TAmount.Min(b: TAmount): TAmount;
+begin
+  if (Self <= b) then
+    Result := Self
+  else
+    Result := b;
+end;
+
 class operator TAmount.Multiply(a, b: TAmount): TAmount;
 begin
   if not isSameCurrency(a, b) then
@@ -555,6 +573,7 @@ constructor TAmountClass.Create(aAmount: TAmount);
 begin
   Amount := aAmount;
 end;
+
 
 initialization
 

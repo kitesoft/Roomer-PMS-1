@@ -5794,7 +5794,7 @@ begin
   s := s+' rr.GroupAccount, '+#10; //
 //  s := s+' rr.invBreakfast, '+#10;
   s := s+' rr.Breakfast, '+#10;
-  s := s+' rr.BreakfastPrice, '+#10;
+  s := s+' rr.BreakfastPrice, '+#10; // native currency!
   s := s+' rr.Discount, '+#10; //
   s := s+' rr.PriceType, '+#10; //
   s := s+' rr.RoomType, '+#10; //

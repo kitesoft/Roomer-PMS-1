@@ -45,6 +45,20 @@ type
     procedure TestGreaterAndLesser;
   end;
 
+  TAmountMinMaxTests = class(TTestCase)
+  public
+    procedure SetUp; override;
+    procedure TearDown; override;
+  published
+    procedure TestSetupTearDown;
+    procedure TestUseMathMaxWithAmounts;
+    procedure TestUseMathMaxWithCastsToDouble;
+    procedure TestUseAmountMax;
+    procedure TestUseMathMinWithAmounts;
+    procedure TestUseMathMinWithCastsToDouble;
+    procedure TestUseAmountMin;
+  end;
+
 implementation
 
 uses
@@ -390,8 +404,86 @@ begin
   CheckTrue(True);
 end;
 
+{ TAmountMinMaxTests }
+
+procedure TAmountMinMaxTests.SetUp;
+begin
+  inherited;
+  CurrencyManager.CreateDefinition('USD').Rate := 0.89;
+end;
+
+procedure TAmountMinMaxTests.TearDown;
+begin
+  inherited;
+  CurrencyManager.ClearDefinitions;
+end;
+
+procedure TAmountMinMaxTests.TestUseAmountMax;
+var
+  a, b: TAmount;
+begin
+  a := TAmount.Create(15, 'EUR');
+  b := TAmount.Create(16, 'USD');
+  CheckTrue(a.max(b) = a);
+end;
+
+procedure TAmountMinMaxTests.TestUseAmountMin;
+var
+  a, b: TAmount;
+begin
+  a := TAmount.Create(15, 'EUR');
+  b := TAmount.Create(16, 'USD');
+  CheckTrue(a.min(b) = b);
+end;
+
+procedure TAmountMinMaxTests.TestUseMathMaxWithAmounts;
+var
+  a, b: TAmount;
+begin
+  a := TAmount.Create(15, 'EUR');
+  b := TAmount.Create(16, 'USD');
+  ExpectedException := EAmountInvalidCastException;
+  a := max (a, b);
+end;
+
+procedure TAmountMinMaxTests.TestUseMathMaxWithCastsToDouble;
+var
+  a, b: TAmount;
+begin
+  a := TAmount.Create(15, 'EUR');
+  b := TAmount.Create(16, 'USD');
+  // This goes wrong because casting only takes the value of amount
+  CheckFalse(a = max(double(a), double(b)));
+end;
+
+procedure TAmountMinMaxTests.TestUseMathMinWithAmounts;
+var
+  a, b: TAmount;
+begin
+  a := TAmount.Create(15, 'EUR');
+  b := TAmount.Create(16, 'USD');
+  ExpectedException := EAmountInvalidCastException;
+  a := min(a, b);
+end;
+
+procedure TAmountMinMaxTests.TestUseMathMinWithCastsToDouble;
+var
+  a, b: TAmount;
+begin
+  a := TAmount.Create(15, 'EUR');
+  b := TAmount.Create(16, 'USD');
+  // This goes wrong because casting only takes the value of amount
+  CheckFalse(b = min(double(a), double(b)));
+end;
+
+procedure TAmountMinMaxTests.TestSetupTearDown;
+begin
+  CheckTrue(True);
+end;
+
 initialization
   RegisterTest(TAmountImplicitTests.Suite);
   RegisterTest(TAmountArtithmeticTests.Suite);
   RegisterTest(TAmountCompareTests.Suite);
+  RegisterTest(TAmountMinMaxTests.Suite);
 end.

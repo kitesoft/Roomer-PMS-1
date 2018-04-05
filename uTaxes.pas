@@ -155,6 +155,8 @@ type
       var Error: Boolean);
     procedure tvDataValid_ToPropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
       var Error: Boolean);
+    procedure tvDataTax_BasePropertiesValidate(Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+      var Error: Boolean);
   private
     { Private declarations }
     zFirstTime       : boolean;
@@ -452,9 +454,18 @@ procedure TfrmTaxes.tvDataIncl_ExclPropertiesValidate(Sender: TObject; var Displ
   var ErrorText: TCaption; var Error: Boolean);
 begin
   inherited;
-  Error := ((m_Tax_Base.AsString = 'BOOKING') or (m_Tax_Base.AsString = 'GUEST_NIGHT')) and (DisplayValue <> 'EXCLUDED');
+  Error := (m_Tax_Base.AsString = 'GUEST_NIGHT') and (DisplayValue <> 'EXCLUDED');
   if Error then
     ErrorText := 'only "EXCLUDED" allowed for Taxbase "GUEST_NIGHT"';
+end;
+
+procedure TfrmTaxes.tvDataTax_BasePropertiesValidate(Sender: TObject; var DisplayValue: Variant;
+  var ErrorText: TCaption; var Error: Boolean);
+begin
+  inherited;
+  Error := (m_Incl_Excl.AsString <> 'EXCLUDED') and (DisplayValue = 'GUEST_NIGHT');
+  if Error then
+    ErrorText := '"GUEST_NIGHT" is only allowed for "EXCLUDED" tax';
 end;
 
 procedure TfrmTaxes.tvDataValid_FromPropertiesValidate(Sender: TObject; var DisplayValue: Variant;

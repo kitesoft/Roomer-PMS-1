@@ -153,14 +153,14 @@ begin
     if stayTaxPerNight then
       Multiply := 1
     else
-    if stayTaxPerGuest then
-      Multiply := NumGuest / NumDays
-    else
+//    if stayTaxPerGuest then
+//      Multiply := NumGuest / NumDays
+//    else
     if stayTaxPerGuestNight then
-      Multiply := NumGuest
-    else
-    if stayTaxPerRoom then
-      Multiply := 1 / NumDays;
+      Multiply := NumGuest;
+//    else
+//    if stayTaxPerRoom then
+//      Multiply := 1 / NumDays;
 
     result := TDateRate.Create(ADate, RateExcl, RateIncl, VAT, CityTax * Multiply / CurrencyRate, False, _Currency);
   end

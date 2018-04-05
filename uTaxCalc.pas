@@ -24,7 +24,7 @@ uses
 type
 
   TEnumTaxType = (TT_PERCENTAGE, TT_FIXED_AMOUNT);
-  TEnumTaxBase = (TB_ROOM_NIGHT, TB_GUEST_NIGHT, TB_ROOM, TB_BOOKING, TB_GUEST);
+  TEnumTaxBase = (TB_ROOM_NIGHT, TB_GUEST_NIGHT{, TB_ROOM, TB_BOOKING, TB_GUEST});
   TEnumTaxDue = (TD_PREPAID, TD_CHECKOUT);
   TEnumTaxIncl_Excl = (TIE_INCLUDED, TIE_EXCLUDED, TIE_PER_CUSTOMER);
 
@@ -106,11 +106,11 @@ function isStayTaxExcluded: Boolean;
 function isStayTaxIncluded: Boolean;
 function isStayTaxPercentage: Boolean;
 
-function stayTaxPerGuest: Boolean;
+//function stayTaxPerGuest: Boolean;
 function stayTaxPerGuestNight: Boolean;
 function stayTaxPerNight: Boolean;
-function stayTaxPerBooking: Boolean;
-function stayTaxPerRoom: Boolean;
+//function stayTaxPerBooking: Boolean;
+//function stayTaxPerRoom: Boolean;
 
 function currentlyValidTax: TTax;
 function CalculateCityTax(rentAmount: Double; Currency: string; Customer: String; ReservationUsesStayTax: Boolean; taxNights, taxGuests: Integer): recCityTaxResultHolder;
@@ -127,7 +127,7 @@ uses
   , uCurrencyConstants
   , TypInfo
   , Math
-  ;
+  , uBreakfastTypeDefinitions;
 
 procedure initializeTaxes;
 var
@@ -190,15 +190,15 @@ begin
   end;
 end;
 
-function stayTaxPerGuest: Boolean;
-var
-  Tax: TTax;
-begin
-  result := False;
-  Tax := CurrentTax;
-  if Assigned(Tax) then
-    result := Tax.TAX_BASE = TB_GUEST;
-end;
+//function stayTaxPerGuest: Boolean;
+//var
+//  Tax: TTax;
+//begin
+//  result := False;
+//  Tax := CurrentTax;
+//  if Assigned(Tax) then
+//    result := Tax.TAX_BASE = TB_GUEST;
+//end;
 
 function stayTaxPerGuestNight: Boolean;
 var
@@ -220,25 +220,25 @@ begin
     result := Tax.TAX_BASE = TB_ROOM_NIGHT;
 end;
 
-function stayTaxPerBooking: Boolean;
-var
-  Tax: TTax;
-begin
-  result := False;
-  Tax := CurrentTax;
-  if Assigned(Tax) then
-    result := Tax.TAX_BASE = TB_BOOKING;
-end;
+//function stayTaxPerBooking: Boolean;
+//var
+//  Tax: TTax;
+//begin
+//  result := False;
+//  Tax := CurrentTax;
+//  if Assigned(Tax) then
+//    result := Tax.TAX_BASE = TB_BOOKING;
+//end;
 
-function stayTaxPerRoom: Boolean;
-var
-  Tax: TTax;
-begin
-  result := False;
-  Tax := CurrentTax;
-  if Assigned(Tax) then
-    result := Tax.TAX_BASE = TB_ROOM;
-end;
+//function stayTaxPerRoom: Boolean;
+//var
+//  Tax: TTax;
+//begin
+//  result := False;
+//  Tax := CurrentTax;
+//  if Assigned(Tax) then
+//    result := Tax.TAX_BASE = TB_ROOM;
+//end;
 
 function stayTaxAmount: Double;
 var
@@ -486,9 +486,9 @@ function MakeInvoiceTaxEntity(aTax: TTax; aInvoiceRoomEntity: TInvoiceRoomEntity
 var
   NumItems: Double;
   Amount: TAmount;
-  baseAmount: Double;
+  baseAmount: TAmount;
 
-  Percentage: Boolean;
+  IsPercentage: Boolean;
   taxGuests: Integer;
   Description: string;
   lCustomerIncludedDefault: boolean;
@@ -509,51 +509,45 @@ begin
 
   if aTax.TAX_TYPE = TT_FIXED_AMOUNT then
   begin
-    Amount := TAmount(aTax.Amount); // / aInvoiceRoomEntity.CurrencyRate; //in room currency
-    Percentage := False;
+    Amount := TAmount(aTax.Amount);
+    IsPercentage := False;
   end
   else
   begin
-    Percentage := True;
+    IsPercentage := True;
+
+    baseAmount := TAmount.Create(aInvoiceRoomEntity.Price, aInvoiceRoomEntity.Currency);
+    if aInvoiceRoomEntity.Breakfast = TBreakfastType.Included then
+      baseAmount := TAmount.ZERO.Max(baseAmount - (aInvoiceRoomEntity.BreakfastPrice * aInvoiceRoomEntity.NumGuests));
+
     if aTax.NETTO_AMOUNT_BASED then
     begin
       if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
-      begin
-        baseAmount := aInvoiceRoomEntity.Price / (1 + ((aTax.Amount + aItemTypeInfo.VATPercentage) / 100));
-        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency) ;
-      end
+        baseAmount := baseAmount / (1 + ((aTax.Amount + aItemTypeInfo.VATPercentage) / 100))
       else
-      begin
-        baseAmount := (aInvoiceRoomEntity.Price - aInvoiceRoomEntity.VatPerNight);
-        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency);
-      end;
+        baseAmount := TAmount.ZERO.Max(baseAmount - aInvoiceRoomEntity.VatPerNight);
     end
     else
     begin
       if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
-      begin
-        baseAmount := aInvoiceRoomEntity.Price / (1 + (aTax.Amount / 100)); // (Room.Price - Room.Vat)
-        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency);
-      end
-      else
-      begin
-        baseAmount := aInvoiceRoomEntity.Price;
-        Amount := TAmount.Create(baseAmount * aTax.Amount / 100, aInvoiceRoomEntity.Currency);
-      end;
+        baseAmount := baseAmount / (1 + (aTax.Amount / 100));
     end;
-    Description := aTax.Description + format(' (%n %% of %m)', [aTax.Amount, baseAmount]);
+
+    Amount := baseAmount * aTax.Amount / 100;
+
+    Description := aTax.Description + format(' (%n %% of %s)', [aTax.Amount, baseAmount.AsDisplayStringWithCode]);
   end;
 
   NumItems := 0;
   case aTax.TAX_BASE of
     TB_ROOM_NIGHT:  NumItems := 1 * lNumNights;
     TB_GUEST_NIGHT: NumItems := taxGuests * lNumNights;
-    TB_GUEST:       NumItems := taxGuests;
-    TB_ROOM,
-    TB_BOOKING:     NumItems := 1;          //TODO: fix calculations for these types
+//    TB_GUEST:       NumItems := taxGuests;
+//    TB_ROOM,
+//    TB_BOOKING:     NumItems := 1;          //TODO: fix calculations for these types
   end;
 
-  Result := TInvoiceTaxEntity.Create(aTax.BOOKING_ITEM, Description, NumItems, Amount, aTax.Incl_excl, Percentage);
+  Result := TInvoiceTaxEntity.Create(aTax.BOOKING_ITEM, Description, NumItems, Amount, aTax.Incl_excl, IsPercentage);
 end;
 
 function MakeTaxListForRoomEntity(aRoomEntity: TInvoiceRoomEntity; ItemTypeInfo: TItemTypeInfo; aOptions: TInvoiceCityTaxCalculationOptions): TInvoiceTaxEntityList;
@@ -630,13 +624,13 @@ begin
       if Tax.TAX_BASE = TB_ROOM_NIGHT then // TB_ROOM_NIGHT, TB_GUEST_NIGHT, TB_ROOM, TB_BOOKING, TB_GUEST
         NumItems := 1
       else if Tax.TAX_BASE = TB_GUEST_NIGHT then
-        NumItems := taxGuests
-      else if Tax.TAX_BASE = TB_ROOM then
-        NumItems := 1
-      else if Tax.TAX_BASE = TB_GUEST then
-        NumItems := taxGuests
-      else if Tax.TAX_BASE = TB_BOOKING then
-        NumItems := 1;
+        NumItems := taxGuests;
+//      else if Tax.TAX_BASE = TB_ROOM then
+//        NumItems := 1
+//      else if Tax.TAX_BASE = TB_GUEST then
+//        NumItems := taxGuests
+//      else if Tax.TAX_BASE = TB_BOOKING then
+//        NumItems := 1;
 
       taxAmount := Tax.Amount;
 
@@ -771,14 +765,14 @@ function TTax.getEnumTaxBase(_tax_base: String): TEnumTaxBase;
 begin
   if _tax_base = 'ROOM_NIGHT' then
     result := TB_ROOM_NIGHT
-  else if _tax_base = 'GUEST_NIGHT' then
-    result := TB_GUEST_NIGHT
-  else if _tax_base = 'ROOM' then
-    result := TB_ROOM
-  else if _tax_base = 'BOOKING' then
-    result := TB_BOOKING
-  else
-    result := TB_GUEST;
+  else //if _tax_base = 'GUEST_NIGHT' then
+    result := TB_GUEST_NIGHT;
+//  else if _tax_base = 'ROOM' then
+//    result := TB_ROOM
+//  else if _tax_base = 'BOOKING' then
+//    result := TB_BOOKING
+//  else
+//    result := TB_GUEST;
 end;
 
 function TTax.getEnumTaxDue(_tax_due: String): TEnumTaxDue;

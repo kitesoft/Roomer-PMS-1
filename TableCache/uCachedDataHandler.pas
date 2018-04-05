@@ -43,7 +43,7 @@ begin
     if not aTableName.IsEmpty then
       url := url + '/' + aTableName;
     aRSet.OpenDatasetFromUrlAsString(url, false, 0, '');
-    Result := true;
+    Result := (aRSet.RecordCount > 0);
   end;
 end;
 

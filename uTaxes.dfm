@@ -170,7 +170,7 @@ inherited frmTaxes: TfrmTaxes
               'ROOM_NIGHT'
               'GUEST_NIGHT')
             Properties.MaxLength = 30
-            Properties.OnValidate = tvDataIncl_ExclPropertiesValidate
+            Properties.OnValidate = tvDataTax_BasePropertiesValidate
             MinWidth = 75
             Width = 97
             Position.BandIndex = 0
