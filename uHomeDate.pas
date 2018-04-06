@@ -63,7 +63,7 @@ begin
       frm.dtHome.Date := aDate;
       frm.Left := Application.MainForm.Left + 1;
       frm.Top := Application.MainForm.Top + 1;
-      if Key in ['0' .. '9'] then
+      if CharInSet(Key, ['0' .. '9']) then
       begin
         dtHome.SelLength := 0;
         dtHome.SelStart := 0;

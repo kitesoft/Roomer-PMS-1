@@ -14,13 +14,26 @@ type
   EAmountInvalidCastException = class(EAmountException);
 
   ///	<summary>
-  ///	  An Amount is a value in a fixed currency.<br />
-  ///   Values are stored as a Currency type, which has 4 fixed decimal places
+  ///	  <para>
+  ///	  An Amount is an immutable value in a certain currency.<br />
+  ///   Values are stored as a Delphi Currency type, which has 4 fixed decimal places. It makes use of the global CurrencyManager
+  ///   to retrieve the properties of the set CurrencyCode
+  ///	  </para>
+  ///	  <para>
   ///   Different amounts can be added or subtracted and will have the currencycode of the first term<br />
-  ///   Mulitplying an amount or dividing an amount will always return a result of the same currency of the first factor
-  ///	  When a value is implicitly converted to an amount, then the native
+  ///   Mulitplying an amount or dividing an amount will always return a result of the same currency of the first factor<br />
+  ///	  When an integer or decimal value is implicitly converted to an amount, then the native
   ///	  currency will be used, provided by the global CurrencyManager
-  ///  Implicitly casting to an Integer is not allowed, to avoid unintentional truncating. Explicit casting to Integer is allowed
+  ///	  </para>
+  ///	  <para>
+  ///   Implicit casting to an Integer will raise an exception, to avoid unintentional truncating.<br />
+  ///   Explicit casting to Integer is allowed. This will return the rounded value of the amount
+  ///	  </para>
+  ///	  <para>
+  ///   .<br />
+  ///   The CurrrencyRate of the currency of the amount is retrieved from the global CurrencyManager, unless an explicit CurrencyRate is
+  ///   set for the Amount. If the CurrencyRate is set to any value <> 0 then this will override the rate defined in CurrencyManager.
+  ///	  </para>
   ///	</summary>
   ///	<remarks>
   ///	  <para>
@@ -28,12 +41,16 @@ type
   ///     This will allow for greater precision if needed
   ///	  </para>
   ///	  <para>
-  ///	    Unittests are available in <c>Roomer-PMS-1\Unittests\CurrencyTests</c>
+  ///	    Unittests are available in <c>..\Unittests\CurrencyTests</c>
   ///	  </para>
   ///	</remarks>
   TAmount = record
+  strict private type
+    //Internal storage format of the value
+    TAmountValueType = Currency;
+
   strict private
-    FValue: Currency;
+    FValue: TAmountValueType;
     FCurCode: TCurrencyCode;
     FCurrencyRate: double;
     function GetCurrencyDefinition: TCurrencyDefinition;
@@ -45,6 +62,7 @@ type
     function GetCurrencyRate: double;
     procedure SetCurrencyRate(const Value: double);
     property CurrencyDefinition: TCurrencyDefinition read GetCurrencyDefinition;
+    function GetValue: Currency;
   public
     class function Create(): TAmount; overload; static; inline;
 
@@ -52,10 +70,6 @@ type
     class function Create(const a: integer; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: double; const c: TCurrencyCode): TAmount; overload; static; inline;
     class function Create(const a: Extended; const c: TCurrencyCode): TAmount; overload; static; inline;
-    class function Create(const a: Currency; const c: string): TAmount; overload; static; inline;
-    class function Create(const a: integer; const c: string): TAmount; overload; static; inline;
-    class function Create(const a: double; const c: string): TAmount; overload; static; inline;
-    class function Create(const a: Extended; const c: string): TAmount; overload; static; inline;
     class function Create(const c: TCurrencyCode): TAmount; overload; static; inline;
 
     class function Create(const a: Currency; const id: integer): TAmount; overload; static; inline;
@@ -136,7 +150,7 @@ type
     /// </summary>
     function Min(b: TAmount): TAmount;
 
-    property Value: Currency read FValue;
+    property Value: Currency read GetValue;
     property CurrencyCode: TCurrencyCode read FCurCode;
     /// <summary>
     ///   CurrencyRate to use conversions of this amount. If not set explicitly (or set to 0) then the active
@@ -284,6 +298,11 @@ begin
     Result := CurrencyDefinition.Rate
   else
     Result := FCurrencyRate;
+end;
+
+function TAmount.GetValue: Currency;
+begin
+  Result := FValue;
 end;
 
 class operator TAmount.GreaterThan(a, b: TAmount): boolean;
@@ -545,26 +564,6 @@ end;
 class function TAmount.Create(const a: Extended; const id: integer): TAmount;
 begin
   Result := Create(a, CheckValidCurrencyID(id));
-end;
-
-class function TAmount.Create(const a: integer; const c: string): TAmount;
-begin
-  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
-end;
-
-class function TAmount.Create(const a: Currency; const c: string): TAmount;
-begin
-  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
-end;
-
-class function TAmount.Create(const a: Extended; const c: string): TAmount;
-begin
-  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
-end;
-
-class function TAmount.Create(const a: double; const c: string): TAmount;
-begin
-  Result := Create(a, TCurrencyCode(c.Substring(0, 3)));
 end;
 
 class operator TAmount.Divide(a, b: TAmount): TAmount;

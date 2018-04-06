@@ -103,7 +103,10 @@ uses
   , PrjConst
   , hData
   , DateUtils
-  , uDateTimeHelper, uReservationProfile, uSQLUtils;
+  , uDateTimeHelper, uReservationProfile
+  , uSQLUtils
+  , Types
+  ;
 
 const
   cSQLCleaningTimes = 'select '#10 +

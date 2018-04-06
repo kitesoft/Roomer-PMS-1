@@ -3303,13 +3303,11 @@ var
   RoomType: String;
 
   temp: String;
-  lOrgNightCount: integer;
 begin
   roomReservation := mRoomsRoomReservation.asInteger;
   reservation := mRoomsReservation.asInteger;
   Room := mRoomsRoom.asstring;
   RoomType := mRoomsRoomType.asstring;
-  lOrgNightCount := mRoomsdayCount.AsInteger;
 
   if mRoomsDS.State = dsEdit then
   begin

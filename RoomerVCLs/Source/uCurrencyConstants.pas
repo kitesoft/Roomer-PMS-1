@@ -8,7 +8,7 @@ uses
 
 type
 
-  TCurrencyCode = string[3];
+  TCurrencyCode = string;
 
   /// <summary>
   ///   Base Excepton for everything that goes wrong when dealing with currencies

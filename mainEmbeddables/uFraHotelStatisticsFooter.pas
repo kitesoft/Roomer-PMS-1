@@ -43,7 +43,10 @@ uses
   uHotelStatisticsAPI
   , uDateTimeHelper
   , uAppGlobal
-  , uRoomerCurrencymanager, uD;
+  , uRoomerCurrencymanager
+  , uD
+  , DateUtils
+  ;
 
 
 {$R *.dfm}

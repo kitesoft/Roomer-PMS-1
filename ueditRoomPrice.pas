@@ -475,7 +475,7 @@ end;
 procedure TfrmEditRoomPrice.edRoomResDiscountKeyPress(Sender: TObject; var Key: Char);
 begin
   inherited;
-  if Key in [',', '.'] then
+  if CharInSet(Key, [',', '.']) then
     Key := FormatSettings.DecimalSeparator;
 
 end;

@@ -1774,7 +1774,7 @@ begin
   lCount := aRoomEntity.NumGuests * aRoomEntity.UnpaidNights;
   if (lCount = 0) then
     exit;
-
+  lVisible := true;
 
   case aRoomEntity.Breakfast of
     TBreakfastType.None:      Exit;

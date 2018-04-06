@@ -346,7 +346,9 @@ uses uRoomerLanguage,
   , uRoomerBookingDataModel_ModelObjects
   , uRoomerCanonicalDataModel_SimpleTypes
   , uFrmTokenChargeHistory
-  , uMarketDefinitions, uRoomerCurrencymanager, uAmount, uCurrencyConstants, uVCLUtils;
+  , uMarketDefinitions, uRoomerCurrencymanager, uAmount, uCurrencyConstants, uVCLUtils
+  , UITypes
+  ;
 
 const
   WM_SET_COMBO_TEXT = WM_User + 101;

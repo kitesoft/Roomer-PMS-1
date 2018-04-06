@@ -343,6 +343,7 @@ implementation
 
 uses
     UITypes
+  , Types
   , uD
   , uReservationProfile
   , uMarketDefinitions

@@ -406,7 +406,7 @@ end;
 
 procedure TFrmRoomClassEdit.edtdefRateKeyPress(Sender: TObject; var Key: Char);
 begin
-  if not (Key in [#8, '0'..'9', '-', FormatSettings.DecimalSeparator]) then
+  if not CharInSet(Key, [#8, '0'..'9', '-', FormatSettings.DecimalSeparator]) then
     Key := #0
   else if ((Key = FormatSettings.DecimalSeparator) or (Key = '-')) and
           (Pos(Key, TsEdit(Sender).Text) > 0) then

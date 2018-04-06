@@ -397,7 +397,6 @@ end;
 
 function FindFirstChildControlOfType(aParent: TWinControl; aClassType: TClass): TControl;
 var
-  lComp: TComponent;
   i: integer;
 begin
   Result := nil;

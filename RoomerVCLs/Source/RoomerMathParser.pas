@@ -512,10 +512,10 @@ begin
   Name := trim(AnsiLowerCase(Name));
   if (Name = '') or (Name = 'e') then exit;        // ex: 5E3 = 5 * 10*10*10
   if GetOperationIndex(Name) <> -1 then exit;
-  if not (Name[1] in ['_', 'a'..'z']) then exit;
+  if not CharInSet(Name[1], ['_', 'a'..'z']) then exit;
 
   for i:= 2 to length(Name) do
-    if not (Name[i] in ['_', 'a'..'z', '0'..'9'])
+    if not CharInSet(Name[i], ['_', 'a'..'z', '0'..'9'])
     then exit;
 
   Result:= True;
@@ -577,10 +577,10 @@ begin
         begin
           s := '';
           for j := i to lengthExpr do
-            if aExpression[j] in ['a'..'z', '_', '0'..'9', ' ']
+            if CharInSet(aExpression[j], ['a'..'z', '_', '0'..'9', ' '])
             then begin
               // case of the function "E": (Exemple: 5E3 = 5 * 10*10*10), must be followed by a number :
-              if (s = 'e') and (aExpression[j] in ['0'..'9', ' '])
+              if (s = 'e') and CharInSet(aExpression[j], ['0'..'9', ' '])
               then begin
                 s := '';
                 inc(i);  // Return to next car after "E"
@@ -617,11 +617,11 @@ begin
         begin
           s:= '';
           for j := i to lengthExpr do
-            if aExpression[j] in ['0'..'9']
+            if CharInSet(aExpression[j], ['0'..'9'])
             then
               s := s + aExpression[j]
             else
-              if aExpression[j] in ['.', ',']
+              if CharInSet(aExpression[j], ['.', ','])
               then s := s + fs.DecimalSeparator
               else break;
 

@@ -76,6 +76,10 @@ object FrmRoomClassEdit: TFrmRoomClassEdit
     object sTabSheet1: TsTabSheet
       Caption = 'Main'
       TabSkin = 'TRANSPARENT'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbxGuest: TsGroupBox
         Left = 0
         Top = 0

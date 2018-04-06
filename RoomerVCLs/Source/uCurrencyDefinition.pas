@@ -43,7 +43,6 @@ type
     FID: integer;
     function DisplayCurrencyFormat(aFormatSettings: TFormatSettings; aAddSymbol: boolean = true): String;
   public
-    constructor Create(const aCurrencyCode: string); overload; virtual;
     constructor Create(const aCurrencyCode: TCurrencyCode); overload; virtual;
     constructor Create(const aCurrencyCode: string; aCurID: integer); overload; virtual;
 
@@ -110,11 +109,6 @@ end;
 function TCurrencyDefinition.DisplayFormat(aInclCurrencySymbol: boolean): string;
 begin
   Result := DisplayCurrencyFormat(FFormatSettings, aInclCurrencySymbol);
-end;
-
-constructor TCurrencyDefinition.Create(const aCurrencyCode: string);
-begin
-  Create(TCurrencyCode(aCurrencyCode));
 end;
 
 function TCurrencyDefinition.EditValue(aAmount: double): string;

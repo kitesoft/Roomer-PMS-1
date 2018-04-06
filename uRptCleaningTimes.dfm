@@ -248,6 +248,10 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     end
     object tsHistory: TsTabSheet
       Caption = 'Cleaning History'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object grHistory: TcxGrid
         Left = 0
         Top = 0
@@ -361,6 +365,7 @@ inherited frmCleaningTimes: TfrmCleaningTimes
     Top = 216
     inherited prLink_grData: TdxGridReportLink
       ReportDocument.CreationDate = 43154.649115509260000000
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       OptionsSize.AutoWidth = True
       OptionsView.ExpandButtons = False
       OptionsView.FilterBar = False

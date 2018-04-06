@@ -583,7 +583,7 @@ procedure parseXml(xmlStr : String; var key, secret : String);
 
   begin
     result := '';
-    res := Soap.EncdDecd.DecodeBase64(secret);
+    res := Soap.EncdDecd.DecodeBase64(AnsiString(secret));
     for i := LOW(res) to HIGH(res) do
       result := result + char(res[i]);
   end;
@@ -977,7 +977,6 @@ begin
 {$IFNDEF USE_INDY}
   aResponseContentHeader := TALHTTPResponseHeader.Create;
 {$ENDIF}
-  Result := false;
   Stream := TFileStream.Create(filename, fmCreate);
   try
     try
@@ -1045,8 +1044,8 @@ begin
 {$IFDEF DEBUG}
             ShowMessage('Error when communicating with Roomer backend: ' + inttostr(E.StatusCode) + ' - ' + E.Message);
 {$ENDIF}
-          raise EALHTTPClientException.Create(format('Error during communication with server (GET): [%d] %s',
-            [E.StatusCode, E.Message]));
+          raise EALHTTPClientException.Create(AnsiString(format('Error during communication with server (GET): [%d] %s',
+            [E.StatusCode, E.Message])));
         end;
 {$ENDIF}
       end;
