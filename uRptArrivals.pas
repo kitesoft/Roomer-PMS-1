@@ -130,9 +130,9 @@ type
 
 
 /// <summary>
-///   Global access point for showing the arrival report form, If Modalresult is OK then True is returned
+///   Global access point for showing the arrival report form
 /// </summary>
-function ShowArrivalsReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
+procedure ShowArrivalsReport(aDate: TDate; aLoadImmediate: Boolean = False);
 
 implementation
 
@@ -157,7 +157,10 @@ uses
   , uReservationStateChangeHandler
   , uReservationStateDefinitions
   , uDataSetFilterUtils
-  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager
+  , uDateTimeHelper
+  , DateUtils
+  ;
 
 const
   cSQL = 'SELECT '#10 +
@@ -201,21 +204,26 @@ const
   cSqlForDateRange = '      AND rd.ADate >= ''%s'' AND rd.ADate <= ''%s'' ';
 
 
-function ShowArrivalsReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
+procedure ShowArrivalsReport(aDate: TDate; aLoadImmediate: Boolean = False);
 var
   frm: TfrmArrivalsReport;
 begin
   frm := TfrmArrivalsReport.Create(nil);
   try
-    if Tomorrow then
+    if aDate = TDateTime.Today then
+      frm.rbToday.Checked := true
+    else if aDate = TDateTime.Tomorrow then
+      frm.rbTomorrow.Checked := True
+    else
     begin
-      frm.rbTomorrow.Checked := True;
-      frm.UpdateControls;
+      frm.rbManualRange.Checked := true;
+      frm.dtDateFrom.Date := aDate;
+      frm.dtDateTo.Date := aDate;
     end;
-    if AutoClick then
+    frm.UpdateControls;
+    if aLoadImmediate then
       frm.btnRefresh.Click;
     frm.ShowModal;
-    Result := (frm.modalresult = mrOk);
   finally
     frm.Free;
   end;

@@ -10319,7 +10319,7 @@ end;
 procedure TfrmMain.btnRepArrivalsClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  ShowArrivalsReport(true);
+  ShowArrivalsReport(dtDate.Date, True);
   _Refresh;
 end;
 
@@ -10758,7 +10758,7 @@ end;
 procedure TfrmMain.btnRptDeparturesClick(Sender: TObject);
 begin
   LogUserClickedButton(Sender);
-  ShowDeparturesReport;
+  ShowDeparturesReport(dtDate.Date);
 end;
 
 procedure TfrmMain.btnRptFinanceForecastClick(Sender: TObject);

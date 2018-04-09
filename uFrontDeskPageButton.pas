@@ -161,19 +161,19 @@ end;
 
 procedure TFrmFrontDeskPageButton.Shape2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  ShowDeparturesReport(true);
+  ShowDeparturesReport(FShowFromDate, true);
   RefreshDisplay;
 end;
 
 procedure TFrmFrontDeskPageButton.Shape3MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  ShowArrivalsReport(true, true);
+  ShowArrivalsReport(TDateTime(FShowFromDate).AddDays(1), true);
   RefreshDisplay;
 end;
 
 procedure TFrmFrontDeskPageButton.Shape4MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  ShowDeparturesReport(true, true);
+  ShowDeparturesReport(TDateTime(FShowFromDate).AddDays(1), true);
   RefreshDisplay;
 end;
 
@@ -211,19 +211,19 @@ begin
 
       if (lDate = FSHowFromDate) then
       begin
-        lblArrivals.Caption := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
-        lblDepartures.Caption := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
+        lblArrivals.Caption := lStats.Statistic['REMAINING_ARRIVALS'].FormattedValue;
+        lblDepartures.Caption := lStats.Statistic['REMAINING_DEPARTURES'].FormattedValue;
         lblInHouse.Caption := lStats.Statistic['IN_HOUSE'].FormattedValue;
       end;
 
       if (lDate = TDateTime(FSHowFromDate).AddDays(1)) then
       begin
-        lblTomArrivals.Caption := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
-        lblTomDepartures.Caption := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
+        lblTomArrivals.Caption := lStats.Statistic['REMAINING_ARRIVALS'].FormattedValue;
+        lblTomDepartures.Caption := lStats.Statistic['REMAINING_DEPARTURES'].FormattedValue;
       end;
 
-      StatGrid.Cells[i+1, ROW_ARRIVALS]     := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
-      StatGrid.Cells[i+1, ROW_DEPARTURES]   := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_ARRIVALS]     := lStats.Statistic['REMAINING_ARRIVALS'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_DEPARTURES]   := lStats.Statistic['REMAINING_DEPARTURES'].FormattedValue;
       StatGrid.Cells[i+1, ROW_LEFT_TO_SELL] := lStats.Statistic['LEFT_TO_SELL'].FormattedValue;
       StatGrid.Cells[i+1, ROW_OCCUPANCY]    := lStats.Statistic['OCCUPANCY'].FormattedValue;
       StatGrid.Cells[i+1, ROW_BAR]          := lStats.Statistic['BAR'].FormattedValue;
@@ -257,7 +257,7 @@ end;
 
 procedure TFrmFrontDeskPageButton.sPanel1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  ShowArrivalsReport(true);
+  ShowArrivalsReport(FShowFromDate, True);
   RefreshDisplay;
 end;
 

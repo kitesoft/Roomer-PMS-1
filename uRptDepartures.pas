@@ -119,9 +119,9 @@ type
 
 
 /// <summary>
-///   Global access point for showing the arrival report form, If Modalresult is OK then True is returned
+///   Global access point for showing the departures report form
 /// </summary>
-function ShowDeparturesReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
+procedure ShowDeparturesReport(aDate: TDate; aLoadImmediate: Boolean = False);
 
 implementation
 
@@ -146,7 +146,10 @@ uses
   , uInvoiceContainer
   , uSQLUtils
   , uDataSetFilterUtils
-  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager;
+  , ufrmInvoiceEdit, uInvoiceDefinitions, uRoomerCurrencymanager
+  , uDateTimeHelper
+  , DateUtils
+  ;
 
 
 const
@@ -298,21 +301,26 @@ begin
 end;
 
 
-function ShowDeparturesReport(AutoClick : Boolean = False; Tomorrow : Boolean = False): boolean;
+procedure ShowDeparturesReport(aDate: TDate; aLoadImmediate: Boolean = False);
 var
   frm: TfrmDeparturesReport;
 begin
   frm := TfrmDeparturesReport.Create(nil);
   try
-    if Tomorrow then
+    if aDate = TDateTime.Today then
+      frm.rbToday.Checked := true
+    else if aDate = TDateTime.Tomorrow then
+      frm.rbTomorrow.Checked := True
+    else
     begin
-      frm.rbTomorrow.Checked := True;
-      frm.UpdateControls;
+      frm.rbManualRange.Checked := true;
+      frm.dtDateFrom.Date := aDate;
+      frm.dtDateTo.Date := aDate;
     end;
-    if AutoClick then
+    frm.UpdateControls;
+    if aLoadImmediate then
       frm.btnRefresh.Click;
     frm.ShowModal;
-    Result := (frm.modalresult = mrOk);
   finally
     frm.Free;
   end;
