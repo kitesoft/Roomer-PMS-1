@@ -264,7 +264,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           TabOrder = 1
           OnClick = btnReportStatsClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 2
         end
       end
       object grStat: TcxGrid
@@ -275,7 +274,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitTop = 41
         object tvStat: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = StatDS
@@ -468,8 +466,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             PropertiesClassName = 'TcxCurrencyEditProperties'
             OnGetProperties = tvStatsGetDefaultCurrencyProperties
             HeaderAlignmentHorz = taCenter
-            HeaderHint = 'This is the header hint for Revenues'
-            HeaderImageIndex = 134
             Width = 70
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -482,7 +478,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Properties.DisplayFormat = ',0.%;-,0.%'
             HeaderAlignmentHorz = taCenter
             HeaderHint = 'Occupancy'
-            HeaderImageIndex = 134
             Width = 88
             Position.BandIndex = 1
             Position.ColIndex = 1
@@ -495,7 +490,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             OnGetProperties = tvStatsGetDefaultCurrencyProperties
             HeaderAlignmentHorz = taCenter
             HeaderHint = 'Average daily rates'
-            HeaderImageIndex = 134
             Position.BandIndex = 1
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -507,7 +501,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             OnGetProperties = tvStatsGetDefaultCurrencyProperties
             HeaderAlignmentHorz = taCenter
             HeaderHint = '{RevParDefinition}'
-            HeaderImageIndex = 134
             Width = 70
             Position.BandIndex = 1
             Position.ColIndex = 3
@@ -851,9 +844,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           Height = 89
           Hint = 'Future extension'
           Align = alLeft
-          Caption = 'Compare on room type'
+          Caption = 'Compare on room type <Future extension>'
           Enabled = False
           TabOrder = 4
+          Visible = False
           object clbCompareRoomTypes: TsCheckListBox
             Left = 2
             Top = 15
@@ -4530,7 +4524,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     object grdPrinterLinkComparison: TdxGridReportLink
       Active = True
       Component = grdComparison
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -4552,7 +4545,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43194.583583993060000000
+      ReportDocument.CreationDate = 43199.367799120370000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -4560,7 +4553,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportTitle.Font.Style = [fsBold]
       ReportTitle.Text = 'Roomrent Comparison'
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -4574,7 +4566,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object grdPrinterLinkStats: TdxGridReportLink
       Component = grStat
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -4592,7 +4583,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportDocument.Creator = 'Roomer'
       ReportTitle.Text = 'Roomrent Statistics'
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

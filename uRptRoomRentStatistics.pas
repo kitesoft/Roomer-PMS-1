@@ -775,6 +775,8 @@ begin
       begin
         aDataSet.Append;
         aDataset.FieldByName('ADate').AsDateTime := lCurrentDate;
+        aDataset.FieldByName('minRate').asFloat := lStat.Statistic['MINRATE'].Value;
+        aDataset.FieldByName('maxRate').asFloat := lStat.Statistic['MAXRATE'].Value;
       end;
       try
         aDataset.FieldByName('revenue').asFloat := aDataset.FieldByName('revenue').asFloat  + lStat.Statistic['REVENUE'].Value;
@@ -858,14 +860,16 @@ begin
       begin
         kbmComparison.Append;
         kbmComparisonADate.AsDateTime := lCurrentDate;
+        kbmComparisonmaxRateBase.AsFloat := kbmStat.FieldByName('maxRate').asFloat;
+        kbmComparisonminRateBase.AsFloat := kbmStat.FieldByName('minRate').asFloat;
       end;
 
       try
         kbmComparisonaDateBase.AsDateTime :=                    kbmComparisonaDateBase.AsDateTime + kbmStat.FieldByName('adate').asDateTime;
         kbmComparisonrevenueBase.asFloat :=                     kbmComparisonrevenueBase.asFloat + kbmStat.FieldByName('revenue').asFloat;
         kbmComparisontotalDiscountBase.asFloat :=               kbmComparisontotalDiscountBase.asFloat + kbmStat.FieldByName('totalDiscount').asFloat;
-        kbmComparisonmaxRateBase.asFloat :=                     kbmComparisonmaxRateBase.asFloat + kbmStat.FieldByName('maxRate').asFloat;
-        kbmComparisonminRateBase.asFloat :=                     kbmComparisonminRateBase.asFloat + kbmStat.FieldByName('minRate').asFloat;
+        kbmComparisonmaxRateBase.asFloat :=                     max(kbmComparisonmaxRateBase.asFloat, kbmStat.FieldByName('maxRate').asFloat);
+        kbmComparisonminRateBase.asFloat :=                     min(kbmComparisonminRateBase.asFloat, kbmStat.FieldByName('minRate').asFloat);
         kbmComparisontotalGuestsBase.AsInteger :=               kbmComparisontotalGuestsBase.AsInteger + kbmStat.FieldByName('totalGuests').AsInteger;
         kbmComparisontotalSellableRoomsBase.AsInteger :=        kbmComparisontotalSellableRoomsBase.AsInteger + kbmStat.FieldByName('totalSellableRooms').AsInteger;
         kbmComparisonoooROomsBase.AsInteger :=                  kbmComparisonoooROomsBase.AsInteger + kbmStat.FieldByName('oooROoms').AsInteger;
