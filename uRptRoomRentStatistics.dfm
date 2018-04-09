@@ -451,10 +451,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           end
           object tvStatsWeekday: TcxGridDBBandedColumn
             Caption = 'Weekday'
-            DataBinding.FieldName = 'ADate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'ddd'
+            DataBinding.FieldName = 'weekday'
+            PropertiesClassName = 'TcxTextEditProperties'
             HeaderAlignmentHorz = taCenter
+            Options.FilteringFilteredItemsList = False
             Width = 62
             Position.BandIndex = 0
             Position.ColIndex = 0
@@ -1434,9 +1434,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             end>
           object tvComparisonDateBaseDay: TcxGridDBBandedColumn
             Caption = 'Day'
-            DataBinding.FieldName = 'aDateBase'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'ddd'
+            DataBinding.FieldName = 'weekdayBase'
+            PropertiesClassName = 'TcxTextEditProperties'
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -1563,9 +1562,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           end
           object tvComparisonDateDay: TcxGridDBBandedColumn
             Caption = 'Day'
-            DataBinding.FieldName = 'ADate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'ddd'
+            DataBinding.FieldName = 'weekday'
+            PropertiesClassName = 'TcxTextEditProperties'
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -1874,6 +1872,11 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     AttachedAutoRefresh = True
     AttachMaxCount = 1
     FieldDefs = <
+      item
+        Name = 'Weekday'
+        DataType = ftWideString
+        Size = 20
+      end
       item
         Name = 'ADate'
         DataType = ftDate
@@ -4064,6 +4067,12 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     OnCalcFields = kbmComparisonCalcFields
     Left = 496
     Top = 464
+    object kbmComparisonweekdayBase: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'weekdayBase'
+      Size = 10
+      Calculated = True
+    end
     object kbmComparisonADateBase: TDateField
       DisplayLabel = 'Date'
       FieldName = 'aDateBase'
@@ -4125,6 +4134,12 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     object kbmComparisonrevenue: TFloatField
       DisplayLabel = 'Revenue'
       FieldName = 'revenue'
+    end
+    object kbmComparisonweekday: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'weekday'
+      Size = 10
+      Calculated = True
     end
     object kbmComparisonADate: TDateField
       DisplayLabel = 'Date'
@@ -4524,6 +4539,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     object grdPrinterLinkComparison: TdxGridReportLink
       Active = True
       Component = grdComparison
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -4545,7 +4561,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43199.367799120370000000
+      ReportDocument.CreationDate = 43199.447474351850000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -4553,6 +4569,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportTitle.Font.Style = [fsBold]
       ReportTitle.Text = 'Roomrent Comparison'
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -4566,6 +4583,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object grdPrinterLinkStats: TdxGridReportLink
       Component = grStat
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -4583,6 +4601,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportDocument.Creator = 'Roomer'
       ReportTitle.Text = 'Roomrent Statistics'
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

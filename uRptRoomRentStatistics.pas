@@ -341,6 +341,8 @@ type
     grdPrinter: TdxComponentPrinter;
     grdPrinterLinkComparison: TdxGridReportLink;
     grdPrinterLinkStats: TdxGridReportLink;
+    kbmComparisonweekdayBase: TWideStringField;
+    kbmComparisonweekday: TWideStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure dtDateChange(Sender: TObject);
@@ -493,6 +495,9 @@ begin
   kbmComparisonTotalSellableRoomsDiff.AsInteger := kbmComparisontotalSellableRoomsBase.AsInteger - kbmComparisontotalSellableRooms.AsInteger;
   kbmComparisonOooRoomsDiff.AsInteger := kbmComparisonoooRoomsBase.AsInteger - kbmComparisonoooRooms.AsInteger;
   kbmComparisonSoldRoomsDiff.AsInteger := kbmComparisonsoldRoomsBase.AsInteger - kbmComparisonsoldRooms.AsInteger;
+
+  kbmComparisonweekdayBase.AsString := kbmComparisonaDateBase.AsDateTime.ToString('ddd');
+  kbmComparisonweekday.AsString := kbmComparisonaDate.AsDateTime.ToString('ddd');
 end;
 
 function TfrmRptRoomRentStatistics.GetFooterSummaryText(aColumn: TcxGridDBBandedColumn): string;
@@ -775,6 +780,7 @@ begin
       begin
         aDataSet.Append;
         aDataset.FieldByName('ADate').AsDateTime := lCurrentDate;
+        aDataset.FieldByName('Weekday').AsString :=  lCurrentDate.ToString('ddd');
         aDataset.FieldByName('minRate').asFloat := lStat.Statistic['MINRATE'].Value;
         aDataset.FieldByName('maxRate').asFloat := lStat.Statistic['MAXRATE'].Value;
       end;
