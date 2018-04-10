@@ -341,8 +341,8 @@ type
     grdPrinter: TdxComponentPrinter;
     grdPrinterLinkComparison: TdxGridReportLink;
     grdPrinterLinkStats: TdxGridReportLink;
-    kbmComparisonweekdayBase: TWideStringField;
-    kbmComparisonweekday: TWideStringField;
+    kbmComparisonweekdayBase: TStringField;
+    kbmComparisonweekday: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure dtDateChange(Sender: TObject);
@@ -365,6 +365,8 @@ type
     procedure btnComparisonExcelClick(Sender: TObject);
     procedure tvComparisonDataControllerSummaryAfterSummary(ASender: TcxDataSummary);
     procedure btnReportStatsClick(Sender: TObject);
+    procedure GetWeekdayFilterValues(Sender: TcxCustomGridTableItem;
+      AValueList: TcxDataFilterValueList);
   private
     { Private declarations }
 
@@ -495,9 +497,6 @@ begin
   kbmComparisonTotalSellableRoomsDiff.AsInteger := kbmComparisontotalSellableRoomsBase.AsInteger - kbmComparisontotalSellableRooms.AsInteger;
   kbmComparisonOooRoomsDiff.AsInteger := kbmComparisonoooRoomsBase.AsInteger - kbmComparisonoooRooms.AsInteger;
   kbmComparisonSoldRoomsDiff.AsInteger := kbmComparisonsoldRoomsBase.AsInteger - kbmComparisonsoldRooms.AsInteger;
-
-  kbmComparisonweekdayBase.AsString := kbmComparisonaDateBase.AsDateTime.ToString('ddd');
-  kbmComparisonweekday.AsString := kbmComparisonaDate.AsDateTime.ToString('ddd');
 end;
 
 function TfrmRptRoomRentStatistics.GetFooterSummaryText(aColumn: TcxGridDBBandedColumn): string;
@@ -550,6 +549,16 @@ begin
   CalculateTvComparisonDiffFooterSummary;
 end;
 
+
+procedure TfrmRptRoomRentStatistics.GetWeekdayFilterValues(Sender: TcxCustomGridTableItem;
+  AValueList: TcxDataFilterValueList);
+var
+  i: integer;
+begin
+  aValueList.SortByDisplayText := false;
+  for i := 1 to 7 do
+    aValueList.Add(fviValue, FormatSettings.ShortDayNames[i], FormatSettings.LongDayNames[i], true);
+end;
 
 procedure TfrmRptRoomRentStatistics.CalculateTvComparisonDiffFooterSummary;
 begin
@@ -780,7 +789,7 @@ begin
       begin
         aDataSet.Append;
         aDataset.FieldByName('ADate').AsDateTime := lCurrentDate;
-        aDataset.FieldByName('Weekday').AsString :=  lCurrentDate.ToString('ddd');
+        aDataset.FieldByName('weekday').AsString := lCurrentdate.ToString('ddd');
         aDataset.FieldByName('minRate').asFloat := lStat.Statistic['MINRATE'].Value;
         aDataset.FieldByName('maxRate').asFloat := lStat.Statistic['MAXRATE'].Value;
       end;
@@ -866,12 +875,14 @@ begin
       begin
         kbmComparison.Append;
         kbmComparisonADate.AsDateTime := lCurrentDate;
+        kbmComparisonweekday.AsString := lCurrentDate.ToString('ddd');
         kbmComparisonmaxRateBase.AsFloat := kbmStat.FieldByName('maxRate').asFloat;
         kbmComparisonminRateBase.AsFloat := kbmStat.FieldByName('minRate').asFloat;
       end;
 
       try
-        kbmComparisonaDateBase.AsDateTime :=                    kbmComparisonaDateBase.AsDateTime + kbmStat.FieldByName('adate').asDateTime;
+        kbmComparisonaDateBase.AsDateTime := kbmStat.FieldByName('adate').asDateTime;
+        kbmComparisonweekdayBase.AsString := kbmComparisonaDateBase.AsDateTime.ToString('ddd');
         kbmComparisonrevenueBase.asFloat :=                     kbmComparisonrevenueBase.asFloat + kbmStat.FieldByName('revenue').asFloat;
         kbmComparisontotalDiscountBase.asFloat :=               kbmComparisontotalDiscountBase.asFloat + kbmStat.FieldByName('totalDiscount').asFloat;
         kbmComparisonmaxRateBase.asFloat :=                     max(kbmComparisonmaxRateBase.asFloat, kbmStat.FieldByName('maxRate').asFloat);

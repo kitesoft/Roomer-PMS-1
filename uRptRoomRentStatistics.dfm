@@ -220,9 +220,18 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Top = 89
     Width = 1459
     Height = 535
-    ActivePage = tsComparison
+    ActivePage = tabStatGrid
     Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    Style = tsButtons
+    TabHeight = 35
     TabOrder = 2
+    TabPadding = 5
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
@@ -270,7 +279,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Left = 0
         Top = 43
         Width = 1451
-        Height = 464
+        Height = 447
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
@@ -453,8 +462,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Caption = 'Weekday'
             DataBinding.FieldName = 'weekday'
             PropertiesClassName = 'TcxTextEditProperties'
+            Properties.Alignment.Horz = taCenter
+            OnGetFilterValues = GetWeekdayFilterValues
             HeaderAlignmentHorz = taCenter
-            Options.FilteringFilteredItemsList = False
+            Options.FilteringAddValueItems = False
             Width = 62
             Position.BandIndex = 0
             Position.ColIndex = 0
@@ -699,6 +710,8 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tsComparison: TsTabSheet
       Caption = 'Comparison'
+      ExplicitTop = 27
+      ExplicitHeight = 504
       object sPanel3: TsPanel
         Left = 0
         Top = 0
@@ -914,9 +927,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Left = 0
         Top = 97
         Width = 1451
-        Height = 410
+        Height = 393
         Align = alClient
         TabOrder = 1
+        ExplicitTop = 95
         object grdComparisonDBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.Summary.DefaultGroupSummaryItems = <>
@@ -1436,6 +1450,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Caption = 'Day'
             DataBinding.FieldName = 'weekdayBase'
             PropertiesClassName = 'TcxTextEditProperties'
+            Properties.Alignment.Horz = taCenter
+            OnGetFilterValues = GetWeekdayFilterValues
+            HeaderAlignmentHorz = taCenter
+            Options.FilteringAddValueItems = False
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -1564,6 +1582,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Caption = 'Day'
             DataBinding.FieldName = 'weekday'
             PropertiesClassName = 'TcxTextEditProperties'
+            Properties.Alignment.Horz = taCenter
+            OnGetFilterValues = GetWeekdayFilterValues
+            HeaderAlignmentHorz = taCenter
+            Options.FilteringAddValueItems = False
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -1785,7 +1807,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Left = 0
         Top = 0
         Width = 1451
-        Height = 507
+        Height = 490
         ActivePage = tabOcc
         Align = alClient
         TabOrder = 0
@@ -1821,7 +1843,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Left = 0
             Top = 33
             Width = 1443
-            Height = 446
+            Height = 426
             Legend.Visible = False
             SubTitle.Font.Color = clBlack
             Title.Text.Strings = (
@@ -1873,9 +1895,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     AttachMaxCount = 1
     FieldDefs = <
       item
-        Name = 'Weekday'
-        DataType = ftWideString
-        Size = 20
+        Name = 'weekday'
+        DataType = ftString
+        Size = 10
       end
       item
         Name = 'ADate'
@@ -3961,7 +3983,12 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     AttachMaxCount = 1
     FieldDefs = <
       item
-        Name = 'ADate'
+        Name = 'weekdayBase'
+        DataType = ftString
+        Size = 10
+      end
+      item
+        Name = 'aDateBase'
         DataType = ftDate
       end
       item
@@ -4007,6 +4034,15 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       item
         Name = 'soldRoomsBase'
         DataType = ftInteger
+      end
+      item
+        Name = 'ADate'
+        DataType = ftDate
+      end
+      item
+        Name = 'weekday'
+        DataType = ftString
+        Size = 20
       end
       item
         Name = 'revenue'
@@ -4067,11 +4103,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     OnCalcFields = kbmComparisonCalcFields
     Left = 496
     Top = 464
-    object kbmComparisonweekdayBase: TWideStringField
-      FieldKind = fkCalculated
+    object kbmComparisonweekdayBase: TStringField
       FieldName = 'weekdayBase'
       Size = 10
-      Calculated = True
     end
     object kbmComparisonADateBase: TDateField
       DisplayLabel = 'Date'
@@ -4135,11 +4169,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       DisplayLabel = 'Revenue'
       FieldName = 'revenue'
     end
-    object kbmComparisonweekday: TWideStringField
-      FieldKind = fkCalculated
+    object kbmComparisonweekday: TStringField
       FieldName = 'weekday'
       Size = 10
-      Calculated = True
     end
     object kbmComparisonADate: TDateField
       DisplayLabel = 'Date'
@@ -4561,7 +4593,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43199.447474351850000000
+      ReportDocument.CreationDate = 43200.571612557870000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
