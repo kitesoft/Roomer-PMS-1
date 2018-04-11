@@ -9,6 +9,9 @@
         <Projects Include="Utils\UpgradeDaemon\RoomerUpgradeDaemon.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Utils\RoomerDataConvert\RoomerDataConvert.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="RoomerUpgradeDaemon:Make">
         <MSBuild Projects="Utils\UpgradeDaemon\RoomerUpgradeDaemon.dproj" Targets="Make"/>
     </Target>
+    <Target Name="RoomerDataConvert">
+        <MSBuild Projects="Utils\RoomerDataConvert\RoomerDataConvert.dproj"/>
+    </Target>
+    <Target Name="RoomerDataConvert:Clean">
+        <MSBuild Projects="Utils\RoomerDataConvert\RoomerDataConvert.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RoomerDataConvert:Make">
+        <MSBuild Projects="Utils\RoomerDataConvert\RoomerDataConvert.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Roomer;RoomerUpgradeDaemon"/>
+        <CallTarget Targets="Roomer;RoomerUpgradeDaemon;RoomerDataConvert"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Roomer:Clean;RoomerUpgradeDaemon:Clean"/>
+        <CallTarget Targets="Roomer:Clean;RoomerUpgradeDaemon:Clean;RoomerDataConvert:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Roomer:Make;RoomerUpgradeDaemon:Make"/>
+        <CallTarget Targets="Roomer:Make;RoomerUpgradeDaemon:Make;RoomerDataConvert:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
