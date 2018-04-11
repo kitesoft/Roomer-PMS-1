@@ -641,7 +641,6 @@ var s : String;
   Res : TResInfo;
   RoomRes : TRoomInfo;
   Pers : TPersonInfo;
-  aDate : TDateTime;
 begin
   result := TStringList.Create;
 
@@ -875,10 +874,11 @@ begin
            'Reservation, ' +
            'Status, ' +
            'GroupAccount, ' +
-           'invBreakfast, ' +
+//           'invBreakfast, ' +
+           'Breakfast, ' +
            'Currency, ' +
            'Discount, ' +
-           'Percentage, ' +
+//           'Percentage, ' +
            'PriceType, ' +
            'Arrival, ' +
            'Departure, ' +
@@ -908,7 +908,7 @@ begin
            '''{Reservation}'', ' +
            '''{Status}'', ' +
            '''{GroupAccount}'', ' +
-           '''{invBreakfast}'', ' +
+           '''{Breakfast}'', ' +
            '''{Currency}'', ' +
            '''{Discount}'', ' +
            '''{Percentage}'', ' +
@@ -940,16 +940,16 @@ begin
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-             ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
+             ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(s, '{RoomReservation}', inttostr(RoomRes.RoomReservation)),
           '{Room}',  RoomRes.Room),
           '{Reservation}', inttostr(Res.Reservation)),
           '{Status}', RoomRes.Status),
           '{GroupAccount}', BoolToString_0_1(RoomRes.GroupAccount)),
-          '{invBreakfast}', BoolToString_0_1(RoomRes.Breakfast)),
+          '{Breakfast}', IIF(RoomRes.Breakfast, 'INCLUDED', 'NONE')),
           '{Currency}', RoomRes.Currency),
           '{Discount}', FloatToDBString(RoomRes.Discount)),
-          '{Percentage}', BoolToString_0_1(RoomRes.Percentage)),
+//          '{Percentage}', BoolToString_0_1(RoomRes.Percentage)),
           '{PriceType}', RoomRes.PriceType),
           '{Arrival}', dateToSqlString(Res.Arrival)),
           '{Departure}', dateToSqlString(Res.Departure)),
@@ -1213,40 +1213,60 @@ begin
              '''{HallReservation}'', ' +
              '''{hgrID}'');';
 
-        s := ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-             ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-             ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-             ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-             ReplaceStr(s, '{RoomReservation}', inttostr(RoomRes.RoomReservation)),
-             '{Reservation}', inttostr(Res.Reservation)),
-             '{title}', Pers.Title),
-             '{Name}', _db(Pers.Name)),
-             '{Surname}', _db(Pers.Surname)),
-             '{Address1}', _db(Pers.Address1)),
-             '{Address2}', _db(Pers.Address2)),
-             '{Address3}', _db(Pers.Address3)),
-             '{Address4}', _db(Pers.Address4)),
-             '{Country}', _db(Pers.Country)),
-             '{Company}', _db(Res.Customer)),
-             '{Tel1}', _db(Pers.Tel1)),
-             '{Tel2}', _db(Pers.Tel2)),
-             '{Fax}', _db(Pers.Fax)),
-             '{Email}', _db(Pers.Email)),
-             '{GuestType}', ''),
-             '{Information}', _db(Pers.Information)),
-             '{PID}', inttostr(Pers.PersonId)),
-             '{MainName}', BoolToString_0_1(p=0)),
-             '{Customer}', Res.Customer),
-
-             '{DateOfBirth}', _db(pers.GuestDateOfBirth)),
-             '{Nationality}', _db(pers.GuestNationality)),
-             '{SocialSecurityNumber}', _db(Pers.GuestSocialSecurityNumber)),
-             '{PersonalIdentificationId}', _db(Pers.GuestPassportNumber)),
-
-
-             '{peTmp}', ''),
+        s := ReplaceStr(
+              ReplaceStr(
+                ReplaceStr(
+                  ReplaceStr(
+                    ReplaceStr(
+                      ReplaceStr(
+                        ReplaceStr(
+                          ReplaceStr(
+                            ReplaceStr(
+                              ReplaceStr(
+                                ReplaceStr(
+                                  ReplaceStr(
+                                    ReplaceStr(
+                                      ReplaceStr(
+                                        ReplaceStr(
+                                          ReplaceStr(
+                                            ReplaceStr(
+                                              ReplaceStr(
+                                                ReplaceStr(
+                                                  ReplaceStr(
+                                                    ReplaceStr(
+                                                      ReplaceStr(
+                                                        ReplaceStr(
+                                                          ReplaceStr(
+                                                            ReplaceStr(
+                                                              ReplaceStr(
+                                                                ReplaceStr(s,
+                                                                '{RoomReservation}', inttostr(RoomRes.RoomReservation)),
+                                                              '{Reservation}', inttostr(Res.Reservation)),
+                                                            '{title}', Pers.Title),
+                                                          '{Name}', _db(Pers.Name)),
+                                                        '{Surname}', _db(Pers.Surname)),
+                                                      '{Address1}', _db(Pers.Address1)),
+                                                    '{Address2}', _db(Pers.Address2)),
+                                                  '{Address3}', _db(Pers.Address3)),
+                                                '{Address4}', _db(Pers.Address4)),
+                                              '{Country}', _db(Pers.Country)),
+                                            '{Company}', _db(Res.Customer)),
+                                          '{Tel1}', _db(Pers.Tel1)),
+                                        '{Tel2}', _db(Pers.Tel2)),
+                                      '{Fax}', _db(Pers.Fax)),
+                                    '{Email}', _db(Pers.Email)),
+                                  '{GuestType}', ''),
+                                '{Information}', _db(Pers.Information)),
+                              '{PID}', inttostr(Pers.PersonId)),
+                           '{MainName}', BoolToString_0_1(p=0)),
+                         '{Customer}', Res.Customer),
+                       '{DateOfBirth}', _db(pers.GuestDateOfBirth)),
+                     '{Nationality}', _db(pers.GuestNationality)),
+                   '{SocialSecurityNumber}', _db(Pers.GuestSocialSecurityNumber)),
+                 '{PersonalIdentificationId}', _db(Pers.GuestPassportNumber)),
+               '{peTmp}', ''),
              '{HallReservation}', '-1'),
-             '{hgrID}', '-1');
+           '{hgrID}', '-1');
 
 
         result.Add(s);
@@ -1340,7 +1360,7 @@ begin
              '{TaxesUnbilled}', '0'),
              '{PriceCode}', 'RACK'),
              '{RoomRate}', FloatToDBString(RoomRes.Price)),
-             '{Currency}', 'EUR'),
+             '{Currency}', RoomRes.Currency),
              '{Discount}', '0'),
              '{isPercentage}', '1'),
              '{showDiscount}', '1'),

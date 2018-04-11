@@ -242,6 +242,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       Align = alLeft
       Caption = 'Excel'
       TabOrder = 0
+      OnClick = btnExcelClick
       SkinData.SkinSection = 'BUTTON'
     end
     object btnProcessIntoRoomer: TsButton

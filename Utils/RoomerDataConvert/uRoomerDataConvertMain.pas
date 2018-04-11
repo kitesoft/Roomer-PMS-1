@@ -116,6 +116,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure sButton1Click(Sender: TObject);
+    procedure btnExcelClick(Sender: TObject);
   private
     iHeaders : TList<Integer>;
     procedure getCounters(var ResId, PersId: Integer; RoomResIds : TStrings; NumRoomResIds : Integer);
@@ -146,9 +147,10 @@ uses uDataUnit,
      uStringUtils,
      uDataBuilder,
      uCSVData,
-     OleAuto,
+     ComObj, //OleAuto,
      uUtils,
-     uSqlUtils
+     uSqlUtils,
+     UITypes
     ;
 
 
@@ -161,6 +163,7 @@ begin
    // Ignore exceptions
   end;
   iHeaders.Free;
+  CSVFileContent.Free;
 end;
 
 procedure TfrmRoomerDataConvertMain.FormCreate(Sender: TObject);
@@ -545,6 +548,12 @@ begin
 //  begin
 //    saveCounters(ResId, RoomResId, PersId);
 //  end;
+end;
+
+procedure TfrmRoomerDataConvertMain.btnExcelClick(Sender: TObject);
+begin
+  if FileExists(edFIleName.FileName) then
+    ShellExecute(Handle, 'OPEN', PChar(edFilename.FileName), nil, nil, sw_shownormal);
 end;
 
 procedure TfrmRoomerDataConvertMain.btnImportCustomersClick(Sender: TObject);
