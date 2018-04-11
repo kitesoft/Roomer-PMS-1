@@ -64,3 +64,5 @@ Utils/*.exe
 Extras/jcl/lib/
 
 RoomerPMSRelease/rdp.ftp
+
+*.vrc

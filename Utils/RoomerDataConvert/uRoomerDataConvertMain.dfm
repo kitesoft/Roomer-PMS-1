@@ -99,7 +99,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      Text = 'hj'
       SkinData.SkinSection = 'EDIT'
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
@@ -108,8 +107,8 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       BoundLabel.Font.Style = []
     end
     object edtPassword: TsEdit
-      Left = 63
-      Top = 54
+      Left = 62
+      Top = 57
       Width = 166
       Height = 21
       Margins.Left = 2
@@ -125,7 +124,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
       ParentFont = False
       PasswordChar = '*'
       TabOrder = 2
-      Text = 'hordur'
       SkinData.SkinSection = 'EDIT'
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
@@ -312,8 +310,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
             Margins.Right = 2
             Margins.Bottom = 2
             Caption = 'Comma delimited data'
-            ExplicitLeft = 3
-            ExplicitTop = 28
             object sLabel4: TsLabel
               Left = 16
               Top = 17
@@ -360,7 +356,7 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
                   'he Excel sheet.')
               ParentFont = False
               Transparent = True
-              Version = '1.9.2.8'
+              Version = '1.9.2.7'
             end
             object sPanel5: TsPanel
               Left = 0
@@ -520,24 +516,6 @@ object frmRoomerDataConvertMain: TfrmRoomerDataConvertMain
               SkinData.SkinSection = 'BUTTON'
             end
           end
-        end
-      end
-    end
-    object sTabSheet3: TsTabSheet
-      Caption = 'DK'
-      object sPageControl3: TsPageControl
-        Left = 0
-        Top = 0
-        Width = 1104
-        Height = 533
-        ActivePage = sTabSheet4
-        Align = alClient
-        TabOrder = 0
-        object sTabSheet4: TsTabSheet
-          Caption = 'sTabSheet4'
-        end
-        object sTabSheet5: TsTabSheet
-          Caption = 'sTabSheet5'
         end
       end
     end

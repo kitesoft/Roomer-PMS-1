@@ -85,7 +85,6 @@ type
     prgWorking: TUbuntuProgress;
     sPageControl2: TsPageControl;
     sTabSheet1: TsTabSheet;
-    sTabSheet3: TsTabSheet;
     sPanel1: TsPanel;
     sSplitter1: TsSplitter;
     sPageControl1: TsPageControl;
@@ -99,9 +98,6 @@ type
     memoResult: TsMemo;
     sPanel3: TsPanel;
     sButton2: TsButton;
-    sPageControl3: TsPageControl;
-    sTabSheet4: TsTabSheet;
-    sTabSheet5: TsTabSheet;
     lbStatus: TsLabel;
     edtSheetIndex: TsSpinEdit;
     sLabel5: TsLabel;
@@ -190,7 +186,7 @@ begin
   rSet := RoomerDataSet.CreateNewDataset;
   try
     rSet.CommandType := cmdText;
-    RoomerDataSet.DoCommand('UPDATE control SET LastReservation=(SELECT MAX(Reservation) FROM reservations), LastRoomRes=(SELECT MAX(RoomReservation) FROM roomreservations), LastPerson=(SELECT MAX(Person) FROM persons)');
+    rSet.DoCommand('UPDATE control SET LastReservation=(SELECT MAX(Reservation) FROM reservations), LastRoomRes=(SELECT MAX(RoomReservation) FROM roomreservations), LastPerson=(SELECT MAX(Person) FROM persons)');
   finally
     FreeAndNil(rSet);
   end;
@@ -203,9 +199,7 @@ end;
 
 function getVariantAsString(v : Variant; checkExistence : boolean) : String;
 var s : String;
-    bArrivalExisting : Boolean;
 begin
-  bArrivalExisting := False;
   s := '';
   if checkExistence then
     if String(v) = '' then
@@ -483,7 +477,6 @@ end;
 procedure TfrmRoomerDataConvertMain.getCounters(var ResId, PersId : Integer; RoomResIds : TStrings; NumRoomResIds : Integer);
 var rSet : TRoomerDataSet;
     sList : String;
-    list : TStrings;
 begin
   rSet := RoomerDataSet.CreateNewDataset;
   try
@@ -586,8 +579,6 @@ var l : Integer;
     defaultChannel, custNum, custPId : String;
     MissingField : String;
 
-    max : integer;
-
     custList : TStrings;
     resList : TStrings;
 
@@ -599,8 +590,6 @@ var l : Integer;
 
 //    myFile : TextFile;
 
-    Xlapp1, Sheet:Variant ;
-    X, Y:integer ;
     str:string;
     arrData:Variant;
     rows, cols : Integer;
@@ -657,7 +646,7 @@ begin
       MissingField := CheckReservationOfLine(sCurrent);
       if MissingField <> '' then
       begin
-        ShowMessage('Cannot continue because field(s) is/are missing: ' + #13#13);
+        ShowMessage('Cannot continue because field(s) is/are missing: ' + #13#13 + MissingField);
         exit;
       end;
       prgWorking.Position := line;
@@ -675,7 +664,6 @@ begin
       for line := 1 to CSVFileContent.Count - 1 do
       begin
         sCurrent := CSVFileContent[line];
-        numRooms := numRooms + NumRoomsOfLine(sCurrent);
         memoResult.Text := ''; // inttostr(i);
         memoResult.Text := memoResult.Text + '  ' + sCurrent;
         numRooms := NumRoomsOfLine(sCurrent);

@@ -49,12 +49,12 @@
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Manifest_File>None</Manifest_File>
-        <DCC_UnitSearchPath>..\..\_dcu;..\..\Extras\VSoft.CommandlineParser\src;..\..\Extras\Skin\AlphaSkins\Components;..\..\Extras\ICS\Source;..\..\RoomerVCLs\http;C:\Temp\dcu;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\..\Extras\VSoft.CommandlineParser\src;..\..\Extras\Skin\AlphaSkins\Components;..\..\Extras\ICS\Source;..\..\RoomerVCLs\http;C:\Temp\dcu;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS Upgrade Agent;FileVersion=2.0.0.0;InternalName=Upgrader;LegalCopyright=(C) 2013, Promoir BV;LegalTrademarks=Roomer is a registered trademark of Promoir BV;OriginalFilename=RoomerUpgradeAgent;ProductName=Roomer Open Hospitality Platform;ProductVersion=2.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1043</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-        <DCC_DcuOutput>..\..\_dcu\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\_dcu\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>..\..\_bin\$(Platform)</DCC_ExeOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">

@@ -151,13 +151,6 @@ end;
 procedure TCSVData.LoadFromFile(const FileName: string);
 var
   data: TStringList;
-  Val: string;
-  MyChar: Char;
-  LastChar: Char;
-  QuotePart: Boolean;
-  Col: Integer;
-  Row: Integer;
-  MaxCol: Integer;
 begin
   data := TStringList.Create;
   try

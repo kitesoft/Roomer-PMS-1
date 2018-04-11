@@ -1255,7 +1255,6 @@ begin
 
       for d := Trunc(Res.Arrival) to Trunc(Res.Departure) - 1 do
       begin
-        aDate := d;
 
         s := 'INSERT INTO roomsdate ' +
              '(ADate, ' +
@@ -1389,6 +1388,7 @@ function valueOfName(valueName, defaultValue : String; container : TStrings) : S
 var i: Integer;
     nameLowercase : String;
 begin
+  i := 0;
   try
     result := defaultValue;
     nameLowercase := Lowercase(valueName);
@@ -1481,7 +1481,6 @@ end;
 
 procedure CreateStandardCustomerLine(line : String);
 var container : TStrings;
-    i: Integer;
     Cust : TCustInfo;
 begin
     container := SplitStringToTStrings(ROOMER_FIELD_DELIMITER, line);
@@ -1537,7 +1536,6 @@ end;
 
 procedure CreateReservationCustomerLine(line : String);
 var container : TStrings;
-    i: Integer;
     Cust : TCustInfo;
     temp : String;
     rSet : TRoomerDataSet;
@@ -1640,18 +1638,9 @@ var container : TStrings;
     RoomRes : TRoomInfo;
     Temp : String;
     customerId,
-    customerPID,
-    custAddr1,
-    custAddr2,
-    custAddr3,
-    custAddr4,
-    custCountry,
-    custTel1,
-    custTel2,
-    custFax,
-    custEmail : String;
+    customerPID: string;
 
-    iRoomCounter, numRooms, l: Integer;
+    iRoomCounter, numRooms: Integer;
 
     ResId, RoomResId : Integer;
 
