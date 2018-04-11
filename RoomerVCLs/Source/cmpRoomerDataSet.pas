@@ -124,8 +124,6 @@ type
     FOnSessionExpired: TNotifyEvent;
 
     FroomerClient: TRoomerHttpClient;
-{$IFDEF USE_INDY}IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
-{$ENDIF}
     FCommandType: TCommandType;
     FSessionLengthSeconds: Integer;
     FLastAccess: TDateTime;
@@ -163,8 +161,7 @@ type
     procedure SetOpenApiUri(const Value: String);
     function PutAsString(const url, Data: String; const contentType: String = ''; retryOnError: boolean = true): String;
     function PostStreamAsString(const url: String; Data: TStream; const contentType: String = ''): String;
-    procedure SetOpenApiAuthHeaders(hdrs:
-{$IFDEF USE_INDY}TIdHeaderList{$ELSE}TAlHttpRequestHeader{$ENDIF});
+    procedure SetOpenApiAuthHeaders(hdrs: TAlHttpRequestHeader);
     // function GetOpenAPIResourcePath(Endpoint, URI: String): String;
     procedure SetOfflineMode(const Value: boolean);
     procedure AssertOnlineMode(param: TRoomerOfflineAssertonParameter = roapGet; const aSql: String = '');
@@ -637,7 +634,7 @@ begin
                 format('?hotelId=%s&user=%s&password=%s&appId=%s', [EncodeURIComponent(hotelId), EncodeURIComponent(username),
                 AnsiString(HashedPassword(password)), EncodeURIComponent(FApplicationID)]), '');
 
-    CopyToClipboard(res);
+//    CopyToClipboard(res);
     if res <> '' then
       parseXml(res, FAppKey, FAppSecret);
 
@@ -970,32 +967,21 @@ end;
 function TRoomerDataSet.DownloadFile(aRoomerClient: TRoomerHttpClient; const url, filename: String): boolean;
 var
   Stream: TFileStream;
-{$IFNDEF USE_INDY}
   aResponseContentHeader: TALHTTPResponseHeader;
-{$ENDIF}
 begin
-{$IFNDEF USE_INDY}
   aResponseContentHeader := TALHTTPResponseHeader.Create;
-{$ENDIF}
   Stream := TFileStream.Create(filename, fmCreate);
   try
     try
       AddAuthenticationHeaders(aRoomerClient);
-{$IFDEF USE_INDY}
-      aRoomerClient.handleRedirects := true; // Handle redirects
-      aRoomerClient.Get(url, Stream);
-{$ELSE}
       aRoomerClient.Get(AnsiString(url), Stream, aResponseContentHeader);
-{$ENDIF}
       Result := true;
     except
       Result := false;
     end;
   finally
     Stream.Free;
-{$IFNDEF USE_INDY}
     aResponseContentHeader.Free;
-{$ENDIF}
   end;
 end;
 
@@ -1010,15 +996,9 @@ begin
       exit;
     except
       on E:
-{$IFDEF USE_INDY}
-        Exception
-{$ELSE}
         EALHTTPClientException
-{$ENDIF}
         do
       begin
-{$IFDEF USE_INDY}
-{$ELSE}
         if RaiseException then
           Raise;
         if (E.StatusCode = 0) OR (E.StatusCode = 401) then
@@ -1047,7 +1027,6 @@ begin
           raise EALHTTPClientException.Create(AnsiString(format('Error during communication with server (GET): [%d] %s',
             [E.StatusCode, E.Message])));
         end;
-{$ENDIF}
       end;
     end;
 end;
@@ -1135,14 +1114,10 @@ begin
       exit;
     except
       on E:
-{$IFDEF USE_INDY}
-        Exception
-{$ELSE}
         EALHTTPClientException
-{$ENDIF}
         do
       begin
-        raise Exception.Create(format('Error during communication with server (GET): [%d] %s',
+        raise Exception.Create(format('Error during communication with server (POST): [%d] %s',
           [E.StatusCode, E.Message]));
       end;
       on E: Exception do
@@ -1187,7 +1162,7 @@ begin
 {$IFDEF DEBUG}
             ShowMessage('Error when communicating with Roomer backend: ' + inttostr(E.StatusCode) + ' - ' + E.Message);
 {$ENDIF}
-          raise Exception.Create(format('Error during communication with server (GET): [%d] %s',
+          raise Exception.Create(format('Error during communication with server (POST): [%d] %s',
             [E.StatusCode, E.Message]));
         end;
       end;
@@ -1209,15 +1184,9 @@ begin
       exit;
     except
       on E:
-{$IFDEF USE_INDY}
-        Exception
-{$ELSE}
         EALHTTPClientException
-{$ENDIF}
         do
       begin
-{$IFDEF USE_INDY}
-{$ELSE}
         if (E.StatusCode = 0) OR (E.StatusCode = 401) then
         begin
           if (loggingInOut = 0) then
@@ -1241,14 +1210,13 @@ begin
 {$IFDEF DEBUG}
             ShowMessage('Error when communicating with Roomer backend: ' + inttostr(E.StatusCode) + ' - ' + E.Message);
 {$ENDIF}
-          raise Exception.Create(format('Error during communication with server (GET): [%d] %s',
+          raise Exception.Create(format('Error during communication with server (PUT): [%d] %s',
             [E.StatusCode, E.Message]));
         end;
-{$ENDIF}
       end;
       on E: Exception do
       begin
-        raise Exception.Create(format('Error during communication with server (POST): %s', [E.Message]));
+        raise Exception.Create(format('Error during communication with server (PUT): %s', [E.Message]));
       end;
     end;
 end;
@@ -1261,15 +1229,9 @@ begin
       FLastAccess := now;
   except
     on E:
-{$IFDEF USE_INDY}
-      Exception
-{$ELSE}
       EALHTTPClientException
-{$ENDIF}
       do
     begin
-{$IFDEF USE_INDY}
-{$ELSE}
       if (E.StatusCode = 401) then
       begin
         raise Exception.Create('Unknown hotel, username and password combination');
@@ -1286,7 +1248,6 @@ begin
           raise Exception.Create('Internal Error ' + E.Message);
       end;
       raise;
-{$ENDIF}
     end;
   end;
 end;
@@ -1301,8 +1262,7 @@ begin
   FOfflineMode := Value;
 end;
 
-procedure TRoomerDataSet.SetOpenApiAuthHeaders(hdrs:
-{$IFDEF USE_INDY}TIdHeaderList{$ELSE}TAlHttpRequestHeader{$ENDIF});
+procedure TRoomerDataSet.SetOpenApiAuthHeaders(hdrs:TAlHttpRequestHeader);
 begin
   if TRIM(AppKey) = '' then
     exit;

@@ -2226,19 +2226,9 @@ begin
     rSet.CommandText := LowerCase(FilterTablenames(sSQL))
   else
     rSet.CommandText := FilterTablenames(sSQL);
-  try
-    rSet.open(doLowerCase, SetLastAccess);
-    result := not rSet.Eof;
-  except
-    on e: exception do
-    begin
-      DebugMessage(e.Message);
-       uStringUtils.CopyToClipboard(Rset.CommandText);
-      // result := false;
-      // errMsg := e.message;
-      raise;
-    end;
-  end;
+
+  rSet.open(doLowerCase, SetLastAccess);
+  result := not rSet.Eof;
 end;
 
 function cmd_bySQL(sSQL: string; performFilterTableNames : Boolean = True; async : Boolean = False): boolean;

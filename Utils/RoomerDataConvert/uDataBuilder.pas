@@ -532,7 +532,9 @@ function getCustomersSqlList : TStrings;
 var s : String;
   i: Integer;
   Cust : TCustInfo;
+  lImportDate: TDateTime;
 begin
+  lImportDate := now;
   result := TStringList.Create;
   for i := 0 to CustList.Count - 1 do
   begin
@@ -597,7 +599,8 @@ begin
          '''{StayTaxIncluted}''); ';
     s :=  ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
           ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-          ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
+//          ReplaceStr(ReplaceStr(
+          ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
           ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(s, '{Customer}', Customer),
                 '{Surname}', _db(Surname)),
                 '{Name}', _db(Name)),
@@ -620,10 +623,10 @@ begin
                 '{Homepage}', _db(HomePage)),
                 '{Active}', '1'),
                 '{marketSegment}', _db(MarketSegment)),
-                '{Notes}', _db(Notes + #13 + 'Roomer Imported: ' + uDateUtils.DateTimeToDBString(now))),
+                '{Notes}', _db(Notes + #13 + 'Roomer Imported: ' + uDateUtils.DateTimeToDBString(lImportDate))),
                 '{Title}', _db(Title)),
-                '{DateOfBirth}', _db(DateOfBirth)),
-                '{Nationality}', _db(Nationality)),
+//                '{DateOfBirth}', _db(DateOfBirth)),
+//                '{Nationality}', _db(Nationality)),
                 '{StayTaxIncluted}', BoolToString_0_1(StayTaxInclute))
           ;
 
@@ -641,8 +644,10 @@ var s : String;
   Res : TResInfo;
   RoomRes : TRoomInfo;
   Pers : TPersonInfo;
+  lImportDate: TDateTime;
 begin
   result := TStringList.Create;
+  lImportDate := Now;
 
   frmRoomerDataConvertMain.lbStatus.Caption := 'Generating SQL statements...'; frmRoomerDataConvertMain.lbStatus.Font.Color := clGreen; frmRoomerDataConvertMain.lbStatus.Update;
   frmRoomerDataConvertMain.prgWorking.Max := ResList.Count;
@@ -823,7 +828,7 @@ begin
           '{Status}', Res.Status),
           '{ReservationDate}', Res.ReservationDate),
           '{Staff}', Res.Staff),
-          '{Information}', _db(Res.Information + #13 + 'Roomer Imported: ' + uDateUtils.DateTimeToDBString(now))),
+          '{Information}', _db(Res.Information + #13 + 'Roomer Imported: ' + uDateUtils.DateTimeToDBString(lImportDate))),
           '{PMInfo}', _db(Res.PMInfo)),
           '{HiddenInfo}', _db(Res.HiddenInfo)),
           '{RoomRentPaid1}', '0'),
