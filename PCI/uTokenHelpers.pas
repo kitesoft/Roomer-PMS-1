@@ -206,7 +206,7 @@ begin
   begin
     rSet := CreateNewDataSet;
     try
-      s := format('SELECT `channel`, PAYCARD_TOKEN FROM reservations r WHERE r.Reservation=%d AND NOT ISNULL(r.PAYCARD_TOKEN) ' +
+      s := format('SELECT `channel`, PAYCARD_TOKEN FROM reservations r WHERE r.Reservation=%d AND IFNULL(r.PAYCARD_TOKEN, '''') <> '''' ' +
                   'UNION ALL ' +
                   'SELECT -1 AS `channel`, PAYCARD_TOKEN FROM home100.PAYMENT_CARD_EXTRA_TOKENS PCET WHERE PCET.HOTEL_ID = ''%s'' AND PCET.RESERVATION=%d ' +
                   ' AND (PCET.ROOM_RESERVATION <= 0 OR PCET.ROOM_RESERVATION=%d)',
