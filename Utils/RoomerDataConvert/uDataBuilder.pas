@@ -1184,7 +1184,7 @@ begin
              'HallReservation, ' +
              'hgrID) ' +
              'VALUES ' +
-             '(''{Person}'', ' +
+             '(getNewPersonId(), ' +
              '''{RoomReservation}'', ' +
              '''{Reservation}'', ' +
              '''{title}'', ' +
@@ -1213,12 +1213,11 @@ begin
              '''{HallReservation}'', ' +
              '''{hgrID}'');';
 
-        s := ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
+        s := ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
              ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(
-             ReplaceStr(s, '{Person}', inttostr(Pers.PersonId)),
-             '{RoomReservation}', inttostr(RoomRes.RoomReservation)),
+             ReplaceStr(s, '{RoomReservation}', inttostr(RoomRes.RoomReservation)),
              '{Reservation}', inttostr(Res.Reservation)),
              '{title}', Pers.Title),
              '{Name}', _db(Pers.Name)),
