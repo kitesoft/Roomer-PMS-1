@@ -314,7 +314,7 @@ begin
            '    AND ( ISNULL(rd.room) OR ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s)))) '#10 +
            'GROUP BY pd.date';
 
-    s := format(s, [lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
+    s := format(s, [_db(zDateFrom, true), _db(zDateTo, true), lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
 
 {$ENDREGION}
 
