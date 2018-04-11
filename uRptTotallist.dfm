@@ -6,8 +6,6 @@ inherited frmRptTotallist: TfrmRptTotallist
   Font.Height = -11
   OnCreate = FormCreate
   OnShow = FormShow
-  ExplicitLeft = -408
-  ExplicitTop = -143
   ExplicitWidth = 1363
   ExplicitHeight = 672
   PixelsPerInch = 96
@@ -69,6 +67,7 @@ inherited frmRptTotallist: TfrmRptTotallist
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -78,7 +77,6 @@ inherited frmRptTotallist: TfrmRptTotallist
         ItemIndex = -1
         ParentFont = False
         TabOrder = 0
-        Text = 'Choose a Month ...'
         OnCloseUp = cbxMonthCloseUp
         Items.Strings = (
           'Choose a Month ...'
@@ -108,6 +106,7 @@ inherited frmRptTotallist: TfrmRptTotallist
         BoundLabel.Font.Style = []
         SkinData.SkinSection = 'COMBOBOX'
         VerticalAlignment = taAlignTop
+        Style = csDropDownList
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
@@ -117,7 +116,6 @@ inherited frmRptTotallist: TfrmRptTotallist
         ItemIndex = -1
         ParentFont = False
         TabOrder = 1
-        Text = 'Choose a year ...'
         OnCloseUp = cbxMonthCloseUp
         Items.Strings = (
           'Choose year ...'
@@ -245,7 +243,6 @@ inherited frmRptTotallist: TfrmRptTotallist
       Navigator.Buttons.Post.Visible = False
       Navigator.Buttons.Cancel.Visible = False
       Navigator.InfoPanel.Visible = True
-      Navigator.Visible = True
       DataController.DataSource = TotallistDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
@@ -422,6 +419,7 @@ inherited frmRptTotallist: TfrmRptTotallist
       object lvTotallistWeekNr: TcxGridDBBandedColumn
         Caption = 'Week'
         DataBinding.FieldName = 'WeekNr'
+        OnGetDisplayText = lvTotallistWeekNrGetDisplayText
         Position.BandIndex = 0
         Position.ColIndex = 1
         Position.RowIndex = 0

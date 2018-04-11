@@ -82,6 +82,8 @@ type
     function StartOfDay: TDateTime; inline;
     function EndOfDay: TDateTime; inline;
 
+    function WeekOfYear: integer; inline;
+
     function AddYears(const aNumberOfYears: Integer = 1): TDateTime; inline;
     function AddMonths(const aNumberOfMonths: Integer = 1): TDateTime; inline;
     function AddDays(const aNumberOfDays: Integer = 1): TDateTime; inline;
@@ -360,6 +362,11 @@ begin
     Result := DateToStr(Self)
   else
     Result := FormatDateTime(aFormatStr, Self);
+end;
+
+function TDateTimeHelper.WeekOfYear: integer;
+begin
+  result := System.DateUtils.WeekOfTheYear(Self)
 end;
 
 function TDateTimeHelper.WeeksBetween(const aDateTime: TDateTime): Integer;

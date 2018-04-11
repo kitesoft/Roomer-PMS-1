@@ -127,6 +127,8 @@ type
     procedure btnExcelClick(Sender: TObject);
     procedure lvTotallistHideZeroValue(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AText: string);
+    procedure lvTotallistWeekNrGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
   private
     { Private declarations }
 
@@ -164,7 +166,9 @@ uses
   , uRoomerDefinitions
   , uMain, uReservationStateDefinitions
   , DateUtils
-  , uSQLUtils, PrjConst;
+  , uSQLUtils, PrjConst
+  , uDateTimeHelper
+  ;
 
 
 function rptTotalList : boolean;
@@ -292,23 +296,25 @@ begin
            '    LEFT JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
            '    LEFT JOIN reservations r ON r.Reservation=rr.Reservation '#10 +
            '    LEFT JOIN (SELECT RoomReservation, COUNT(*) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
-           '    LEFT JOIN (SELECT RR_departure(rr2.roomreservation, false) as departure, '#10+
+           '    LEFT JOIN (SELECT RR_departure(rr2.roomreservation, false) as RRdeparture, '#10+
            '                      SUM(p.numGuests) AS numGuests, '#10+
            '                      COUNT(*) AS numRooms '#10 +
            '               FROM roomreservations rr2 '#10 +
            '               JOIN (SELECT RoomReservation, COUNT(*) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
+                            // This not really needed but avoids a strange bug in GROUPING BY RRDeparture which results in doubled values
+           '               JOIN roomsdate rd on rr2.roomreservation=rd.roomreservation and aDate between DATE_ADD(%s, INTERVAL -1 DAY) and %s and resflag <>''X'' '#10 +
            '	             LEFT JOIN rooms ON (rooms.room = rr2.room AND rooms.active AND not rooms.wildcard and rooms.location in (%s)) '#10 +
            '               WHERE rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
            '                 AND (rr2.rrIsNoRoom or not IsNUll(rooms.room)) '#10+
-           '               GROUP BY rr2.departure '#10+
-           '               HAVING((rr2.departure >= %s AND rr2.departure<= %s )) '#10+
-           '              ) dep ON dep.departure=pd.date '#10 +
+           '               GROUP BY RRdeparture '#10+
+           '               HAVING((RRdeparture >= %s AND RRdeparture<= %s )) '#10+
+           '              ) dep ON dep.RRdeparture=pd.date '#10 +
            'WHERE '#10 +
            '    (pd.date >= %s AND pd.date<=%s) '#10 +
            '    AND ( ISNULL(rd.room) OR ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s)))) '#10 +
            'GROUP BY pd.date';
 
-    s := format(s, [lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
+    s := format(s, [lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
 
 {$ENDREGION}
 
@@ -416,6 +422,16 @@ procedure TfrmRptTotallist.lvTotallistHideZeroValue(Sender: TcxCustomGridTableIt
 begin
   inherited;
   if aText = '0' then aText := '';
+end;
+
+procedure TfrmRptTotallist.lvTotallistWeekNrGetDisplayText(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+var
+  lDate: TDateTime;
+begin
+  inherited;
+  lDate := aRecord.Values[lvTotalListdtDate.Index];
+  aText := IntToStr(lDate.WeekOfYear);
 end;
 
 end.
