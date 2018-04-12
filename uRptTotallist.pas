@@ -266,55 +266,73 @@ begin
     end;
 
       s := '   SELECT '#10 +
-           '     pd.date AS dtDate, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, 1, 0)) AS roomsArrival, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, true)= pd.Date, p.numGuests, 0)) AS paxArrival, '#10 +
-           '     IFNULL(dep.numRooms, 0) AS roomsDeparture, '#10 +
-           '     IFNULL(dep.numGuests, 0) AS paxDeparture, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') , 1, 0)) AS roomsInHouse, '#10 +
-           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'') , p.numGuests, 0)) AS paxInHouse, '#10 +
-           '     SUM(IF(rd.resFlag  IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, 1, 0)) AS roomsStayOver, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND RR_Arrival(rd.roomreservation, false) < pd.date AND RR_Departure(rd.roomreservation, false) > pd.date, p.numGuests, 0)) AS paxStayOver, '#10 +
-           '     SUM(IF(rd.resFlag IN (''O''), 1, 0)) AS roomsWaitinglist, '#10 +
-           '     SUM(IF(rd.resFlag IN (''O''), p.numGuests, 0)) AS paxWaitinglist, '#10 +
-           '     SUM(IF(rd.resFlag IN (''L''), 1, 0)) AS roomsWaitinglistNonOptional, '#10 +
-           '     SUM(IF(rd.resFlag IN (''L''), p.numGuests, 0)) AS paxWaitinglistNonOptional, '#10 +
-           '     SUM(IF(rd.resFlag IN (''A''), 1, 0)) AS roomsAllotment, '#10 +
-           '     SUM(IF(rd.resFlag IN (''A''), p.numGuests, 0)) AS paxAllotment, '#10 +
-           '     SUM(IF(rd.resFlag IN (''N''), 1, 0)) AS roomsNoShow, '#10 +
-           '     SUM(IF(rd.resFlag IN (''N''), p.numGuests, 0)) AS paxNoShow, '#10 +
-           '     SUM(IF(rd.resFlag IN (''B'') AND not r.outOfOrderBlocking, 1, 0)) AS roomsBlocked, '#10 +
-           '     SUM(IF(rd.resFlag IN (''B'') AND not r.outOfOrderBlocking, p.numGuests, 0)) AS paxBlocked, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N'', ''B'') and not r.outOfOrderBlocking, 1, 0)) AS roomsTotal, '#10 +
-           '     SUM(IF(rd.resFlag IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N'', ''B'') and not r.outOfOrderBlocking, p.numGuests, 0)) AS paxTotal, '#10 +
-           '     SUM(IF(r.outOfOrderBlocking=1, 1, 0)) AS roomsOutOfOrder, '#10 +
-           '     SUM(IF(r.outOfOrderBlocking=1, p.numGuests, 0)) AS paxOutOfOrder '#10 +
-           'FROM '#10 +
-           '    predefineddates pd '#10 +
-           '    LEFT JOIN roomsdate rd ON rd.ADate=pd.date AND NOT rd.resFlag IN (''X'',''C'') '#10 +
-           '	  LEFT JOIN rooms ON (rooms.room = rd.room)'#10 +
-           '    LEFT JOIN roomreservations rr ON rr.RoomReservation=rd.RoomReservation '#10 +
-           '    LEFT JOIN reservations r ON r.Reservation=rr.Reservation '#10 +
-           '    LEFT JOIN (SELECT RoomReservation, COUNT(*) AS numGuests FROM persons GROUP BY RoomReservation) AS p ON p.RoomReservation=rr.RoomReservation '#10 +
-           '    LEFT JOIN (SELECT RR_departure(rr2.roomreservation, false) as RRdeparture, '#10+
-           '                      SUM(p.numGuests) AS numGuests, '#10+
-           '                      COUNT(*) AS numRooms '#10 +
-           '               FROM roomreservations rr2 '#10 +
-           '               JOIN (SELECT RoomReservation, COUNT(*) numGuests FROM persons p GROUP BY p.RoomReservation) p ON p.RoomReservation=rr2.RoomReservation '#10 +
-                            // This not really needed but avoids a strange bug in GROUPING BY RRDeparture which results in doubled values
-           '               JOIN roomsdate rd on rr2.roomreservation=rd.roomreservation and aDate between DATE_ADD(%s, INTERVAL -1 DAY) and %s and resflag <>''X'' '#10 +
-           '	             LEFT JOIN rooms ON (rooms.room = rr2.room AND rooms.active AND not rooms.wildcard and rooms.location in (%s)) '#10 +
-           '               WHERE rr2.status IN (''P'',''G'',''D'',''W'',''Z'',''Q'') '#10 +
-           '                 AND (rr2.rrIsNoRoom or not IsNUll(rooms.room)) '#10+
-           '               GROUP BY RRdeparture '#10+
-           '               HAVING((RRdeparture >= %s AND RRdeparture<= %s )) '#10+
-           '              ) dep ON dep.RRdeparture=pd.date '#10 +
-           'WHERE '#10 +
-           '    (pd.date >= %s AND pd.date<=%s) '#10 +
-           '    AND ( ISNULL(rd.room) OR ((substring(rd.room, 1, 1) = ''<'') OR (rooms.room is not null and not rooms.wildcard and rooms.active and rooms.location in (%s)))) '#10 +
-           'GROUP BY pd.date';
+           '         date as dtDate '#10 +
+           '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND not outoforderblocking, 1, 0)) AS roomsArrival '#10 +
+           '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND not outoforderblocking, numGuests, 0)) AS paxArrival '#10 +
+           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL, 1, 0)) AS roomsDeparture '#10 +
+           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL, numGuests, 0)) AS paxDeparture '#10 +
+           '   --    , SUM(IF(PREV_DAY = ''G'' OR RES_FLAG = ''G'', 1, 0)) AS roomsInHouse -- Roomrent stats method '#10 +
+           '   --    , SUM(IF(PREV_DAY = ''G'' OR RES_FLAG = ''G'', numGuests, 0)) AS paxInHouse -- Roomrent stats method '#10 +
+           '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsInHouse -- Totallist method '#10 +
+           '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q''), numGuests, 0)) AS paxInHouse -- TotalList method '#10 +
+           '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND PREV_DAY IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsStayOver '#10 +
+           '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q'') AND PREV_DAY IN (''P'',''G'',''D'',''W'',''Z'',''Q''), numGuests, 0)) AS paxStayOver '#10 +
+           '       , SUM(IF(RES_FLAG IN (''O''), 1, 0)) AS roomsWaitingList '#10 +
+           '       , SUM(IF(RES_FLAG IN (''O''), numGuests, 0)) AS paxWaitingList '#10 +
+           '       , SUM(IF(RES_FLAG IN (''L''), 1, 0)) AS roomsWaitinglistNonOptional '#10 +
+           '       , SUM(IF(RES_FLAG IN (''L''), numGuests, 0)) AS paxWaitinglistNonOptional '#10 +
+           '       , SUM(IF(RES_FLAG IN (''A''), 1, 0)) AS roomsAllotment '#10 +
+           '       , SUM(IF(RES_FLAG IN (''A''), numGuests, 0)) AS paxAllotment '#10 +
+           '       , SUM(IF(RES_FLAG IN (''N''), 1, 0)) AS roomsNoShow '#10 +
+           '       , SUM(IF(RES_FLAG IN (''N''), numGuests, 0)) AS paxNoShow '#10 +
+           '       , SUM(IF(RES_FLAG IN (''B'') AND not outOfOrderBlocking, 1, 0)) AS roomsBlocked '#10 +
+           '       , SUM(IF(RES_FLAG IN (''B'') AND not outOfOrderBlocking, numGuests, 0)) AS paxBlocked '#10 +
+           '       , SUM(IF(outOfOrderBlocking, 1, 0)) AS roomsOutOfOrder '#10 +
+           '       , SUM(IF(outOfOrderBlocking, numGuests, 0)) AS paxOutOfOrder '#10 +
+           '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N'', ''B'') and not outOfOrderBlocking, 1, 0)) AS roomsTotal  -- totallist method '#10 +
+           '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N'', ''B'') and not outOfOrderBlocking, numGuests, 0)) AS paxTotal -- totallist method '#10 +
+           '   FROM '#10 +
+           '       ( '#10 +
+           '           SELECT date '#10 +
+           '           FROM predefineddates '#10 +
+           '       ) base '#10 +
+           '       LEFT JOIN ( '#10 +
+           '           SELECT -- TMP_RD_STATS '#10 +
+           '               rd.ADate AS rdDate, '#10 +
+           '               rd.ResFlag AS RES_FLAG, '#10 +
+           '               r.outoforderblocking, '#10 +
+           '               (SELECT rd0.ResFlag '#10 +
+           '                FROM roomsdate rd0 '#10 +
+           '                WHERE rd0.RoomReservation = rd.RoomReservation '#10 +
+           '                      AND rd0.ADate = DATE_ADD(rd.ADate, INTERVAL - 1 DAY) AND rd0.ResFlag NOT IN (''X'', ''C'')) AS PREV_DAY, '#10 +
+           '               (SELECT count(person) from persons p where p.roomreservation=rd.roomreservation) as numGuests '#10 +
+           '           FROM roomsdate rd '#10 +
+           '           JOIN reservations r on r.reservation=rd.reservation '#10 +
+           '           LEFT JOIN rooms rm2 on (rm2.room = rd.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden and not rm2.wildcard AND rm2.location in (%s)) '#10 +
+           '           WHERE %s <= rd.ADate AND rd.ADate <= %s '#10 +
+           '           AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or rm2.room is not null) '#10 +
+           '           AND rd.ResFlag NOT IN (''X'', ''C'') '#10 +
+           ' '#10 +
+           '           UNION ALL '#10 +
+           ' '#10 +
+           '           SELECT -- Add reservations from "yesterday" that are leaving or have left "today" '#10 +
+           '               CAST(rd.ADate AS date) + INTERVAL 1 DAY AS rdDate, '#10 +
+           '               NULL AS RES_FLAG, '#10 +
+           '               false, '#10 +
+           '               rd.ResFlag AS PREV_DAY '#10 +
+           '               ,(SELECT count(person) from persons p where p.roomreservation=rd.roomreservation) as numGuests '#10 +
+           '           FROM roomsdate rd '#10 +
+           '           LEFT JOIN rooms rm2 on (rm2.room = rd.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden and not rm2.wildcard AND rm2.location in (%s)) '#10 +
+           '           WHERE %s - INTERVAL 1 DAY <= rd.ADate AND rd.ADate <= %s - INTERVAL 1 DAY '#10 +
+           '           AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or rm2.room is not null) '#10 +
+           '           AND rd.ResFlag NOT IN (''X'', ''C'') '#10 +
+           '           AND NOT EXISTS(SELECT rd0.ResFlag FROM roomsdate rd0 WHERE rd0.RoomReservation = rd.RoomReservation AND rd0.ADate = DATE_ADD(rd.ADate, INTERVAL 1 DAY) AND rd0.ResFlag NOT IN (''X'', ''C'')) '#10 +
+           '       ) AS _TMP_RD_STATS ON (_TMP_RD_STATS.rdDate = base.date) '#10 +
+           '   WHERE %s <= base.date AND base.date <= %s '#10 +
+           '   GROUP BY dtDate '#10 +
+           '   ORDER by dtDate '#10;
 
-    s := format(s, [_db(zDateFrom, true), _db(zDateTo, true), lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true), lLocationClause]);
+    s := format(s, [lLocationClause,  _db(zDateFrom, true), _db(zDateTo, true), lLocationClause, _db(zDateFrom, true), _db(zDateTo, true), _db(zDateFrom, true), _db(zDateTo, true)]);
 
 {$ENDREGION}
 
@@ -430,8 +448,12 @@ var
   lDate: TDateTime;
 begin
   inherited;
-  lDate := aRecord.Values[lvTotalListdtDate.Index];
-  aText := IntToStr(lDate.WeekOfYear);
+  try
+    lDate := aRecord.Values[lvTotalListdtDate.Index];
+    aText := IntToStr(lDate.WeekOfYear);
+  except
+    aText := '';
+  end;
 end;
 
 end.
