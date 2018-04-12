@@ -425,6 +425,9 @@ const
 
   cDisabledReservationStates  : TReservationStateSet = [TReservationState.rsReservation, TReservationState.rsGuests, TReservationState.rsDeparted];
 
+  cDefaultIncludeddReservationStates: TReservationStateSet = [TReservationState.rsReservation, TReservationState.rsGuests, TReservationState.rsDeparted,
+                                                              TReservationState.rsAllotment, tReservationState.rsBlocked];
+
 function ShowRoomRentStatistics : boolean;
 var
   frm: TfrmRptRoomRentStatistics;
@@ -1018,7 +1021,7 @@ begin
   for i := 0 to clbIncludedStates.Items.Count-1 do
   begin
     clbIncludedStates.ItemEnabled[i] := not (TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDisabledReservationStates);
-    clbIncludedStates.Checked[i] := TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDisabledReservationStates;
+    clbIncludedStates.Checked[i] := TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDefaultIncludeddReservationStates;
   end;
 
   zSetDates := false;
