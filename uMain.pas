@@ -2082,7 +2082,7 @@ begin
     While not rSet.Eof do
     begin
       Key := LowerCase(rSet['Room']);
-      if g.oRooms.RoomItemsList.TryGetValue(LowerCase(key), RoomItem) then
+      if g.oRooms.TryGetValue(LowerCase(key), RoomItem) then
       begin
         inc(RowIndex);
   //      RoomItem := g.oRooms.RoomItemsList.Items[Key];
@@ -3732,7 +3732,7 @@ begin
 
     BusyOn;
     try
-      statNumRooms := g.oRooms.RoomCount;
+      statNumRooms := g.oRooms.Count;
       statNumExternRooms := 0;
       statCancelledExt := 0;
       statCancelledRm := 0;
@@ -7817,7 +7817,7 @@ begin
   result := 0;
   ClearStringGridRows(grPeriodRooms, grPeriodRooms.RowCount - 1, 1);
 
-  grPeriodRooms.RowCount := grPeriodRooms.RowCount + g.oRooms.RoomCount;
+  grPeriodRooms.RowCount := grPeriodRooms.RowCount + g.oRooms.Count;
   FillPeriodGridWithRooms;
 
 end;

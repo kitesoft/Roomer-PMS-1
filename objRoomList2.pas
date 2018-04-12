@@ -18,11 +18,11 @@ uses
   , System.Generics.Collections
   , uUtils
   , cmpRoomerDataSet
-  , cmpRoomerConnection
+  , cmpRoomerConnection, RoomerExceptionHandling
   ;
 
 TYPE
-  ERoomListException = class(Exception);
+  ERoomListException = class(ERoomerException);
 
   TRoomItem = class
 
@@ -90,9 +90,7 @@ TYPE
     // **
   public
     constructor Create;
-    destructor Destroy; override;
-
-    function IsDirty: boolean;
+    function IsNotClean: boolean;
 
     property Room               : string    read  getRoom                  write setRoom               ;
     property RoomDescription    : string    read  getRoomDescription       write setRoomDescription    ;
@@ -116,57 +114,15 @@ TYPE
 
   end;
 
-
-//////////////////////////////////////////////////////////////////////////////
-//  TRoomItem
-//
-//
-//////////////////////////////////////////////////////////////////////////////
-
-
-
-  TRoomItemsList = TObjectDictionary<String, TRoomItem>;
-
-  //////////////////////////////////////////////////////////////////////////////////////
-  ///
-  ///
-  ///
-  /////////////////////////////////////////////////////////////////////////////////////
-
-  TRooms = class
+  TRooms = class (TObjectDictionary<String, TRoomItem>)
   private
-    FXmlFileName : string;
-
-    FRoomList : TRoomItemsList;
-
-    FHotelcode       : string    ;
-
-    function getRoomCount : integer;
+    FHotelcode: string;
     procedure FillList;
-    procedure Clear;
-    function GetRoomByNumber(aRoomNumber: string): TRoomItem;
-
   public
-    constructor Create(aHotelCode : string);
+    constructor Create(const aHotelCode : string); overload;
     destructor Destroy; override;
-
-    property XmlFileName : string read FXmlFileName write FXmlFileName;
-
-    property Hotelcode      : string    read FHotelcode      write FHotelcode;
-
-    function FindRoomFromRoomNumber(RoomNumber : string) : TRoomItem;
-//    function FindRoomFromRoomNumber(RoomNumber : string; StartAt: integer = 0; caseSensitive: Boolean = false) : integer;
-    function FindRoomStatus(RoomNumber: string): string;
-
-
-    property RoomItemsList : TRoomItemsList read FRoomList;
-    property RoomCount : integer read getRoomCount;
-    property Room[aRoomNumber: string]: TRoomItem read GetRoomByNumber;
-
+    function FindRoomStatus(const RoomNumber: string): string;
   end;
-
-
-
 
 implementation
 
@@ -180,13 +136,6 @@ uses //uDSp
   ;
 
 
-
-//////////////////////////////////////////////////////////////////////////////
-//  TRoomItem
-//
-//
-//////////////////////////////////////////////////////////////////////////////
-
 constructor  TRoomItem.Create;
 begin
   FCleaningNotes       := '';
@@ -196,12 +145,6 @@ begin
   FReportUserName      := '';
   FStatusDescripton    := '';
 end;
-
-destructor TRoomItem.Destroy;
-begin
-  inherited;
-end;
-
 
 
 function TRoomItem.getBookable: boolean;
@@ -296,14 +239,10 @@ end;
 
 
 
-function TRoomItem.IsDirty: boolean;
+function TRoomItem.IsNotClean: boolean;
 begin
   Result := not CharInSet(Status[1], ['C', 'R']);
 end;
-
-////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////
 
 
 procedure TRoomItem.SetBookable(Value: boolean);
@@ -396,36 +335,22 @@ begin
   FUseInResStatistics := value
 end;
 
-
-//////////////////////////////////////////////////////////////////////
-//{ TPosSale }
-//
-//
-//////////////////////////////////////////////////////////////////////
-constructor TRooms.Create(aHotelCode : string);
+constructor TRooms.Create(const aHotelCode : string);
 begin
-  FRoomList := TRoomItemsList.Create([doOwnsValues]);
-
+  inherited Create([doOwnsValues]);
   FHotelCode := aHotelCode;
   try
     FillList;
   except
-    FRoomList.Clear;
+    Clear;
     raise;
   end;
-
 end;
 
 destructor TRooms.Destroy;
 begin
   Clear;
-  freeandnil(FRoomList);
   inherited;
-end;
-
-procedure TRooms.Clear;
-begin
-  FRoomList.Clear;
 end;
 
 procedure TRooms.FillList();
@@ -512,54 +437,25 @@ begin
             RoomItem.StatusDescripton := maintCodes['name'];
         end;
 
-        FRoomList.Add(Lowercase(Room), RoomItem);
+        Add(Lowercase(Room), RoomItem);
       except
           on E: Exception do
-            MessageDlg('Exception during update of roomslist: ' + e.message, mtError, mbOKCancel, 0);
+            ERoomListException.Create('Exception during update of roomslist: ' + e.message);
       end;
     end;
     rSet.Next;
   end;
 end;
 
-function TRooms.FindRoomFromRoomNumber(RoomNumber: string): TRoomItem;
-var
-  RoomItem : TRoomItem;
-begin
-  result := nil;
-  if FRoomList.TryGetValue(LowerCase(RoomNumber), RoomItem) then
-    result := RoomITem;
-end;
-
-function TRooms.FindRoomStatus(RoomNumber: string): string;
+function TRooms.FindRoomStatus(const RoomNumber: string): string;
 var
   RoomItem : TRoomItem;
 begin
   if Application.Terminated then exit;
   result := '';
 
-  RoomItem := FindRoomFromRoomNumber(RoomNumber);
-
-  if Assigned(RoomItem) then
+  if TryGetValue(RoomNumber, RoomItem) then
     result := RoomItem.FStatus;
-end;
-
-
-function TRooms.GetRoomByNumber(aRoomNumber: string): TRoomItem;
-var
-  lRoom: TRoomItem;
-begin
-  result := nil;
-  if FRoomList.TryGetValue(LowerCase(aRoomNumber), lRoom) then
-    result := lRoom;
-
-  if result = nil then
-    raise ERoomlistException.CreateFmt('Roomnumber [%s] not found in roomlist', [aRoomNumber]);
-end;
-
-function TRooms.getRoomCount: integer;
-begin
-  result := FRoomList.Count;
 end;
 
 end.

@@ -2108,9 +2108,9 @@ begin
     s := s + GetTranslatedText('shTx_Floor') + ' : ' + wRooms_.FieldByName('floor').Asstring + #13;
     s := s + GetTranslatedText('shTx_NumGuests') + ' : ' + wRooms_.FieldByName('numberGuests').Asstring + #13;
 
-    RoomItem := g.oRooms.FindRoomFromRoomNumber(sRoom);
-    if Assigned(RoomItem) then
+    if g.oRooms.ContainsKey(sRoom) then
     begin
+      RoomItem := g.oRooms[sRoom];
       StatusColor := d.colorCodeOfStatus(RoomItem.status);
       s := s + '<hr><br><b><shad>' + GetTranslatedText('shTx_Status') + ' : <font ' +
         GetHTMLColor(StatusColor, True) + ' ' +

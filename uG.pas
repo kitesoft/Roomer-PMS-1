@@ -237,7 +237,7 @@ type
 
     function GetHotelCode: string;
     procedure SetPCIContract(const Value: String);
-    function GetNativeCurrency: string;
+    function GetNativeCurrency: string; deprecated 'Use RoomerCurrencyManager.DefaultCurrency';
   public
     PCIContractWildcards : TStrings;
     qConnected : boolean;

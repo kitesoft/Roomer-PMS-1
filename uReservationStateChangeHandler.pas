@@ -372,7 +372,7 @@ begin
     Exit;
 
   // warn dirty room
-  if g.qWarnCheckInDirtyRoom AND g.oRooms.Room[FRoom].IsDirty then
+  if g.qWarnCheckInDirtyRoom AND g.oRooms[FRoom].IsNotClean then
     if MessageDlg(Format(GetTranslatedText('shTx_Various_RoomNotClean'), [FRoom]), mtWarning, [mbYes, mbCancel], 0) <> mrYes then
       exit;
 

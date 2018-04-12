@@ -175,7 +175,7 @@ begin
       lParams.setStatus := true;
       lParams.Status := frm.Status;
 
-      RoomItem := g.oRooms.FindRoomFromRoomNumber(sRoom);
+      RoomItem := g.oRooms[sRoom];
       RoomItem.Status := frm.Status;
     end;
 
