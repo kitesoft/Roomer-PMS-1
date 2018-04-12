@@ -47,12 +47,14 @@ type
   private
     FStatistics: IList<THotelStatistic>;
     FDate: TDate;
+    FDefaultStatistic: THotelStatistic;
     function GetStatisticsList: TStatisticsList;
     function GetStatistic(const aName: string): THotelStatistic;
   protected
     class function GetNodeName: string; override;
   public
     constructor Create;
+    destructor Destroy; override;
     procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
     property Statistic[const aName: string]: THotelStatistic read GetStatistic; default;
@@ -68,13 +70,14 @@ type
   THotelStatisticsList = class(TxsdBaseObject)
   private
     FStatsPerDateList: IList<TSingleDateStatistics>;
+    FDefaultSingleDateStatistic: TSingleDateStatistics;
     function GetStatisticsPerDateList: TStatisticsPerDateList;
     function GetSingleDateStatistics(aDate: TDate): TSingleDateStatistics;
   protected
     class function GetNodeName: string; override;
   public
     constructor Create;
-
+    destructor Destroy; override;
     procedure Clear; override;
     procedure SetPropertiesFromXMLNode(const aNode: PXMLNode); override;
 
@@ -133,8 +136,15 @@ constructor TSingleDateStatistics.Create;
 begin
   inherited;
   FStatistics := TStatisticsList.Create;
+  FDefaultStatistic := THotelStatistic.Create;
+  FDefaultStatistic.UOM := TUnitOfMeasurement.NoDimension;
 end;
 
+destructor TSingleDateStatistics.Destroy;
+begin
+  FDefaultStatistic.Free;
+  inherited;
+end;
 
 class function TSingleDateStatistics.GetNodeName: string;
 begin
@@ -145,7 +155,7 @@ function TSingleDateStatistics.GetStatistic(const aName: string): THotelStatisti
 var
   lStat: THotelStatistic;
 begin
-  Result := nil;
+  Result := FDefaultStatistic;
   for lStat in FStatistics do
     if SameText(lStat.Name, aName) then
     begin
@@ -197,6 +207,13 @@ constructor THotelStatisticsList.Create;
 begin
   inherited;
   FStatsPerDateList := TStatisticsPerDateList.Create;
+  FDefaultSingleDateStatistic := TSingleDateStatistics.Create;
+end;
+
+destructor THotelStatisticsList.Destroy;
+begin
+  FDefaultSingleDateStatistic.Free;
+  inherited;
 end;
 
 class function THotelStatisticsList.GetNodeName: string;
@@ -208,7 +225,7 @@ function THotelStatisticsList.GetSingleDateStatistics(aDate: TDate): TSingleDate
 var
   lItem: TSingleDateStatistics;
 begin
-  Result := nil;
+  Result := FDefaultSingleDateStatistic;
   for lItem in FStatsPerDateList do
     if lItem.Date = aDate then
     begin
