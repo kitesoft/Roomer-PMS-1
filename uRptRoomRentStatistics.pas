@@ -376,6 +376,7 @@ type
     FBaseBandOrigCaption: string;
     FCompareBandOrigCaption: string;
     FLoadingData: boolean;
+    FUpdatingDates: boolean;
 
     function GetFooterSummaryValueOrZero(aColumn: TcxGridDBBandedColumn): variant;
 
@@ -454,6 +455,9 @@ end;
 
 procedure TfrmRptRoomRentStatistics.kbmComparisonCalcFields(DataSet: TDataSet);
 begin
+  if kbmComparisonADate.IsNull or kbmComparisonADateBase.IsNull then
+    Exit;
+
   if kbmComparisontotalSellableRoomsBase.AsInteger <> 0 then
   begin
     kbmComparisonoccBase.asFloat := kbmComparisonsoldRoomsBase.AsInteger / kbmComparisontotalSellableRoomsBase.AsInteger * 100;
@@ -723,7 +727,12 @@ begin
   if pcMain.ActivePage = tsComparison then
   begin
     inc(FDataLoadingThreads);
-    lCompareToDate := dtComparisonStart.Date.AddDays(trunc(dtDateTo.Date - dtDateFrom.Date));
+
+    if (cbxMonth.ItemIndex >=0) and (cbxYear.ItemIndex >=0) and (cbxComparisonPeriod.ItemIndex >= 0) then // limit compare data to end of year / month
+      lCompareToDate := dtComparisonStart.Date.EndOfMonth
+    else  // Manually selected period, just calculated based on number of days
+      lCompareToDate := dtComparisonStart.Date.AddDays(trunc(dtDateTo.Date - dtDateFrom.Date));
+
     THotelStatisticsMobileAPICallerThreaded.GetRoomRentStatistics(dtComparisonStart.Date,
                                                                   lCompareToDate,
                                                                   lExcludedReservationStates,
@@ -930,6 +939,9 @@ procedure TfrmRptRoomRentStatistics.cbxMonthChange(Sender: TObject);
 var
   y, m : word;
 begin
+  if FUpdatingDates then
+    Exit;
+
   if cbxYear.ItemIndex < 0 then
     exit;
   if cbxMonth.ItemIndex < 0 then
@@ -961,13 +973,25 @@ end;
 
 procedure TfrmRptRoomRentStatistics.dtDateChange(Sender: TObject);
 begin
-  if zSetDates then
-  begin
-    cbxYear.ItemIndex := -1;
-    cbxMonth.ItemIndex := -1;
-  end;
+  FUpdatingDates := true;
+  try
+    if zSetDates then
+    begin
+      if dtDateFrom.Date.Year = dtDateTo.Date.Year then
+        cbxYear.ItemIndex := cbxYear.IndexOf(IntToStr(dtDateTo.Date.Year))
+      else
+        cbxYear.ItemIndex := -1;
 
-  cbxComparisonPeriodChange(nil);
+      if (dtDateFrom.Date = dtDateFrom.Date.StartOfMonth.Date) and (dtDateTo.Date = dtDateFrom.Date.EndOfMonth.Date) then
+        cbxMonth.ItemIndex := dtDateFrom.Date.Month -1
+      else
+        cbxMonth.ItemIndex := -1;
+    end;
+
+    cbxComparisonPeriodChange(nil);
+  finally
+    FUpdatingDates := false;
+  end;
 end;
 
 procedure TfrmRptRoomRentStatistics.FormCreate(Sender: TObject);

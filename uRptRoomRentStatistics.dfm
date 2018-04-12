@@ -220,7 +220,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Top = 89
     Width = 1459
     Height = 535
-    ActivePage = tabStatGrid
+    ActivePage = tsComparison
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -710,8 +710,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tsComparison: TsTabSheet
       Caption = 'Comparison'
-      ExplicitTop = 27
-      ExplicitHeight = 504
       object sPanel3: TsPanel
         Left = 0
         Top = 0
@@ -828,9 +826,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           TabOrder = 3
           object clbComparisonDataSelection: TsCheckListBox
             Left = 2
-            Top = 15
+            Top = 18
             Width = 352
-            Height = 72
+            Height = 69
             Align = alClient
             BevelOuter = bvNone
             BorderStyle = bsSingle
@@ -863,9 +861,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
           Visible = False
           object clbCompareRoomTypes: TsCheckListBox
             Left = 2
-            Top = 15
+            Top = 18
             Width = 300
-            Height = 72
+            Height = 69
             Align = alClient
             BevelOuter = bvNone
             BorderStyle = bsSingle
@@ -930,7 +928,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Height = 393
         Align = alClient
         TabOrder = 1
-        ExplicitTop = 95
         object grdComparisonDBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.Summary.DefaultGroupSummaryItems = <>
@@ -4571,7 +4568,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     object grdPrinterLinkComparison: TdxGridReportLink
       Active = True
       Component = grdComparison
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -4593,7 +4589,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43200.571612557870000000
+      ReportDocument.CreationDate = 43202.395263587960000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -4601,7 +4597,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportTitle.Font.Style = [fsBold]
       ReportTitle.Text = 'Roomrent Comparison'
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -4615,7 +4610,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object grdPrinterLinkStats: TdxGridReportLink
       Component = grStat
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -4633,7 +4627,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportDocument.Creator = 'Roomer'
       ReportTitle.Text = 'Roomrent Statistics'
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
