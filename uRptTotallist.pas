@@ -113,7 +113,6 @@ type
     lvTotallistroomsBlocked: TcxGridDBBandedColumn;
     lvTotallistpaxBlocked: TcxGridDBBandedColumn;
     lvTotallistroomsOutOfOrder: TcxGridDBBandedColumn;
-    lvTotallistpaxOutOfOrder: TcxGridDBBandedColumn;
     FormStore: TcxPropertiesStore;
     labLocationsList: TsLabel;
     labLocations: TsLabel;
@@ -288,7 +287,6 @@ begin
            '       , SUM(IF(RES_FLAG IN (''B'') AND not outOfOrderBlocking, 1, 0)) AS roomsBlocked '#10 +
            '       , SUM(IF(RES_FLAG IN (''B'') AND not outOfOrderBlocking, numGuests, 0)) AS paxBlocked '#10 +
            '       , SUM(IF(outOfOrderBlocking, 1, 0)) AS roomsOutOfOrder '#10 +
-           '       , SUM(IF(outOfOrderBlocking, numGuests, 0)) AS paxOutOfOrder '#10 +
            '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'',''N'', ''B'') and not outOfOrderBlocking, 1, 0)) AS roomsTotal  -- totallist method '#10 +
            '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q'',''L'',''A'', ''N'', ''B'') and not outOfOrderBlocking, numGuests, 0)) AS paxTotal -- totallist method '#10 +
            '   FROM '#10 +

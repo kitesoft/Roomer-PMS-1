@@ -326,7 +326,6 @@ inherited frmRptTotallist: TfrmRptTotallist
           Format = '0'
           Kind = skSum
           FieldName = 'paxOutOfOrder'
-          Column = lvTotallistpaxOutOfOrder
         end
         item
           Format = '0'
@@ -402,6 +401,7 @@ inherited frmRptTotallist: TfrmRptTotallist
         end
         item
           Caption = 'OutOfOrder'
+          Width = 76
         end
         item
           Caption = 'Waiting list'
@@ -573,15 +573,6 @@ inherited frmRptTotallist: TfrmRptTotallist
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object lvTotallistpaxOutOfOrder: TcxGridDBBandedColumn
-        Caption = 'Guests'
-        DataBinding.FieldName = 'paxOutOfOrder'
-        PropertiesClassName = 'TcxCalcEditProperties'
-        OnGetDisplayText = lvTotallistHideZeroValue
-        Position.BandIndex = 9
-        Position.ColIndex = 1
-        Position.RowIndex = 0
-      end
       object lvTotallistroomsWaitinglistNonOptional: TcxGridDBBandedColumn
         Caption = 'Rooms'
         DataBinding.FieldName = 'roomsWaitinglistNonOptional'
@@ -704,10 +695,6 @@ inherited frmRptTotallist: TfrmRptTotallist
       end
       item
         Name = 'roomsOutOfOrder'
-        DataType = ftInteger
-      end
-      item
-        Name = 'paxOutOfOrder'
         DataType = ftInteger
       end
       item
