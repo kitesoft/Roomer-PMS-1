@@ -52,13 +52,11 @@ type
 
 function getXmlFromJavaEntity(recordSet: string): string;
 function getXmlFromRecordSet(rs: _Recordset): string;
-//function getXmlFromRecord(rec: _RecordSet): string;
 function XMLToRecordset(const someXML: string): _Recordset;
 function generateRecordXml(data : array of TFieldsAndValues) : string;
 function SQLToXML(const aConnection: TAdoConnection;
   const aSQLCommand: string): string;
 
-//  TDictionary<string, TStringlist>
 
 implementation
 
@@ -127,17 +125,14 @@ function XMLToRecordset(const someXML: string): _Recordset;
 var
   xml: IXMLDOMDocument2;
   rs: OleVariant;
-  temp : string;
 begin
   xml := CreateXmlDocument; // CoDOMDocument40.Create;
-  temp := someXML;
-  CopyToClipboard(temp);
-//  temp := StringReplace(someXML, 'dt:type=''tinyint''', 'dt:type=''boolean''',
-//                          [rfReplaceAll, rfIgnoreCase]);
+
   try
-    xml.LoadXML(temp);
+    xml.LoadXML(someXML);
   except
-    raise Exception.Create('Roomer PMS got a incorrect result from server.');
+    on E: Exception do
+      raise Exception.CreateFmt('Error ocurred while interpreting result from server [%s].', [e.Message]);
   end;
   rs := CoRecordset.Create;
   rs.Open(xml);
@@ -196,8 +191,6 @@ BEGIN
   end;
   result := result + RECORDSET_SCHEMA_FOOTER;
 
-
-
   nlist := XML.getElementsByTagName(WideString(entity));
 
   for i:=0 to nlist.Get_length-1 do
@@ -215,114 +208,8 @@ BEGIN
   end;
 
   result := result + RECORDSET_DATA_FOOTER;
-
-
-//
-//  columns := recordSet.columns;
-//  for col := Low(columns) to High(columns) do
-//  begin
-//    result := result + format(RECORDSET_SCHEMA_COLUMN,
-//      [columns[col].name_, columns[col].index_,
-//      boolToString(columns[col].nullable),
-//      boolToString(columns[col].writeunknown),
-//      columns[col].basecatalog, columns[col].basetable,
-//      columns[col].basecolumn, columns[col].datatype,
-//      columns[col].maxLength]);
-//  end;
-//  result := result + RECORDSET_SCHEMA_FOOTER;
-//
-//  recordCounter := 0;
-//  dataClusters := recordSet.values;
-//  records := Low(dataClusters);
-//  while records <= High(dataClusters) - High(columns) do
-//  begin
-//    row := '';
-//    for col := Low(columns) to High(columns) do
-//    begin
-//      lbl := columns[col].name_;
-//      dataAsString := findValue(lbl + '.' + inttostr(recordCounter), records,
-//        dataClusters);
-//      row := row + format(RECORDSET_DATA_VALUE, [lbl, dataAsString]);
-//
-//    end;
-//    result := result + format(RECORDSET_DATA_ROW, [row]);
-//
-//    records := records + (High(columns) - Low(columns));
-//    recordCounter := recordCounter + 1;
-//  end;
-//
-//  result := result + RECORDSET_DATA_FOOTER;
-
 end;
 
-//function getXmlFromRecord(rec: _RecordSet): string;
-//var
-//  col: integer;
-//  records: integer;
-//  row: string;
-//  lbl: String;
-//  dataAsString: string;
-//
-//  dataClusters: Array_Of_string;
-//  columns: Fields;
-//  recordCounter: integer;
-//
-//begin
-//  result := RECORDSET_SCHEMA_HEADER;
-//
-//  columns := rec.Fields;
-//  for col := 0 to columns.Count - 1 do
-//  begin
-//    result := result + format(RECORDSET_SCHEMA_COLUMN,
-//      [columns[col].Name, col + 1,
-//      boolToString(true),
-//      boolToString(true),
-//      columns[col].Properties., columns[col].basetable,
-//      columns[col].basecolumn, columns[col].datatype,
-//      columns[col].maxLength]);
-//  end;
-//  result := result + RECORDSET_SCHEMA_FOOTER;
-//
-//  recordCounter := 0;
-//  dataClusters := recordSet.values;
-//  records := Low(dataClusters);
-//  while records <= High(dataClusters) - High(columns) do
-//  begin
-//    row := '';
-//    for col := Low(columns) to High(columns) do
-//    begin
-//      lbl := recordSet.columns[col].name_;
-//      dataAsString := findValue(lbl + '.' + inttostr(recordCounter), records,
-//        dataClusters);
-//      row := row + format(RECORDSET_DATA_VALUE, [lbl, dataAsString]);
-//
-//    end;
-//    result := result + format(RECORDSET_DATA_ROW, [row]);
-//
-//    records := records + (High(columns) - Low(columns));
-//    recordCounter := recordCounter + 1;
-//  end;
-//
-//  result := result + RECORDSET_DATA_FOOTER;
-//
-//end;
-
-//function findValue(key: String; const startAt: integer;
-//  valueList: Array_Of_string): String;
-//var
-//  counter: integer;
-//  txt: string;
-//begin
-//  key := key + '=';
-//  result := '';
-//  for counter := startAt to High(valueList) do
-//    if key = Copy(valueList[counter], 1, length(key)) then
-//    begin
-//      txt := Copy(valueList[counter], length(key) + 1);
-//      result := txt;
-//    end;
-//
-//end;
 
 function generateRecordXml(data : array of TFieldsAndValues) : string;
 var
