@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -69,15 +69,17 @@ type
     function Execute: Boolean;
 
     procedure LoadTables;
+
+    property Connected: Boolean read fConnected;
+    property Entities: IList<TEntityModelData> read fEntities;
+
     //serializable properties
     property DatabaseName: string read fDatabaseName write fDatabaseName;
     property DefaultSchemaName: string read fDefaultSchemaName write fDefaultSchemaName;
-    property Connected: Boolean read fConnected;
     property ConnectionString: string read fConnectionString write fConnectionString;
     property OutputDir: string read fOutputDir write fOutputDir;
     property UnitPrefix: string read fUnitPrefix write fUnitPrefix;
     property UseNullableTypes: Boolean read fUseNullableTypes write fUseNullableTypes;
-    property Entities: IList<TEntityModelData> read fEntities;
   end;
 
 implementation

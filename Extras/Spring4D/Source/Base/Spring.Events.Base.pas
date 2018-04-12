@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -59,10 +59,13 @@ type
     function GetHandlers: TArray<TMethodPointer>;
     function GetInvoke: TMethodPointer; inline;
     function GetOnChanged: TNotifyEvent;
+    function GetUseFreeNotification: Boolean; inline;
     procedure SetEnabled(const value: Boolean);
     procedure SetOnChanged(const value: TNotifyEvent);
+    procedure SetUseFreeNotification(const value: Boolean);
   {$ENDREGION}
     procedure Delete(index: Integer);
+    procedure EnsureNotificationHandler; inline;
     procedure HandleNotification(component: TComponent; operation: TOperation);
     procedure LockEnter; inline;
     procedure LockLeave; inline;
@@ -87,6 +90,7 @@ type
     property Enabled: Boolean read GetEnabled write SetEnabled;
     property Invoke: TMethodPointer read GetInvoke;
     property OnChanged: TNotifyEvent read GetOnChanged write SetOnChanged;
+    property UseFreeNotification: Boolean read GetUseFreeNotification write SetUseFreeNotification;
   end;
 
   TEventBase<T> = class(TEventBase, IEvent<T>)
@@ -98,7 +102,6 @@ type
   {$REGION 'Implements IEvent<T>'}
     procedure Add(handler: T);
     procedure Remove(handler: T);
-    procedure ForEach(const action: TAction<T>);
   {$ENDREGION}
   end;
 
@@ -146,13 +149,23 @@ end;
 
 destructor TEventBase.Destroy;
 begin
-  fNotificationHandler.Free;
-  fNotificationHandler := nil;
+  if UseFreeNotification then
+    fNotificationHandler.Free;
+  NativeInt(fNotificationHandler) := 0;
   Clear;
 {$IFDEF MSWINDOWS}
   DeleteCriticalSection(fLock);
 {$ENDIF}
   inherited Destroy;
+end;
+
+procedure TEventBase.EnsureNotificationHandler;
+begin
+  if fNotificationHandler = nil then
+  begin
+    fNotificationHandler := TNotificationHandler.Create(nil);
+    fNotificationHandler.OnNotification := HandleNotification;
+  end;
 end;
 
 function TEventBase.GetCanInvoke: Boolean;
@@ -180,6 +193,11 @@ begin
   Result := fOnChanged;
 end;
 
+function TEventBase.GetUseFreeNotification: Boolean;
+begin
+  Result := NativeInt(fNotificationHandler) <> 1;
+end;
+
 procedure TEventBase.LockEnter;
 begin
 {$IFDEF MSWINDOWS}
@@ -202,6 +220,8 @@ procedure TEventBase.Add(const handler: TMethodPointer);
 var
   i: Integer;
 begin
+  if not Assigned(handler) then
+    Exit;
   LockEnter;
   try
     i := Count;
@@ -226,6 +246,7 @@ begin
   try
     for i := 0 to Count - 1 do
       Notify(Self, fHandlers[i], cnRemoved);
+    fCount := fCount and DisabledFlag;
     fHandlers := nil;
   finally
     LockLeave;
@@ -268,15 +289,11 @@ var
   data: Pointer;
 begin
   data := TMethod(item).Data;
-  if SafeIsClass(data, TComponent) then
+  if UseFreeNotification and SafeIsClass(data, TComponent) then
     case action of
       cnAdded:
       begin
-        if fNotificationHandler = nil then
-        begin
-          fNotificationHandler := TNotificationHandler.Create(nil);
-          fNotificationHandler.OnNotification := HandleNotification;
-        end;
+        EnsureNotificationHandler;
         fNotificationHandler.FreeNotification(TComponent(data));
       end;
       cnRemoved:
@@ -335,6 +352,43 @@ begin
   fOnChanged := value;
 end;
 
+procedure TEventBase.SetUseFreeNotification(const value: Boolean);
+var
+  i: Integer;
+  data: Pointer;
+begin
+  LockEnter;
+  try
+    case NativeInt(fNotificationHandler) of
+      0: // UseFreeNotification is True but no handler assigned yet ...
+        if not value then // ... it can only be turned False
+          NativeInt(fNotificationHandler) := 1;
+      1: // UseFreeNotification is False ...
+        if value then // ... it can only be turned True
+        begin
+          NativeInt(fNotificationHandler) := 0;
+          for i := 0 to Count - 1 do // check every handler
+          begin
+            data := TMethod(fHandlers[i]).Data;
+            if SafeIsClass(data, TComponent) then
+            begin
+              EnsureNotificationHandler;
+              fNotificationHandler.FreeNotification(TComponent(data));
+            end;
+          end;
+        end;
+    else // UseFreeNotification is True and handler is already assigned ...
+      if not value then // ... it can only be turned False
+      begin
+        fNotificationHandler.Free;
+        NativeInt(fNotificationHandler) := 1;
+      end;
+    end;
+  finally
+    LockLeave;
+  end;
+end;
+
 {$ENDREGION}
 
 
@@ -350,21 +404,6 @@ begin
     inherited Add(MethodReferenceToMethodPointer(handler))
   else
     inherited Add(PMethodPointer(@handler)^);
-end;
-
-procedure TEventBase<T>.ForEach(const action: TAction<T>);
-var
-  handler: TMethodPointer;
-begin
-  for handler in Handlers do
-{$IFDEF DELPHI2010}
-    if PTypeInfo(TypeInfo(T)).Kind = tkInterface then
-{$ELSE}
-    if TType.Kind<T> = tkInterface then
-{$ENDIF}
-      TAction<IInterface>(action)(MethodPointerToMethodReference(handler))
-    else
-      TAction<TMethodPointer>(action)(handler);
 end;
 
 function TEventBase<T>.GetInvoke: T;

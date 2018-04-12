@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -40,6 +40,7 @@ resourcestring
   SNotClassType                = '"%s" is not a class type.';
   STypeNotSupported            = 'Type is not supported: %s';
   SValueFactoryReturnedNil     = 'ValueFactory returned nil.';
+  STypeInfoNotFound            = 'TypeInfo not found for type: %s';
 
   SArgumentOutOfRangeException = 'Specified argument was out of the range of valid values: %s';
   SArgumentNullException       = 'Specified argument cannot be nil: %s';
@@ -93,12 +94,13 @@ resourcestring
   SGBDescription       = 'GB';
   STBDescription       = 'TB';
 
+  SArraysIdentical = 'Source and target array must not be identical';
+
   {$ENDREGION}
 
 
   {$REGION 'Spring.Collections'}
 
-  SCannotResetEnumerator = 'Cannot reset the enumerator.';
   SEnumNotStarted = 'Enum not started.';
   SEnumEnded = 'Enum ended.';
   SEnumEmpty = 'Invalid Operation. The enumeration is empty.';

@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -54,6 +54,7 @@ type
     fItemTypeInfo: PTypeInfo;
     fIndexFields: TArray<TIndexFieldInfo>;
     fProperties: IList<TRttiProperty>;
+    fDisabledFields: ISet<TField>;
     fSort: string;
     fSorted: Boolean;
     fColumnAttributeClass: TAttributeClass;
@@ -200,6 +201,7 @@ type
     property BeforePost;
     property BeforeRefresh;
     property BeforeScroll;
+    property OnCalcFields;
     property OnDeleteError;
     property OnEditError;
     property OnFilterRecord;
@@ -215,11 +217,13 @@ type
 implementation
 
 uses
+  FmtBcd,
   StrUtils,
   SysUtils,
   TypInfo,
   Variants,
   Spring.Data.ExpressionParser.Functions,
+  Spring.Data.ValueConverters,
   Spring.Reflection;
 
 resourcestring
@@ -240,6 +244,7 @@ constructor TObjectDataSet.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   fProperties := TCollections.CreateList<TRttiProperty>;
+  fDisabledFields := TCollections.CreateSet<TField>;
   fFilterParser := TExprParser.Create;
   fFilterParser.OnGetVariable := ParserGetVariableValue;
   fFilterParser.OnExecuteFunction := ParserGetFunctionValue;
@@ -444,7 +449,7 @@ begin
       if VarIsNull(fieldValue) then
         prop.SetValue(newItem, TValue.Empty)
       else
-        if TValue.FromVariant(fieldValue).TryConvert(prop.PropertyType.Handle, value) then
+        if TValue.From<Variant>(fieldValue).TryConvert(prop.PropertyType.Handle, value) then
           prop.SetValue(newItem, value);
     end;
   end;
@@ -530,6 +535,7 @@ procedure TObjectDataSet.InitRttiPropertiesFromItemType(AItemTypeInfo: PTypeInfo
 var
   itemType: TRttiType;
   prop: TRttiProperty;
+  field: TField;
 begin
   if AItemTypeInfo = nil then
     Exit;
@@ -542,9 +548,15 @@ begin
     if not (prop.Visibility in [mvPublic, mvPublished]) then
       Continue;
 
-    if (Fields.Count > 0) and Assigned(Fields.FindField(prop.Name)) then
+    if Fields.Count > 0 then
     begin
-      fProperties.Add(prop);
+      field := Fields.FindField(prop.Name);
+      if Assigned(field) and (field.FieldKind = fkData) then
+      begin
+        fProperties.Add(prop);
+        if not prop.IsWritable then
+          field.ReadOnly := True;
+      end;
       Continue;
     end;
 
@@ -585,7 +597,12 @@ begin
     Result := prop.GetValue(obj).ToVariant
   else
     if field.FieldKind = fkData then
-      raise EObjectDataSetException.CreateFmt(SPropertyNotFound, [field.FieldName]);
+      if fDisabledFields.Add(field) then
+      begin
+        field.ReadOnly := True;
+        field.Visible := False;
+        raise EObjectDataSetException.CreateFmt(SPropertyNotFound, [field.FieldName]);
+      end;
 end;
 
 procedure TObjectDataSet.InternalInitFieldDefs;
@@ -606,6 +623,7 @@ end;
 
 procedure TObjectDataSet.InternalRefresh;
 begin
+  inherited InternalRefresh;
   if Sorted then
     InternalSetSort(Sort);
 end;
@@ -767,6 +785,8 @@ var
           fieldType := ftGuid;
           len := 38;
         end
+        else if typeInfo = System.TypeInfo(TBcd) then
+          fieldType := ftFMTBcd
         else if IsNullable(typeInfo) then
           DoGetFieldType(GetUnderlyingType(typeInfo));
       tkInt64:

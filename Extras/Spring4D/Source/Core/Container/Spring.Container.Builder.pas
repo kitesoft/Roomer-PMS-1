@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -30,6 +30,7 @@ interface
 
 uses
   Rtti,
+  SysUtils,
   Spring,
   Spring.Collections,
   Spring.Container.Core;
@@ -113,6 +114,11 @@ type
   end;
 
   TInterceptorInspector = class(TInspectorBase)
+  protected
+    procedure DoProcessModel(const kernel: IKernel; const model: TComponentModel); override;
+  end;
+
+  TAbstractMethodInspector = class(TInspectorBase)
   protected
     procedure DoProcessModel(const kernel: IKernel; const model: TComponentModel); override;
   end;
@@ -304,6 +310,7 @@ var
   i: Integer;
 begin
   if model.ConstructorInjections.Any then Exit;  // TEMP
+  if model.ComponentTypeInfo.Kind <> tkClass then Exit;
   predicate := TMethodFilters.IsConstructor
     and not TMethodFilters.HasParameterFlags([pfVar, pfArray, pfOut]);
   for method in model.ComponentType.Methods.Where(predicate) do
@@ -412,7 +419,10 @@ procedure TComponentActivatorInspector.DoProcessModel(
 begin
   if not Assigned(model.ComponentActivator) then
     if not Assigned(model.ActivatorDelegate) then
-      model.ComponentActivator := TReflectionComponentActivator.Create(kernel, model)
+      if model.ComponentType.TypeKind = tkClass then
+        model.ComponentActivator := TReflectionComponentActivator.Create(kernel, model)
+      else
+        raise EBuilderException.CreateResFmt(@SRegistrationIncomplete, [model.ComponentTypeName])
     else
       model.ComponentActivator := TDelegateComponentActivator.Create(kernel, model);
 end;
@@ -552,6 +562,49 @@ begin
 {$ELSE}
 begin
 {$ENDIF}
+end;
+
+{$ENDREGION}
+
+
+{$REGION 'TAbstractMethodInspector'}
+
+procedure TAbstractMethodInspector.DoProcessModel(const kernel: IKernel;
+  const model: TComponentModel);
+
+  function HasVirtualAbstractMethod(const rttiType: TRttiType): Boolean;
+  var
+    virtualMethods: IEnumerable<TRttiMethod>;
+    virtualMethodsGrouped: IEnumerable<IGrouping<SmallInt,TRttiMethod>>;
+  begin
+    virtualMethods := rttiType.Methods.Where(
+      function(const method: TRttiMethod): Boolean
+      begin
+        Result := (method.DispatchKind = dkVtable) and (method.VirtualIndex >= 0);
+      end);
+    virtualMethodsGrouped := TEnumerable.GroupBy<TRttiMethod,SmallInt>(
+      virtualMethods,
+      function(method: TRttiMethod): SmallInt
+      begin
+        Result := method.VirtualIndex;
+      end);
+    virtualMethods := TEnumerable.Select<IGrouping<SmallInt,TRttiMethod>, TRttiMethod>(
+      virtualMethodsGrouped,
+      function(group: IGrouping<SmallInt,TRttiMethod>): TRttiMethod
+      begin
+        Result := group.First;
+      end);
+    Result := virtualMethods.Any(
+      function(const method: TRttiMethod): Boolean
+      begin
+        Result := method.IsAbstract;
+      end);
+  end;
+
+begin
+  if model.ComponentType.IsClass
+    and HasVirtualAbstractMethod(model.ComponentType) then
+    kernel.Logger.Warn(Format('component type %s contains abstract methods', [model.ComponentTypeName]));
 end;
 
 {$ENDREGION}

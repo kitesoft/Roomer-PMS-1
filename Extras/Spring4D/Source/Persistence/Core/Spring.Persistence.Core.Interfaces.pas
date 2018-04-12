@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -146,8 +146,9 @@ type
   end;
 
   /// <summary>
-  ///   Represents interface for mapping rows of a ResultSet on a per-row basis.
-  ///   Implementations of this interface perform the actual work of mapping each row to a result object.
+  ///   Represents interface for mapping rows of a ResultSet on a per-row
+  ///   basis. Implementations of this interface perform the actual work of
+  ///   mapping each row to a result object.
   /// </summary>
   IRowMapper<T: class, constructor> = interface(IInvokable)
     ['{557EE245-3542-40EC-86B5-16B1A3EA902A}']
@@ -281,11 +282,8 @@ type
     ///   Retrieves ICriteria, pre-constructed by given expression.
     /// </summary>
     /// <example>
-    ///     <c>var Key: Prop;
-    ///     begin
-    ///     Key := GetProp('KEY');
-    ///     fRepository.FindWhere(Key = 100).Page(1,10);
-    ///     </c>
+    ///   <c>var Key: Prop; begin Key := GetProp('KEY');
+    ///   fRepository.FindWhere(Key = 100).Page(1,10);</c>
     /// </example>
     function FindWhere(const expression: ICriterion): IList<T>; overload;
   end;
@@ -364,7 +362,7 @@ type
   ISelectCommand = interface(IDBCommand)
     ['{8D6D2229-8626-43C3-AD0A-091E4CB91050}']
     function Select: IDBResultSet;
-    function SelectAll(entityClass: TClass): IDBResultSet;
+    function SelectAll: IDBResultSet;
   end;
 
   IDDLCommand = interface(IDBCommand)

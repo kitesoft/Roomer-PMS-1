@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -50,8 +50,7 @@ type
 
     class procedure SetConnectionProperties(
       const externalConnection: TObject; const jsonObject: TJSONObject);
-    class procedure SetConnectionConnected(
-      const qualifiedName: string; const externalConnection: TObject);
+    class procedure SetConnectionConnected(const externalConnection: TObject);
   public
     class constructor Create;
     class destructor Destroy;
@@ -143,7 +142,7 @@ begin
     externalConnection := TActivator.CreateInstance(qualifiedName, [nil]);
     try
       SetConnectionProperties(externalConnection, GetJsonPair(jsonObject, 0).JsonValue as TJSONObject);
-      SetConnectionConnected(qualifiedName, externalConnection);
+      SetConnectionConnected(externalConnection);
     except
       externalConnection.Free;
       raise;
@@ -179,7 +178,7 @@ begin
 end;
 
 class procedure TConnectionFactory.SetConnectionConnected(
-  const qualifiedName: string; const externalConnection: TObject);
+  const externalConnection: TObject);
 begin
   TType.SetPropertyValue(externalConnection, 'Connected', True);
 end;

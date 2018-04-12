@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -29,11 +29,19 @@ unit Spring.Persistence.Core.Graphics;
 interface
 
 uses
-{$IFDEF MSWINDOWS}
-  Graphics
-{$ELSE}
-  {$IFNDEF LINUX}
+{$IFDEF FMX}
+  {$IFDEF DELPHIXE5_UP}
   Fmx.Graphics
+  {$ELSE}
+  Fmx.Types
+  {$ENDIF}
+{$ELSE}
+  {$IFDEF MSWINDOWS}
+  {$IFDEF HAS_UNITSCOPE}
+  Vcl.Graphics
+  {$ELSE}
+  Graphics
+  {$ENDIF}
   {$ELSE}
   SysUtils,
   Classes
@@ -45,17 +53,28 @@ type
 
 {$REGION 'Type overlays'}
 
-{$IFDEF MSWINDOWS}
+{$IFDEF FMX}
+  {$IFDEF DELPHIXE5_UP}
+  TBitmap = Fmx.Graphics.TBitmap;
+  {$ELSE}
+  TBitmap = Fmx.Types.TBitmap;
+  {$ENDIF}
+  TPicture = TBitmap;
+  TGraphic = TBitmap;
+  TGraphicClass = class of TBitmap;
+{$ELSE}
+  {$IFDEF MSWINDOWS}
+  {$IFDEF HAS_UNITSCOPE}
+  TBitmap = Vcl.Graphics.TBitmap;
+  TPicture = Vcl.Graphics.TPicture;
+  TGraphic = Vcl.Graphics.TGraphic;
+  TGraphicClass = Vcl.Graphics.TGraphicClass;
+  {$ELSE}
   TBitmap = Graphics.TBitmap;
   TPicture = Graphics.TPicture;
   TGraphic = Graphics.TGraphic;
   TGraphicClass = Graphics.TGraphicClass;
-{$ELSE}
-  {$IFNDEF LINUX}
-  TBitmap = Fmx.Graphics.TBitmap;
-  TPicture = TBitmap;
-  TGraphic = TBitmap;
-  TGraphicClass = class of TBitmap;
+  {$ENDIF}
   {$ELSE}
   // hack to compile code on Linux - semi functional
   TBitmapType = (Unknown, BMP, PNG);
@@ -158,8 +177,8 @@ type
   end;
 
 const
-  PNG_HEADER : array[0..7] of Byte = ($89, $50, $4E, $47, $0D, $0A, $1A, $0A);
-  PNG_IHDR :  array[0..7] of Byte = (0, 0, 0, $D, $49, $48, $44, $52);
+  PNG_HEADER: array[0..7] of Byte = ($89, $50, $4E, $47, $0D, $0A, $1A, $0A);
+  PNG_IHDR: array[0..7] of Byte = (0, 0, 0, $D, $49, $48, $44, $52);
 
 procedure TBitmap.Assign(source: TPersistent);
 begin

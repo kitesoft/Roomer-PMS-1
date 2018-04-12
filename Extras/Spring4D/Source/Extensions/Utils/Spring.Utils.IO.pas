@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -579,7 +579,6 @@ type
       attributes: Cardinal; includeSubfolders: Boolean); overload;
     destructor Destroy; override;
     function MoveNext: Boolean; override;
-    procedure Reset; override;
   end;
 
   /// <summary>
@@ -605,7 +604,6 @@ type
     constructor Create(files: TStrings);
 //    constructor Create(files: TStrings; const searchPattern: string;
 //      attributes: Cardinal; includeSubfolders: Boolean);
-    procedure Reset; override;
     function MoveNext: Boolean; override;
   end;
 
@@ -1825,12 +1823,6 @@ begin
   until Result or IsTerminated;
 end;
 
-procedure TFileEnumerator.Reset;
-begin
-  FreeContexts;
-  fCurrentContext := CreateSearchContext(fRootPath);
-end;
-
 {$ENDREGION}
 
 
@@ -1913,11 +1905,6 @@ begin
   Result := fIndex < fFiles.Count - 1;
   if Result then
     Inc(fIndex);
-end;
-
-procedure TFileListEnumerator.Reset;
-begin
-  fIndex := -1;
 end;
 
 {$ENDREGION}

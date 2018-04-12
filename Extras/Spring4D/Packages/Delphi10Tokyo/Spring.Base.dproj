@@ -7,7 +7,7 @@
         <TargetedPlatforms>135</TargetedPlatforms>
         <AppType>Package</AppType>
         <FrameworkType>None</FrameworkType>
-        <ProjectVersion>18.2</ProjectVersion>
+        <ProjectVersion>18.3</ProjectVersion>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -175,6 +175,7 @@
         <DCCReference Include="..\..\Source\Base\Collections\Spring.Collections.Queues.pas"/>
         <DCCReference Include="..\..\Source\Base\Collections\Spring.Collections.Sets.pas"/>
         <DCCReference Include="..\..\Source\Base\Collections\Spring.Collections.Stacks.pas"/>
+        <DCCReference Include="..\..\Source\Base\Collections\Spring.Collections.Trees.pas"/>
         <DCCReference Include="..\..\Source\Base\Spring.DesignPatterns.pas"/>
         <DCCReference Include="..\..\Source\Base\Spring.Events.pas"/>
         <DCCReference Include="..\..\Source\Base\Spring.Events.Base.pas"/>

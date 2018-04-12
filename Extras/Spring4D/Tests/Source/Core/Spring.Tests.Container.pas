@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -103,6 +103,12 @@ type
 
     procedure TestResolveComponentDoesNotFallbackToTObject;
     procedure TestResolveComponentDoesCallOverriddenConstructor;
+
+    procedure TestRecordConstructorNotConsidered;
+
+{$IFDEF DELPHIXE_UP}
+    procedure TestClassContainsAbstractMethods;
+{$ENDIF}
   end;
 
   // Same Service, Different Implementations
@@ -212,6 +218,11 @@ type
   published
     procedure TestResolveChicken;
     procedure TestResolveEgg;
+  end;
+
+  TTestCircularReferenceLazySingleton = class(TContainerTestCase)
+  published
+    procedure TestResolveLazySingleton;
   end;
 
   TTestPerResolve = class(TContainerTestCase)
@@ -329,7 +340,11 @@ uses
   Spring.Collections,
   Spring.Container.Core,
   Spring.Container.Resolvers,
-  Spring.TestUtils;
+  Spring.TestUtils,
+{$IFDEF DELPHIXE_UP}
+  Spring.Mocking,
+{$ENDIF}
+  Spring.Logging;
 
 type
   TObjectAccess = class(TObject);
@@ -576,6 +591,26 @@ begin
   end;
 end;
 
+type
+  TAbstractMethodsTest = class
+  public
+    procedure FooBar; virtual; abstract;
+  end;
+
+{$IFDEF DELPHIXE_UP}
+procedure TTestSimpleContainer.TestClassContainsAbstractMethods;
+var
+  logger: Mock<ILogger>;
+begin
+  fContainer.Kernel.Logger := logger;
+  fContainer.RegisterType<TAbstractMethodsTest>;
+  fContainer.Build;
+
+  logger.Received(1).Warn(Arg.IsAny<string>);
+  Pass;
+end;
+{$ENDIF}
+
 procedure TTestSimpleContainer.TestSingleton;
 var
   obj1, obj2: TAgeServiceBase;
@@ -742,6 +777,17 @@ begin
   CheckEquals(3, count);
   service3 := fContainer.Resolve<INameService>; // pool creates a new instance again
   CheckEquals(4, count);
+end;
+
+procedure TTestSimpleContainer.TestRecordConstructorNotConsidered;
+begin
+  fContainer.RegisterType<Lazy<INameService>>.DelegateTo(
+    function: Lazy<INameService>
+    begin
+    end);
+  // Lazy<T> has a constructor which the TConstructorInspector mistakenly inspected
+  fContainer.Build;
+  Pass;
 end;
 
 procedure TTestSimpleContainer.TestRecyclable;
@@ -1247,6 +1293,24 @@ var
 begin
   ExpectedException := ECircularDependencyException;
   egg := fContainer.Resolve<IEgg>;
+end;
+
+{$ENDREGION}
+
+
+{$REGION 'TTestCircularReferenceLazySingleton'}
+
+procedure TTestCircularReferenceLazySingleton.TestResolveLazySingleton;
+var
+  chicken: IChicken;
+begin
+  fContainer.RegisterType<TChicken>.AsSingleton;
+  fContainer.RegisterType<TEggLazyChicken>;
+  fContainer.Build;
+
+  chicken := fContainer.Resolve<IChicken>;
+  CheckSame(chicken, chicken.Egg.Chicken);
+  chicken.Egg := nil;
 end;
 
 {$ENDREGION}

@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -62,19 +62,30 @@ type
 implementation
 
 uses
-{$IF Defined(DELPHIXE4_UP) AND NOT Defined(NEXTGEN)}
+{$IF Defined(DELPHIXE4_UP) and not Defined(NEXTGEN)}
   AnsiStrings,
 {$ELSE}
   SysUtils,
 {$IFEND}
-{$IFDEF MSWINDOWS}
-  GIFImg,
+{$IFDEF FMX}
+  {$IFDEF DELPHIXE5_UP}
+  Fmx.Graphics,
+  {$ELSE}
+  Fmx.Types,
+  {$ENDIF}
+{$ELSE}
+  {$IFDEF MSWINDOWS}
+  {$IFDEF HAS_UNITSCOPE}
+  Vcl.Graphics,
+  Vcl.Imaging.GIFImg,
+  Vcl.Imaging.jpeg,
+  Vcl.Imaging.pngimage,
+  {$ELSE}
   Graphics,
+  GIFImg,
   jpeg,
   pngimage,
-{$ELSE}
-  {$IFNDEF LINUX}
-  FMX.Graphics,
+  {$ENDIF}
   {$ENDIF}
 {$ENDIF}
   Variants;
@@ -88,6 +99,7 @@ begin
   TValueConverterFactory.RegisterConverter(TypeInfo(TStream), TypeInfo(TPicture),
     TStreamToPictureConverter);
 end;
+
 
 {$REGION 'TStreamToVariantConverter'}
 
@@ -112,7 +124,11 @@ var
 begin
   stream := TMemoryStream.Create;
   try
+  {$IF Defined(MSWINDOWS) and not Defined(FMX)}
     TPicture(value.AsObject).Graphic.SaveToStream(stream);
+  {$ELSE}
+    TPicture(value.AsObject).SaveToStream(stream);
+  {$IFEND}
     stream.Position := 0;
     Result := TValue.From<Variant>(StreamToVariant(stream));
   finally
@@ -131,7 +147,7 @@ var
   pic: TPicture;
   stream: TStream;
 begin
-  pic := TPicture.Create;
+  pic := TPicture.Create{$IFDEF FMX}{$IFNDEF DELPHIXE5_UP}(0, 0){$ENDIF}{$ENDIF};
   stream := TStream(value.AsObject);
   if TryLoadFromStreamSmart(stream, pic) then
     Result := pic
@@ -142,7 +158,7 @@ begin
   end;
 end;
 
-{$IFDEF MSWINDOWS}
+{$IF Defined(MSWINDOWS) and not Defined(FMX)}
 function FindGraphicClass(const Buffer; const BufferSize: Int64;
   out GraphicClass: TGraphicClass): Boolean; overload;
 const
@@ -173,7 +189,7 @@ begin
   end;
   Result := (GraphicClass <> nil);
 end;
-{$ENDIF}
+{$IFEND}
 
 function TStreamToPictureConverter.TryLoadFromStreamSmart(const stream: TStream;
   const picture: TPicture): Boolean;
@@ -192,14 +208,14 @@ begin
       picture.Assign(nil);
       Exit(True);
     end;
-{$IFDEF MSWINDOWS}
+{$IF Defined(MSWINDOWS) and not Defined(FMX)}
     if not FindGraphicClass(LStream.Memory^, LStream.Size, LGraphicClass) then
       Exit(False);
 {$ELSE}
     LGraphicClass := TBitmap;
-{$ENDIF}
+{$IFEND}
      // raise EInvalidGraphic.Create(SInvalidImage);
-    LGraphic := LGraphicClass.Create;
+    LGraphic := LGraphicClass.Create{$IFDEF FMX}{$IFNDEF DELPHIXE5_UP}(0, 0){$ENDIF}{$ENDIF};
     LStream.Position := 0;
     LGraphic.LoadFromStream(LStream);
     picture.Assign(LGraphic);

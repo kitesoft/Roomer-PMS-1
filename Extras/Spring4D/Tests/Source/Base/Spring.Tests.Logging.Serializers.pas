@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -339,7 +339,7 @@ end;
 
 procedure TTestReflectionTypeSerializer.TestNestedClass;
 var
-  controller: Managed<TLoggerController>;
+  controller: Shared<TLoggerController>;
   o: TSampleObject;
   result: string;
   s, c: string;
@@ -405,7 +405,7 @@ end;
 
 procedure TTestReflectionTypeSerializer.TestNestingClass;
 var
-  controller: Managed<TLoggerController>;
+  controller: Shared<TLoggerController>;
   o: TSampleObject;
   result: string;
 begin
@@ -536,7 +536,7 @@ end;
 
 procedure TTestArrayOfValueSerializer.TestNested;
 var
-  controller: Managed<TLoggerController>;
+  controller: Shared<TLoggerController>;
   values: TArray<TValue>;
   result: string;
   i: IInterface;

@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -121,7 +121,7 @@ type
 
 procedure TDBXExceptionHandlerTest.TestGetAdapterException_EDatabaseError;
 var
-  exc, result: Managed<Exception>;
+  exc, result: Shared<Exception>;
 begin
   exc := EDatabaseError.Create('');
   result := SUT.GetAdapterException(exc, 'message');
@@ -132,7 +132,7 @@ end;
 
 procedure TDBXExceptionHandlerTest.TestGetAdapterException_Others_Return_Nil;
 var
-  exc, result: Managed<Exception>;
+  exc, result: Shared<Exception>;
 begin
   exc := Exception.Create('');
   result := SUT.GetAdapterException(exc, '');
@@ -141,7 +141,7 @@ end;
 
 procedure TDBXExceptionHandlerTest.TestGetAdapterException_TDBXError;
 var
-  exc, result: Managed<Exception>;
+  exc, result: Shared<Exception>;
 begin
   exc := TDBXError.Create(-1, '');
   result := SUT.GetAdapterException(exc, 'message');
@@ -229,7 +229,7 @@ end;
 
 procedure TDBXConnectionAdapterTest.TestCreateStatement;
 var
-  params: Managed<TStrings>;
+  params: Shared<TStrings>;
   statement: IDBStatement;
 begin
   fMockConnection.Setup.Executes.When(Args.Any).RegisterClient(nil, nil);

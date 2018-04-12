@@ -2,7 +2,7 @@
 {                                                                           }
 {           Spring Framework for Delphi                                     }
 {                                                                           }
-{           Copyright (c) 2009-2017 Spring4D Team                           }
+{           Copyright (c) 2009-2018 Spring4D Team                           }
 {                                                                           }
 {           http://www.spring4d.org                                         }
 {                                                                           }
@@ -348,7 +348,8 @@ begin
     TPropertyInspector.Create,
     TMethodInspector.Create,
     TFieldInspector.Create,
-    TInterceptorInspector.Create
+    TInterceptorInspector.Create,
+    TAbstractMethodInspector.Create
   );
   for inspector in inspectors do
     fBuilder.AddInspector(inspector);
@@ -586,7 +587,7 @@ begin
   targetType := serviceType.RttiType;
   // TODO: remove dependency on lazy type
   if IsLazyType(serviceType) then
-    serviceType := targetType.GetGenericArguments[0].Handle;
+    serviceType := GetLazyType(serviceType);
   models := fRegistry.FindAll(serviceType).ToArray;
   SetLength(Result, Length(models));
   for i := Low(models) to High(models) do
@@ -652,7 +653,8 @@ begin
   Result := fContainer.Resolve(serviceType);
 end;
 
-function TServiceLocatorAdapter.GetService(serviceType: PTypeInfo; const serviceName: string): TValue;
+function TServiceLocatorAdapter.GetService(serviceType: PTypeInfo; //FI:O804
+  const serviceName: string): TValue;
 begin
   Result := fContainer.Resolve({serviceType, }serviceName);
 end;
@@ -663,7 +665,7 @@ begin
   Result := fContainer.Resolve(serviceType, args);
 end;
 
-function TServiceLocatorAdapter.GetService(serviceType: PTypeInfo;
+function TServiceLocatorAdapter.GetService(serviceType: PTypeInfo; //FI:O804
   const serviceName: string; const args: array of TValue): TValue;
 begin
   Result := fContainer.Resolve({serviceType, }serviceName, args);
