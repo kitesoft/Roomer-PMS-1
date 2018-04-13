@@ -220,7 +220,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Top = 89
     Width = 1459
     Height = 535
-    ActivePage = tsComparison
+    ActivePage = tabStatGrid
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -235,10 +235,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -588,7 +584,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             OnGetDisplayText = tvStatsHideZeroValues
             HeaderAlignmentHorz = taCenter
             Position.BandIndex = 3
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object tvStatssoldRooms: TcxGridDBBandedColumn
@@ -610,7 +606,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             OnGetDisplayText = tvStatsHideZeroValues
             HeaderAlignmentHorz = taCenter
             Position.BandIndex = 3
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object tvStatsnoShow: TcxGridDBBandedColumn
@@ -621,7 +617,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             OnGetDisplayText = tvStatsHideZeroValues
             HeaderAlignmentHorz = taCenter
             Position.BandIndex = 3
-            Position.ColIndex = 6
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object tvStatsRemainingDepartures: TcxGridDBBandedColumn
@@ -643,7 +639,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             OnGetDisplayText = tvStatsHideZeroValues
             HeaderAlignmentHorz = taCenter
             Position.BandIndex = 3
-            Position.ColIndex = 8
+            Position.ColIndex = 11
             Position.RowIndex = 0
           end
           object tvStatsInHouse: TcxGridDBBandedColumn
@@ -654,7 +650,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             OnGetDisplayText = tvStatsHideZeroValues
             HeaderAlignmentHorz = taCenter
             Position.BandIndex = 3
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object tvStatsTotalSellableRooms: TcxGridDBBandedColumn
@@ -685,7 +681,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             PropertiesClassName = 'TcxCalcEditProperties'
             OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 3
-            Position.ColIndex = 11
+            Position.ColIndex = 9
             Position.RowIndex = 0
           end
           object tvStatsArrivedRooms: TcxGridDBBandedColumn
@@ -703,7 +699,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             PropertiesClassName = 'TcxCalcEditProperties'
             OnGetDisplayText = tvStatsHideZeroValues
             Position.BandIndex = 3
-            Position.ColIndex = 9
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
         end
@@ -714,10 +710,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tsComparison: TsTabSheet
       Caption = 'Comparison'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel3: TsPanel
         Left = 0
         Top = 0
@@ -1808,10 +1800,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0
@@ -1823,10 +1811,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
@@ -4584,7 +4568,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     object grdPrinterLinkComparison: TdxGridReportLink
       Active = True
       Component = grdComparison
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -4606,7 +4589,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43202.660247905090000000
+      ReportDocument.CreationDate = 43203.456402719910000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -4614,7 +4597,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportTitle.Font.Style = [fsBold]
       ReportTitle.Text = 'Roomrent Comparison'
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -4628,7 +4610,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object grdPrinterLinkStats: TdxGridReportLink
       Component = grStat
-      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -4646,7 +4627,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportDocument.Creator = 'Roomer'
       ReportTitle.Text = 'Roomrent Statistics'
       ShrinkToPageWidth = True
-      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end

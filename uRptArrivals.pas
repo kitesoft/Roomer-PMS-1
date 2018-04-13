@@ -15,7 +15,7 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton  ;
+  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, sEdit, Vcl.Buttons, sSpeedButton, cxCurrencyEdit  ;
 
 type
   TfrmArrivalsReport = class(TfrmBaseRoomerForm)
@@ -172,7 +172,10 @@ const
           '  pe.Name AS GuestName, '#10 +
           '  r.Customer AS CompanyCode, '#10 +
           '  r.Name AS CompanyName, '#10 +
-          '  (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '#10 +
+          '  (SELECT AVG(rd1.RoomRate * cu.aValue) '#10 +
+          '   FROM roomsdate rd1 '#10 +
+          '   JOIN currencies cu on cu.currency=rd1.currency '#10 +
+          '  WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '#10 +
           '  RR_Arrival(rd.roomreservation, false) as Arrival, '#10 +
           '  RR_Departure(rd.roomreservation, false) as Departure,   '#10 +
           '  ( SELECT COUNT(id) '#10 +
@@ -340,7 +343,7 @@ end;
 procedure TfrmArrivalsReport.grArrivalsListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(AProperties);
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmArrivalsReport.grArrivalsListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;
