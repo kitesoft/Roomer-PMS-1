@@ -208,7 +208,10 @@ begin
     s := s + '        yyy.NumGuests, '#10;
     s := s + '        yyy.NumNights, '#10;
     s := s + '        rr.ExpectedCheckOutTime, '#10;
-    s := s + '        (SELECT AVG(RoomRate) FROM roomsdate rd WHERE rd.RoomReservation=yyy.RoomReservation AND (rd.ResFlag NOT IN (''X'',''C''))) AS Averagerate '#10;
+    s := s + '    (SELECT AVG(rd1.RoomRate * cu.aValue) '#10;
+    s := s + '      FROM roomsdate rd1 '#10;
+    s := s + '      JOIN currencies cu on cu.currency=rd1.currency '#10;
+    s := s + '      WHERE rd1.RoomReservation=yyy.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
     s := s + '    FROM '#10;
     s := s + '        (SELECT  -- yyy '#10;
     s := s + '            CurrencyRate, '#10;
@@ -489,13 +492,13 @@ procedure TfrmDeparturesReport.tvDeparturesList2AverageRatePerNightGetProperties
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(AProperties);
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmDeparturesReport.tvDeparturesListGroupInvoiceBalanceGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AProperties: TcxCustomEditProperties);
 begin
-  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(AProperties);
+  AProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmDeparturesReport.DoUpdateControls;

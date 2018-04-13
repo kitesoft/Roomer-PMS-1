@@ -274,8 +274,6 @@ inherited frmArrivalsReport: TfrmArrivalsReport
     PopupMenu = pnmuGridMenu
     TabOrder = 1
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
-    ExplicitTop = 161
     object grArrivalsListDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnCellDblClick = grArrivalsListDBTableView1CellDblClick
@@ -359,6 +357,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       object grArrivalsListDBTableView1AverageRoomRate: TcxGridDBColumn
         Caption = 'Average Rate'
         DataBinding.FieldName = 'AverageRoomRate'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         OnGetProperties = grArrivalsListDBTableView1AverageRoomRateGetProperties
         Options.Editing = False
         Width = 82
@@ -596,7 +595,7 @@ inherited frmArrivalsReport: TfrmArrivalsReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43199.433159976850000000
+      ReportDocument.CreationDate = 43203.525875925920000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
