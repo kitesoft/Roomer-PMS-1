@@ -190,7 +190,7 @@ begin
     s := s + '        RR_Arrival(yyy.roomreservation, false) as Arrival, '#10;
     s := s + '        RR_Departure(yyy.roomreservation, false) as Departure, '#10;
     s := s + '        rr.GroupAccount, '#10;
-    s := s + '        if (Paid=1, 0, ROUND(SUM(RateWithDiscount + IFNULL(IF(CityTaxIncl, 0, CityTaxPerDay), 0.00)), 2) * CurrencyRate) AS TotalRent, '#10;
+    s := s + '        if (Paid=1, 0, ROUND(SUM(RateWithDiscount + IFNULL(IF(CityTaxIncl, 0, CityTaxPerDay), 0.00)) * CurrencyRate, 2)) AS TotalRent, '#10;
     s := s + '        IFNULL((SELECT '#10;
     s := s + '                    SUM(Number * Price) '#10;
     s := s + '                FROM '#10;
