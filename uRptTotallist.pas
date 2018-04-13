@@ -268,8 +268,8 @@ begin
            '         date as dtDate '#10 +
            '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND not outoforderblocking, 1, 0)) AS roomsArrival '#10 +
            '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND not outoforderblocking, numGuests, 0)) AS paxArrival '#10 +
-           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL, 1, 0)) AS roomsDeparture '#10 +
-           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL, numGuests, 0)) AS paxDeparture '#10 +
+           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL AND not outoforderblocking, 1, 0)) AS roomsDeparture '#10 +
+           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL AND not outoforderblocking, numGuests, 0)) AS paxDeparture '#10 +
            '   --    , SUM(IF(PREV_DAY = ''G'' OR RES_FLAG = ''G'', 1, 0)) AS roomsInHouse -- Roomrent stats method '#10 +
            '   --    , SUM(IF(PREV_DAY = ''G'' OR RES_FLAG = ''G'', numGuests, 0)) AS paxInHouse -- Roomrent stats method '#10 +
            '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsInHouse -- Totallist method '#10 +
@@ -316,10 +316,11 @@ begin
            '           SELECT -- Add reservations from "yesterday" that are leaving or have left "today" '#10 +
            '               CAST(rd.ADate AS date) + INTERVAL 1 DAY AS rdDate, '#10 +
            '               NULL AS RES_FLAG, '#10 +
-           '               false, '#10 +
+           '               false, -- outoforderblocking '#10 +
            '               rd.ResFlag AS PREV_DAY '#10 +
            '               ,(SELECT count(person) from persons p where p.roomreservation=rd.roomreservation) as numGuests '#10 +
            '           FROM roomsdate rd '#10 +
+           '           JOIN reservations r on r.reservation=rd.reservation and not r.outoforderblocking '#10 +
            '           LEFT JOIN rooms rm2 on (rm2.room = rd.room AND rm2.active AND rm2.statistics AND NOT rm2.hidden and not rm2.wildcard AND rm2.location in (%s)) '#10 +
            '           WHERE %s - INTERVAL 1 DAY <= rd.ADate AND rd.ADate <= %s - INTERVAL 1 DAY '#10 +
            '           AND (SUBSTRING(rd.Room, 1, 1) = ''<'' or rm2.room is not null) '#10 +

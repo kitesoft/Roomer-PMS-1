@@ -273,7 +273,7 @@ inherited frmRptTotallist: TfrmRptTotallist
         item
           Format = '0'
           Kind = skSum
-          FieldName = 'paxStay'
+          FieldName = 'paxStayOver'
           Column = lvTotallistpaxStayOver
         end
         item
@@ -378,20 +378,20 @@ inherited frmRptTotallist: TfrmRptTotallist
           Visible = False
         end
         item
-          Caption = 'Arrival'
+          Caption = 'Arrivals'
           Width = 148
         end
         item
           Caption = 'Inhouse'
         end
         item
-          Caption = 'Departure'
+          Caption = 'Departures'
         end
         item
-          Caption = 'StayOver'
+          Caption = 'Stay Overs'
         end
         item
-          Caption = 'Optional Booking'
+          Caption = 'Optional Bookings'
         end
         item
           Caption = 'Allotments'
