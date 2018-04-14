@@ -266,10 +266,10 @@ begin
 
       s := '   SELECT '#10 +
            '         date as dtDate '#10 +
-           '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND not outoforderblocking, 1, 0)) AS roomsArrival '#10 +
-           '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND not outoforderblocking, numGuests, 0)) AS paxArrival '#10 +
-           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL AND not outoforderblocking, 1, 0)) AS roomsDeparture '#10 +
-           '       , SUM(IF(PREV_DAY IS NOT NULL AND RES_FLAG IS NULL AND not outoforderblocking, numGuests, 0)) AS paxDeparture '#10 +
+           '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND RES_FLAG NOT IN (''A'', ''B'', ''N'',''L'',''O'') AND not outoforderblocking, 1, 0)) AS roomsArrival '#10 +
+           '       , SUM(IF(PREV_DAY IS NULL AND RES_FLAG IS NOT NULL AND RES_FLAG NOT IN (''A'', ''B'', ''N'',''L'',''O'') AND not outoforderblocking, numGuests, 0)) AS paxArrival '#10 +
+           '       , SUM(IF(PREV_DAY IS NOT NULL AND PREV_DAY NOT IN (''A'', ''B'', ''N'',''L'',''O'') AND RES_FLAG IS NULL AND not outoforderblocking, 1, 0)) AS roomsDeparture '#10 +
+           '       , SUM(IF(PREV_DAY IS NOT NULL AND PREV_DAY NOT IN (''A'', ''B'', ''N'',''L'',''O'') AND RES_FLAG IS NULL AND not outoforderblocking, numGuests, 0)) AS paxDeparture '#10 +
            '   --    , SUM(IF(PREV_DAY = ''G'' OR RES_FLAG = ''G'', 1, 0)) AS roomsInHouse -- Roomrent stats method '#10 +
            '   --    , SUM(IF(PREV_DAY = ''G'' OR RES_FLAG = ''G'', numGuests, 0)) AS paxInHouse -- Roomrent stats method '#10 +
            '       , SUM(IF(RES_FLAG IN (''P'',''G'',''D'',''W'',''Z'',''Q''), 1, 0)) AS roomsInHouse -- Totallist method '#10 +
