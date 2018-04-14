@@ -235,6 +235,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -710,6 +714,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tsComparison: TsTabSheet
       Caption = 'Comparison'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object sPanel3: TsPanel
         Left = 0
         Top = 0
@@ -832,10 +840,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Align = alClient
             BevelOuter = bvNone
             BorderStyle = bsSingle
-            Color = 14540253
             Columns = 3
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = 4013373
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
@@ -867,10 +874,9 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Align = alClient
             BevelOuter = bvNone
             BorderStyle = bsSingle
-            Color = 14540253
             Columns = 3
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = 4013373
+            Font.Color = clWindowText
             Font.Height = -11
             Font.Name = 'Tahoma'
             Font.Style = []
@@ -1800,6 +1806,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0
@@ -1811,6 +1821,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
@@ -4589,7 +4603,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43203.456402719910000000
+      ReportDocument.CreationDate = 43204.982264074070000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
