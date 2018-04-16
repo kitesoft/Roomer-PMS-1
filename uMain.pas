@@ -67,7 +67,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime,
   dxSkinStardust,
   dxSkinSummer2008, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, sScrollBox, acImage, AdvUtil,
-  uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics
+  uReservationStateDefinitions, System.Actions, Vcl.ActnList, uEmbDateStatistics, uVersionManagement
   , uReservationStateChangeHandler
   , uFraDayStatistics
   , uFrmRateQuery
@@ -1079,6 +1079,7 @@ type
     PeriodViewSelectedRow: integer;
 
     AppIsClosing : Boolean;
+    RoomerVersionManagement : TRoomerVersionManagement;
     FReservationStateHandler: TReservationStateChangeHandler;
 
     procedure OnRefreshMessagesRequest(var Msg: TMessage); message WM_REFRESH_MESSAGES;
@@ -1428,6 +1429,10 @@ type
     procedure DeActivateMessageTimerIfActive;
     procedure SetPMSVisibilities;
     function GetDateUnderCursor: TDate;
+    {$HINTS OFF}
+    procedure OnAskUpgrade(const Text, version: String; forced : Boolean; var upgrade: Boolean);
+    {$HINTS ON}
+    procedure PrepareVersionManagement;
     procedure ClearFilter;
     procedure SetDateStatisticsDate;
     procedure WMEnterSizeMove(var Message: TMessage) ; message WM_ENTERSIZEMOVE;
@@ -1612,7 +1617,7 @@ uses
     , uFinanceTransactionReport
     , uDailyTotalsReport
     , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
-  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes, uVersionManagement
+  uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes
   , uReservationTaxesAPI, uRoomRentTaxReceipt, uVCLUtils;
 
 {$R *.DFM}
@@ -1732,17 +1737,67 @@ begin
   end;
 end;
 
+procedure TfrmMain.OnAskUpgrade(const Text : String; const version : String; forced : Boolean; var upgrade : Boolean);
+var
+    Buttons: TMsgDlgButtons;
+    lMSgResult: integer;
+
+    Dialog : TForm;
+
+    procedure SetButtonCaption(const CurrentButtonCaption, NewButtonCaption : String);
+    var lButton: TButton;
+    begin
+      With Dialog do
+      begin
+        lButton := TButton(FindComponent(CurrentButtonCaption));
+        if lButton <> nil then
+          lButton.Caption := NewButtonCaption;
+      end;
+    end;
+
+begin
+  if NOT forced then
+    Buttons := [mbOK,mbCancel]
+  else
+    Buttons := [mbOK];
+
+  Dialog := CreateMessageDialog(text, mtConfirmation, Buttons);
+  with Dialog do
+  try
+    SetButtonCaption('OK', GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateNow'));
+    SetButtonCaption('Cancel', GetTranslatedText('shTx_AboutRoomer_NewVersionAvailableUpdateLater'));
+
+    Position := poScreenCenter;
+    lMsgResult := ShowModal;
+    upgrade := lMsgResult = mrOk;
+  finally
+    Free;
+  end;
+end;
+
+procedure TfrmMain.PrepareVersionManagement;
+begin
+{$IFNDEF DEBUG}
+  if not TRoomerVersionInfo.IsDebug then
+  begin
+    RoomerVersionManagement.Free;
+    RoomerVersionManagement := TRoomerVersionManagement.Create;
+    RoomerVersionManagement.OnAskUpgrade := OnAskUpgrade;
+    RoomerVersionManagement.Prepare;
+  end;
+{$ENDIF}
+end;
+
 procedure TfrmMain.PostLoginProcess(prepareLanguages: boolean);
 begin
   LoggedIn := true;
   OpenAppSettings;
   g.RefreshRoomList;
   SetPMSVisibilities;
+  PrepareVersionManagement;
   // ******
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
-
-  RoomerVersionManagement.Start;
 
   if prepareLanguages then
   begin
@@ -1858,7 +1913,6 @@ begin
     panelHide.BringToFront;
   end;
   CloseAppSettings;
-  RoomerVersionManagement.Stop;
 end;
 
 procedure TfrmMain.ReEnableFiltersInPeriodGrid;
@@ -2738,6 +2792,10 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  try
+    RoomerVersionManagement.Free;
+  Except
+  end;
   try
     PushActivityLogs(true);
   Except
@@ -10329,7 +10387,7 @@ end;
 procedure TfrmMain.btnReDownloadRoomerClick(Sender: TObject);
 begin
 {$IFNDEF DEBUG}
-  if RoomerVersionManagement.Active then
+  if RoomerVersionManagement.VersionManagerActive then
   begin
     LoginCancelled := true;
     RoomerVersionManagement.ForceUpdate;

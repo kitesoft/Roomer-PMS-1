@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{436E2CCE-115E-475F-9C3E-19C03F70A4D0}</ProjectGuid>
         <MainSource>Roomer.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">preReleaseAcceptance</Config>
+        <Config Condition="'$(Config)'==''">DebugBas</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <ProjectVersion>14.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
@@ -243,11 +243,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCC_DcuOutput>_dcu</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_3_Win32)'!=''">
+        <DCC_IMPLICIT_STRING_CAST>false</DCC_IMPLICIT_STRING_CAST>
         <VerInfo_MajorVer>9</VerInfo_MajorVer>
         <VerInfo_Release>9</VerInfo_Release>
         <VerInfo_Build>9</VerInfo_Build>
         <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=9.9.9.9;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=9.9.9.9;Comments=;ExtraBuild=320526;PrivateBuild=</VerInfo_Keys>
-        <DCC_IMPLICIT_STRING_CAST>false</DCC_IMPLICIT_STRING_CAST>
         <DCC_DcuOutput>_dcu\debug</DCC_DcuOutput>
         <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_BplOutput> </DCC_BplOutput>
@@ -1164,7 +1164,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat</PostBuildEvent>
+        <PostBuildEvent>$(OUTPUTDIR)DeployOnDev.bat</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
 </Project>
