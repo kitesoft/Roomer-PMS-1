@@ -1742,6 +1742,8 @@ begin
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
 
+  RoomerVersionManagement.Start;
+
   if prepareLanguages then
   begin
     if NOT d.roomerMainDataSet.OffLineMode then
@@ -1856,6 +1858,7 @@ begin
     panelHide.BringToFront;
   end;
   CloseAppSettings;
+  RoomerVersionManagement.Stop;
 end;
 
 procedure TfrmMain.ReEnableFiltersInPeriodGrid;

@@ -35,8 +35,6 @@ type
     FActive: boolean;
 
     procedure OnTimer(Sender: TObject);
-    procedure Start(initialStart : Boolean = False);
-    procedure Stop;
 
     procedure makeSureUpgradeDaemonIsActive;
 
@@ -62,6 +60,8 @@ type
 
     function IsNewVersionAvailable(force : Boolean = false) : Boolean;
     procedure Prepare;
+    procedure Start(initialStart : Boolean = False);
+    procedure Stop;
     procedure ForceUpdate;
 
     property Active: boolean read FActive write FActive;
@@ -276,8 +276,8 @@ procedure TRoomerVersionManagement.Start(initialStart : Boolean = False);
 begin
   timer.Interval := TEN_MINUTES;
   timer.Enabled := True;
-  if initialStart then
-    PerformUpdateIfAvailable(InitialStart);
+//  if initialStart then
+//    PerformUpdateIfAvailable(InitialStart);
 end;
 
 procedure TRoomerVersionManagement.Stop;
@@ -388,7 +388,7 @@ procedure TRoomerVersionManagement.activateDaemon;
 begin
   // --
   GetFromURI(format(URI_UPGRADE_DAEMON_ACTIVATE, [d.roomerMainDataSet.ForcedURLEncode(d.roomerMainDataSet.RoomerStoreUri)]));
-  Start(true);
+//  Start(true);
 end;
 
 procedure TRoomerVersionManagement.CloseDaemon;
