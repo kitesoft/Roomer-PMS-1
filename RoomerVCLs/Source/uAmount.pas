@@ -107,6 +107,7 @@ type
     class operator Multiply(a: TAmount; b: TAmount): TAmount;
 
     class operator Divide(a: TAmount; d: double): TAmount;
+    class operator Divide(a: TAmount; d: extended): TAmount;
     class operator Divide(a: TAmount; d: integer): TAmount;
     class operator Divide(a: TAmount; b: TAmount): TAmount;
 
@@ -261,20 +262,6 @@ begin
   Result.FValue := a;
   Result.FCurCode := c;
   Result.FCurrencyRate := 0.0000;
-end;
-
-class operator TAmount.Divide(a: TAmount; d: double): TAmount;
-begin
-  Result.FCurCode := a.FCurCode;
-  Result.FValue := a.FValue / d;
-  Result.FCurrencyRate := a.FCurrencyRate;
-end;
-
-class operator TAmount.Divide(a: TAmount; d: integer): TAmount;
-begin
-  Result.FCurCode := a.FCurCode;
-  Result.FValue := a.FValue / d;
-  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Equal(a, b: TAmount): boolean;
@@ -564,6 +551,27 @@ end;
 class function TAmount.Create(const a: Extended; const id: integer): TAmount;
 begin
   Result := Create(a, CheckValidCurrencyID(id));
+end;
+
+class operator TAmount.Divide(a: TAmount; d: double): TAmount;
+begin
+  Result.FCurCode := a.FCurCode;
+  Result.FValue := a.FValue / d;
+  Result.FCurrencyRate := a.FCurrencyRate;
+end;
+
+class operator TAmount.Divide(a: TAmount; d: integer): TAmount;
+begin
+  Result.FCurCode := a.FCurCode;
+  Result.FValue := a.FValue / d;
+  Result.FCurrencyRate := a.FCurrencyRate;
+end;
+
+class operator TAmount.Divide(a: TAmount; d: extended): TAmount;
+begin
+  Result.FCurCode := a.FCurCode;
+  Result.FValue := a.FValue / d;
+  Result.FCurrencyRate := a.FCurrencyRate;
 end;
 
 class operator TAmount.Divide(a, b: TAmount): TAmount;

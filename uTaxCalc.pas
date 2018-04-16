@@ -523,14 +523,14 @@ begin
     if aTax.NETTO_AMOUNT_BASED then
     begin
       if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
-        baseAmount := baseAmount / (1 + ((aTax.Amount + aItemTypeInfo.VATPercentage) / 100))
+        baseAmount := baseAmount / (100 + aTax.Amount + aItemTypeInfo.VATPercentage) * 100
       else
         baseAmount := TAmount.ZERO.Max(baseAmount - aInvoiceRoomEntity.VatPerNight);
     end
     else
     begin
       if TaxIsIncluded(aTax, lCustomerIncludedDefault) then
-        baseAmount := baseAmount / (1 + (aTax.Amount / 100));
+        baseAmount := baseAmount / (100 + aTax.Amount) * 100;
     end;
 
     Amount := baseAmount * aTax.Amount / 100;

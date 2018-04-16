@@ -33,6 +33,7 @@ type
     procedure TestSubtract;
     procedure TestMultiply;
     procedure TestDivide;
+    procedure TestDivideBy109AndaHalf;
   end;
 
   TAmountCompareTests = class(TTestCase)
@@ -251,6 +252,16 @@ begin
   a2 := TAmount.Create(91.2623, 'GBP');
   b := a /a2;
   CheckTrue(SameValue(b.Value, 899661 / RoundDecimals(91.2623 * 1.15, 4), 0.0001), 'Dividing by different currency not working');
+end;
+
+procedure TAmountArtithmeticTests.TestDivideBy109AndaHalf;
+var
+  a: TAmount;
+  b: TAmount;
+begin
+  a := TAmount.Create(18500, 'GBP');
+  b := a / 109.5;
+  CheckEquals(168.9498, b.value);
 end;
 
 procedure TAmountArtithmeticTests.TestMultiply;
