@@ -222,8 +222,8 @@ begin
         lblTomDepartures.Caption := lStats.Statistic['REMAINING_DEPARTURES'].FormattedValue;
       end;
 
-      StatGrid.Cells[i+1, ROW_ARRIVALS]     := lStats.Statistic['REMAINING_ARRIVALS'].FormattedValue;
-      StatGrid.Cells[i+1, ROW_DEPARTURES]   := lStats.Statistic['REMAINING_DEPARTURES'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_ARRIVALS]     := lStats.Statistic['EXPECTED_ARRIVALS'].FormattedValue;
+      StatGrid.Cells[i+1, ROW_DEPARTURES]   := lStats.Statistic['EXPECTED_DEPARTURES'].FormattedValue;
       StatGrid.Cells[i+1, ROW_LEFT_TO_SELL] := lStats.Statistic['LEFT_TO_SELL'].FormattedValue;
       StatGrid.Cells[i+1, ROW_OCCUPANCY]    := lStats.Statistic['OCCUPANCY'].FormattedValue;
       StatGrid.Cells[i+1, ROW_BAR]          := lStats.Statistic['BAR'].FormattedValue;
