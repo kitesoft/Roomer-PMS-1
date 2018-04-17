@@ -275,12 +275,12 @@ procedure THotelStatsFromXMLTest.TestReadXML;
 begin
   FHotelStats.LoadFromXML(cXML);
   CheckEquals(FHotelStats.StatisticsPerDateList.Count, 3);
-  CheckFalse(Assigned(FHotelStats.StatisticsForDate[EncodeDate(2118, 3, 7)]));
-  CheckEquals(EncodeDate(2018, 3, 7), FHotelStats.StatisticsForDate[EncodeDate(2018, 3, 7)].Date);
 
+  CheckEquals(EncodeDate(2018, 3, 7), FHotelStats.StatisticsForDate[EncodeDate(2018, 3, 7)].Date);
   CheckTrue(Assigned(FHotelStats.StatisticsForDate[EncodeDate(2018, 3, 7)]['BAR']));
   CheckEquals(110.0, FHotelStats.StatisticsForDate[EncodeDate(2018, 3, 7)]['BAR'].Value);
 
+  CheckEquals(0.0, FHotelStats.StatisticsForDate[EncodeDate(2118, 3, 7)]['BAR'].Value, 'Statistics for out of range date not found');
 end;
 
 initialization

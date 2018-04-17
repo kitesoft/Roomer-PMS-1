@@ -1618,7 +1618,8 @@ uses
     , uDailyTotalsReport
     , uReleaseNotes, ufrmVatCodesGrid, uRoomerGridForm, ufrmPriceCodesGrid, uFrmConnectionsStatistics,
   uRoomReservationOBJ, uBreakfastTypeDefinitions, uRptBreakfastList, uRptCleaningTimes
-  , uReservationTaxesAPI, uRoomRentTaxReceipt, uVCLUtils;
+  , uReservationTaxesAPI, uRoomRentTaxReceipt, uVCLUtils
+  , AlHttpClient;
 
 {$R *.DFM}
 {$R Cursors.res}
@@ -3554,10 +3555,16 @@ begin
         on E: Exception do
         begin
           lTryAutoLogin := '';
-          lastMessage := E.message;
-          iLoc := max(pos(' - ''http://', lastMessage), pos(' - ''https://', lastMessage));
-          if iLoc > 0 then
-            lastMessage := Copy(lastMessage, 1, iLoc - 1);
+
+          if (E is EALHTTPClientException) and (EALHTTPClientException(E).StatusCode = 403) then
+            lastMessage := GetTranslatedText('shRoomerVersionNotAllowed')
+          else
+          begin
+            lastMessage := E.message;
+            iLoc := max(pos(' - ''http://', lastMessage), pos(' - ''https://', lastMessage));
+            if iLoc > 0 then
+              lastMessage := Copy(lastMessage, 1, iLoc - 1);
+          end;
           lblAuthStatus.Caption := lastMessage;
           password := '';
           result := false;
