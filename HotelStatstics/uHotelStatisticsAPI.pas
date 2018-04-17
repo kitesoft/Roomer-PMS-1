@@ -119,7 +119,11 @@ begin
       lAPI := THotelStatisticsMobileAPICaller.Create;
       try
         lStatistics := THotelStatisticsList.Create;
-        lAPI.GetHotelStatistics(aFromDate, aToDate, lStatistics);
+        try
+          lAPI.GetHotelStatistics(aFromDate, aToDate, lStatistics);
+        except
+          lStatistics.Clear;
+        end;
         if assigned(aOnCompletionHandler) then
         begin
           TTHread.Synchronize(TThread.CurrentThread,
@@ -226,7 +230,11 @@ begin
       lAPI := THotelStatisticsMobileAPICaller.Create;
       try
         lStatistics := THotelStatisticsList.Create;
-        lAPI.GetRoomRentStatistics(aFromDate, aToDate, aExcludedStates, lStatistics);
+        try
+          lAPI.GetRoomRentStatistics(aFromDate, aToDate, aExcludedStates, lStatistics);
+        except
+          lStatistics.Clear;
+        end;
         if assigned(aOnCompletionHandler) then
         begin
           TTHread.Synchronize(TThread.CurrentThread,
