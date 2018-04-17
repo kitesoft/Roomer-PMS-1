@@ -818,7 +818,10 @@ end;
 
 function TPackageInvoiceLine.GetAmountIncludedInParent: TAmount;
 begin
-  Result := inherited / FParentList.Count;
+  if FParentList.Count <> 0 then
+    Result := inherited / FParentList.Count
+  else
+    Result := TAmount.ZERO;
 end;
 
 procedure TPackageInvoiceLine.RemoveParent(aParent: TInvoiceLine);

@@ -3368,12 +3368,18 @@ procedure TfrmReservationProfile.DropComboTarget1Drop(Sender: TObject; ShiftStat
   var Effect: Integer);
 begin
   Effect := DROPEFFECT_COPY;
-  DropComboTargetDrop(format(BOOKING_STATIC_RESOURCES, [inttostr(zReservation)]), ACCESS_RESTRICTED,
-    Sender AS TDropComboTarget, ShiftState, APoint, Effect);
-  timBlink.Tag := 0;
-  timBlink.enabled := false;
-  timBlink.Interval := 100;
-  timBlink.enabled := true;
+  try
+    if DropComboTargetDrop(format(BOOKING_STATIC_RESOURCES, [inttostr(zReservation)]), ACCESS_RESTRICTED,
+      Sender AS TDropComboTarget, ShiftState, APoint, Effect) then
+    begin
+      timBlink.Tag := 0;
+      timBlink.enabled := false;
+      timBlink.Interval := 100;
+      timBlink.enabled := true;
+    end;
+  except on E: Exception do
+    ShowMessage('Error occured while saving file: ' + e.message);
+  end;
 end;
 
 procedure TfrmReservationProfile.DropComboTarget1GetDropEffect(Sender: TObject; ShiftState: TShiftState; APoint: TPoint;

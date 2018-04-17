@@ -435,25 +435,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
       OnClick = btCancelClick
       SkinData.SkinSection = 'BUTTON'
     end
-    object btDownload: TsButton
-      AlignWithMargins = True
-      Left = 2
-      Top = 2
-      Width = 111
-      Height = 29
-      Margins.Left = 2
-      Margins.Top = 2
-      Margins.Right = 2
-      Margins.Bottom = 2
-      Align = alLeft
-      Cancel = True
-      Caption = 'Download'
-      ImageIndex = 95
-      Images = DImages.PngImageList1
-      TabOrder = 2
-      OnClick = btDownloadClick
-      SkinData.SkinSection = 'BUTTON'
-    end
   end
   object StoreLogin: TcxPropertiesStore
     Components = <
@@ -482,6 +463,6 @@ object frmRoomerLoginForm: TfrmRoomerLoginForm
   object tmrCheckConnection: TTimer
     OnTimer = tmrCheckConnectionTimer
     Left = 40
-    Top = 216
+    Top = 272
   end
 end

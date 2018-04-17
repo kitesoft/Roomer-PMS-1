@@ -383,7 +383,7 @@ type
     procedure SetFooterSummaryValue(aColumn: TcxGridDBBandedColumn; aValue: Variant);
     function GetFooterSummaryText(aColumn: TcxGridDBBandedColumn): string;
     procedure LoadDataInDataset(aDataset: TDataSet; aStatistics: THotelStatisticsList; aComparisonFieldsOnly: boolean = false);
-    procedure LoadBaseDataInComparisonDataset(aDaysOffset: integer);
+    procedure LoadBaseDataInComparisonDataset(aOffset: integer);
     procedure LoadBaseDataInDataset(aStatistics: THotelStatisticsList);
     procedure LoadComparisonDataInDataset(aStatistics: THotelStatisticsList);
     procedure UpdateCompareDataColumns;
@@ -391,6 +391,7 @@ type
     procedure CalculateTvComparisonDiffFooterSummary;
     procedure UpdateControls;
     procedure SetLoadingData(const Value: boolean);
+    function GroupingByMonth: boolean;
 
     property LoadingData: boolean read FLoadingData write SetLoadingData;
   public
@@ -762,7 +763,11 @@ begin
   LoadDataInDataset(kbmStat, aStatistics);
   if pcMain.ActivePage = tsComparison then
   begin
-    LoadBaseDataInComparisonDataset(trunc(dtComparisonStart.Date - dtDateFrom.Date));
+    if GroupingByMonth then
+      LoadBaseDataInComparisonDataset((dtComparisonStart.Date.Year - dtDateFrom.Date.Year) * 12 +
+                                      (dtComparisonStart.Date.Month- dtDateFrom.Date.Month))
+    else
+      LoadBaseDataInComparisonDataset(trunc(dtComparisonStart.Date - dtDateFrom.Date));
     kbmStat.Close; // Avoid display of aggregated data when switching back to stats tab
   end;
 
@@ -779,7 +784,6 @@ end;
 procedure TfrmRptRoomRentStatistics.LoadDataInDataset(aDataset: TDataSet; aStatistics: THotelStatisticsList; aComparisonFieldsOnly: boolean);
 var
   lStat: TSingleDateStatistics;
-  lGroupByMonth: boolean;
   lCurrentDate: TDateTime;
 begin
 
@@ -787,12 +791,10 @@ begin
   try
     aDataset.Open;
 
-    lGroupByMonth := (pcMain.ActivePage = tsComparison) and (rgCompareOn.ItemIndex = 1);
-
     for lStat in aStatistics.StatisticsPerDateList do
     begin
       lCurrentDate := lStat.Date;
-      if lGroupByMonth then
+      if GroupingByMonth then
         lCurrentDate := lCurrentDate.StartOfMonth;
 
       if aDataset.Locate('aDate', lCurrentDate, []) then
@@ -860,9 +862,13 @@ begin
   end;
 end;
 
-procedure TfrmRptRoomRentStatistics.LoadBaseDataInComparisonDataset(aDaysOffset: integer);
+function TfrmRptRoomRentStatistics.GroupingByMonth: boolean;
+begin
+  Result := (pcMain.ActivePage = tsComparison) and (rgCompareOn.ItemIndex = 1);
+end;
+
+procedure TfrmRptRoomRentStatistics.LoadBaseDataInComparisonDataset(aOffset: integer);
 var
-  lGRoupByMonth: boolean;
   lCurrentDate: TDateTime;
 begin
   tvComparison.DataController.BeginFullUpdate;
@@ -872,14 +878,14 @@ begin
     if not kbmComparison.Active then
       kbmComparison.Open;
 
-    lGroupByMonth := (pcMain.ActivePage = tsComparison) and (rgCompareOn.ItemIndex = 1);
 
     kbmStat.First;
     while not kbmStat.Eof do
     begin
-      lCurrentDate := kbmStat.FieldByName('adate').asDateTime.AddDays(aDaysOffset);
-      if lGroupByMonth then
-        lCurrentDate := lCurrentDate.StartOfMonth;
+      if GroupingByMonth then
+        lCurrentDate := kbmStat.FieldByName('adate').asDateTime.StartOfMonth.AddMonths(aOffset)
+      else
+        lCurrentDate := kbmStat.FieldByName('adate').asDateTime.AddDays(aOffset);
 
       if kbmComparison.Locate('aDate', lCurrentDate, []) then
         kbmComparison.Edit

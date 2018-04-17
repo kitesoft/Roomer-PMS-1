@@ -589,7 +589,7 @@ inherited frmDeparturesReport: TfrmDeparturesReport
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43203.525887303240000000
+      ReportDocument.CreationDate = 43206.659886203710000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19

@@ -1236,10 +1236,6 @@ begin
       begin
         raise Exception.Create('Unknown hotel, username and password combination');
       end
-      else if (E.StatusCode = 403) then
-      begin
-        raise Exception.Create('This version is not compatible with RoomerServices'#10 +'Please download the latest version.');
-      end
       else if (E.StatusCode DIV 100 = 5) then
       begin
         if POS('UNKNOWN DATABASE', Uppercase(E.Message)) > 0 then

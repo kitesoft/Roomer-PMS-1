@@ -114,7 +114,7 @@ type
   end;
 
 function UploadFileToResources(KeyString, Access : String; onlyFilename, filename : String; ResourceParameters : TResourceParameters = nil) : String;
-procedure DropComboTargetDrop(KeyString, Access : String; Sender: TDropComboTarget; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+function DropComboTargetDrop(KeyString, Access : String; Sender: TDropComboTarget; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer): boolean;
 procedure parseResourceXml(xmlStr : String; var path, filename, error : String; var success : boolean);
 function getNewFilenameIfNeeded(filename : String; ResourceParameters : TResourceParameters) : String;
 function DownloadResource(sourceFilename, destFilename: String): Boolean;
@@ -173,12 +173,20 @@ begin
   end;
 end;
 
-procedure DropComboTargetDrop(KeyString, Access : String; Sender: TDropComboTarget; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+function DropComboTargetDrop(KeyString, Access : String; Sender: TDropComboTarget; ShiftState: TShiftState; APoint: TPoint; var Effect: Integer): boolean;
 var
   Stream: TStream;
   i: integer;
   filename, Name: string;
 begin
+  Result := true;
+  if (Sender.Files.Count = 0) and (Sender.Data.Count = 0) then
+  begin
+    ShowMessage('Nothing to save');
+    Result := false;
+    Exit;
+  end;
+
   // Extract and display dropped data.
   if (Sender.Files.Count > 0) AND (Sender.Data.Count = 0) then
   begin
@@ -188,6 +196,7 @@ begin
       if UploadFileToResources(KeyString, Access, ExtractFilename(filename), filename) = '' then
       begin
         ShowMessage(format(GetTranslatedText('shTx_ManageFiles_UnableToUpload'), [filename]));
+        Result := false;
         break;
       end;
     end;
@@ -216,6 +225,7 @@ begin
       if UploadFileToResources(KeyString, Access, ExtractFilename(filename), filename) = '' then
       begin
         ShowMessage(format(GetTranslatedText('shTx_ManageFiles_UnableToUpload'), [filename]));
+        Result := false;
         break;
       end;
     end;

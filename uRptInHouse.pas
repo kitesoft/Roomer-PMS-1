@@ -15,7 +15,8 @@ uses
   cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv, dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLnk,
   dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers, dxSkinsdxBarPainter, dxSkinsdxRibbonPainter,
   dxPScxCommon, dxPSCore, dxStatusBar
-  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit, dxPScxPivotGridLnk  ;
+  , AdvSmoothProgressBar, Vcl.ComCtrls, sStatusBar, cxTextEdit, Vcl.Buttons, sSpeedButton, sEdit, dxPScxPivotGridLnk,
+  cxCurrencyEdit  ;
 
 type
   TfrmInHouseReport = class(TfrmBaseRoomerForm)
@@ -158,7 +159,13 @@ const
           '  pe.Name AS GuestName, '#10 +
           '  r.Customer AS CompanyCode, '#10 +
           '  r.Name AS CompanyName, '#10 +
-          '  (SELECT AVG(rd1.RoomRate) FROM roomsdate rd1 WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '#10 +
+          '  (SELECT AVG(CASE WHEN rd1.isPercentage '#10 +
+          '              THEN rd1.RoomRate - RoomRate * rd1.Discount / 100 '#10 +
+          '              ELSE rd1.RoomRate - rd1.Discount '#10 +
+          '              END * cu.aValue) '#10 +
+          '   FROM roomsdate rd1 '#10 +
+          '   JOIN currencies cu on cu.currency=rd1.currency '#10 +
+          '   WHERE rd1.RoomReservation=rr.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRoomRate, '#10 +
           '  RR_Arrival(rr.roomreservation, false) as Arrival, '#10 +
           '  RR_Departure(rr.roomreservation, false) as Departure,   '#10 +
           '  ( SELECT COUNT(id) '#10 +
@@ -273,7 +280,7 @@ end;
 procedure TfrmInHouseReport.grInHouseListDBTableView1AverageRoomRateGetProperties(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AProperties: TcxCustomEditProperties);
 begin
-  RoomerCurrencyManager.DefaultCurrencyDefinition.SetcxEditProperties(AProperties);
+  aProperties := RoomerCurrencyManager.DefaultCurrencyDefinition.GetcxEditProperties;
 end;
 
 procedure TfrmInHouseReport.grInHouseListDBTableView1CellDblClick(Sender: TcxCustomGridTableView; ACellViewInfo: TcxGridTableDataCellViewInfo;

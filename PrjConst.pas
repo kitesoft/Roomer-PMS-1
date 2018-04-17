@@ -1829,6 +1829,8 @@ begin
                    '  - Is the login information correct?' + #13 +
                    '  - Has login been blocked for this user?' + #13 +
                    '  - Is the organization code correct?' + #13);
+
+  constants.Add('shRoomerVersionNotAllowed', 'This version of Roomer PMS is not compatible with the Roomer services and not allowed access anymore.');
 end;
 
 procedure AddConstants_OfflineReports;

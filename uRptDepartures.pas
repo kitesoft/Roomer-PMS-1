@@ -190,7 +190,7 @@ begin
     s := s + '        RR_Arrival(yyy.roomreservation, false) as Arrival, '#10;
     s := s + '        RR_Departure(yyy.roomreservation, false) as Departure, '#10;
     s := s + '        rr.GroupAccount, '#10;
-    s := s + '        if (Paid=1, 0, ROUND(SUM(RateWithDiscount + IFNULL(IF(CityTaxIncl, 0, CityTaxPerDay), 0.00)), 2) * CurrencyRate) AS TotalRent, '#10;
+    s := s + '        if (Paid=1, 0, ROUND(SUM(RateWithDiscount + IFNULL(IF(CityTaxIncl, 0, CityTaxPerDay), 0.00)) * CurrencyRate, 2)) AS TotalRent, '#10;
     s := s + '        IFNULL((SELECT '#10;
     s := s + '                    SUM(Number * Price) '#10;
     s := s + '                FROM '#10;
@@ -208,10 +208,13 @@ begin
     s := s + '        yyy.NumGuests, '#10;
     s := s + '        yyy.NumNights, '#10;
     s := s + '        rr.ExpectedCheckOutTime, '#10;
-    s := s + '    (SELECT AVG(rd1.RoomRate * cu.aValue) '#10;
-    s := s + '      FROM roomsdate rd1 '#10;
-    s := s + '      JOIN currencies cu on cu.currency=rd1.currency '#10;
-    s := s + '      WHERE rd1.RoomReservation=yyy.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
+    s := s + '        (SELECT AVG(CASE WHEN rd1.isPercentage '#10;
+    s := s + '                      THEN rd1.RoomRate - RoomRate * rd1.Discount / 100 '#10;
+    s := s + '                      ELSE rd1.RoomRate - rd1.Discount '#10;
+    s := s + '                    END * cu.aValue) '#10;
+    s := s + '          FROM roomsdate rd1 '#10;
+    s := s + '          JOIN currencies cu on cu.currency=rd1.currency '#10;
+    s := s + '          WHERE rd1.RoomReservation=yyy.RoomReservation AND (rd1.ResFlag NOT IN (''X'',''C''))) AS AverageRate '#10;
     s := s + '    FROM '#10;
     s := s + '        (SELECT  -- yyy '#10;
     s := s + '            CurrencyRate, '#10;
