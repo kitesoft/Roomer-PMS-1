@@ -392,6 +392,7 @@ type
     procedure UpdateControls;
     procedure SetLoadingData(const Value: boolean);
     function GroupingByMonth: boolean;
+    function FullMonthSelected: boolean;
 
     property LoadingData: boolean read FLoadingData write SetLoadingData;
   public
@@ -459,52 +460,58 @@ end;
 
 procedure TfrmRptRoomRentStatistics.kbmComparisonCalcFields(DataSet: TDataSet);
 begin
-  if kbmComparisonADate.IsNull or kbmComparisonADateBase.IsNull then
-    Exit;
+  if not kbmComparisonADateBase.IsNUll then
+  begin
+    if kbmComparisontotalSellableRoomsBase.AsInteger <> 0 then
+    begin
+      kbmComparisonoccBase.asFloat := kbmComparisonsoldRoomsBase.AsInteger / kbmComparisontotalSellableRoomsBase.AsInteger * 100;
+      kbmComparisonrevParBase.asFloat := kbmComparisonrevenueBase.asFloat / kbmComparisontotalSellableRoomsBase.AsInteger;
+    end
+    else
+    begin
+      kbmComparisonoccBase.asFloat := 0;
+      kbmComparisonrevParBase.asFloat := 0;
+    end;
 
-  if kbmComparisontotalSellableRoomsBase.AsInteger <> 0 then
-  begin
-    kbmComparisonoccBase.asFloat := kbmComparisonsoldRoomsBase.AsInteger / kbmComparisontotalSellableRoomsBase.AsInteger * 100;
-    kbmComparisonrevParBase.asFloat := kbmComparisonrevenueBase.asFloat / kbmComparisontotalSellableRoomsBase.AsInteger;
-  end
-  else
-  begin
-    kbmComparisonoccBase.asFloat := 0;
-    kbmComparisonrevParBase.asFloat := 0;
+    if kbmComparisonsoldRoomsBase.AsInteger <> 0 then
+      kbmComparisonadrBase.asFloat := kbmComparisonrevenueBase.AsFloat / kbmComparisonsoldRoomsBase.AsInteger
+    else
+      kbmComparisonadrBase.asFloat := 0;
   end;
 
-  if kbmComparisonsoldRoomsBase.AsInteger <> 0 then
-    kbmComparisonadrBase.asFloat := kbmComparisonrevenueBase.AsFloat / kbmComparisonsoldRoomsBase.AsInteger
-  else
-    kbmComparisonadrBase.asFloat := 0;
+  if not kbmComparisonADate.IsNUll then
+  begin
+    if kbmComparisontotalSellableRooms.AsInteger <> 0 then
+    begin
+      kbmComparisonocc.asFloat := kbmComparisonsoldRooms.AsInteger / kbmComparisontotalSellableRooms.AsInteger * 100;
+      kbmComparisonrevPar.asFloat := kbmComparisonrevenue.asFloat / kbmComparisontotalSellableRooms.AsInteger;
+    end
+    else
+    begin
+      kbmComparisonocc.asFloat := 0;
+      kbmComparisonrevPar.asFloat := 0;
+    end;
 
-  if kbmComparisontotalSellableRooms.AsInteger <> 0 then
-  begin
-    kbmComparisonocc.asFloat := kbmComparisonsoldRooms.AsInteger / kbmComparisontotalSellableRooms.AsInteger * 100;
-    kbmComparisonrevPar.asFloat := kbmComparisonrevenue.asFloat / kbmComparisontotalSellableRooms.AsInteger;
-  end
-  else
-  begin
-    kbmComparisonocc.asFloat := 0;
-    kbmComparisonrevPar.asFloat := 0;
+    if kbmComparisonsoldRooms.AsInteger <> 0 then
+      kbmComparisonadr.asFloat := kbmComparisonrevenue.AsFloat / kbmComparisonsoldRooms.AsInteger
+    else
+      kbmComparisonadr.asFloat := 0;
   end;
 
-  if kbmComparisonsoldRooms.AsInteger <> 0 then
-    kbmComparisonadr.asFloat := kbmComparisonrevenue.AsFloat / kbmComparisonsoldRooms.AsInteger
-  else
-    kbmComparisonadr.asFloat := 0;
-
-  kbmComparisonrevenueDiff.AsFloat := kbmComparisonrevenueBase.AsFloat - kbmComparisonrevenue.AsFloat;
-  kbmComparisonOccDiff.AsFloat := kbmComparisonoccBase.AsFloat - kbmComparisonocc.AsFloat;
-  kbmComparisonAdrDiff.AsFloat := kbmComparisonadrBase.AsFloat - kbmComparisonadr.AsFloat;
-  kbmComparisonRevParDiff.AsFloat := kbmComparisonrevParBase.AsFloat - kbmComparisonrevPar.AsFloat;
-  kbmComparisonTotalDiscountDiff.AsFloat := kbmComparisontotalDiscountBase.AsFloat - kbmComparisontotalDiscount.AsFloat;
-  kbmComparisonMaxRateDiff.AsInteger := kbmComparisonmaxRateBase.AsInteger - kbmComparisonmaxRate.AsInteger;
-  kbmComparisonMinRateDiff.AsInteger := kbmComparisonminRateBase.asInteger - kbmComparisonminRate.AsInteger;
-  kbmComparisonTotalGuestsDiff.AsInteger := kbmComparisontotalGuestsBase.AsInteger - kbmComparisontotalGuests.AsInteger;
-  kbmComparisonTotalSellableRoomsDiff.AsInteger := kbmComparisontotalSellableRoomsBase.AsInteger - kbmComparisontotalSellableRooms.AsInteger;
-  kbmComparisonOooRoomsDiff.AsInteger := kbmComparisonoooRoomsBase.AsInteger - kbmComparisonoooRooms.AsInteger;
-  kbmComparisonSoldRoomsDiff.AsInteger := kbmComparisonsoldRoomsBase.AsInteger - kbmComparisonsoldRooms.AsInteger;
+  if not kbmComparisonADate.IsNull and not kbmComparisonADateBase.IsNull then
+  begin
+    kbmComparisonrevenueDiff.AsFloat := kbmComparisonrevenueBase.AsFloat - kbmComparisonrevenue.AsFloat;
+    kbmComparisonOccDiff.AsFloat := kbmComparisonoccBase.AsFloat - kbmComparisonocc.AsFloat;
+    kbmComparisonAdrDiff.AsFloat := kbmComparisonadrBase.AsFloat - kbmComparisonadr.AsFloat;
+    kbmComparisonRevParDiff.AsFloat := kbmComparisonrevParBase.AsFloat - kbmComparisonrevPar.AsFloat;
+    kbmComparisonTotalDiscountDiff.AsFloat := kbmComparisontotalDiscountBase.AsFloat - kbmComparisontotalDiscount.AsFloat;
+    kbmComparisonMaxRateDiff.AsInteger := kbmComparisonmaxRateBase.AsInteger - kbmComparisonmaxRate.AsInteger;
+    kbmComparisonMinRateDiff.AsInteger := kbmComparisonminRateBase.asInteger - kbmComparisonminRate.AsInteger;
+    kbmComparisonTotalGuestsDiff.AsInteger := kbmComparisontotalGuestsBase.AsInteger - kbmComparisontotalGuests.AsInteger;
+    kbmComparisonTotalSellableRoomsDiff.AsInteger := kbmComparisontotalSellableRoomsBase.AsInteger - kbmComparisontotalSellableRooms.AsInteger;
+    kbmComparisonOooRoomsDiff.AsInteger := kbmComparisonoooRoomsBase.AsInteger - kbmComparisonoooRooms.AsInteger;
+    kbmComparisonSoldRoomsDiff.AsInteger := kbmComparisonsoldRoomsBase.AsInteger - kbmComparisonsoldRooms.AsInteger;
+  end;
 end;
 
 function TfrmRptRoomRentStatistics.GetFooterSummaryText(aColumn: TcxGridDBBandedColumn): string;
@@ -732,7 +739,7 @@ begin
   begin
     inc(FDataLoadingThreads);
 
-    if (cbxMonth.ItemIndex >=0) and (cbxYear.ItemIndex >=0) and (cbxComparisonPeriod.ItemIndex >= 0) then // limit compare data to end of year / month
+    if FullMonthSelected then  // limit compare data to end of year / month
       lCompareToDate := dtComparisonStart.Date.EndOfMonth
     else  // Manually selected period, just calculated based on number of days
       lCompareToDate := dtComparisonStart.Date.AddDays(trunc(dtDateTo.Date - dtDateFrom.Date));
@@ -750,6 +757,11 @@ begin
 
   UpdateControls;
 
+end;
+
+function TfrmRptRoomRentStatistics.FullMonthSelected: boolean;
+begin
+  Result := (cbxMonth.ItemIndex >=0) and (cbxYear.ItemIndex >=0) and (cbxComparisonPeriod.ItemIndex >= 0);
 end;
 
 procedure TfrmRptRoomRentStatistics.btnReportStatsClick(Sender: TObject);
@@ -892,8 +904,11 @@ begin
       else
       begin
         kbmComparison.Append;
-        kbmComparisonADate.AsDateTime := lCurrentDate;
-        kbmComparisonweekday.AsString := lCurrentDate.ToString('ddd');
+        if not FullMonthSelected or (lCurrentDate.Month = dtComparisonStart.Date.Month) then // dont roll over into next month
+        begin
+          kbmComparisonADate.AsDateTime := lCurrentDate;
+          kbmComparisonweekday.AsString := lCurrentDate.ToString('ddd');
+        end;
         kbmComparisonmaxRateBase.AsFloat := kbmStat.FieldByName('maxRate').asFloat;
         kbmComparisonminRateBase.AsFloat := kbmStat.FieldByName('minRate').asFloat;
       end;
