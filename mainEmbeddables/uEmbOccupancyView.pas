@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, AdvObj, BaseGrid, AdvGrid, Vcl.ExtCtrls, sPanel,
-  uD, HData, PrjConst, cmpRoomerDataSet, uSqlDefinitions, uDateUtils, uUtils, uRoomerLanguage, uAppGlobal, AdvUtil;
+  uD, HData, PrjConst, cmpRoomerDataSet, uSqlDefinitions, uDateUtils, uUtils, uRoomerLanguage, uAppGlobal, AdvUtil
+  , uHotelStatistics
+  ;
 
 type
 
@@ -29,6 +31,7 @@ type
     procedure CheckResizeFont;
     function ResizeFont(Canvas : TCanvas; width : Integer; text : String) : Integer;
     procedure SetCell0FontSize(const Value: Integer);
+    procedure UpdateGridFromStats(aStats: THotelStatisticsList);
     { Private declarations }
   protected
     FOriginalParentHeight : Integer;
@@ -52,7 +55,8 @@ implementation
 
 {$R *.dfm}
 
-uses uHotelStatisticsAPI, uHotelStatistics;
+uses uHotelStatisticsAPI
+    ;
 
 { TembOccupancyView }
 
@@ -90,39 +94,26 @@ procedure TembOccupancyView.ShowOccupancy(fromDate, toDate: TDateTime);
 begin
   self.FromDate := fromDate;
   self.ToDate := toDate;
-
-  grdOccupancy.BeginUpdate;
-  try
-//    grdOccupancy.ColCount := trunc(toDate) - trunc(fromDate) + 1;
-    grdOccupancy.FixedCols := 1;
-    RefreshStats;
-    grdOccupancy.Show;
-  finally
-    grdOccupancy.EndUpdate;
-  end;
+  RefreshStats;
 end;
 
 procedure TembOccupancyView.RefreshStats;
+begin
+  THotelStatisticsMobileAPICallerThreaded.GetHotelStatistics(fromDate, toDate, UpdateGridFromStats);
+end;
+
+procedure TembOccupancyView.UpdateGridFromStats(aStats: THotelStatisticsList);
 var
   col : Integer;
-  lStats: THotelStatisticsList;
   lDateStat: TSingleDateStatistics;
 begin
-  grdOccupancy.RowCount := 3 + (4 * ABS(ORD(OccupancyViewType = ovtAdvanced)));
-  grdOccupancy.ColCount := trunc(toDate) - trunc(fromDate) + 2;
-
-  lStats := THotelStatisticsList.Create;
+  grdOccupancy.BeginUpdate;
   try
-    with THotelStatisticsMobileAPICaller.Create do
-    try
-      GetHotelStatistics(fromDate, toDate, lStats);
-    finally
-      Free;
-    end;
+    grdOccupancy.RowCount := 3 + (4 * ABS(ORD(OccupancyViewType = ovtAdvanced)));
+    grdOccupancy.ColCount := trunc(toDate) - trunc(fromDate) + 2;
 
     col := 0;
-
-    for lDateStat in lStats.StatisticsPerDateList do // TODO: Force order by date!
+    for lDateStat in aStats.StatisticsPerDateList do // TODO: Force order by date!
     begin
       inc(col);
 
@@ -139,14 +130,14 @@ begin
       end;
 
     end;
-
     TranslateHeaders;
+    grdOccupancy.FixedCols := 1;
+    grdOccupancy.Show;
   finally
-    lStats.Free;
+    grdOccupancy.EndUpdate;
   end;
-
+//  PostMessage(ParentWindow, WM_REFRESH_PERIOD_VIEW_BOTTOM_REFRESH, 0, 0);
 end;
-
 
 procedure TembOccupancyView.TranslateHeaders;
 begin
