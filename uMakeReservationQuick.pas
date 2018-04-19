@@ -776,6 +776,7 @@ type
     ///  values in roomrates for this roomreservation
     /// </summary>
     procedure UpdateRatesInRoomRes(aRoomReservation: integer; aChannelID: integer = -1; const aRateID: string = '');
+    procedure UpdateDynamicRates;
   protected
     const
       WM_LOADPREVIOUS_GUESTS = WM_User + 53;
@@ -4257,9 +4258,16 @@ begin
 end;
 
 procedure TfrmMakeReservationQuick.cbxChannelsChange(Sender: TObject);
+begin
+  UpdateDynamicRates;
+  if Assigned(Sender) then
+    GetPrices;
+end;
+
+procedure TfrmMakeReservationQuick.UpdateDynamicRates();
 var
   ChannelCode,
-    chManCode: String;
+  chManCode: String;
   channelId: integer;
   FirstRound: boolean;
 begin
@@ -4274,11 +4282,7 @@ begin
       PopulateRatePlanCombo(FirstRound);
     end;
   end;
-  if Assigned(Sender) then
-    GetPrices;
 end;
-
-
 
 // ******************************************************************************
 // Page Reservation Edits
@@ -4290,6 +4294,7 @@ var
 begin
   datetimetostring(s, 'dddd', dtArrival.date);
   __lblArrivalWeekday.Caption := s;
+  UpdateDynamicRates;
 end;
 
 procedure TfrmMakeReservationQuick.dtArrivalCloseUp(Sender: TObject);
@@ -4320,6 +4325,7 @@ var
 begin
   datetimetostring(s, 'dddd', dtDeparture.date);
   __lblDepartureWeekday.Caption := s;
+  UpdateDynamicRates;
 end;
 
 procedure TfrmMakeReservationQuick.edNightsChange(Sender: TObject);
