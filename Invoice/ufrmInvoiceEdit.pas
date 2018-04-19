@@ -5832,14 +5832,11 @@ end;
 
 procedure TfrmInvoiceEdit.SaveAnd(doExit: boolean);
 begin
-  if zDoSave then
-  begin
-    if not IsDirectInvoice then
-      SaveInvoice(zInvoiceNumber, stProvisionally);
-    chkChanged;
-    if doExit then
-      close;
-  end;
+  if not IsDirectInvoice then
+    SaveInvoice(zInvoiceNumber, stProvisionally);
+  chkChanged;
+  if doExit then
+    close;
 end;
 
 procedure TfrmInvoiceEdit.actSaveAndExitExecute(Sender: TObject);
@@ -5897,6 +5894,8 @@ end;
 
 procedure TfrmInvoiceEdit.actPrintProformaExecute(Sender: TObject);
 begin
+  if chkChanged then
+    SaveAnd(false);
   PrintProforma;
 end;
 

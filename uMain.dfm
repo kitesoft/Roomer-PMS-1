@@ -55,7 +55,6 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
-    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -5565,7 +5564,8 @@ object frmMain: TfrmMain
       Category = 0
       Hint = 'Release Notes'
       Visible = ivAlways
-      ImageIndex = 137
+      ImageIndex = 135
+      LargeImageIndex = 138
       OnClick = dxbtnReleaseNotesClick
     end
     object btnConnectionsStatistics: TdxBarLargeButton
@@ -6068,6 +6068,7 @@ object frmMain: TfrmMain
       Hint = 'Help'
       Visible = ivAlways
       ImageIndex = 18
+      LargeImageIndex = 0
       ItemLinks = <
         item
           Visible = True
