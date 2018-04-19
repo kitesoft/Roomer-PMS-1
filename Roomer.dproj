@@ -121,6 +121,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_Build>1</VerInfo_Build>
         <DCC_NO_RETVAL>error</DCC_NO_RETVAL>
         <VerInfo_PreRelease>true</VerInfo_PreRelease>
         <VerInfo_Debug>true</VerInfo_Debug>
@@ -129,7 +130,7 @@
         <Manifest_File>None</Manifest_File>
         <DCC_UnitSearchPath>RoomerVCLs\Source;RoomerVCLs\http;Extras\NativeXml407\nativexml;Extras\NativeXml407\general;RoomerVCLs\Source ;Extras\DragDrop\Source;FastMM;Extras\Skin\AlphaSkins\Components;Extras\OXML\units;Extras\Spring4d\Source;Extras\Spring4d\Source\Base;Extras\Spring4d\Source\Core;Extras\Spring4d\Source\Data;Extras\Spring4d\Source\Data\ObjectDataset;Extras\Spring4d\Source\Base\Collections;Extras\Spring4d\Source\Base\Logging;Extras\Spring4d\Source\Base\Patches;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ImageBase>00400000</DCC_ImageBase>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.0;Comments=;ExtraBuild=170703;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.1;Comments=;ExtraBuild=180418;PrivateBuild=</VerInfo_Keys>
         <VerInfo_Locale>1039</VerInfo_Locale>
         <VerInfo_MinorVer>9</VerInfo_MinorVer>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
@@ -190,7 +191,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_4_Win32)'!=''">
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.0;Comments=;ExtraBuild=180417;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.1;Comments=;ExtraBuild=180419;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8)'!=''">
@@ -199,7 +200,7 @@
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
         <DCC_DcuOutput>_dcu\release</DCC_DcuOutput>
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.0;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.0;Comments=;ExtraBuild=180417Acc2;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.1;Comments=;ExtraBuild=180419Acc;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>
