@@ -1030,7 +1030,9 @@ begin
       invoiceLine := FInvoiceLinesList.AddInvoiceLine(lineId, lParent);
 
     if not aLineGUID.IsEmpty then
-      invoiceLine.lineGuid := aLineGUID;
+      invoiceLine.lineGuid := aLineGUID
+    else
+      invoiceline.lineGuid := CreateAGUID;
     invoiceLine.Item := sItem;
     invoiceLine.Text := sText;
     invoiceLine.Number := iNumber;
@@ -3504,7 +3506,7 @@ begin
 
     try
 
-      // Order must be hierarchal, or at least parents before children, because all lineguids are replaced on saving
+      // Order must be hierarchal, or at least parents before children, because all lineguids are replaced on inserting
       // new lines
       FinvoiceLinesList.SortHierarchical;
       lEnumerator := FInvoiceLinesList.GetEnumerator;
@@ -3854,7 +3856,8 @@ begin
     s := s + ', ' + _db(d.roomerMainDataSet.username);
     s := s + ', ' + _db(aInvoiceLine.IsVisibleOnInvoice);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative.Value);
-    ainvoiceLine.lineGuid := CreateAGUID;             // New one needed
+    if aInvoiceLine.lineGuid.IsEmpty then
+      ainvoiceLine.lineGuid := CreateAGUID;             // New one needed
     s := s + ', ' + GUIDToSQL(ainvoiceLine.lineGuid);
     if assigned(aInvoiceLine.Parent) then
       s := s + ', ' + GUIDToSQL(aInvoiceLine.Parent.lineGuid)
@@ -3886,14 +3889,14 @@ begin
       s := s + ' , Currency= ' + _db(InvoiceCurrencyCode) + #10;
     end;
 
-    ainvoiceLine.lineGuid := CreateAGUID;             // New one needed
+//    ainvoiceLine.lineGuid := CreateAGUID;             // New one needed [BS 2018-04-20] Why?
     s := s + ' , Persons= ' + _db(aInvoiceLine.noGuests) + #10 +
              ' , Nights= ' + _db(iNights) + #10 +
              ' , ilAccountKey= ' + _db(sAccountKey) + #10 +
              ' , InvoiceIndex= ' + _db(FInvoiceIndex) + #10 +
              ' , staffLastEdit= ' + _db(d.roomerMainDataSet.username) + #10 +
              ' , VisibleOnInvoice = ' + _db(aInvoiceLine.IsVisibleOnInvoice) + #10 +
-             ' , lineGUID = ' + GUIDToSQL(ainvoiceLine.lineGuid) + #10 +
+//             ' , lineGUID = ' + GUIDToSQL(ainvoiceLine.lineGuid) + #10 +
              ' , Revenue = ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative) +  #10;
 
     if assigned(aInvoiceLine.Parent) then
