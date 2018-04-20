@@ -318,7 +318,7 @@ object frmRptFinance: TfrmRptFinance
     Top = 135
     Width = 1195
     Height = 556
-    ActivePage = SheetInvoicelist
+    ActivePage = sheetSums
     Align = alClient
     Style = tsFlatButtons
     TabHeight = 25
@@ -367,8 +367,6 @@ object frmRptFinance: TfrmRptFinance
               Align = alClient
               TabOrder = 0
               LookAndFeel.NativeStyle = False
-              ExplicitLeft = 168
-              ExplicitTop = 3
               object tvSums2: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 Navigator.Buttons.First.Visible = True
@@ -2345,7 +2343,7 @@ object frmRptFinance: TfrmRptFinance
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43188.480691689820000000
+      ReportDocument.CreationDate = 43210.386335729170000000
       ReportTitle.TextAlignX = taLeft
       BuiltInReportLink = True
     end
@@ -2364,7 +2362,7 @@ object frmRptFinance: TfrmRptFinance
       PrinterPage.PageSize.Y = 297000
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43188.480691701390000000
+      ReportDocument.CreationDate = 43210.386335740740000000
       BuiltInReportLink = True
     end
     object grPrinterInvoicelist: TdxGridReportLink
@@ -2400,7 +2398,7 @@ object frmRptFinance: TfrmRptFinance
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43188.480691712960000000
+      ReportDocument.CreationDate = 43210.386335752320000000
       BuiltInReportLink = True
     end
     object grPrinterItemTypeSale: TdxGridReportLink
@@ -2419,7 +2417,7 @@ object frmRptFinance: TfrmRptFinance
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43188.480691724540000000
+      ReportDocument.CreationDate = 43210.386335763890000000
       BuiltInReportLink = True
     end
     object grPrinterItemVATsale: TdxGridReportLink
@@ -2438,7 +2436,7 @@ object frmRptFinance: TfrmRptFinance
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43188.480691736110000000
+      ReportDocument.CreationDate = 43210.386335775460000000
       BuiltInReportLink = True
     end
     object grPrinterPaymentGroups: TdxGridReportLink
@@ -2457,7 +2455,7 @@ object frmRptFinance: TfrmRptFinance
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43188.480691747680000000
+      ReportDocument.CreationDate = 43210.386335787040000000
       BuiltInReportLink = True
     end
     object grPrinterPayments: TdxGridReportLink
@@ -2493,7 +2491,7 @@ object frmRptFinance: TfrmRptFinance
       PrinterPage._dxMeasurementUnits_ = 0
       PrinterPage._dxLastMU_ = 2
       ReportDocument.Caption = 'Sums2'
-      ReportDocument.CreationDate = 43188.480691759260000000
+      ReportDocument.CreationDate = 43210.386335787040000000
       BuiltInReportLink = True
     end
     object grPrinterLink1: TdxCompositionReportLink
