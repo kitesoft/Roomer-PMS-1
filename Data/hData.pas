@@ -2463,6 +2463,7 @@ begin
     confirmAmount := 0.00;
     InvoiceIndex := 0;
     Revenue := 0;
+    VisibleOnInvoice := true;
   end;
 end;
 
