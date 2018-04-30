@@ -44,8 +44,6 @@ begin
   Alert := AlertList.Alerts[Integer(lvAlerts.Selected.Data)];
   Alert.Delete;
   AlertList.Alerts.Remove(Alert);
-  Alert.Free;
-
   ListAlerts(AlertList, lvAlerts);
 end;
 
@@ -58,8 +56,7 @@ begin
   if EditAlert(Alert) then
   begin
     ListAlerts(AlertList, lvAlerts);
-  end else
-    Alert.Free;
+  end;
 end;
 
 procedure TFrmAlertPanel.ListAlerts(AlertList : TAlertList; lv : TsListView);
