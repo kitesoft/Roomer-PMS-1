@@ -1862,6 +1862,7 @@ begin
     invoiceLineData.AutoGen         := _GetCurrentTick;
     invoiceLineData.Reservation     := FRoomReservationItem.Reservation;
     invoiceLineData.RoomReservation := FRoomReservationItem.FRoomReservation;
+    invoiceLineData.RoomReservationAlias := FRoomReservationItem.FRoomReservation;
     invoiceLineData.PurchaseDate    := FromDate;
     invoiceLineData.InvoiceNumber   := -1;
     invoiceLineData.Description     := Description;
@@ -1889,6 +1890,8 @@ begin
     invoiceLineData.ImportSource       := '';
     invoiceLineData.Ispackage          := false;
     invoiceLineData.InvoiceIndex          := 0;
+    invoiceLineData.revenue            := lTotal;
+    invoiceLineData.VisibleOnInvoice   := true;
     aExecPlan.AddExec(SQL_INS_InvoiceLine(invoiceLineData));
 end;
 
@@ -1938,7 +1941,7 @@ begin
   cmdList := TList<String>.Create;
   try
     cmdList.Add( Format('DELETE from roomreservationstockitems WHERE roomreservation=%d', [FReservationitem.RoomReservation]));
-    cmdList.Add( Format('DELETE from invoicelines WHERE roomreservation=%d and importrefrence=''%s'' ', [FReservationitem.RoomReservation, cSTOCKITEM_IMPORTREFERENCE]));
+    cmdList.Add( Format('DELETE from invoicelines WHERE invoicenumber=-1 and roomreservation=%d and importrefrence=''%s'' ', [FReservationitem.RoomReservation, cSTOCKITEM_IMPORTREFERENCE]));
     d.roomerMainDataSet.SystemFreeExecuteMultiple(cmdList);
   finally
     cmdList.Free;

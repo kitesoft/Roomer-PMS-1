@@ -1962,15 +1962,16 @@ begin
   memCustomerAlert.lines.Clear;
   memCustomerAlert.Text := d.GetCustomerPreferences(Customer);
 
+  cbxChannels.ItemIndex := -1;
   if glb.LocateSpecificRecordAndGetValue('channels', 'id', FNewReservation.HomeCustomer.CustomerRatePlanId,
     'channelManagerId', ChannelCode) then
     for i := 1 to cbxChannels.Items.Count - 1 do
       if integer(cbxChannels.Items.Objects[i]) = FNewReservation.HomeCustomer.CustomerRatePlanId then
       begin
         cbxChannels.ItemIndex := i; // cbxChannels.Items.IndexOf(ChannelCode);
-        cbxChannelsChange(nil);
         Break;
       end;
+  cbxChannelsChange(nil);
 end;
 
 procedure TfrmMakeReservationQuick.btdEditRoomRateClick(Sender: TObject);

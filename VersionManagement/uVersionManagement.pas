@@ -396,7 +396,7 @@ procedure TRoomerVersionManagement.activateDaemon;
 begin
   // --
   GetFromURI(format(URI_UPGRADE_DAEMON_ACTIVATE, [d.roomerMainDataSet.ForcedURLEncode(d.roomerMainDataSet.RoomerStoreUri)]));
-//  Start(true);
+  Start(true);
 end;
 
 procedure TRoomerVersionManagement.CloseDaemon;

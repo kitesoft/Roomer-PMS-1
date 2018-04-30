@@ -2728,8 +2728,8 @@ begin
     s := s + '  LEFT OUTER JOIN -- Add stockitem totalcount and total price per roomreservation '#10;
     s := s + '      (select '#10;
     s := s + '      	roomreservation as tmp_roomres, '#10;
-    s := s + '      	sum(rtmp.count) DIV 1 as StockitemsCount, '#10;
-    s := s + '      	sum(rtmp.count * rtmp.price * rtmp.dayscount) as StockItemsPrice '#10;
+    s := s + '      	sum(ifnull(rtmp.count, 0)) DIV 1 as StockitemsCount, -- forced into integer'#10;
+    s := s + '      	sum(ifnull(rtmp.count * rtmp.price * rtmp.dayscount, 0)) as StockItemsPrice '#10;
     s := s + '      from '#10;
     s := s + '      	(select '#10;
     s := s + '      	    rrs2.Roomreservation, '#10;
@@ -2738,8 +2738,8 @@ begin
     s := s + '            count(*) as dayscount, '#10;
     s := s + '      	    rrs2.price '#10;
     s := s + '      	  from roomreservationstockitems rrs2 '#10;
-    s := s + '      	  group by rrs2.StockItem, rrs2.count, rrs2.Price) rtmp '#10;
-    s := s + '       group by rtmp.roomreservation) rrs on rrs.tmp_roomres= rr.RoomReservation '#10;
+    s := s + '      	  group by rrs2.roomreservation, rrs2.StockItem, rrs2.count, rrs2.Price) rtmp '#10;
+    s := s + '       group by tmp_roomres) rrs on rrs.tmp_roomres= rr.RoomReservation '#10;
     s := s + ' WHERE '#10;
     s := s + '   (rr.Reservation = %d) '#10;
     s := s + ' ORDER BY '#10;

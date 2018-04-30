@@ -354,7 +354,7 @@ begin
 
   end;
 
-  AmountLeft         := FNativeAmount - lPaid - FAmountChargedToPaycard;
+  AmountLeft          := (FNativeAmount - lPaid - FAmountChargedToPaycard).Rounded;
   lblSelected.caption := (lPaid + FAmountChargedToPaycard).AsDisplayStringWithCode;
   if AmountLeft = TAmount.ZERO then beep;
 

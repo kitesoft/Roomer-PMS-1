@@ -1162,10 +1162,12 @@ begin
         '   , il.CurrencyRate ' +
         '   , il.ImportRefrence ' +
         '   , il.ImportSource ' +
+        '   , il.ItemNumber ' +
         ' FROM ' +
         '   invoicelines il' +
         ' WHERE ' +
-        '   (il.InvoiceNumber IN  %s ) '; // zSqlInText
+        '   (il.InvoiceNumber IN  %s ) ' +
+        ' ORDER BY invoicenumber, ItemNumber'; // zSqlInText
 
       s := format(sql, [zSQLInText]);
       hData.rSet_bySQL(rSet, s);
