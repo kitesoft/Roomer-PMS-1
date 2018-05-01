@@ -3875,7 +3875,9 @@ begin
         ', Price= ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.Price.ToNative) + #10 +
         ', Total= ' + _db(iCreditInvoiceMultiplier * fItemTotal) + #10 +
         ', TotalWOVat= ' + _db(iCreditInvoiceMultiplier * fItemTotalWOVat) + #10 +
-        ', VAT= ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.VATOnInvoice.ToNative) + #10;
+        ', VAT= ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.VATOnInvoice.ToNative) + #10 +
+        ', lineGUID = IF( IFNULL(lineGUID, '''')='''',' + GUIDToSQL(ainvoiceLine.lineGuid) +', lineGUID) -- Fix empty lineGUID ' + #10
+        ;
 
     // If not storing provisionally, all records should set payment-currency = Currency of invoice
     if (aSaveType = stProvisionally) then
