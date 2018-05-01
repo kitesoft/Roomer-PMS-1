@@ -1962,7 +1962,7 @@ begin
   memCustomerAlert.lines.Clear;
   memCustomerAlert.Text := d.GetCustomerPreferences(Customer);
 
-  cbxChannels.ItemIndex := -1;
+  cbxChannels.ItemIndex := 0;
   if glb.LocateSpecificRecordAndGetValue('channels', 'id', FNewReservation.HomeCustomer.CustomerRatePlanId,
     'channelManagerId', ChannelCode) then
     for i := 1 to cbxChannels.Items.Count - 1 do
@@ -4270,19 +4270,18 @@ var
   ChannelCode,
   chManCode: String;
   channelId: integer;
-  FirstRound: boolean;
+
 begin
+  FDynamicRates.Clear;
   if cbxChannels.ItemIndex > 0 then
   begin
     channelId := integer(cbxChannels.Items.Objects[cbxChannels.ItemIndex]);
     chManCode := channelManager_GetDefaultCode;
-    FirstRound := true;
+
     if glb.LocateSpecificRecordAndGetValue('channels', 'id', channelId, 'channelManagerId', ChannelCode) then
-    begin
-      FDynamicRates.Prepare(dtArrival.date, dtDeparture.date, ChannelCode, chManCode);
-      PopulateRatePlanCombo(FirstRound);
-    end;
+      FDynamicRates.Prepare(dtArrival.date, dtDeparture.date, ChannelCode, chManCode)
   end;
+  PopulateRatePlanCombo(true);
 end;
 
 // ******************************************************************************
