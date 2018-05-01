@@ -200,9 +200,10 @@
         <DCC_DcuOutput>_dcu\release</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_8_Win32)'!=''">
+        <VerInfo_Build>2</VerInfo_Build>
         <DCC_DcuOutput>_dcu\release</DCC_DcuOutput>
         <VerInfo_PreRelease>false</VerInfo_PreRelease>
-        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.1;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.1;Comments=;ExtraBuild=180419Acc;PrivateBuild=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Promoir BV;FileDescription=Roomer PMS;FileVersion=1.9.21.2;InternalName=;LegalCopyright=(C) 2013, 2014, 2015, 2016, 2017, 2018 Promoir BV;LegalTrademarks=Roomer is a Registered Trademark of Promoir BV;OriginalFilename=Roomer.exe;ProductName=Roomer Open Hospitality Platform;ProductVersion=1.9.21.2;Comments=;ExtraBuild=180501Acc;PrivateBuild=</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Debug>false</VerInfo_Debug>
     </PropertyGroup>

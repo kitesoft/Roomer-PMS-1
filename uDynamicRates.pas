@@ -14,11 +14,11 @@ type
     chRates : TRoomerDataSet;
     arrival, departure : TDate;
     channelCode, chManCode : String;
-    procedure Clear;
   public
     constructor Create;
     destructor Destroy; override;
 
+    procedure Clear;
     procedure Prepare(_arrival, _departure : TDate; _channelCode, _chManCode : String);
     function findRateByRateCode(ADate : TDate; numGuests : Integer; const rateId : String; var roomPrice : Double; var aCurrCode: string) : Boolean;
     function findRateForRoomType(ADate: TDate; RoomType: String; numGuests: Integer; var roomPrice: Double; var rateId: String; var aCurrCode: string): Boolean;
@@ -214,9 +214,12 @@ end;
 procedure TDynamicRates.GetAllRateCodes(List : TStrings);
 var s : String;
 begin
+  if not Active then
+    Exit;
+
   List.BeginUpdate;
   try
-  chRates.First;
+    chRates.First;
     while NOT chRates.Eof do
     begin
       s := chRates['rateCode'];
