@@ -915,6 +915,7 @@ begin
   constants.Add('shTx_NationalReport_Created', 'Created : ');
   constants.Add('shTx_NationalReport_User', 'User : ');
   constants.Add('shTx_NationalReport_NationalReportWasSuccessfullySentToHagstofan', 'National report was successfully sent to Hagstofan');
+  constants.Add('shTx_NationalReport_SelectFullMonthForHagstofan', 'Sending to Hagstofan is only possible when a full month is selected');
   constants.Add('shTx_NationalReport_NationalReportToSentToHagstofanError', 'Hagstofan was unable to process the report.' + #10 +
                 'The following problem was reported:' + #10#10 +
                 '%s');
