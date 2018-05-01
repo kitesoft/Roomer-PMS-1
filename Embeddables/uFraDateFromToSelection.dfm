@@ -19,7 +19,6 @@ object fraDateFromToSelection: TfraDateFromToSelection
     ParentFont = False
     TabOrder = 0
     SkinData.SkinSection = 'GROUPBOX'
-    ExplicitHeight = 154
     object dtDateFrom: TsDateEdit
       AlignWithMargins = True
       Left = 52
@@ -52,7 +51,7 @@ object fraDateFromToSelection: TfraDateFromToSelection
       Left = 52
       Top = 45
       Width = 112
-      Height = 20
+      Height = 21
       Margins.Left = 50
       Align = alTop
       AutoSize = False
@@ -93,12 +92,15 @@ object fraDateFromToSelection: TfraDateFromToSelection
     ParentFont = False
     TabOrder = 1
     SkinData.SkinSection = 'GROUPBOX'
-    ExplicitHeight = 154
     object cbxMonth: TsComboBox
-      Left = 15
-      Top = 20
-      Width = 121
+      AlignWithMargins = True
+      Left = 12
+      Top = 18
+      Width = 127
       Height = 21
+      Margins.Left = 10
+      Margins.Right = 10
+      Align = alTop
       Alignment = taLeftJustify
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
@@ -121,12 +123,19 @@ object fraDateFromToSelection: TfraDateFromToSelection
       OnChange = cbxMonthChange
       Items.Strings = (
         '')
+      ExplicitLeft = 15
+      ExplicitTop = 20
+      ExplicitWidth = 121
     end
     object cbxYear: TsComboBox
-      Left = 15
-      Top = 47
-      Width = 121
+      AlignWithMargins = True
+      Left = 12
+      Top = 45
+      Width = 127
       Height = 21
+      Margins.Left = 10
+      Margins.Right = 10
+      Align = alTop
       Alignment = taLeftJustify
       BoundLabel.Font.Charset = DEFAULT_CHARSET
       BoundLabel.Font.Color = clWindowText
@@ -147,6 +156,9 @@ object fraDateFromToSelection: TfraDateFromToSelection
       ParentFont = False
       TabOrder = 1
       OnChange = cbxMonthChange
+      ExplicitLeft = 15
+      ExplicitTop = 47
+      ExplicitWidth = 121
     end
   end
 end

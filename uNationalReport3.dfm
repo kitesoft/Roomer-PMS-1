@@ -39,11 +39,9 @@ object frmNationalReport3: TfrmNationalReport3
     TabOrder = 0
     TabWidth = 169
     SkinData.SkinSection = 'PAGECONTROL'
-    ExplicitWidth = 1116
     object sheetNationalStatistics1: TsTabSheet
       Caption = 'Room Nights'
       ImageIndex = 1
-      ExplicitWidth = 1071
       object Panel2: TsPanel
         Left = 0
         Top = 0
@@ -52,7 +50,6 @@ object frmNationalReport3: TfrmNationalReport3
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1071
         object btnNationalStatisticsExcel: TsButton
           AlignWithMargins = True
           Left = 4
@@ -80,7 +77,6 @@ object frmNationalReport3: TfrmNationalReport3
           TabOrder = 1
           OnClick = btnNationalStatisticsReportClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitTop = 2
         end
       end
       object grNationalStatistics1: TcxGrid
@@ -92,7 +88,6 @@ object frmNationalReport3: TfrmNationalReport3
         BorderStyle = cxcbsNone
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1071
         object tvNationalStatistics1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -219,7 +214,6 @@ object frmNationalReport3: TfrmNationalReport3
     object cxTabSheet1: TsTabSheet
       Caption = 'Guests'
       ImageIndex = 2
-      ExplicitWidth = 1071
       object Panel5: TsPanel
         Left = 0
         Top = 0
@@ -228,7 +222,6 @@ object frmNationalReport3: TfrmNationalReport3
         Align = alTop
         TabOrder = 0
         SkinData.SkinSection = 'PANEL'
-        ExplicitWidth = 1071
         object btnGuestsExcel: TsButton
           AlignWithMargins = True
           Left = 4
@@ -269,7 +262,6 @@ object frmNationalReport3: TfrmNationalReport3
           TabOrder = 3
           OnClick = btnExpandAllClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 939
         end
         object btnCollapseAll: TsButton
           AlignWithMargins = True
@@ -283,7 +275,6 @@ object frmNationalReport3: TfrmNationalReport3
           TabOrder = 4
           OnClick = btnCollapseAllClick
           SkinData.SkinSection = 'BUTTON'
-          ExplicitLeft = 805
         end
         object btnChangeCountry: TsButton
           AlignWithMargins = True
@@ -324,7 +315,6 @@ object frmNationalReport3: TfrmNationalReport3
         Align = alClient
         TabOrder = 1
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1071
         object tvAllGuests: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.First.Visible = True
@@ -486,7 +476,6 @@ object frmNationalReport3: TfrmNationalReport3
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitWidth = 1079
   end
   object Panel3: TsPanel
     Left = 0
@@ -496,8 +485,6 @@ object frmNationalReport3: TfrmNationalReport3
     Align = alTop
     TabOrder = 2
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = -6
-    ExplicitWidth = 1116
     object labLocations: TsLabel
       AlignWithMargins = True
       Left = 53
@@ -536,7 +523,6 @@ object frmNationalReport3: TfrmNationalReport3
       Anchors = [akTop, akRight]
       TabOrder = 2
       SkinData.SkinSection = 'PANEL'
-      ExplicitLeft = 451
       object Panel8: TsPanel
         Left = 1
         Top = 1
@@ -700,7 +686,7 @@ object frmNationalReport3: TfrmNationalReport3
           Font.Style = []
         end
         object cxLabel4: TsLabel
-          Left = 9
+          Left = 4
           Top = 0
           Width = 231
           Height = 17
@@ -982,22 +968,31 @@ object frmNationalReport3: TfrmNationalReport3
       SkinData.SkinSection = 'BUTTON'
     end
     inline fraDateFromToSelection: TfraDateFromToSelection
-      Left = 1
+      Left = 2
       Top = 1
-      Width = 326
+      Width = 328
       Height = 85
       Constraints.MaxHeight = 85
+      Padding.Left = 1
+      Padding.Top = 1
+      Padding.Right = 1
+      Padding.Bottom = 1
       TabOrder = 0
-      ExplicitLeft = 1
+      ExplicitLeft = 2
       ExplicitTop = 1
+      ExplicitWidth = 328
       ExplicitHeight = 85
       inherited gbxSelectDates: TsGroupBox
-        Height = 85
+        Left = 1
+        Top = 1
         ExplicitLeft = -3
+        ExplicitTop = 2
         ExplicitHeight = 85
       end
       inherited gbxSelectMonth: TsGroupBox
-        Height = 85
+        Left = 173
+        Top = 1
+        ExplicitHeight = 85
       end
     end
   end

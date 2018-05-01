@@ -321,7 +321,7 @@ type
     procedure getRoomInfo;
     procedure ShowData;
     procedure SetMarketCaptions;
-    procedure DatesChanged(Sender: TObject);
+    procedure DateSelectionChanged(Sender: TObject);
 
   public
     { Public declarations }
@@ -1044,13 +1044,13 @@ end;
 
 procedure TfrmNationalReport3.FormShow(Sender : TObject);
 begin
-  fraDateFromToSelection.OnDatesChanged := DatesChanged;
+  fraDateFromToSelection.OnDatesChanged := DateSelectionChanged;
   SetMarketCaptions;
   ShowData;
   btnPostToHagstofa.Visible := d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled;
 end;
 
-procedure TfrmNationalReport3.DatesChanged(Sender: TObject);
+procedure TfrmNationalReport3.DateSelectionChanged(Sender: TObject);
 begin
   FDatesHaveChanged := True;
 end;

@@ -27,160 +27,30 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    object cxGroupBox2: TsGroupBox
-      AlignWithMargins = True
-      Left = 145
-      Top = 4
-      Width = 151
-      Height = 81
-      Align = alLeft
-      Caption = '.. or select month'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 0
-      SkinData.SkinSection = 'GROUPBOX'
-      object cbxMonth: TsComboBox
-        Left = 15
-        Top = 20
-        Width = 121
-        Height = 21
-        Alignment = taLeftJustify
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -13
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
-        SkinData.SkinSection = 'COMBOBOX'
-        VerticalAlignment = taAlignTop
-        TextHint = 'Choose a month ...'
-        Style = csDropDownList
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ItemIndex = -1
-        ParentFont = False
-        TabOrder = 0
-        OnChange = cbxMonthChange
-        Items.Strings = (
-          '')
-      end
-      object cbxYear: TsComboBox
-        Left = 15
-        Top = 47
-        Width = 121
-        Height = 21
-        Alignment = taLeftJustify
-        BoundLabel.Font.Charset = DEFAULT_CHARSET
-        BoundLabel.Font.Color = clWindowText
-        BoundLabel.Font.Height = -13
-        BoundLabel.Font.Name = 'Tahoma'
-        BoundLabel.Font.Style = []
-        SkinData.SkinSection = 'COMBOBOX'
-        VerticalAlignment = taAlignTop
-        TextHint = 'Choose a year ...'
-        Style = csDropDownList
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ItemIndex = -1
-        ParentFont = False
-        TabOrder = 1
-        OnChange = cbxMonthChange
-      end
-    end
+    ExplicitTop = -6
     object btnRefresh: TsButton
-      Left = 805
-      Top = 16
+      Left = 835
+      Top = 14
       Width = 118
       Height = 37
       Caption = 'Refresh ALL'
       Default = True
       ImageIndex = 28
       Images = DImages.PngImageList1
-      TabOrder = 1
+      TabOrder = 0
       OnClick = btnRefreshClick
       SkinData.SkinSection = 'BUTTON'
     end
-    object gbxSelectDates: TsGroupBox
-      AlignWithMargins = True
-      Left = 4
-      Top = 4
-      Width = 135
-      Height = 81
-      Align = alLeft
-      Caption = 'Select dates'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      SkinData.SkinSection = 'GROUPBOX'
-      object dtDateFrom: TsDateEdit
-        Left = 16
-        Top = 20
-        Width = 105
-        Height = 21
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 0
-        Text = '  -  -    '
-        OnChange = dtDateChange
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-      end
-      object dtDateTo: TsDateEdit
-        Left = 16
-        Top = 47
-        Width = 105
-        Height = 20
-        AutoSize = False
-        Color = clWhite
-        EditMask = '!99/99/9999;1; '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        MaxLength = 10
-        ParentFont = False
-        TabOrder = 1
-        Text = '  -  -    '
-        OnChange = dtDateChange
-        SkinData.SkinSection = 'EDIT'
-        GlyphMode.Blend = 0
-        GlyphMode.Grayed = False
-      end
-    end
     object gbxIncludedStates: TsGroupBox
       AlignWithMargins = True
-      Left = 302
+      Left = 336
       Top = 4
       Width = 493
       Height = 81
       Align = alLeft
       Caption = 'Include rooms with status of:'
-      TabOrder = 3
+      TabOrder = 1
+      ExplicitLeft = 302
       object clbIncludedStates: TsCheckListBox
         Left = 2
         Top = 15
@@ -204,6 +74,23 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         TabOrder = 0
         StyleElements = [seFont, seClient]
         SkinData.SkinSection = 'GROUPBOX'
+      end
+    end
+    inline fraDateFromToSelection: TfraDateFromToSelection
+      AlignWithMargins = True
+      Left = 4
+      Top = 4
+      Width = 326
+      Height = 81
+      Align = alLeft
+      TabOrder = 2
+      ExplicitTop = 1
+      ExplicitHeight = 87
+      inherited gbxSelectDates: TsGroupBox
+        Height = 81
+      end
+      inherited gbxSelectMonth: TsGroupBox
+        Height = 81
       end
     end
   end
@@ -235,10 +122,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     SkinData.SkinSection = 'PAGECONTROL'
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel1: TsPanel
         Left = 0
         Top = 0
@@ -714,10 +597,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tsComparison: TsTabSheet
       Caption = 'Comparison'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object sPanel3: TsPanel
         Left = 0
         Top = 0
@@ -1806,10 +1685,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object tabGraph: TsTabSheet
       Caption = 'Charts'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pageCharts: TsPageControl
         Left = 0
         Top = 0
@@ -1821,10 +1696,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         SkinData.SkinSection = 'PAGECONTROL'
         object tabOcc: TsTabSheet
           Caption = 'OCC'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sPanel2: TsPanel
             Left = 0
             Top = 0
@@ -4582,6 +4453,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     object grdPrinterLinkComparison: TdxGridReportLink
       Active = True
       Component = grdComparison
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.GrayShading = True
@@ -4603,7 +4475,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43204.982264074070000000
+      ReportDocument.CreationDate = 43221.618678240740000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -4611,6 +4483,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportTitle.Font.Style = [fsBold]
       ReportTitle.Text = 'Roomrent Comparison'
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -11
@@ -4624,6 +4497,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     end
     object grdPrinterLinkStats: TdxGridReportLink
       Component = grStat
+      PageNumberFormat = pnfNumeral
       PrinterPage.DMPaper = 9
       PrinterPage.Footer = 6350
       PrinterPage.Header = 6350
@@ -4641,6 +4515,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       ReportDocument.Creator = 'Roomer'
       ReportTitle.Text = 'Roomrent Statistics'
       ShrinkToPageWidth = True
+      AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
   end
