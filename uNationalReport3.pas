@@ -51,7 +51,7 @@ uses
   dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
   dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin,
   dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, uFraDateFromToSelection
   ;
 
 type
@@ -59,12 +59,6 @@ type
     pageMain: TsPageControl;
     dxStatusBar1 : TdxStatusBar;
     Panel3: TsPanel;
-    gbDates: TsGroupBox;
-    dtDateFrom: TsDateEdit;
-    dtDateTo: TsDateEdit;
-    cxGroupBox2: TsGroupBox;
-    cbxMonth: TsComboBox;
-    cbxYear: TsComboBox;
     btnRefresh: TsButton;
     Panel4: TsPanel;
     Panel8: TsPanel;
@@ -275,10 +269,9 @@ type
     mnuLeisure: TMenuItem;
     mnuBusiness: TMenuItem;
     mnuConference: TMenuItem;
+    fraDateFromToSelection: TfraDateFromToSelection;
     procedure FormShow(Sender : TObject);
-    procedure cbxMonthPropertiesCloseUp(Sender : TObject);
     procedure btnRefreshClick(Sender : TObject);
-    procedure dtDateFromChange(Sender : TObject);
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure btnExitClick(Sender: TObject);
@@ -301,12 +294,6 @@ type
       var AText: string);
   private
     { Private declarations }
-    zDateFrom : Tdate;
-    zDateTo   : Tdate;
-    zYear     : integer;
-    zMonth    : integer;
-    zSetDates : boolean;
-
     lstReservations : TstringList;
     lstRoomReservations : TstringList;
 
@@ -324,7 +311,7 @@ type
     zDayCount   : integer;
 
     zLocationList : string;
-
+    FDatesHaveChanged: boolean;
     procedure getGuests;
     procedure getAllGuests;
     procedure getResCount;
@@ -334,6 +321,7 @@ type
     procedure getRoomInfo;
     procedure ShowData;
     procedure SetMarketCaptions;
+    procedure DateSelectionChanged(Sender: TObject);
 
   public
     { Public declarations }
@@ -367,9 +355,9 @@ uses
 
 function TfrmNationalReport3.getRoomReservationsList : string;
 var
-  rrList : TstringList;
+  rrList : TStringList;
 begin
-  rrList := d.RRlst_DepartureNationalReportByLocation(zDateFrom, zDateTo,zLocationList);
+  rrList := d.RRlst_DepartureNationalReportByLocation(fraDateFromToSelection.StartDate, fraDateFromToSelection.EndDate,zLocationList);
   try
     if rrList.Count > 0 then
       result := ' (' + rrList.DelimitedText + ') '
@@ -449,9 +437,18 @@ procedure TfrmNationalReport3.btnPostToHagstofaClick(Sender: TObject);
 var lHagstofaService : TConnectionsHagstofaService;
     answer : String;
 begin
+  if not fraDateFromToSelection.IsFullMonthSelected then
+  begin
+    MessageDlg(GetTranslatedText('shTx_NationalReport_SelectFullMonthForHagstofan'), mtError, [mbOk], 0);
+    Exit;
+  end;
+
+  if FDatesHaveChanged then
+    btnRefresh.Click;
+
   lHagstofaService := TConnectionsHagstofaService.Create;
   try
-    answer := lHagstofaService.sendToHagstofa(zDateFrom, zDateTo, '');
+    answer := lHagstofaService.sendToHagstofa(fraDateFromToSelection.StartDate, fraDateFromToSelection.EndDate, '');
 
     if LowerCase(answer) = 'success' then
        MessageDlg(GetTranslatedText('shTx_NationalReport_NationalReportWasSuccessfullySentToHagstofan'),
@@ -468,9 +465,9 @@ procedure TfrmNationalReport3.ppHeaderBand1BeforePrint(Sender: TObject);
 var
   s : string;
 begin
-  dateTimeToString(s, 'dd.mm.yyyy', zDateFrom);
+  dateTimeToString(s, 'dd.mm.yyyy', fraDateFromToSelection.StartDate);
   rlabFrom.Caption := s;
-  dateTimeToString(s, 'dd.mm.yyyy', zDateTo);
+  dateTimeToString(s, 'dd.mm.yyyy', fraDateFromToSelection.EndDate);
   rlabTo.Caption := s;
 
   s := g.qHotelName;
@@ -600,6 +597,7 @@ procedure TfrmNationalReport3.btnRefreshClick(Sender : TObject);
 begin
   getGuests;
   getAllGuests;
+  FDatesHaveChanged := false;
 end;
 
 procedure TfrmNationalReport3.getGuests;
@@ -634,7 +632,7 @@ begin
   edConference.Text := '0';
   edBusiness.Text := '0';
 
-  zDayCount := (trunc(zDateTo)-trunc(zDateFrom))+1;
+  zDayCount := fraDateFromToSelection.DayCount;
   updateSums;
   zRoomReservationsList := getRoomReservationsList;
   getRoomInfo;
@@ -681,7 +679,7 @@ begin
     screen.Cursor := crHourGlass;
     mHagstofa1.DisableControls;
     try
-      s := format(s, [_db(zDateFrom, True), _db(zDateTo, True), zRoomReservationsList]);
+      s := format(s, [_db(fraDateFromToSelection.StartDate, True), _db(fraDateFromToSelection.EndDate, True), zRoomReservationsList]);
       CopyToCLipboard(s);
       hData.rSet_bySQL(rSet,s);
       While NOT rSet.Eof do
@@ -900,32 +898,6 @@ begin
   end;
 end;
 
-
-procedure TfrmNationalReport3.cbxMonthPropertiesCloseUp(Sender : TObject);
-var
-  y, m : word;
-  lastDay : integer;
-
-begin
-
-  if cbxYear.ItemIndex < 1 then
-    exit;
-  if cbxMonth.ItemIndex < 1 then
-    exit;
-  zSetDates := false;
-  y := StrToInt(cbxYear.Items[cbxYear.ItemIndex]);
-//  y := cbxYear.ItemIndex + 2010;
-  m := cbxMonth.ItemIndex;
-
-  zDateFrom := encodeDate(y, m, 1);
-  lastDay := DaysInAMonth(y, m);
-  zDateTo := encodeDate(y, m, lastDay);
-  dtDateFrom.Date := zDateFrom;
-  dtDateTo.Date := zDateTo;
-  zSetDates := true;
-end;
-
-
 procedure TfrmNationalReport3.btnGuestsExcelClick(Sender: TObject);
 var
   sFilename : string;
@@ -1006,18 +978,6 @@ begin
   EditReservation(iReservation, iRoomReservation);
 end;
 
-procedure TfrmNationalReport3.dtDateFromChange(Sender : TObject);
-begin
-  if zSetDates then
-  begin
-    zDateFrom := dtDateFrom.Date;
-    zDateTo := dtDateTo.Date;
-
-    cbxYear.ItemIndex := 0;
-    cbxMonth.ItemIndex := 0;
-  end;
-end;
-
 procedure TfrmNationalReport3.edBusinessChange(Sender: TObject);
 begin
   LabTotalVisitType.Caption := IntToStr(
@@ -1038,9 +998,6 @@ begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self);
   PlaceFormOnVisibleMonitor(self);
-
-  glb.fillListWithMonthsLong(cbxMonth.Items, 1);
-  glb.fillListWithYears(cbxYear.Items, 1, False);
 
   PageMain.ActivePageIndex := 0;
   lstReservations := TstringList.Create;
@@ -1087,9 +1044,15 @@ end;
 
 procedure TfrmNationalReport3.FormShow(Sender : TObject);
 begin
+  fraDateFromToSelection.OnDatesChanged := DateSelectionChanged;
   SetMarketCaptions;
   ShowData;
   btnPostToHagstofa.Visible := d.HotelServicesSettings.HagstofaServiceSettings.HagstofaEnabled;
+end;
+
+procedure TfrmNationalReport3.DateSelectionChanged(Sender: TObject);
+begin
+  FDatesHaveChanged := True;
 end;
 
 procedure TfrmNationalReport3.SetMarketCaptions;
@@ -1105,26 +1068,8 @@ end;
 
 procedure TfrmNationalReport3.ShowData;
 var
-  y, m, d : word;
-  lastDay : integer;
   lLocations: TSet_Of_Integer;
 begin
-  zSetDates := false;
-
-  decodeDate(now, y, m, d);
-  zYear := y;
-  zMonth := m;
-  cbxMonth.ItemIndex := zMonth;
-
-  cbxYear.ItemIndex := cbxYear.Items.IndexOf(inttostr(zYear));
-
-  zDateFrom := encodeDate(y, m, 1);
-  lastDay := DaysInAMonth(y, m);
-  zDateTo := encodeDate(y, m, lastDay);
-  dtDateFrom.Date := zDateFrom;
-  dtDateTo.Date := zDateTo;
-  zSetDates := true;
-
   btnNationalStatisticsReport.Enabled := true;
 
   //**

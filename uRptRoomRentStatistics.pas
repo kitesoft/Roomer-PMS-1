@@ -60,19 +60,14 @@ uses
   , uRoomRentStatisticsDefinitions, dxPSGlbl, dxPSUtl, dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCompsProvider,
   dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv,
   dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
-  dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, htmlhint, dxScreenTip, dxCustomHint, cxHint
+  dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, htmlhint, dxScreenTip, dxCustomHint, cxHint,
+  uFraDateFromToSelection
   ;
 
 type
   TfrmRptRoomRentStatistics = class(TForm)
     Panel3: TsPanel;
-    cxGroupBox2: TsGroupBox;
-    cbxMonth: TsComboBox;
-    cbxYear: TsComboBox;
     btnRefresh: TsButton;
-    gbxSelectDates: TsGroupBox;
-    dtDateFrom: TsDateEdit;
-    dtDateTo: TsDateEdit;
     sStatusBar1: TsStatusBar;
     kbmStat: TkbmMemTable;
     StatDS: TDataSource;
@@ -343,10 +338,9 @@ type
     grdPrinterLinkStats: TdxGridReportLink;
     kbmComparisonweekdayBase: TStringField;
     kbmComparisonweekday: TStringField;
+    fraDateFromToSelection: TfraDateFromToSelection;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure dtDateChange(Sender: TObject);
-    procedure cbxMonthChange(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnGuestsExcelClick(Sender: TObject);
     procedure tvStatsGetDefaultCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -370,13 +364,11 @@ type
   private
     { Private declarations }
 
-    zSetDates : boolean;
     FDataLoadingThreads: integer;
     FCompareData: TRoomRentCompareDataSet;
     FBaseBandOrigCaption: string;
     FCompareBandOrigCaption: string;
     FLoadingData: boolean;
-    FUpdatingDates: boolean;
 
     function GetFooterSummaryValueOrZero(aColumn: TcxGridDBBandedColumn): variant;
 
@@ -392,7 +384,6 @@ type
     procedure UpdateControls;
     procedure SetLoadingData(const Value: boolean);
     function GroupingByMonth: boolean;
-    function FullMonthSelected: boolean;
 
     property LoadingData: boolean read FLoadingData write SetLoadingData;
   public
@@ -734,22 +725,22 @@ begin
   kbmComparison.Close;
 
   inc(FDataLoadingThreads);
-  THotelStatisticsMobileAPICallerThreaded.GetRoomRentStatistics(dtDateFrom.Date, dtDateTo.Date, lExcludedReservationStates, LoadBaseDataInDataset);
+  THotelStatisticsMobileAPICallerThreaded.GetRoomRentStatistics(fraDateFromToSelection.StartDate, fraDateFromToSelection.EndDate, lExcludedReservationStates, LoadBaseDataInDataset);
   if pcMain.ActivePage = tsComparison then
   begin
     inc(FDataLoadingThreads);
 
-    if FullMonthSelected then  // limit compare data to end of year / month
+    if fraDateFromToSelection.IsFullMonthSelected then  // limit compare data to end of year / month
       lCompareToDate := dtComparisonStart.Date.EndOfMonth
     else  // Manually selected period, just calculated based on number of days
-      lCompareToDate := dtComparisonStart.Date.AddDays(trunc(dtDateTo.Date - dtDateFrom.Date));
+      lCompareToDate := dtComparisonStart.Date.AddDays(fraDateFromToSelection.DayCount);
 
     THotelStatisticsMobileAPICallerThreaded.GetRoomRentStatistics(dtComparisonStart.Date,
                                                                   lCompareToDate,
                                                                   lExcludedReservationStates,
                                                                   LoadComparisonDataInDataset);
 
-    tvComparison.Bands[0].Caption := FBaseBandOrigCaption + Format(cBandCaptionFormat, [dtDateFrom.Text, dtDateTo.Text]);
+    tvComparison.Bands[0].Caption := FBaseBandOrigCaption + Format(cBandCaptionFormat, [fraDateFromToSelection.dtDateFrom.Text, fraDateFromToSelection.dtDateTo.Text]);
     tvComparison.Bands[1].Caption := FCompareBandOrigCaption +
                                       Format(cBandCaptionFormat, [dtComparisonStart.Text,
                                                                   FormatDateTime(FormatSettings.ShortDateFormat, lCompareToDate)]);
@@ -757,11 +748,6 @@ begin
 
   UpdateControls;
 
-end;
-
-function TfrmRptRoomRentStatistics.FullMonthSelected: boolean;
-begin
-  Result := (cbxMonth.ItemIndex >=0) and (cbxYear.ItemIndex >=0) and (cbxComparisonPeriod.ItemIndex >= 0);
 end;
 
 procedure TfrmRptRoomRentStatistics.btnReportStatsClick(Sender: TObject);
@@ -776,10 +762,10 @@ begin
   if pcMain.ActivePage = tsComparison then
   begin
     if GroupingByMonth then
-      LoadBaseDataInComparisonDataset((dtComparisonStart.Date.Year - dtDateFrom.Date.Year) * 12 +
-                                      (dtComparisonStart.Date.Month- dtDateFrom.Date.Month))
+      LoadBaseDataInComparisonDataset((dtComparisonStart.Date.Year - fraDateFromToSelection.StartDate.Year) * 12 +
+                                      (dtComparisonStart.Date.Month- fraDateFromToSelection.StartDate.Month))
     else
-      LoadBaseDataInComparisonDataset(trunc(dtComparisonStart.Date - dtDateFrom.Date));
+      LoadBaseDataInComparisonDataset(trunc(dtComparisonStart.Date - fraDateFromToSelection.StartDate));
     kbmStat.Close; // Avoid display of aggregated data when switching back to stats tab
   end;
 
@@ -904,7 +890,7 @@ begin
       else
       begin
         kbmComparison.Append;
-        if not FullMonthSelected or (lCurrentDate.Month = dtComparisonStart.Date.Month) then // dont roll over into next month
+        if not fraDateFromToSelection.IsFullMonthSelected or (lCurrentDate.Month = dtComparisonStart.Date.Month) then // dont roll over into next month
         begin
           kbmComparisonADate.AsDateTime := lCurrentDate;
           kbmComparisonweekday.AsString := lCurrentDate.ToString('ddd');
@@ -952,35 +938,11 @@ begin
     Exit;
 
   case TRoomRentComparePeriod.FromItemIndex(cbxComparisonPeriod.ItemIndex) of
-    TRoomRentComparePeriod.PreviousYear:     dtComparisonStart.Date := dtDateFrom.Date.AddYears(-1);
-    TRoomRentComparePeriod.PreviousMonth:    dtComparisonStart.Date := dtDateFrom.Date.AddMonths(-1);
-    TRoomRentComparePeriod.NextYear:     dtComparisonStart.Date := dtDateFrom.Date.AddYears(1);
-    TRoomRentComparePeriod.NextMonth:    dtComparisonStart.Date := dtDateFrom.Date.AddMonths(1);
+    TRoomRentComparePeriod.PreviousYear:     dtComparisonStart.Date := fraDateFromToSelection.StartDate.AddYears(-1);
+    TRoomRentComparePeriod.PreviousMonth:    dtComparisonStart.Date := fraDateFromToSelection.StartDate.AddMonths(-1);
+    TRoomRentComparePeriod.NextYear:     dtComparisonStart.Date := fraDateFromToSelection.StartDate.AddYears(1);
+    TRoomRentComparePeriod.NextMonth:    dtComparisonStart.Date := fraDateFromToSelection.StartDate.AddMonths(1);
   end;
-end;
-
-procedure TfrmRptRoomRentStatistics.cbxMonthChange(Sender: TObject);
-var
-  y, m : word;
-begin
-  if FUpdatingDates then
-    Exit;
-
-  if cbxYear.ItemIndex < 0 then
-    exit;
-  if cbxMonth.ItemIndex < 0 then
-    exit;
-  zSetDates := false;
-  try
-    y := StrToInt(cbxYear.Items[cbxYear.ItemIndex]);
-    m := cbxMonth.ItemIndex+1;
-
-    dtDateFrom.Date := encodeDate(y, m, 1);
-    dtDateTo.Date := dtDateFrom.Date.EndOfMonth;
-  finally
-    zSetDates := true;
-  end;
-
 end;
 
 procedure TfrmRptRoomRentStatistics.clbComparisonDataSelectionClickCheck(Sender: TObject);
@@ -995,35 +957,10 @@ begin
   UpdateCompareDataColumns;
 end;
 
-procedure TfrmRptRoomRentStatistics.dtDateChange(Sender: TObject);
-begin
-  FUpdatingDates := true;
-  try
-    if zSetDates then
-    begin
-      if dtDateFrom.Date.Year = dtDateTo.Date.Year then
-        cbxYear.ItemIndex := cbxYear.IndexOf(IntToStr(dtDateTo.Date.Year))
-      else
-        cbxYear.ItemIndex := -1;
-
-      if (dtDateFrom.Date = dtDateFrom.Date.StartOfMonth.Date) and (dtDateTo.Date = dtDateFrom.Date.EndOfMonth.Date) then
-        cbxMonth.ItemIndex := dtDateFrom.Date.Month -1
-      else
-        cbxMonth.ItemIndex := -1;
-    end;
-
-    cbxComparisonPeriodChange(nil);
-  finally
-    FUpdatingDates := false;
-  end;
-end;
-
 procedure TfrmRptRoomRentStatistics.FormCreate(Sender: TObject);
 begin
   RoomerLanguage.TranslateThisForm(self);
   glb.PerformAuthenticationAssertion(self); PlaceFormOnVisibleMonitor(self);
-  glb.fillListWithMonthsLong(cbxMonth.Items, 0);
-  glb.fillListWithYears(cbxYear.Items, 0, False);
 end;
 
 procedure TfrmRptRoomRentStatistics.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -1043,16 +980,6 @@ begin
   begin
     clbIncludedStates.ItemEnabled[i] := not (TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDisabledReservationStates);
     clbIncludedStates.Checked[i] := TReservationState(Integer(clbIncludedStates.Items.Objects[i])) in cDefaultIncludeddReservationStates;
-  end;
-
-  zSetDates := false;
-  try
-    cbxMonth.ItemIndex := Now.Month -1;
-    cbxYear.ItemIndex := Now.Year - StrToInt(cbxYear.Items[0]);
-    dtDateFrom.Date := Now.StartOfMonth;
-    dtDateTo.Date := Now.EndOfMonth;
-  finally
-    zSetDates := true;
   end;
 
   TRoomRentComparePeriod.AsStrings(cbxComparisonPeriod.Items);
@@ -1085,14 +1012,15 @@ begin
   FCompareBandOrigCaption := tvComparison.Bands[1].Caption;
 
   pcMain.ActivePage := tabStatGrid;
+  fraDateFromToSelection.OndatesChanged := cbxComparisonPeriodChange;
 end;
 
 procedure TfrmRptRoomRentStatistics.ppHeaderBand1BeforePrint(Sender : TObject);
 var
   s : string;
 begin
-  rlabFrom.Caption := FormatDateTime('ddddd', dtDateFrom.Date);
-  rlabTo.Caption := FormatDateTime('ddddd', dtDateTo.Date);
+  rlabFrom.Caption := FormatDateTime('ddddd', fraDateFromToSelection.StartDate);
+  rlabTo.Caption := FormatDateTime('ddddd', fraDateFromToSelection.EndDate);
   rLabHotelName.Caption := g.qHotelName;
   rLabTimeCreated.Caption := 'Created : ' + FormatDateTime('', now);
   rLabCurrencyCode.Caption := RoomerCurrencyManager.DefaultCurrency;
