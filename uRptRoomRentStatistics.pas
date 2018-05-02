@@ -61,7 +61,7 @@ uses
   dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv,
   dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, htmlhint, dxScreenTip, dxCustomHint, cxHint,
-  uFraDateFromToSelection
+  uFraDateFromToSelection, VCLTee.DBChart, VCLTee.TeeGDIPlus
   ;
 
 type
@@ -73,7 +73,7 @@ type
     StatDS: TDataSource;
     pcMain: TsPageControl;
     tabStatGrid: TsTabSheet;
-    tabGraph: TsTabSheet;
+    tsCharts: TsTabSheet;
     sPanel1: TsPanel;
     grStat: TcxGrid;
     tvStat: TcxGridDBTableView;
@@ -98,13 +98,7 @@ type
     tvStatsOccupancy: TcxGridDBBandedColumn;
     tvStatsadr: TcxGridDBBandedColumn;
     tvStatsrevPar: TcxGridDBBandedColumn;
-    pageCharts: TsPageControl;
-    tabOcc: TsTabSheet;
-    sPanel2: TsPanel;
-    sButton2: TsButton;
-    Chart1: TChart;
-    AdvChartPanesEditorDialog1: TAdvChartPanesEditorDialog;
-    Series1: TLineSeries;
+    pnlCharts: TsPanel;
     FormStore: TcxPropertiesStore;
     kbmStatReport: TkbmMemTable;
     dsStatReport: TDataSource;
@@ -339,13 +333,18 @@ type
     kbmComparisonweekdayBase: TStringField;
     kbmComparisonweekday: TStringField;
     fraDateFromToSelection: TfraDateFromToSelection;
+    tcStatsChart: TDBChart;
+    Series1: TLineSeries;
+    Series2: TBarSeries;
+    Series3: TLineSeries;
+    Series4: TLineSeries;
+    TeeGDIPlus1: TTeeGDIPlus;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnGuestsExcelClick(Sender: TObject);
     procedure tvStatsGetDefaultCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure sButton2Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnComparisonReportClick(Sender: TObject);
     procedure tvStatsHideZeroValues(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -384,6 +383,7 @@ type
     procedure UpdateControls;
     procedure SetLoadingData(const Value: boolean);
     function GroupingByMonth: boolean;
+    procedure UpdateChartSeriesTitles;
 
     property LoadingData: boolean read FLoadingData write SetLoadingData;
   public
@@ -690,9 +690,7 @@ begin
       TcxCustomDateEditProperties( tvComparisonaDate.Properties).DisplayFormat := 'mmm yyyy';
     end;
   end;
-
 end;
-
 
 procedure TfrmRptRoomRentStatistics.btnGuestsExcelClick(Sender: TObject);
 var
@@ -1011,8 +1009,18 @@ begin
   FBaseBandOrigCaption := tvComparison.Bands[0].Caption;
   FCompareBandOrigCaption := tvComparison.Bands[1].Caption;
 
+  UpdateChartSeriesTitles;
+
   pcMain.ActivePage := tabStatGrid;
   fraDateFromToSelection.OndatesChanged := cbxComparisonPeriodChange;
+end;
+
+procedure TfrmRptRoomRentStatistics.UpdateChartSeriesTitles;
+begin
+  tcStatsChart.Series[0].Title := tvStatsrevenue.Caption;
+  tcStatsChart.Series[1].Title := tvStatsOccupancy.Caption;
+  tcStatsChart.Series[2].Title := tvStatsadr.Caption;
+  tcStatsChart.Series[3].Title := tvStatsrevPar.Caption;
 end;
 
 procedure TfrmRptRoomRentStatistics.ppHeaderBand1BeforePrint(Sender : TObject);
@@ -1054,34 +1062,6 @@ begin
   redtADRSummary.Text := GetFooterSummaryText(tvStatsadr);
   redtRevParSummary.Text := GetFooterSummaryText(tvStatsrevPar);
 end;
-
-procedure TfrmRptRoomRentStatistics.sButton2Click(Sender: TObject);
-var
-  aValue : integer;
-  sDate  : string;
-  dtDate : Tdate;
-
-begin
-  Chart1.Series[0].Clear;
-  kbmStat.DisableControls;
-  try
-    kbmstat.SortFields := 'ADate';
-    kbmstat.Sort([]);
-    kbmStat.First;
-    while not kbmstat.eof do
-    begin
-      aValue := kbmStat.FieldByName('occ').AsInteger;
-      dtDate := kbmStat.fieldbyname('aDate').asdatetime;
-      dateTimeTostring(sDate,'mmm dd',dtDate);
-      Chart1.Series[0].Add(aValue,sDate, clBlue);
-      kbmStat.Next;
-    end;
-  finally
-    kbmStat.EnableControls;
-  end;
-
-end;
-
 
 end.
 
