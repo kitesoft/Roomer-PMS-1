@@ -3856,9 +3856,12 @@ begin
     s := s + ', ' + _db(d.roomerMainDataSet.username);
     s := s + ', ' + _db(aInvoiceLine.IsVisibleOnInvoice);
     s := s + ', ' + _db(iCreditInvoiceMultiplier * aInvoiceLine.TotalRevenue.ToNative.Value);
-    if aInvoiceLine.lineGuid.IsEmpty then
-      ainvoiceLine.lineGuid := CreateAGUID;             // New one needed
+
+    if aInvoiceLine.lineGuid.IsEmpty or (aSaveType = stProforma) then // Create new lineGUIDS for temp proforma save as lineGUID must be unique in invoicelines
+        ainvoiceLine.lineGuid := CreateAGUID;             // New one needed
     s := s + ', ' + GUIDToSQL(ainvoiceLine.lineGuid);
+
+
     if assigned(aInvoiceLine.Parent) then
       s := s + ', ' + GUIDToSQL(aInvoiceLine.Parent.lineGuid)
     else
