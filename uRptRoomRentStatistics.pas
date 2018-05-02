@@ -61,7 +61,7 @@ uses
   dxPSFillPatterns, dxPSEdgePatterns, dxPSPDFExportCore, dxPSPDFExport, cxDrawTextUtils, dxPSPrVwStd, dxPSPrVwAdv,
   dxPSPrVwRibbon, dxPScxPageControlProducer, dxPScxGridLayoutViewLnk, dxPScxEditorProducers, dxPScxExtEditorProducers,
   dxSkinsdxBarPainter, dxSkinsdxRibbonPainter, dxPSCore, htmlhint, dxScreenTip, dxCustomHint, cxHint,
-  uFraDateFromToSelection
+  uFraDateFromToSelection, VCLTee.DBChart, VCLTee.TeeGDIPlus
   ;
 
 type
@@ -99,8 +99,6 @@ type
     tvStatsadr: TcxGridDBBandedColumn;
     tvStatsrevPar: TcxGridDBBandedColumn;
     pnlCharts: TsPanel;
-    pnlChartsTop: TsPanel;
-    AdvChartPanesEditorDialog1: TAdvChartPanesEditorDialog;
     FormStore: TcxPropertiesStore;
     kbmStatReport: TkbmMemTable;
     dsStatReport: TDataSource;
@@ -338,6 +336,9 @@ type
     tcStatsChart: TDBChart;
     Series1: TLineSeries;
     Series2: TBarSeries;
+    Series3: TLineSeries;
+    Series4: TLineSeries;
+    TeeGDIPlus1: TTeeGDIPlus;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -359,7 +360,6 @@ type
     procedure btnReportStatsClick(Sender: TObject);
     procedure GetWeekdayFilterValues(Sender: TcxCustomGridTableItem;
       AValueList: TcxDataFilterValueList);
-    procedure clbChartSelectSeriesClickCheck(Sender: TObject);
   private
     { Private declarations }
 
@@ -383,6 +383,7 @@ type
     procedure UpdateControls;
     procedure SetLoadingData(const Value: boolean);
     function GroupingByMonth: boolean;
+    procedure UpdateChartSeriesTitles;
 
     property LoadingData: boolean read FLoadingData write SetLoadingData;
   public
@@ -1008,8 +1009,18 @@ begin
   FBaseBandOrigCaption := tvComparison.Bands[0].Caption;
   FCompareBandOrigCaption := tvComparison.Bands[1].Caption;
 
+  UpdateChartSeriesTitles;
+
   pcMain.ActivePage := tabStatGrid;
   fraDateFromToSelection.OndatesChanged := cbxComparisonPeriodChange;
+end;
+
+procedure TfrmRptRoomRentStatistics.UpdateChartSeriesTitles;
+begin
+  tcStatsChart.Series[0].Title := tvStatsrevenue.Caption;
+  tcStatsChart.Series[1].Title := tvStatsOccupancy.Caption;
+  tcStatsChart.Series[2].Title := tvStatsadr.Caption;
+  tcStatsChart.Series[3].Title := tvStatsrevPar.Caption;
 end;
 
 procedure TfrmRptRoomRentStatistics.ppHeaderBand1BeforePrint(Sender : TObject);

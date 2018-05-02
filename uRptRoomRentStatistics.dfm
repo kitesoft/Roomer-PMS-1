@@ -27,7 +27,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Align = alTop
     TabOrder = 0
     SkinData.SkinSection = 'PANEL'
-    ExplicitTop = -6
     object btnRefresh: TsButton
       Left = 835
       Top = 14
@@ -50,7 +49,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       Align = alLeft
       Caption = 'Include rooms with status of:'
       TabOrder = 1
-      ExplicitLeft = 302
       object clbIncludedStates: TsCheckListBox
         Left = 2
         Top = 15
@@ -84,13 +82,21 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       Height = 81
       Align = alLeft
       TabOrder = 2
-      ExplicitTop = 1
-      ExplicitHeight = 87
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitHeight = 81
       inherited gbxSelectDates: TsGroupBox
         Height = 81
+        ExplicitHeight = 81
       end
       inherited gbxSelectMonth: TsGroupBox
         Height = 81
+        ExplicitHeight = 81
+        inherited cbxMonth: TsComboBox
+          ExplicitLeft = 12
+          ExplicitTop = 18
+          ExplicitWidth = 127
+        end
       end
     end
   end
@@ -120,6 +126,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     TabOrder = 2
     TabPadding = 5
     SkinData.SkinSection = 'PAGECONTROL'
+    ExplicitTop = 88
     object tabStatGrid: TsTabSheet
       Caption = 'Data'
       object sPanel1: TsPanel
@@ -1692,40 +1699,75 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         Height = 490
         Align = alClient
         TabOrder = 0
-        object pnlChartsTop: TsPanel
+        object tcStatsChart: TDBChart
           Left = 1
           Top = 1
           Width = 1449
-          Height = 41
-          Align = alTop
-          TabOrder = 0
-          SkinData.SkinSection = 'PANEL'
-        end
-        object tcStatsChart: TDBChart
-          Left = 1
-          Top = 42
-          Width = 1449
-          Height = 447
+          Height = 488
           AllowPanning = pmNone
-          Title.Text.Strings = (
-            'TDBChart')
+          BottomWall.Size = 1
+          Foot.Visible = False
+          LeftWall.Color = clSilver
+          SubFoot.Visible = False
+          SubTitle.Visible = False
+          Title.Visible = False
           BottomAxis.DateTimeFormat = 'dd-mm-yyyy'
           BottomAxis.Grid.Visible = False
-          BottomAxis.Increment = 1.000000000000000000
-          BottomAxis.LabelsAngle = 70
-          BottomAxis.LabelsOnAxis = False
+          BottomAxis.Grid.DrawEvery = 7
+          BottomAxis.Increment = 7.000000000000000000
+          BottomAxis.LabelsAlternate = True
+          BottomAxis.LabelsFont.Charset = ANSI_CHARSET
+          BottomAxis.LabelsFont.Gradient.Outline = True
+          BottomAxis.LabelsFont.Shadow.Visible = False
+          BottomAxis.RoundFirstLabel = False
+          BottomAxis.Ticks.SmallDots = True
           BottomAxis.Ticks.Visible = False
-          BottomAxis.Title.Caption = 'Date'
-          Chart3DPercent = 5
+          BottomAxis.TickOnLabelsOnly = False
+          BottomAxis.Title.Visible = False
+          Chart3DPercent = 10
           LeftAxis.Grid.Visible = False
           Legend.CheckBoxes = True
           Panning.MouseWheel = pmwNone
+          RightAxis.Automatic = False
+          RightAxis.AutomaticMaximum = False
           RightAxis.AxisValuesFormat = '0%'
+          RightAxis.ExactDateTime = False
+          RightAxis.Increment = 10.000000000000000000
+          RightAxis.Maximum = 100.000000000000000000
           View3DOptions.Perspective = 6
+          View3DOptions.VertOffset = 1
           Zoom.Allow = False
           Align = alClient
-          TabOrder = 1
-          ColorPaletteIndex = 13
+          TabOrder = 0
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          PrintMargins = (
+            15
+            34
+            15
+            34)
+          ColorPaletteIndex = 1
+          object Series2: TBarSeries
+            BarBrush.BackColor = clDefault
+            Marks.Arrow.Visible = True
+            Marks.Callout.Brush.Color = clBlack
+            Marks.Callout.Arrow.Visible = True
+            Marks.Callout.Length = 8
+            Marks.Visible = False
+            DataSource = kbmStat
+            SeriesColor = 12615808
+            Title = 'Revenues'
+            ValueFormat = '#.##0,###'
+            Emboss.Color = 8750469
+            Shadow.Color = 8750469
+            XValues.DateTime = True
+            XValues.Name = 'X'
+            XValues.Order = loAscending
+            XValues.ValueSource = 'ADate'
+            YValues.Name = 'Bar'
+            YValues.Order = loNone
+            YValues.ValueSource = 'revenue'
+          end
           object Series1: TLineSeries
             LegendTitle = 'Occupancy'
             Marks.Arrow.Visible = True
@@ -1733,10 +1775,10 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             Marks.Callout.Arrow.Visible = True
             Marks.Visible = False
             DataSource = kbmStat
+            SeriesColor = 8454143
             Title = 'Occupancy'
             ValueFormat = '0'
             VertAxis = aRightAxis
-            XLabelsSource = 'occ'
             Brush.BackColor = clDefault
             Pointer.Brush.Gradient.EndColor = 10708548
             Pointer.Gradient.EndColor = 10708548
@@ -1751,25 +1793,48 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
             YValues.Order = loNone
             YValues.ValueSource = 'occ'
           end
-          object Series2: TBarSeries
-            BarBrush.BackColor = clDefault
+          object Series3: TLineSeries
             Marks.Arrow.Visible = True
             Marks.Callout.Brush.Color = clBlack
             Marks.Callout.Arrow.Visible = True
-            Marks.Callout.Length = 8
             Marks.Visible = False
             DataSource = kbmStat
-            SeriesColor = 12615935
-            Title = 'Revenues'
-            ValueFormat = #8364'#,##0'
-            XLabelsSource = 'revenue'
+            Title = 'ADR'
+            Brush.BackColor = clDefault
+            Pointer.Brush.Gradient.EndColor = 3513587
+            Pointer.Gradient.EndColor = 3513587
+            Pointer.InflateMargins = True
+            Pointer.Style = psRectangle
+            Pointer.Visible = False
             XValues.DateTime = True
             XValues.Name = 'X'
             XValues.Order = loAscending
             XValues.ValueSource = 'ADate'
-            YValues.Name = 'Bar'
+            YValues.Name = 'Y'
             YValues.Order = loNone
-            YValues.ValueSource = 'revenue'
+            YValues.ValueSource = 'adr'
+          end
+          object Series4: TLineSeries
+            Marks.Arrow.Visible = True
+            Marks.Callout.Brush.Color = clBlack
+            Marks.Callout.Arrow.Visible = True
+            Marks.Callout.Length = 20
+            Marks.Visible = False
+            DataSource = kbmStat
+            SeriesColor = 8421631
+            Title = 'RevPar'
+            Brush.BackColor = clDefault
+            LineHeight = 2
+            Pointer.InflateMargins = True
+            Pointer.Style = psRectangle
+            Pointer.Visible = False
+            XValues.DateTime = True
+            XValues.Name = 'X'
+            XValues.Order = loAscending
+            XValues.ValueSource = 'ADate'
+            YValues.Name = 'Y'
+            YValues.Order = loNone
+            YValues.ValueSource = 'revPar'
           end
         end
       end
@@ -1894,10 +1959,6 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     DataSet = kbmStat
     Left = 560
     Top = 392
-  end
-  object AdvChartPanesEditorDialog1: TAdvChartPanesEditorDialog
-    Left = 1032
-    Top = 40
   end
   object FormStore: TcxPropertiesStore
     Components = <
@@ -4480,7 +4541,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43222.435474398150000000
+      ReportDocument.CreationDate = 43222.555542962960000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19
@@ -4523,5 +4584,11 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       AssignedFormatValues = [fvDate, fvTime, fvPageNumber]
       BuiltInReportLink = True
     end
+  end
+  object TeeGDIPlus1: TTeeGDIPlus
+    Active = True
+    TeePanel = tcStatsChart
+    Left = 968
+    Top = 80
   end
 end
