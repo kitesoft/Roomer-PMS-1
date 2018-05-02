@@ -107,7 +107,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
     Top = 89
     Width = 1459
     Height = 535
-    ActivePage = tabStatGrid
+    ActivePage = tsCharts
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -1683,88 +1683,93 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
         end
       end
     end
-    object tabGraph: TsTabSheet
+    object tsCharts: TsTabSheet
       Caption = 'Charts'
-      object pageCharts: TsPageControl
+      object pnlCharts: TsPanel
         Left = 0
         Top = 0
         Width = 1451
         Height = 490
-        ActivePage = tabOcc
         Align = alClient
         TabOrder = 0
-        SkinData.SkinSection = 'PAGECONTROL'
-        object tabOcc: TsTabSheet
-          Caption = 'OCC'
-          object sPanel2: TsPanel
-            Left = 0
-            Top = 0
-            Width = 1443
-            Height = 33
-            Align = alTop
-            TabOrder = 0
-            SkinData.SkinSection = 'PANEL'
-            object sButton2: TsButton
-              AlignWithMargins = True
-              Left = 16
-              Top = 6
-              Width = 128
-              Height = 21
-              Margins.Left = 15
-              Margins.Top = 5
-              Margins.Bottom = 5
-              Align = alLeft
-              Caption = 'Create Chart'
-              ImageIndex = 0
-              TabOrder = 0
-              OnClick = sButton2Click
-              SkinData.SkinSection = 'BUTTON'
-            end
+        object pnlChartsTop: TsPanel
+          Left = 1
+          Top = 1
+          Width = 1449
+          Height = 41
+          Align = alTop
+          TabOrder = 0
+          SkinData.SkinSection = 'PANEL'
+        end
+        object tcStatsChart: TDBChart
+          Left = 1
+          Top = 42
+          Width = 1449
+          Height = 447
+          AllowPanning = pmNone
+          Title.Text.Strings = (
+            'TDBChart')
+          BottomAxis.DateTimeFormat = 'dd-mm-yyyy'
+          BottomAxis.Grid.Visible = False
+          BottomAxis.Increment = 1.000000000000000000
+          BottomAxis.LabelsAngle = 70
+          BottomAxis.LabelsOnAxis = False
+          BottomAxis.Ticks.Visible = False
+          BottomAxis.Title.Caption = 'Date'
+          Chart3DPercent = 5
+          LeftAxis.Grid.Visible = False
+          Legend.CheckBoxes = True
+          Panning.MouseWheel = pmwNone
+          RightAxis.AxisValuesFormat = '0%'
+          View3DOptions.Perspective = 6
+          Zoom.Allow = False
+          Align = alClient
+          TabOrder = 1
+          ColorPaletteIndex = 13
+          object Series1: TLineSeries
+            LegendTitle = 'Occupancy'
+            Marks.Arrow.Visible = True
+            Marks.Callout.Brush.Color = clBlack
+            Marks.Callout.Arrow.Visible = True
+            Marks.Visible = False
+            DataSource = kbmStat
+            Title = 'Occupancy'
+            ValueFormat = '0'
+            VertAxis = aRightAxis
+            XLabelsSource = 'occ'
+            Brush.BackColor = clDefault
+            Pointer.Brush.Gradient.EndColor = 10708548
+            Pointer.Gradient.EndColor = 10708548
+            Pointer.InflateMargins = True
+            Pointer.Style = psRectangle
+            Pointer.Visible = False
+            XValues.DateTime = True
+            XValues.Name = 'X'
+            XValues.Order = loAscending
+            XValues.ValueSource = 'ADate'
+            YValues.Name = 'Y'
+            YValues.Order = loNone
+            YValues.ValueSource = 'occ'
           end
-          object Chart1: TChart
-            Left = 0
-            Top = 33
-            Width = 1443
-            Height = 426
-            Legend.Visible = False
-            SubTitle.Font.Color = clBlack
-            Title.Text.Strings = (
-              'Occupancy')
-            BottomAxis.LabelsFont.Height = -12
-            SeriesGroups = <
-              item
-                Name = 'Group1'
-              end>
-            View3DWalls = False
-            Align = alClient
-            BevelOuter = bvNone
-            Color = clWhite
-            TabOrder = 1
-            PrintMargins = (
-              15
-              29
-              15
-              29)
-            ColorPaletteIndex = 10
-            object Series1: TLineSeries
-              Marks.Arrow.Visible = True
-              Marks.Callout.Brush.Color = clBlack
-              Marks.Callout.Arrow.Visible = True
-              Marks.Visible = False
-              Brush.BackColor = clDefault
-              LinePen.Color = 390140
-              Pointer.InflateMargins = True
-              Pointer.Style = psRectangle
-              Pointer.Visible = False
-              TreatNulls = tnIgnore
-              XValues.Name = 'X'
-              XValues.Order = loAscending
-              YValues.Name = 'Y'
-              YValues.Order = loNone
-              Data = {
-                0007000000000000000000000000000000000000000000000000000000000000
-                0000000000000000000000000000000000000000000000000000000000}
-            end
+          object Series2: TBarSeries
+            BarBrush.BackColor = clDefault
+            Marks.Arrow.Visible = True
+            Marks.Callout.Brush.Color = clBlack
+            Marks.Callout.Arrow.Visible = True
+            Marks.Callout.Length = 8
+            Marks.Visible = False
+            DataSource = kbmStat
+            SeriesColor = 12615935
+            Title = 'Revenues'
+            ValueFormat = #8364'#,##0'
+            XLabelsSource = 'revenue'
+            XValues.DateTime = True
+            XValues.Name = 'X'
+            XValues.Order = loAscending
+            XValues.ValueSource = 'ADate'
+            YValues.Name = 'Bar'
+            YValues.Order = loNone
+            YValues.ValueSource = 'revenue'
           end
         end
       end
@@ -4475,7 +4480,7 @@ object frmRptRoomRentStatistics: TfrmRptRoomRentStatistics
       PrinterPage.ScaleMode = smFit
       PrinterPage._dxMeasurementUnits_ = 2
       PrinterPage._dxLastMU_ = 2
-      ReportDocument.CreationDate = 43221.618678240740000000
+      ReportDocument.CreationDate = 43222.435474398150000000
       ReportTitle.Font.Charset = DEFAULT_CHARSET
       ReportTitle.Font.Color = clBlack
       ReportTitle.Font.Height = -19

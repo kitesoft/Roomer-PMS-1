@@ -73,7 +73,7 @@ type
     StatDS: TDataSource;
     pcMain: TsPageControl;
     tabStatGrid: TsTabSheet;
-    tabGraph: TsTabSheet;
+    tsCharts: TsTabSheet;
     sPanel1: TsPanel;
     grStat: TcxGrid;
     tvStat: TcxGridDBTableView;
@@ -98,13 +98,9 @@ type
     tvStatsOccupancy: TcxGridDBBandedColumn;
     tvStatsadr: TcxGridDBBandedColumn;
     tvStatsrevPar: TcxGridDBBandedColumn;
-    pageCharts: TsPageControl;
-    tabOcc: TsTabSheet;
-    sPanel2: TsPanel;
-    sButton2: TsButton;
-    Chart1: TChart;
+    pnlCharts: TsPanel;
+    pnlChartsTop: TsPanel;
     AdvChartPanesEditorDialog1: TAdvChartPanesEditorDialog;
-    Series1: TLineSeries;
     FormStore: TcxPropertiesStore;
     kbmStatReport: TkbmMemTable;
     dsStatReport: TDataSource;
@@ -339,13 +335,15 @@ type
     kbmComparisonweekdayBase: TStringField;
     kbmComparisonweekday: TStringField;
     fraDateFromToSelection: TfraDateFromToSelection;
+    tcStatsChart: TDBChart;
+    Series1: TLineSeries;
+    Series2: TBarSeries;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnGuestsExcelClick(Sender: TObject);
     procedure tvStatsGetDefaultCurrencyProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
-    procedure sButton2Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnComparisonReportClick(Sender: TObject);
     procedure tvStatsHideZeroValues(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
@@ -361,6 +359,7 @@ type
     procedure btnReportStatsClick(Sender: TObject);
     procedure GetWeekdayFilterValues(Sender: TcxCustomGridTableItem;
       AValueList: TcxDataFilterValueList);
+    procedure clbChartSelectSeriesClickCheck(Sender: TObject);
   private
     { Private declarations }
 
@@ -690,9 +689,7 @@ begin
       TcxCustomDateEditProperties( tvComparisonaDate.Properties).DisplayFormat := 'mmm yyyy';
     end;
   end;
-
 end;
-
 
 procedure TfrmRptRoomRentStatistics.btnGuestsExcelClick(Sender: TObject);
 var
@@ -1054,34 +1051,6 @@ begin
   redtADRSummary.Text := GetFooterSummaryText(tvStatsadr);
   redtRevParSummary.Text := GetFooterSummaryText(tvStatsrevPar);
 end;
-
-procedure TfrmRptRoomRentStatistics.sButton2Click(Sender: TObject);
-var
-  aValue : integer;
-  sDate  : string;
-  dtDate : Tdate;
-
-begin
-  Chart1.Series[0].Clear;
-  kbmStat.DisableControls;
-  try
-    kbmstat.SortFields := 'ADate';
-    kbmstat.Sort([]);
-    kbmStat.First;
-    while not kbmstat.eof do
-    begin
-      aValue := kbmStat.FieldByName('occ').AsInteger;
-      dtDate := kbmStat.fieldbyname('aDate').asdatetime;
-      dateTimeTostring(sDate,'mmm dd',dtDate);
-      Chart1.Series[0].Add(aValue,sDate, clBlue);
-      kbmStat.Next;
-    end;
-  finally
-    kbmStat.EnableControls;
-  end;
-
-end;
-
 
 end.
 
