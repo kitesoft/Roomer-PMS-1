@@ -2093,7 +2093,7 @@ begin
   grid := nil;
   if mainPage.ActivePage = sheetSums then
   begin
-    if pageSums.ActivePage = sheetSums then
+    if pageSums.ActivePage = sheetSums3 then
     begin
       grid := grSums;
       sPartName := 'sums';
