@@ -162,7 +162,7 @@ end;
 
 function TaxsIsCurrentlyValid(Tax: TTax): Boolean;
 begin
-  Result := Tax.IsValidOn(frmMain.dtDate.Date);
+  Result := Tax.IsValidOn(frmMain.dtDate.Date); // WHAT???????????
 end;
 
 function TaxIsIncluded(Tax: TTax; customerIncluded: Boolean): Boolean;

@@ -158,7 +158,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
         end
-        object rgrInvoiceAddressType: TsRadioGroup
+        inline fraInvoiceAddressType: TfraInvoiceAddressType
           AlignWithMargins = True
           Left = 372
           Top = 15
@@ -167,19 +167,18 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
           Margins.Top = 0
           Margins.Bottom = 0
           Align = alRight
-          Caption = 'Invoice header method'
-          ParentBackground = False
           TabOrder = 8
-          OnClick = rgrInvoiceAddressTypeClick
-          SkinData.SkinSection = 'GROUPBOX'
-          ItemIndex = 1
-          Items.Strings = (
-            'Customer'
-            'Reservation Customer'
-            'RoomGuest'
-            'Last Saved '
-            'Free Text'
-            'Cash')
+          ExplicitLeft = 372
+          ExplicitTop = 15
+          ExplicitWidth = 189
+          ExplicitHeight = 166
+          inherited rgrInvoiceAddressType: TsRadioGroup
+            Width = 183
+            Height = 166
+            OnClick = nil
+            ExplicitWidth = 183
+            ExplicitHeight = 166
+          end
         end
         object edtPersonalId: TsEdit
           Left = 111
@@ -2378,19 +2377,12 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = 'Move payment to Roominvoice'
     end
   end
-  object timCloseInvoice: TTimer [6]
-    Enabled = False
-    Interval = 100
-    OnTimer = timCloseInvoiceTimer
-    Left = 57
-    Top = 405
-  end
-  object PaymentsDS: TDataSource [7]
+  object PaymentsDS: TDataSource [6]
     DataSet = mPayments
     Left = 680
     Top = 520
   end
-  object mPayments: TdxMemData [8]
+  object mPayments: TdxMemData [7]
     Indexes = <>
     SortOptions = []
     OnCalcFields = mPaymentsCalcFields
@@ -2452,7 +2444,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       FieldName = 'currencyRate'
     end
   end
-  object mnuMoveItem: TPopupMenu [9]
+  object mnuMoveItem: TPopupMenu [8]
     OnPopup = mnuMoveItemPopup
     Left = 208
     Top = 328
@@ -2471,7 +2463,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = 'Transfer'
     end
   end
-  object mnuMoveRoom: TPopupMenu [10]
+  object mnuMoveRoom: TPopupMenu [9]
     OnPopup = mnuMoveRoomPopup
     Left = 40
     Top = 328
@@ -2493,7 +2485,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       end
     end
   end
-  object mnuInvoiceIndex: TPopupMenu [11]
+  object mnuInvoiceIndex: TPopupMenu [10]
     Left = 632
     Top = 352
     object I1: TMenuItem
@@ -2555,7 +2547,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Caption = '10'
     end
   end
-  object mRoomRes: TdxMemData [12]
+  object mRoomRes: TdxMemData [11]
     Indexes = <
       item
         FieldName = 'Room'
@@ -2628,7 +2620,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Size = 60
     end
   end
-  object mRoomRates: TdxMemData [13]
+  object mRoomRates: TdxMemData [12]
     Indexes = <>
     SortOptions = []
     Left = 224
@@ -2679,7 +2671,7 @@ inherited frmInvoiceEdit: TfrmInvoiceEdit
       Size = 60
     end
   end
-  object mnuShowOnInvoice: TPopupMenu [14]
+  object mnuShowOnInvoice: TPopupMenu [13]
     Left = 352
     Top = 384
     object mnuCityTax: TMenuItem

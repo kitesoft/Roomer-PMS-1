@@ -371,7 +371,7 @@ uses
   , uDateUtils
   , Math
   , uSQLUtils, uReservationEmailingDialog, uRoomerIDList
-  ;
+  , uInvoiceDefinitions;
 
 const
   cSTOCKITEM_IMPORTREFERENCE = 'STOCKITEM';
@@ -1118,7 +1118,7 @@ var
     invoiceHeadData.Finished := false;
     invoiceHeadData.CreditInvoice := -1;
     invoiceHeadData.OriginalInvoice := -1;
-    invoiceHeadData.InvoiceType := 1;
+    invoiceHeadData.InvoiceType := glb.PMSSettings.InvoiceSettings.DefaultInvoiceAddressType.ToItemIndex;
     invoiceHeadData.ihTmp := '';
     invoiceHeadData.CustPID := CustPID;
     invoiceHeadData.RoomGuest := guestName;

@@ -7,7 +7,7 @@ uses
   , Classes
   , cmpRoomerDataset
   , uMandatoryFIeldDefinitions
-  , uPMSSettingsAccessor
+  , uPMSSettingsAccessor, uInvoiceDefinitions
   ;
 
 type
@@ -36,7 +36,6 @@ type
     /// </summary>
     const cRoomRentPerDayStrings: array[TRoomRentPerDaySetting] of string =
       ('NEVER', ' ASK' , 'ALWAYS');
-
   public
       // constructor
       /// <summary>
@@ -63,7 +62,6 @@ type
       function AsReadableString : string;
   end;
 
-
   TPMSSettingsInvoice = class(TPMSSettingsGroup)
   private const
     cInvoiceHandlingGroup = 'INVOICE_HANDLING_FUNCTIONS';
@@ -74,6 +72,7 @@ type
     cShowIncludedBreakfastOnInvoice = 'SHOW_INCLUDED_BREAKFAST_ON_INVOICE';
     cShowRoomRentPerDay = 'SHOW_ROOMRENT_PER_DAY';
     cAggregateCityTax= 'AGGREGATE_CITYTAX';
+    cInvoiceAddressType= 'INVOICE_ADDRESS_TYPE';
   private
     function GetShowInvoiceAsPaidWhenStatusIsZero: boolean;
     procedure SetShowInvoiceAsPaidWhenStatusIsZero(const Value: boolean);
@@ -89,6 +88,8 @@ type
     procedure SetRoomRentPerDayOninvoice(const Value: TRoomrentPerDaySetting);
     function GetAggregateCityTax: boolean;
     procedure SetAggregateCityTax(const Value: boolean);
+    function GetInvoiceAddressType: TInvoiceAddressType;
+    procedure SetInvoiceAddressType(const Value: TInvoiceAddressType);
   protected
     function GetKeyGroup: string; override;
   public
@@ -99,6 +100,7 @@ type
     property AllowTogglingOfCityTaxes: boolean read GetAllowTogglingOfCityTaxes write SetAllowTogglingOfCityTaxes;
     property RoomRentPerDayOninvoice: TRoomrentPerDaySetting read GetRoomRentPerDayOninvoice write SetRoomRentPerDayOninvoice;
     property AggregateCityTax: boolean read GetAggregateCityTax write SetAggregateCityTax;
+    property DefaultInvoiceAddressType: TInvoiceAddressType read GetInvoiceAddressType write SetInvoiceAddressType;
   end;
 
   TPMSSettingsRatesAvailabilities = class(TPMSSettingsGroup)
@@ -385,6 +387,11 @@ begin
   Result := GetSettingsAsBoolean(cAllowTogglingOfCityTaxes, True);
 end;
 
+function TPMSSettingsInvoice.GetInvoiceAddressType: TInvoiceAddressType;
+begin
+  result := TinvoiceAddressType.FromString(GetSettingsAsString(cInvoiceAddressType, TinvoiceAddressType.ReservationCustomer.AsDB));
+end;
+
 function TPMSSettingsInvoice.GetShowIncludedBreakfastOnInvoice: boolean;
 begin
   Result := GetSettingsAsBoolean(cShowIncludedBreakfastOnInvoice, False);
@@ -413,6 +420,11 @@ end;
 procedure TPMSSettingsInvoice.SetAllowTogglingOfCityTaxes(const Value: boolean);
 begin
   SaveSetting(cAllowTogglingOfCityTaxes, Value);
+end;
+
+procedure TPMSSettingsInvoice.SetInvoiceAddressType(const Value: TInvoiceAddressType);
+begin
+  SaveSetting(cInvoiceAddressType, Value.AsDB);
 end;
 
 procedure TPMSSettingsInvoice.SetRoomRentPerDayOninvoice(const Value: TRoomrentPerDaySetting);

@@ -1832,6 +1832,14 @@ begin
                    '  - Is the organization code correct?' + #13);
 
   constants.Add('shRoomerVersionNotAllowed', 'This version of Roomer PMS is not compatible with the Roomer services and not allowed access anymore.');
+
+  constants.Add('shInvoiceAddressType_Customer', 'Customer');
+  constants.Add('shInvoiceAddressType_ReservationCustomer', 'Reservation Customer');
+  constants.Add('shInvoiceAddressType_RoomGuest', 'Room Guest');
+  constants.Add('shInvoiceAddressType_LastSaved', 'Last Saved');
+  constants.Add('shInvoiceAddressType_FreeText', 'Free Text');
+  constants.Add('shInvoiceAddressType_Cash', 'Cash');
+
 end;
 
 procedure AddConstants_OfflineReports;

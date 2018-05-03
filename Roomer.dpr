@@ -353,7 +353,8 @@ uses
   uRoomRentTaxReceipt in 'MobileAPI\uRoomRentTaxReceipt.pas',
   uVCLUtils in 'RoomerUtils\uVCLUtils.pas',
   uRoomRentStatisticsDefinitions in 'Definitions\uRoomRentStatisticsDefinitions.pas',
-  uFraDateFromToSelection in 'Embeddables\uFraDateFromToSelection.pas' {fraDateFromToSelection: TFrame};
+  uFraDateFromToSelection in 'Embeddables\uFraDateFromToSelection.pas' {fraDateFromToSelection: TFrame},
+  uFraInvoiceAddressType in 'Embeddables\uFraInvoiceAddressType.pas' {fraInvoiceAddressType: TFrame};
 
 {$R *.RES}
 

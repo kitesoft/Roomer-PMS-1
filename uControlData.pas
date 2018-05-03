@@ -746,6 +746,8 @@ type
     fraRackCustomerPanel: TfraCustomerPanel;
     fraEndOfDayCustomerPanel: TfraCustomerPanel;
     fraStaffMemberPanel: TfraStaffMemberPanel;
+    cbxInvoiceAddressType: TsComboBox;
+    lbDefaultAddressType: TsLabel;
     procedure FormCreate(Sender : TObject);
     procedure FormClose(Sender : TObject; var Action : TCloseAction);
     procedure FormShow(Sender : TObject);
@@ -868,7 +870,7 @@ uses
   , uResourceTypeDefinitions
   , uPMSSettings
   , uRoomerLanguage
-  , uVCLUtils;
+  , uVCLUtils, uInvoiceDefinitions;
 
 {$R *.DFM}
 
@@ -1322,6 +1324,7 @@ g.ReadWriteSettingsToRegistry(0);
     cbxWithdrawalWithoutGuarantee.Checked := NOT g.qRestrictWithdrawalWithoutGuarantee;
 
     cbxRoomRentPerDay.ItemIndex :=  glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice.ToItemIndex;
+    cbxInvoiceAddressType.ItemIndex :=  glb.PMSSettings.InvoiceSettings.DefaultInvoiceAddressType.ToItemIndex;
 
     chkConfirmAuto.checked := g.qConfirmAuto;
     edConfirmMinuteOfTheDay.value  := g.qConfirmMinuteOfTheDay;
@@ -1943,6 +1946,11 @@ begin
         glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := rpdNever
       else
         glb.PMSSettings.InvoiceSettings.RoomRentPerDayOninvoice := TRoomRentPerDaySetting.FromItemIndex(cbxRoomRentPerDay.ItemIndex);
+
+      if cbxInvoiceAddressType.ItemIndex = -1 then
+        glb.PMSSettings.InvoiceSettings.DefaultInvoiceAddressType := TInvoiceAddressType.Customer
+      else
+        glb.PMSSettings.InvoiceSettings.DefaultInvoiceAddressType := TInvoiceAddressType.FromItemIndex(cbxInvoiceAddressType.ItemIndex);
 
       g.qConfirmAuto := chkConfirmAuto.checked;
       g.qConfirmMinuteOfTheDay := edConfirmMinuteOfTheDay.value;
@@ -2588,6 +2596,9 @@ begin
 
   TRoomRentPerDaySetting.AsStrings(cbxRoomRentPerDay.Items);
   cbxRoomRentPerDay.ItemIndex := 0;
+
+  TInvoiceAddressType.AsStrings(cbxInvoiceAddressType.Items);
+  cbxInvoiceAddressType.ItemIndex := 0;
 
   LoadTable;
   cbxStatusAttr_.ItemIndex := 0;

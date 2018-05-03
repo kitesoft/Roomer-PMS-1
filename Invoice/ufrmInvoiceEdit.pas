@@ -81,7 +81,7 @@ uses
   , Generics.Collections
   , cxCheckBox, cxCurrencyEdit, sSplitter, uRoomerForm, dxPScxCommon, dxPScxGridLnk
   , RoomerExceptionHandling, ufraCurrencyPanel
-  , uAmount, uCurrencyConstants, uFraLookupPanel, htmlhint, uFraCustomerPanel, uFraCountryPanel
+  , uAmount, uCurrencyConstants, uFraLookupPanel, htmlhint, uFraCustomerPanel, uFraCountryPanel, uFraInvoiceAddressType
   ;
 
 type
@@ -133,7 +133,6 @@ type
     actAddLine: TAction;
     actRemoveSelected: TAction;
     actMoveItemToGroupInvoice: TAction;
-    timCloseInvoice: TTimer;
     pnlTotalsAndPayments: TsPanel;
     memExtraText: TMemo;
     pnlLineButtons: TsPanel;
@@ -285,7 +284,7 @@ type
     clabCountry: TsLabel;
     clabAddress: TsLabel;
     cLabName: TsLabel;
-    rgrInvoiceAddressType: TsRadioGroup;
+    fraInvoiceAddressType: TfraInvoiceAddressType;
     edtPersonalId: TsEdit;
     edtName: TsEdit;
     edtAddress1: TsEdit;
@@ -378,7 +377,7 @@ type
     procedure evtCustomerChangedAndValid(Sender: TObject);
     procedure agrLinesGetEditText(Sender: TObject; ACol, ARow: integer; var Value: string);
     procedure evtCurrencyChangedAndValid(Sender: TObject);
-    procedure rgrInvoiceAddressTypeClick(Sender: TObject);
+    procedure fraInvoiceAddressTypeChanged(Sender: TObject);
     procedure actSaveAndExitExecute(Sender: TObject);
     procedure actPrintInvoiceExecute(Sender: TObject);
     procedure actPrintProformaExecute(Sender: TObject);
@@ -387,7 +386,6 @@ type
     procedure actAddLineExecute(Sender: TObject);
     procedure actRemoveSelectedExecute(Sender: TObject);
     procedure actMoveItemToGroupInvoiceExecute(Sender: TObject);
-    procedure timCloseInvoiceTimer(Sender: TObject);
     procedure actToggleLodgingTaxClick(Sender: TObject);
     procedure btnClearAddressesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -563,12 +561,11 @@ type
     procedure MarkOriginalInvoiceAsCredited(iInvoice: integer);
 
     function isSystemLine(row: integer): boolean;
-    procedure SetCustEdits;
     function GetInvoiceHeader(Res, RoomRes: integer): boolean; overload;
     function GetInvoiceHeader(Res, RoomRes: integer; arSet: TRoomerDataset): boolean; overload;
     function GetReservationHeader(Res, RoomRes: integer): boolean;
     function GetMainGuestHeader(Res, RoomRes: integer): boolean;
-    function GetCustomerHeader(Res: integer): boolean;
+    procedure GetCustomerHeader(Res: integer);
     function GetMainGuestName(Res, RoomRes: integer): string;
     procedure RemoveInvalidKreditInvoice;
     procedure itemLookup;
@@ -1299,8 +1296,6 @@ begin
   pnlHead.Color := $00FFDDDD; // $00EAFFEA
   pnlTotalsAndPayments.Color := $00FFDDDD; // $00EAFFEA
 
-  rgrInvoiceAddressType.itemIndex := 4;
-
   CustomerHolder := hData.Customer_GetHolder(g.qRackCustomer);
 
   // SQL 108 xINSERT InvoiceHeads
@@ -1364,7 +1359,7 @@ begin
   s := s + ', ' + _db(0);
   s := s + ', ' + _db(memExtraText.Lines.Text);
   s := s + ', ' + _db(false);
-  s := s + ', ' + _db(rgrInvoiceAddressType.itemIndex);
+  s := s + ', ' + _db(fraInvoiceAddressType.AddressType.ToItemIndex);
   s := s + ', ' + _db(g.qUser);
   s := s + ', ' + _db(Date);
   s := s + ', ' + _db(zInvoiceDate);
@@ -1380,8 +1375,8 @@ begin
   begin
   end;
 
-  rgrInvoiceAddressType.itemIndex := 4;
   fraCustomer.Code := CustomerHolder.customer;
+  fraInvoiceAddressType.AddressType := TInvoiceAddressType.Cash;
   edtPersonalId.Text := CustomerHolder.PID;
   edtName.Text := CustomerHolder.CustomerName;
 end;
@@ -2236,16 +2231,6 @@ var
   lParentLine: TInvoiceLine;
   lCurrency: string;
 
-  procedure SetInvoiceAddressTypeIndex(Index: integer);
-  begin
-    rgrInvoiceAddressType.OnClick := nil;
-    try
-      rgrInvoiceAddressType.itemIndex := index;
-    finally
-      rgrInvoiceAddressType.OnClick := rgrInvoiceAddressTypeClick;
-    end;
-  end;
-
 label
   Again;
 
@@ -2328,19 +2313,20 @@ begin
       zInvoiceNumber := lInvoiceHeadSet.FieldByName('InvoiceNumber').asinteger;
 
       GetInvoiceHeader(FReservation, FRoomReservation, lInvoiceHeadSet); // To initialize with current data
-      SetInvoiceAddressTypeIndex(lInvoiceHeadSet.FieldByName('InvoiceType').asinteger);
-
-      if lInvoiceHeadSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
-        GetReservationHeader(FReservation, FRoomReservation);
 
       if FInvoiceType = TInvoiceType.itCreditInvoice then // Kreditinvoice
       begin
-        GetInvoiceHeader(FReservation, FRoomReservation);
-        SetInvoiceAddressTypeIndex(3);
-      end;
+//        GetInvoiceHeader(FReservation, FRoomReservation); //Done by ssetting addresstype
+        fraInvoiceAddressType.AddressType := TInvoiceAddressType.LastSaved;
+      end else
+        fraInvoiceAddressType.AddressType := TInvoiceAddressType.FromItemIndex(lInvoiceHeadSet.FieldByName('InvoiceType').asinteger);
+
+//      Done by setting addressType
+//      if lInvoiceHeadSet.FieldByName('InvoiceType').asinteger = 1 then   // Reservation customer
+//        GetReservationHeader(FReservation, FRoomReservation);
+
 
       HeaderChanged := false;
-      fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
 
       InvoiceCurrencyCode := trim(lInvoiceHeadSet.FieldByName('ihCurrency').asString);
       memExtraText.Lines.Text := trim(lInvoiceHeadSet.FieldByName('ExtraText').asString);
@@ -2395,7 +2381,7 @@ begin
         invoiceHeadData.Country := lInvoiceHeadSet.FieldByName('Country').asString;
         invoiceHeadData.ExtraText := memExtraText.Lines.Text;
         invoiceHeadData.Finished := false;
-        invoiceHeadData.InvoiceType := rgrInvoiceAddressType.itemIndex;
+        invoiceHeadData.InvoiceType := fraInvoiceAddressType.AddressType.ToItemIndex;
         invoiceHeadData.CustPID := lInvoiceHeadSet.FieldByName('CustPid').asString;
         invoiceHeadData.ihDate := Date;
         invoiceHeadData.ihInvoiceDate := zInvoiceDate;
@@ -2909,6 +2895,9 @@ begin
   fraCountryPanel.OnChangedAndValid := evtHeaderChanged;
   fraCountryPanel.AllowEmpty := true;
 
+  fraInvoiceAddressType.Initialize;
+  fraInvoiceAddressType.OnAddressTypeChanged := fraInvoiceAddressTypeChanged;
+
   RefreshData;
   UpdateCaptions;
   UpdateControls;
@@ -3336,7 +3325,7 @@ begin
     _db(fraCountryPanel.Code),
     _db(memExtraText.Lines.Text),
     _db(edtPersonalId.Text),
-    rgrInvoiceAddressType.itemIndex,
+    fraInvoiceAddressType.AddressType.ToItemIndex,
     _db(InvoiceCurrencyCode)
   ]);
 
@@ -3364,7 +3353,7 @@ begin
       _db(fraCountryPanel.Code),
       _db(memExtraText.Lines.Text),
       _db(edtPersonalId.Text),
-      rgrInvoiceAddressType.itemIndex,
+      fraInvoiceAddressType.AddressType.ToItemIndex,
       _db(InvoiceCurrencyCode)
     ]);
 
@@ -3464,7 +3453,7 @@ begin
   s := s + ', ' + _db(memExtraText.Lines.Text);
   s := s + ', ' + inttostr(zOriginalInvoice);
   s := s + ', ' + _db(false);
-  s := s + ', ' + inttostr(1);
+  s := s + ', ' + inttostr(1); // actual addressing type is stored in invoiceAddresses
   s := s + ', ' + _db(g.qUser);
   s := s + ', ' + _db(Date, True);
   s := s + ', ' + _db(zInvoiceDate, True);
@@ -5240,17 +5229,6 @@ begin
   Refreshdata;
 end;
 
-procedure TfrmInvoiceEdit.SetCustEdits;
-begin
-  fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
-  fraCountryPanel.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
-  if rgrInvoiceAddressType.itemIndex = 5 then
-  begin
-    fraCustomer.Code := ctrlGetString('RackCustomer');
-  end;
-
-end;
-
 procedure TfrmInvoiceEdit.SetHeaderChanged(const Value: boolean);
 begin
   if (FHeaderChanged <> Value) then
@@ -5434,46 +5412,18 @@ begin
   MoveRoomToRoomInvoice;
 end;
 
-function TfrmInvoiceEdit.GetCustomerHeader(Res: integer): boolean;
+procedure TfrmInvoiceEdit.GetCustomerHeader(Res: integer);
 var
   customer: string;
-  aname: string;
-  Address1: string;
-  Address2: string;
-  Address3: string;
-  Address4: string;
-  Country: string;
-  PID: string;
-
 begin
-  // Ekki fyrir sta�grei�slureikninga
-  result := false;
   if FInvoiceType = TInvoiceType.itCashInvoice then
     exit;
   if FReservation = -1 then
     exit;
 
   customer := fraCustomer.Code;
-  if glb.LocateSpecificRecord('customers', 'Customer', customer) then
-    with glb.CustomersSet do
-    begin
-      aname := FieldByName('SurName').asString;
-      Address1 := FieldByName('Address1').asString;
-      Address2 := FieldByName('Address2').asString;
-      Address3 := FieldByName('Address3').asString;
-      Address4 := FieldByName('Address4').asString;
-      Country := FieldByName('Country').asString;
-      PID := FieldByName('PID').asString;
-
-      edtName.Text := trim(aname);
-      edtPersonalId.Text := trim(PID);
-      edtAddress1.Text := trim(Address1);
-      edtAddress2.Text := trim(Address2);
-      edtAddress3.Text := trim(Address3);
-      edtAddress4.Text := trim(Address4);
-      fraCountryPanel.Code := trim(Country);
-      result := True;
-    end;
+  fraCustomer.Code := '';
+  fraCustomer.Code := customer;
 end;
 
 function TfrmInvoiceEdit.GetInvoiceHeader(Res, RoomRes: integer): boolean;
@@ -5797,45 +5747,30 @@ begin
   end;
 end;
 
-procedure TfrmInvoiceEdit.rgrInvoiceAddressTypeClick(Sender: TObject);
+procedure TfrmInvoiceEdit.fraInvoiceAddressTypeChanged(Sender: TObject);
 begin
-  fraCustomer.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
-  fraCountryPanel.Enabled := rgrInvoiceAddressType.itemIndex <> 1;
+  fraCustomer.Enabled := fraInvoiceAddressType.AddressType <> TInvoiceAddressType.ReservationCustomer;
+  fraCountryPanel.Enabled := fraInvoiceAddressType.AddressType <> TInvoiceAddressType.ReservationCustomer;
 
-  case rgrInvoiceAddressType.itemIndex of
-    0:
-      begin
-        GetCustomerHeader(FReservation);
-      end;
-    1:
-      begin
-        GetReservationHeader(FReservation, FRoomReservation);
-      end;
-    2:
-      begin
-        GetMainGuestHeader(FReservation, FRoomReservation);
-      end;
-    3:
-      begin
-        GetInvoiceHeader(FReservation, FRoomReservation);
-      end;
-    4:
-      begin
-      end;
-    5:
-      begin
-        fraCustomer.Code := ctrlGetString('RackCustomer');
-        edtPersonalId.Text := '';
-        edtName.Text := 'Invoice';
-        edtAddress1.Text := '';
-        edtAddress2.Text := '';
-        edtAddress3.Text := '';
-        edtAddress4.Text := '';
-      end;
-
+  case fraInvoiceAddressType.AddressType of
+    TInvoiceAddressType.Customer:             GetCustomerHeader(FReservation);
+    TInvoiceAddressType.ReservationCustomer:  GetReservationHeader(FReservation, FRoomReservation);
+    TInvoiceAddressType.RoomGuest:            GetMainGuestHeader(FReservation, FRoomReservation);
+    TInvoiceAddressType.LastSaved:            GetInvoiceHeader(FReservation, FRoomReservation);
+    TInvoiceAddressType.FreeText:             ; // keep current values
+    TInvoiceAddressType.Cash:                 begin
+                                                fraCustomer.Code := ctrlGetString('RackCustomer');
+                                                edtPersonalId.Text := '';
+                                                edtName.Text := 'Invoice';
+                                                edtAddress1.Text := '';
+                                                edtAddress2.Text := '';
+                                                edtAddress3.Text := '';
+                                                edtAddress4.Text := '';
+                                                fraCountryPanel.Code := '';
+                                              end;
   end;
+
   HeaderChanged := True;
-  SetCustEdits;
 end;
 
 procedure TfrmInvoiceEdit.SaveAnd(doExit: boolean);
@@ -7022,12 +6957,6 @@ begin
     MoveSelectedLinesToInvoiceIndex(mnu.Tag);
     UpdateGrid;
   end;
-end;
-
-procedure TfrmInvoiceEdit.timCloseInvoiceTimer(Sender: TObject);
-begin
-  timCloseInvoice.Enabled := false;
-  close;
 end;
 
 procedure TfrmInvoiceEdit.ClearGrid;
