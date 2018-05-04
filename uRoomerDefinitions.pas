@@ -2,7 +2,10 @@ unit uRoomerDefinitions;
 
 interface
 
-uses Graphics;
+uses
+  Graphics
+  , WinAPI.Messages
+  ;
 
 const
   cHotelInvoice  = 0;
@@ -43,6 +46,16 @@ const
   indAppKey = 'Application_Key';
   indAppSecret = 'Application_Secret';
 
+// Windows events
+const
+  WM_SET_DATE_FROM_MAIN = WM_User + 31;
+  WM_REFRESH_ARRIVAL_DATE = WM_User + 32;
+  WM_REFRESH_DEPARTURE_DATE = WM_User + 33;
+  WM_REFRESH_DATE = WM_User + 41;
+  WM_REFRESH_PERIOD_VIEW_BOTTOM = WM_User + 392;
+  WM_REFRESH_PERIOD_VIEW_BOTTOM_REFRESH = WM_User + 393;
+  WM_REFRESH_SKIN_MANAGER = WM_User + 391;
+  WM_REFRESH_STAFF_COMM_NOTIFIER = WM_User + 394;
 
 
 const

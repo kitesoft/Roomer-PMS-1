@@ -10,6 +10,8 @@
 
 
 
+
+
 uses
   {$ifdef UseFastMM}
   FastMM4 in 'FastMM\FastMM4.pas',
@@ -354,7 +356,8 @@ uses
   uVCLUtils in 'RoomerUtils\uVCLUtils.pas',
   uRoomRentStatisticsDefinitions in 'Definitions\uRoomRentStatisticsDefinitions.pas',
   uFraDateFromToSelection in 'Embeddables\uFraDateFromToSelection.pas' {fraDateFromToSelection: TFrame},
-  uFraInvoiceAddressType in 'Embeddables\uFraInvoiceAddressType.pas' {fraInvoiceAddressType: TFrame};
+  uFraInvoiceAddressType in 'Embeddables\uFraInvoiceAddressType.pas' {fraInvoiceAddressType: TFrame},
+  uFrmGuestList in 'mainEmbeddables\uFrmGuestList.pas' {frmGuestList};
 
 {$R *.RES}
 
@@ -385,7 +388,7 @@ begin
     TSplashFormManager.Show;
 
     Application.CreateForm(TD, D);
-  D.ApplicationId := cOpenAPIApplicationID;
+    D.ApplicationId := cOpenAPIApplicationID;
 
     TSplashFormManager.UpdateProgress('Loading forms...');
 

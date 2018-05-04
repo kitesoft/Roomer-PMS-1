@@ -71,6 +71,7 @@ uses
   , uReservationStateChangeHandler
   , uFraDayStatistics
   , uFrmRateQuery
+  , uFrmGuestList
   , uFraHotelStatisticsFooter, cxTextEdit
     ;
 
@@ -280,97 +281,8 @@ type
     barinnGuests: TdxBar;
     btnGroupsReport: TdxBarLargeButton;
     btnCurrentGuestsReport: TdxBarLargeButton;
-    Panel3: TsPanel;
-    rgrGroupreportStayType: TsRadioGroup;
-    mAllReservations: TkbmMemTable;
-    allReservationsDS: TDataSource;
-    gAllReservations: TcxGrid;
-    tvAllReservations: TcxGridDBTableView;
-    tvAllReservationsArrivalDate: TcxGridDBColumn;
-    tvAllReservationsDepartureDate: TcxGridDBColumn;
-    tvAllReservationsRRGuestCount: TcxGridDBColumn;
-    tvAllReservationsmainGuests: TcxGridDBColumn;
-    tvAllReservationsRoom: TcxGridDBColumn;
-    tvAllReservationsRoomType: TcxGridDBColumn;
-    tvAllReservationsRoomDescription: TcxGridDBColumn;
-    tvAllReservationsFloor: TcxGridDBColumn;
-    tvAllReservationsLocationDescription: TcxGridDBColumn;
-    tvAllReservationsStatustext: TcxGridDBColumn;
-    tvAllReservationsmarketSegmentDescription: TcxGridDBColumn;
-    tvAllReservationsGroupAccount: TcxGridDBColumn;
-    tvAllReservationsCustomer: TcxGridDBColumn;
-    tvAllReservationsPersonalID: TcxGridDBColumn;
-    tvAllReservationsEmail: TcxGridDBColumn;
-    tvAllReservationsWebsite: TcxGridDBColumn;
-    tvAllReservationsRvGuestCount: TcxGridDBColumn;
-    tvAllReservationsNoRoom: TcxGridDBColumn;
-    tvAllReservationsBookable: TcxGridDBColumn;
-    tvAllReservationsStatistics: TcxGridDBColumn;
-    tvAllReservationsRoomReservation: TcxGridDBColumn;
-    tvAllReservationsroomCount: TcxGridDBColumn;
-    tvAllReservationsReservation: TcxGridDBColumn;
-    tvAllReservationsStatus: TcxGridDBColumn;
-    tvAllReservationsLocation: TcxGridDBColumn;
-    tvAllReservationsmarketSegment: TcxGridDBColumn;
-    tvAllReservationsresInfo: TcxGridDBColumn;
-    tvAllReservationshidden: TcxGridDBColumn;
-    tvAllReservationsEquipments: TcxGridDBColumn;
-    lvAllReservations: TcxGridLevel;
-    btnGroupReportExpandAll: TsButton;
-    btnGroupreportCollapseAll: TsButton;
-    btnGuestListExcel: TsButton;
-    rptbGroups: TppReport;
-    ppParameterList1: TppParameterList;
-    dplGroups: TppDBPipeline;
-    mDS: TDataSource;
-    ppDesignLayers1: TppDesignLayers;
-    ppDesignLayer1: TppDesignLayer;
-    ppHeaderBand1: TppHeaderBand;
-    ppDetailBand1: TppDetailBand;
-    ppFooterBand1: TppFooterBand;
-    ppLabel1: TppLabel;
-    ppDBText1: TppDBText;
-    ppLabel2: TppLabel;
-    ppDBText2: TppDBText;
-    ppGroup1: TppGroup;
-    ppGroupHeaderBand1: TppGroupHeaderBand;
-    ppGroupFooterBand1: TppGroupFooterBand;
-    tvAllReservationsGroupReservation: TcxGridDBColumn;
-    ppDBText3: TppDBText;
-    ppDBCalc1: TppDBCalc;
-    ppLabel3: TppLabel;
-    ppLine1: TppLine;
-    ppLine2: TppLine;
-    tvAllReservationsResLine: TcxGridDBColumn;
-    ppDBText5: TppDBText;
-    ppDBText6: TppDBText;
-    ppDBText7: TppDBText;
-    ppLabel5: TppLabel;
-    ppLabel6: TppLabel;
-    ppLabel7: TppLabel;
-    ppDBText8: TppDBText;
-    ppLabel8: TppLabel;
-    ppDBCalc2: TppDBCalc;
-    ppDBText9: TppDBText;
-    ppDBText10: TppDBText;
-    ppDBText11: TppDBText;
-    rLabReportName: TppLabel;
-    ppLabel9: TppLabel;
-    rlabFrom: TppLabel;
-    rLabHotelName: TppLabel;
-    rlabUser: TppLabel;
-    rLabTimeCreated: TppLabel;
-    ppLine4: TppLine;
-    mem: TppMemo;
-    ppDBText4: TppDBText;
-    grbGroupReportProperties: TsGroupBox;
-    chkNewPage: TsCheckBox;
-    chkPrintMemo: TsCheckBox;
-    ppLabel4: TppLabel;
-    ppLabel10: TppLabel;
     dxBarButton1: TdxBarButton;
     btnShowHideStat: TdxBarLargeButton;
-    m: TkbmMemTable;
     StoreMain: TcxPropertiesStore;
     sSkinProvider1: TsSkinProvider;
     __N2: TMenuItem;
@@ -406,7 +318,6 @@ type
     cxBarEditItem1: TcxBarEditItem;
     dxBarSubItem2: TdxBarSubItem;
     __dxBarCombo1: TdxBarCombo;
-    btnGroupReportShow: TsButton;
     rbTabExternal: TdxRibbonTab;
     barinnBar12: TdxBar;
     barinnBar3: TdxBar;
@@ -453,17 +364,12 @@ type
     btnContactTypes: TdxBarLargeButton;
     tabDashboard: TsTabSheet;
     btnTurnover: TdxBarLargeButton;
-    tvAllReservationsReservationName: TcxGridDBColumn;
-    tvAllReservationsCustomerName: TcxGridDBColumn;
-    tvAllReservationsGroupReservationName: TcxGridDBColumn;
-    tvAllReservationsRoomNotes: TcxGridDBColumn;
     P1: TMenuItem;
     __N7: TMenuItem;
     dlgAdvGridPrintSettings: TAdvGridPrintSettingsDialog;
     btnTaxes: TdxBarLargeButton;
     btnDownPayments: TdxBarLargeButton;
     pnlNotifications: TsPanel;
-    tvAllReservationsbreakfastGuests: TcxGridDBColumn;
     btnEmailTemplates: TdxBarLargeButton;
     btnCancelReservations: TMenuItem;
     btnTotallist: TdxBarLargeButton;
@@ -479,12 +385,6 @@ type
     sPanel3: TsPanel;
     edtSearch: TButtonedEdit;
     pnlRBE: TsPanel;
-    pupGroups: TPopupMenu;
-    C4: TMenuItem;
-    C5: TMenuItem;
-    N8: TMenuItem;
-    I1: TMenuItem;
-    G4: TMenuItem;
     btnManagmentStat: TdxBarLargeButton;
     tabRateQuery: TsTabSheet;
     sLabel2: TsLabel;
@@ -531,8 +431,6 @@ type
     shpN: TShape;
     __ExplainO: TsLabel;
     shpO: TShape;
-    P2: TMenuItem;
-    P3: TMenuItem;
     mnuRegistrationForm: TMenuItem;
     S3: TMenuItem;
     F1: TMenuItem;
@@ -555,13 +453,6 @@ type
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
     btnCashierReport: TdxBarLargeButton;
-    tvAllReservationsNights: TcxGridDBColumn;
-    tvAllReservationsCurrency: TcxGridDBColumn;
-    tvAllReservationsAverageRate: TcxGridDBColumn;
-    tvAllReservationsTotalStayRate: TcxGridDBColumn;
-    tvAllReservationsAdults: TcxGridDBColumn;
-    tvAllReservationsChildren: TcxGridDBColumn;
-    tvAllReservationsInfants: TcxGridDBColumn;
     pnlStatSlider: TsPanel;
     ApplicationEvents1: TApplicationEvents;
     lblCacheNotification: TsLabel;
@@ -574,9 +465,6 @@ type
     btnConfirmAllottedBooking: TdxBarLargeButton;
     timOfflineReports: TTimer;
     btnDynamicRateRules: TdxBarLargeButton;
-    R2: TMenuItem;
-    R3: TMenuItem;
-    N9: TMenuItem;
     btnRepArrivals: TdxBarLargeButton;
     mnuCancelRoomFromRoomReservation: TMenuItem;
     __N10: TMenuItem;
@@ -644,7 +532,6 @@ type
     dxBarSubItem11: TdxBarSubItem;
     dxBarButton8: TdxBarButton;
     btnNationalStatistics: TdxBarLargeButton;
-    tvAllReservationsBreakfast: TcxGridDBColumn;
     dxUserActivityLog2: TdxBarLargeButton;
     btnBreakfastList: TdxBarLargeButton;
     acResStatusPerDay: TAction;
@@ -652,7 +539,6 @@ type
     btnCleaningReport: TdxBarLargeButton;
     tmrDateChangeDelay: TTimer;
     hhHintHTMLFormatter: THTMLHint;
-    ppLabel11: TppLabel;
     dxBarButton10: TdxBarButton;
     btnTestTaxesAPI: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
@@ -779,14 +665,6 @@ type
     procedure NewReservation1Click(Sender: TObject);
     procedure QuickReservation1Click(Sender: TObject);
     procedure btnGroupsReportClick(Sender: TObject);
-    procedure rgrTypePropertiesEditValueChanged(Sender: TObject);
-    procedure rgrUsePropertiesEditValueChanged(Sender: TObject);
-    procedure btnGroupReportExpandAllClick(Sender: TObject);
-    procedure btnGroupreportCollapseAllClick(Sender: TObject);
-    procedure btnGuestListExcelClick(Sender: TObject);
-    procedure btnGroupReportShowClick(Sender: TObject);
-    procedure ppHeaderBand1BeforePrint(Sender: TObject);
-    procedure ppGroupHeaderBand1BeforePrint(Sender: TObject);
     procedure btnCurrentGuestsReportClick(Sender: TObject);
     procedure grPeriodRoomsMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
     procedure grPeriodRoomsDragOver(Sender, Source: TObject; X, Y: integer; State: TDragState; var Accept: boolean);
@@ -840,8 +718,6 @@ type
     procedure btnPersonvipTypesClick(Sender: TObject);
     procedure btnContactTypesClick(Sender: TObject);
     procedure btnTurnoverClick(Sender: TObject);
-    procedure rgrGroupreportStayTypeClick(Sender: TObject);
-    procedure rgrGroupReportDateTypeClick(Sender: TObject);
     procedure C2Click(Sender: TObject);
     procedure P1Click(Sender: TObject);
     procedure btnTaxesClick(Sender: TObject);
@@ -850,11 +726,6 @@ type
     procedure btnTotallistClick(Sender: TObject);
     procedure mnuRemovereservationClick(Sender: TObject);
     procedure dtMainHeaderPropertiesChange(Sender: TObject);
-    procedure C4Click(Sender: TObject);
-    procedure pupGroupsPopup(Sender: TObject);
-    procedure C5Click(Sender: TObject);
-    procedure I1Click(Sender: TObject);
-    procedure G4Click(Sender: TObject);
     procedure sSpeedButton1Click(Sender: TObject);
     procedure btnManagmentStatClick(Sender: TObject);
     procedure pmnuReservationRoomListClick(Sender: TObject);
@@ -892,10 +763,6 @@ type
     procedure btnEmailTemplatesClick(Sender: TObject);
     procedure btnCashierReportClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure tvAllReservationsAverageRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
-    procedure tvAllReservationsTotalStayRateGetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-      var AProperties: TcxCustomEditProperties);
     procedure lblLogoutClick(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: boolean);
     procedure btnWebAccessibleFilesClick(Sender: TObject);
@@ -908,9 +775,6 @@ type
     procedure timOfflineReportsTimer(Sender: TObject);
     procedure btnDynamicRateRulesClick(Sender: TObject);
     procedure __cbxHotelsCloseUp(Sender: TObject);
-    procedure P2Click(Sender: TObject);
-    procedure R2Click(Sender: TObject);
-    procedure R3Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure btnRepArrivalsClick(Sender: TObject);
     procedure mnuCancelRoomFromRoomReservationClick(Sender: TObject);
@@ -971,6 +835,7 @@ type
     FrmReservationHintHolder: TFrmReservationHintHolder;
     embOccupancyView: TembOccupancyView;
     frmRateQuery: TfrmRateQuery;
+    frmGuestList: TfrmGuestList;
 
     curNoDrop: HCursor;
     curNoDropNew: HCursor;
@@ -1047,8 +912,6 @@ type
     zGotoRow: integer;
     zGotoCol: integer;
 
-    zGuestListFirstTime: boolean;
-
     zsFreeRackRooms: string;
     zsOccRackRooms: string;
     zsNoRooms: string;
@@ -1091,7 +954,6 @@ type
     function OneDay_GetIsLeftOrRight(iCol: integer): integer;
     function OneDay_isATakenType(ACol, ARow: integer): boolean;
     function OneDay_RoomReservedName(const RoomNumber: string; iRes, iRoom: integer): string;
-    procedure OneDay_CheckOut;
     procedure OneDay_RemoveRoom(_grid: TAdvStringGrid; bAll: boolean);
     procedure OneDay_RoomInvoice(invType: integer);
     procedure OneDay_DeleteRoomReservation;
@@ -1153,7 +1015,7 @@ type
     /// ////////////////////////////////////////////////////////////////////////
 
     procedure EnterPeriodView;
-    procedure EnterGuestListView;
+    procedure EnterGuestListView(aDate: TDate);
     procedure EnterDayView;
 
     /// ////////////////////////////////////////////////////////////////////////
@@ -1318,9 +1180,6 @@ type
 
     procedure CreateProvideAllotment(aAllotmentResId: integer; aSHowDate: TDateTime = 0);
 
-    procedure refreshGuestList;
-    function getSortField: string;
-    procedure GuestListReport;
     function FilteredData(aRoom: TRoomObject): boolean;
     // Reservation: TSingleReservations): Boolean;
     procedure FilterMenuItemSelect(Sender: TObject);
@@ -1390,8 +1249,8 @@ type
     procedure PerformFilterRefresh;
     procedure checkFilterStatuses;
     procedure SetRBEMode(const Value: boolean);
-    function CheckInARoom(iReservation, iRoomReservation: integer): boolean;
-    procedure CheckOutARoom(const Room: String; iRoomReservation, iReservation: integer);
+    procedure CheckInARoom(iReservation, iRoomReservation: integer);
+    procedure CheckOutARoom(iReservation, iRoomReservation: integer);
     procedure SetDateWithoutEvents(aDate: TdateTime);
     procedure EnterRateQueryView(aDate: integer);
     procedure SetOffLineMode(const Value: boolean);
@@ -1413,7 +1272,6 @@ type
     procedure DrawPeriodColumn1(Grid: TAdvStringGrid; ACol, ARow: integer; State: TGridDrawState);
     procedure ShowHintWindow;
     procedure ShowOneDayHint(ACol, ARow: integer);
-    function getRoomReservationsListSubQuery(aType: integer): string;
     procedure ActivateMessagesIfApplicable;
     procedure ConfirmABooking;
     procedure NillifyEventHandlers(Grid: TAdvStringGrid);
@@ -1444,6 +1302,7 @@ type
     function RoomtypeFilterActive: boolean;
     procedure RefreshFooterStats;
     function GetDateOfSelectedColumn: TDate;
+    procedure RefreshGuestList;
   public
     { Public declarations }
     StaffComm: TStaffCommunication;
@@ -1628,11 +1487,6 @@ const
   ROOMER_COPY_RESERVATION = 'ROOMER:COPY:RESERVATION:';
   ROOMER_COPY_RESERVATION_ID = ROOMER_COPY_RESERVATION + 'HOTEL=%s;ID=%d';
 
-  WM_REFRESH_DATE = WM_User + 41;
-  WM_REFRESH_PERIOD_VIEW_BOTTOM = WM_User + 392;
-  WM_REFRESH_PERIOD_VIEW_BOTTOM_REFRESH = WM_User + 393;
-  WM_REFRESH_SKIN_MANAGER = WM_User + 391;
-  WM_REFRESH_STAFF_COMM_NOTIFIER = WM_User + 394;
   PERIOD_GRID_RECTANGLES_WIDTH = 10;
 
   //cGoingStr = '» ';
@@ -1932,35 +1786,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.R2Click(Sender: TObject);
-var
-  iReservation: integer;
-  iRoomReservation: integer;
-begin
-  if mAllReservations.IsEmpty then
-    exit;
-  iRoomReservation := mAllReservations['RoomReservation'];
-  iReservation := mAllReservations['Reservation'];
-  if EditReservation(iReservation, iRoomReservation) then
-  begin
-  end;
-end;
-
-procedure TfrmMain.R3Click(Sender: TObject);
-var
-  theData: recPersonHolder;
-begin
-  if mAllReservations.IsEmpty then
-    exit;
-
-  initPersonHolder(theData);
-  theData.RoomReservation := mAllReservations['RoomReservation'];
-  theData.Reservation := mAllReservations['Reservation'];
-  theData.name := mAllReservations['ReservationName'];
-
-  if openGuestProfile(actNone, theData) then
-    RefreshGrid;
-end;
 
 procedure TfrmMain.RedisplayGuestWindows;
 begin
@@ -2678,20 +2503,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.pupGroupsPopup(Sender: TObject);
-begin
-  C4.Enabled := false;
-  C5.Enabled := false;
-  I1.Enabled := false;
-  G4.Enabled := false;
-  if mAllReservations.IsEmpty then
-    exit;
-
-  C4.Enabled := mAllReservations['Status'] = 'P';
-  C5.Enabled := mAllReservations['Status'] = 'G';
-  I1.Enabled := true;
-  G4.Enabled := true;
-end;
 
 procedure TfrmMain.SelectSkinEvent(Sender: TObject);
 begin
@@ -2787,6 +2598,8 @@ begin
   frmReservationHintHolder := TFrmReservationHintHolder.Create(Self);
   embOccupancyView := TembOccupancyView.Create(Self);
   frmRateQuery := TfrmRateQuery.Create(Self);
+
+  frmGuestList := TfrmGuestList.Create(Self);
 
   PrepareFrontDeskPage(sbFrontDesk); // tabFrontDesk);
 end;
@@ -2890,7 +2703,6 @@ begin
     if btnShowHideStat.Down then
       btnShowHideStatClick(btnShowHideStat);
 
-
     if cbxViewTypes.ItemIndex < 0 then
       cbxViewTypes.ItemIndex := 0;
 
@@ -2898,6 +2710,8 @@ begin
     FrmReservationHintHolder.InitEmbededHint(self);
 
     embOccupancyView.InitEmbededOccupancyView(pnlPeriodNoRooms);
+    FrmRateQuery.pnlHolder.Parent := tabRateQuery;
+    FrmGuestList.pnlHolder.Parent := tabGuestList;
 
     Application.ShowHint := true;
 
@@ -3194,9 +3008,6 @@ begin
     TSplashFormManager.UpdateProgress('Updating current guests list...');
     g.updateCurrentGuestlist;
 
-    if NOT OffLineMode then
-      rgrGroupreportStayType.ItemIndex := 2;
-
     TSplashFormManager.UpdateProgress('Refreshing periodview...');
     Period_Init;
     Period_GetRooms;
@@ -3266,6 +3077,11 @@ begin
   end;
 
   try
+    RoomerLanguage.TranslateThisForm(FrmGuestList);
+  except
+  end;
+
+  try
     RoomerLanguage.TranslateThisForm(FrmReservationHintHolder);
   except
   end;
@@ -3278,20 +3094,6 @@ begin
   except
   end;
 
-end;
-
-procedure TfrmMain.tvAllReservationsAverageRateGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
-end;
-
-procedure TfrmMain.tvAllReservationsTotalStayRateGetProperties(Sender: TcxCustomGridTableItem;
-  ARecord: TcxCustomGridRecord;
-  var AProperties: TcxCustomEditProperties);
-begin
-  AProperties := d.getCurrencyProperties(ARecord.Values[tvAllReservationsCurrency.index]);
 end;
 
 procedure TfrmMain.FilterMenuItemSelect(Sender: TObject);
@@ -3809,7 +3611,6 @@ begin
 
       FAlreadyIn := true;
 
-      zGuestListFirstTime := true;
       if ViewMode = vmOneDay then
       begin
 
@@ -3911,10 +3712,6 @@ begin
         if iTopRow < grOneDayRooms.RowCount then
           grOneDayRooms.TopRow := iTopRow;
 
-      end
-      else if ViewMode = vmGuestList then
-      begin
-        zGuestListFirstTime := false;
       end;
 
       DisplayDate(dtDate.Date);
@@ -3977,7 +3774,7 @@ begin
       case ViewMode of
         vmOneDay:     RefreshOneDayGrid;
 
-        vmGuestList:  refreshGuestList;
+        vmGuestList:  RefreshGuestList;
 
         vmPeriod:     RefreshPeriodView;
         vmMeetings: ;
@@ -3999,6 +3796,11 @@ begin
   except on e: Exception do
     ShowMessage('Error occured during refreshing data'#10 + 'Message: ' + e.Message);
   end;
+end;
+
+procedure TfrmMain.RefreshGuestList;
+begin
+  frmGuestList.Date := dtDate.Date;
 end;
 
 procedure TfrmMain.SetDateStatisticsDate;
@@ -4382,20 +4184,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.P2Click(Sender: TObject);
-var
-  RoomResArray: IntegerArray;
-  iRoomReservation: integer;
-begin
-  if mAllReservations.IsEmpty then
-    exit;
-  iRoomReservation := mAllReservations['RoomReservation'];
-  SetLength(RoomResArray, 1);
-  RoomResArray[LOW(RoomResArray)] := iRoomReservation;
-
-  PrintRegistrationForm(RoomResArray);
-end;
-
 procedure TfrmMain.mnuGroupGuestNamesClick(Sender: TObject);
 begin
   if GetSelectedRoomInformation AND
@@ -4633,31 +4421,6 @@ begin
   CancelARoomReservation;
 end;
 
-procedure TfrmMain.C4Click(Sender: TObject);
-var
-  iRoomReservation: integer;
-  iReservation: integer;
-begin
-  if mAllReservations.IsEmpty then
-    exit;
-  iRoomReservation := mAllReservations['RoomReservation'];
-  iReservation := mAllReservations['Reservation'];
-
-  CheckInARoom(iReservation, iRoomReservation);
-end;
-
-procedure TfrmMain.C5Click(Sender: TObject);
-var
-  iRoomReservation, iReservation: integer;
-  Room: String;
-begin
-  if mAllReservations.IsEmpty then
-    exit;
-  iRoomReservation := mAllReservations['RoomReservation'];
-  iReservation := mAllReservations['Reservation'];
-  Room := mAllReservations['Room'];
-  CheckOutARoom(Room, iRoomReservation, iReservation);
-end;
 
 procedure TfrmMain.C6Click(Sender: TObject);
 begin
@@ -4666,28 +4429,6 @@ begin
       MessageDlg(GetTranslatedText('shTxCancellationEmailHasBeenSent'), mtConfirmation, [mbOk], 0);
 end;
 
-procedure TfrmMain.I1Click(Sender: TObject);
-var
-  iReservation, iRoomReservation: integer;
-begin
-  if mAllReservations.IsEmpty then
-    exit;
-  iRoomReservation := mAllReservations['RoomReservation'];
-  iReservation := mAllReservations['Reservation'];
-  EditInvoice(iReservation, iRoomReservation, TInvoiceType.itDebitInvoice, 0, false);
-  RefreshGrid;
-end;
-
-procedure TfrmMain.G4Click(Sender: TObject);
-var
-  iReservation: integer;
-begin
-  if mAllReservations.IsEmpty then
-    exit;
-  iReservation := mAllReservations['Reservation'];
-  EditInvoice(iReservation, 0, TInvoiceType.itDebitInvoice, 0, false);
-  RefreshGrid;
-end;
 
 function TfrmMain.GetActivePeriodGrid: TAdvStringGrid;
 begin
@@ -4779,34 +4520,36 @@ begin
 end;
 
 
-procedure TfrmMain.CheckOutARoom(const Room: String; iRoomReservation, iReservation: integer);
-var
-  lRoomStateCHanger: TRoomReservationStateChangeHandler;
+procedure TfrmMain.CheckOutARoom(iReservation, iROomReservation: integer);
+//var
+//  lRoomStateCHanger: TRoomReservationStateChangeHandler;
 begin
-
-  lRoomStateCHanger := TRoomReservationStateChangeHandler.Create(iReservation, iRoomReservation);
-  try
-    if lRoomStateChanger.ChangeState(rsDeparted) then
-      RefreshGrid;
-  finally
-    lRoomStateChanger.Free;
-  end;
+  if FReservationStateHandler.RoomStateChangeHandler[iRoomReservation].ChangeState(rsDeparted) then
+    RefreshGrid;
+//  lRoomStateCHanger := TRoomReservationStateChangeHandler.Create(iReservation, iRoomReservation);
+//  try
+//    if lRoomStateChanger.ChangeState(rsDeparted) then
+//      RefreshGrid;
+//  finally
+//    lRoomStateChanger.Free;
+//  end;
 end;
 
-function TfrmMain.CheckInARoom(iReservation, iRoomReservation: integer): boolean;
-var
-  lResStateChanger: TRoomReservationStateChangeHandler;
+procedure TfrmMain.CheckInARoom(iReservation, iRoomReservation: integer);
+//var
+//  lResStateChanger: TRoomReservationStateChangeHandler;
 begin
-
-  lResStateChanger := TRoomReservationStateChangeHandler.Create(iReservation, iRoomReservation) ;
-  try
-    Result := lResStateChanger.ChangeState(rsGuests);
-  finally
-    lResStateChanger.Free;
-  end;
-  if Result then
+  if FReservationStateHandler.RoomStateChangeHandler[iRoomReservation].ChangeState(rsGuests) then
     RefreshGrid;
-
+//
+//  lResStateChanger := TRoomReservationStateChangeHandler.Create(iReservation, iRoomReservation) ;
+//  try
+//    Result := lResStateChanger.ChangeState(rsGuests);
+//  finally
+//    lResStateChanger.Free;
+//  end;
+//  if Result then
+//    RefreshGrid;
 end;
 
 // ------------------------------------------------------------------------------
@@ -4814,71 +4557,11 @@ end;
 //
 // ------------------------------------------------------------------------------
 procedure TfrmMain.CheckInGroup;
-var
-  lStateChanger: TReservationStateChangeHandler;
 begin
-
-  if GetSelectedRoomInformation then
-  begin
-    lStateChanger := TReservationStateChangeHandler.Create(_iReservation);
-    try
-      if lStateChanger.ChangeState(rsGuests) then
-        if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
-              RefreshGrid;
-    finally
-      lStateChanger.Free;
-    end;
-  end;
+  if GetSelectedRoomInformation and FReservationStateHandler.ChangeState(rsGuests) then
+    RefreshGrid;
 end;
 
-// ------------------------------------------------------------------------------
-// +080223 - Added 5day Grid support
-//
-// ------------------------------------------------------------------------------
-procedure TfrmMain.OneDay_CheckOut;
-var
-  Execute: boolean;
-  sErr: string;
-
-begin
-  if GetSelectedRoomInformation then
-  begin
-
-    sErr := '';
-    if _ResStatus = rsBlocked then
-      sErr := sErr + { 1013 } GetTranslatedText('sh1013') + ' '
-    else if _ResStatus = rsDeparted then
-      sErr := sErr + { 1014 } GetTranslatedText('sh1014') + ' '
-    else if _ResStatus = rsReservation then
-      sErr := sErr + { 1015 } GetTranslatedText('sh1015') + ' '
-    else if _ResStatus = rsOptionalBooking then
-      sErr := sErr + { 1016 } GetTranslatedText('sh1016') + ' '
-    else if _ResStatus = rsAllotment then
-      sErr := sErr + { 1018 } GetTranslatedText('sh1018') + ' '
-    else if _ResStatus = rsNoShow then
-      sErr := sErr + { 1019 } GetTranslatedText('sh1019') + ' '
-    else if _ResStatus = rsCancelled then // *HJ 140206
-      sErr := sErr + { 1019 } GetTranslatedText('sh1020') + ' '
-    else if _ResStatus = rsTmp1 then // *HJ 140206
-      sErr := sErr + { 1019 } GetTranslatedText('sh1021') + ' '
-    else if _ResStatus = rsAwaitingPayment then // *HJ 140206
-      sErr := sErr + { 1019 } GetTranslatedText('sh1022') + ' ';
-
-    Execute := sErr = '';
-
-    // - � lagi rsGuests - N�verandi Gestur
-    // - � lagi rsDeparting - Farandi
-
-    if Execute then
-    begin
-      if d.CheckOutRoom(_iReservation, _iRoomReservation, _Room) then
-        if (ViewMode = vmOneDay) OR (ViewMode = vmPeriod) then
-          RefreshGrid;
-    end
-    else
-      ShowMessage(Format(GetTranslatedText('shCannotCheckoutRoom'), [sErr, _Room]));
-  end;
-end;
 
 function TfrmMain.GetDateUnderCursor: TDate;
 var
@@ -4962,7 +4645,6 @@ begin
        _iRoomReservation := 0;
 
     EditInvoice(_iReservation, _iRoomReservation, TInvoiceType.itDebitInvoice, _InvoiceIndex, false);
-    RefreshGrid;
   end;
 end;
 
@@ -7662,7 +7344,7 @@ begin
         DisplayStatusses(true);
         fraDayStatistics.BeingViewed := false;
         FrmRateQuery.BeingViewed := false;
-        EnterGuestListView;
+        EnterGuestListView(dtDate.Date);
       end;
     4:
       begin
@@ -7703,7 +7385,6 @@ end;
 
 procedure TfrmMain.EnterRateQueryView(aDate: integer);
 begin
-  FrmRateQuery.pnlHolder.Parent := tabRateQuery;
   PostMessage(handle, WM_SET_DATE_FROM_MAIN, 0, trunc(aDate));
   ViewMode := vmRateQuery;
   if tabsView.TabIndex <> 4 then
@@ -7713,6 +7394,13 @@ begin
   FrmRateQuery.Nullify;
   FrmRateQuery.pnlHolder.Update;
   tabRateQuery.Update;
+end;
+
+procedure TfrmMain.EnterGuestListView(aDate: TDate);
+begin
+  ViewMode := vmGuestList;
+  pageMainGrids.ActivePage := tabGuestList;
+  frmGuestList.Date := dtDate.Date;
 end;
 
 procedure TfrmMain.EnterPeriodView;
@@ -7780,21 +7468,6 @@ begin
 
   pageMainGrids.ActivePage := tabOneDayView;
   RefreshGrid;
-end;
-
-procedure TfrmMain.EnterGuestListView;
-begin
-  if ViewMode = vmGuestList then
-    exit;
-
-  ViewMode := vmGuestList;
-
-  if tabsView.TabIndex <> 2 then
-    tabsView.TabIndex := 2;
-
-  pageMainGrids.ActivePage := tabGuestList;
-  refreshGuestList;
-  zGuestListFirstTime := false;
 end;
 
 procedure TfrmMain.timCheckSessionExpiredTimer(Sender: TObject);
@@ -11520,9 +11193,8 @@ end;
 
 procedure TfrmMain._CheckOutRoom;
 begin
-  if not IsValidCellSelected then
-    exit;
-  OneDay_CheckOut;
+  if IsValidCellSelected and GetSelectedRoomInformation then
+    CheckOutARoom(_iReservation, _iRoomReservation);
 end;
 
 // ##############################  Invoices ##################################
@@ -11533,19 +11205,9 @@ begin
   OneDay_RoomInvoice(1); // RoomInvoice
 
   if d.qRes > -1 then
-  begin
-    if d.qrres = 0 then
-    begin
-      EditInvoice(d.qRes, 0, TInvoiceType.itDebitInvoice, 0, false);
-    end
-    else
-    begin
-      // This is not groupinvoice
-      EditInvoice(d.qRes, d.qrres, TInvoiceType.itDebitInvoice, 0, false);
-    end;
-    RefreshGrid;
-  end;
+    EditInvoice(d.qRes, d.qrres, TInvoiceType.itDebitInvoice, 0, false);
 
+  RefreshGrid;
   d.qRes := -1;
   d.qrres := -1;
 
@@ -11559,19 +11221,9 @@ begin
   OneDay_RoomInvoice(2);
 
   if d.qRes > -1 then
-  begin
-    if d.qrres = 0 then
-    begin
-      EditInvoice(d.qRes, 0, TInvoiceType.itDebitInvoice, 0, false);
-    end
-    else
-    begin
-      // This is not groupinvoice
-      EditInvoice(d.qRes, d.qrres, TInvoiceType.itDebitInvoice, 0, false);
-    end;
-  end;
-  RefreshGrid;
+    EditInvoice(d.qRes, d.qRres, TInvoiceType.itDebitInvoice, 0, false);
 
+  RefreshGrid;
   d.qRes := -1;
   d.qrres := -1;
 
@@ -11579,11 +11231,8 @@ end;
 
 procedure TfrmMain._CashInvoice;
 begin
-  try
-    EditInvoice(0, 0, TInvoiceType.itCashInvoice, 0, false);
-    RefreshGrid;
-  finally
-  end;
+  EditInvoice(0, 0, TInvoiceType.itCashInvoice, 0, false);
+  RefreshGrid;
 end;
 
 procedure TfrmMain._CreditInvoice;
@@ -11800,7 +11449,7 @@ end;
 
 procedure TfrmMain._GuestListView;
 begin
-  EnterGuestListView;
+  EnterGuestListView(dtDate.Date);
 end;
 
 // ############################# Reports  ?###################################
@@ -12557,8 +12206,7 @@ end;
 
 procedure TfrmMain.btnGroupsReportClick(Sender: TObject);
 begin
-  refreshGuestList;
-  GuestListReport;
+  frmGuestList.GuestListReport;
 end;
 
 procedure TfrmMain.btnCurrentGuestsReportClick(Sender: TObject);
@@ -12590,407 +12238,6 @@ begin
   SetExtraSkinColors;
 end;
 
-/// /////////////////////////////////////////////////////////////////////////////
-///
-/// Guest List Tab
-///
-/// ///////////////////////////////////////////////////////////////////////////
-
-
-function TfrmMain.getSortField: string;
-var
-  i: integer;
-  AColumn: TcxGridDBColumn;
-  aName: string;
-  s: string;
-begin
-  //
-  s := '';
-  for i := 0 to tvAllReservations.ColumnCount - 1 do
-  begin
-    AColumn := tvAllReservations.Columns[i];
-    aName := AColumn.DataBinding.FieldName;
-    s := aName;
-    if AColumn.SortOrder = soNone then
-    begin
-    end
-    else if AColumn.SortOrder = soAscending then
-    begin
-      s := s + ';a';
-      result := s;
-      exit;
-    end
-    else if AColumn.SortOrder = soDescending then
-    begin
-      s := s + ';d';
-      result := s;
-      exit;
-    end;
-  end;
-end;
-
-function TfrmMain.getRoomReservationsListSubQuery(aType: integer): string;
-begin
-  result := '';
-  case aType of
-    0:
-      begin
-        result := Format(GetListOfRoomReservationsPerArrivalDate, [_db(dtDate.Date, true)]);
-      end;
-    1:
-      begin
-        result := Format(GetListOfRoomReservationsPerDepartureDate, [_db(dtDate.Date, true)]);
-      end;
-    2:
-      begin
-        result := Format(GetListOfRoomReservationsFromToDate, [_db(dtDate.Date, true), _db(dtDate.Date, true)]);
-      end;
-  end;
-  if not Result.IsEmpty then
-    Result := result + ' ORDER BY Roomreservation';
-end;
-
-procedure TfrmMain.refreshGuestList;
-var
-  rSet: TRoomerDataSet;
-  s: string;
-  aType: integer;
-  // Fields
-  RoomReservation: integer;
-  Reservation: integer;
-  ReservationName: string;
-  ArrivalDate: Tdate;
-  DepartureDate: Tdate;
-  Room: string;
-  RoomType: string;
-  status: string;
-  Breakfast: TBreakfastType;
-  noRoom: boolean;
-  RoomDescription: string;
-  Bookable: boolean;
-  hidden: boolean;
-  Location: string;
-  Floor: integer;
-  Equipments: string;
-  LocationDescription: string;
-  GroupAccount: boolean;
-  marketSegment: string;
-  marketSegmentDescription: string;
-  Email: string;
-  Website: string;
-  customer: string;
-  CustomerName: string;
-  PersonalID: string;
-
-  // calc Fields
-  Statustext: string;
-  ResInfo: string;
-  RoomCount: integer;
-  RvGuestCount: integer;
-  RRGuestCount: integer;
-  mainGuests: string;
-  GroupReservation: integer;
-  GroupReservationName: string;
-
-  Currency: String;
-  AverageRate, TotalRate: Double;
-  numDays, Adults, Children, Infants: integer;
-
-  ResLine: string;
-  breakfastguests: integer;
-
-  SubSql: String;
-  zRoomReservationList: string;
-
-begin
-
-  if ViewMode = vmGuestList then
-    try
-      aType := rgrGroupreportStayType.ItemIndex;
-      zRoomReservationList := getRoomReservationsListSubQuery(aType);
-
-      if zRoomReservationList = '' then
-      begin
-        if mAllReservations.active then
-          mAllReservations.Close;
-        mAllReservations.Open;
-        exit;
-      end;
-      s := '';
-      if mAllReservations.active then
-        mAllReservations.Close;
-      mAllReservations.Open;
-
-      rSet := CreateNewDataSet;
-      try
-        Screen.Cursor := crHourglass;
-        mAllReservations.DisableControls;
-        try
-          s := select_Main_refreshGuestList;
-          SubSql := Format('(%s)', [zRoomReservationList]);
-          s := Format(s, [SubSql]);
-
-          uUtils.CopyToClipboard(s);
-          // DebugMessage(s);
-
-          hData.rSet_bySQL(rSet, s);
-
-          rSet.first;
-          while not rSet.eof do
-          begin
-            mAllReservations.append;
-            RoomReservation := rSet.FieldByName('RoomReservation').asinteger;
-            Reservation := rSet.FieldByName('Reservation').asinteger;
-            ReservationName := rSet.FieldByName('ReservationName').asString;
-            ArrivalDate := rSet.FieldByName('ArrivalDate').AsDateTime;
-            DepartureDate := rSet.FieldByName('DepartureDate').AsDateTime;
-            Room := rSet.FieldByName('Room').asString;
-            RoomType := rSet.FieldByName('RoomType').asString;
-            status := rSet.FieldByName('Status').asString;
-            Breakfast := TBreakfastType.FromDBString(rSet['Breakfast']);
-            noRoom := rSet['NoRoom'];
-            RoomDescription := rSet.FieldByName('RoomDescription').asString;
-            Bookable := rSet['Bookable'];
-            hidden := rSet['hidden'];
-            Location := rSet.FieldByName('Location').asString;
-            Floor := rSet.FieldByName('Floor').asinteger;
-            Equipments := rSet.FieldByName('Equipments').asString;
-            LocationDescription := rSet.FieldByName('LocationDescription').asString;
-            GroupAccount := rSet['GroupAccount'];
-            marketSegment := rSet.FieldByName('marketSegment').asString;
-            marketSegmentDescription := rSet.FieldByName('marketSegmentDescription').asString;
-            Email := rSet.FieldByName('Email').asString;
-            Website := rSet.FieldByName('Website').asString;
-            customer := rSet.FieldByName('Customer').asString;
-            CustomerName := rSet.FieldByName('CustomerName').asString;
-            PersonalID := rSet.FieldByName('PersonalID').asString;
-            Statustext := rSet.FieldByName('Statustext').asString;
-            RoomCount := rSet.FieldByName('RoomCount').asinteger;
-            RvGuestCount := rSet.FieldByName('RvGuestCount').asinteger;
-            RRGuestCount := rSet.FieldByName('RRGuestCount').asinteger;
-            mainGuests := rSet.FieldByName('MainGuests').asString;
-            ResLine := mainGuests + ' / ' + ReservationName;
-
-            Currency := rSet.FieldByName('Currency').asString;
-            AverageRate := rSet.FieldByName('AverageRate').AsFloat;
-            numDays := trunc(DepartureDate - ArrivalDate);
-            TotalRate := numDays * AverageRate;
-            Adults := rSet.FieldByName('NumGuests').asinteger;
-            Children := rSet.FieldByName('NumChildren').asinteger;
-            Infants := rSet.FieldByName('NumInfants').asinteger;
-
-            breakfastguests := 0;
-            if Breakfast in [TBreakfastType.Included, TBreakfastType.Excluded] then
-              breakfastguests := RRGuestCount;
-
-            if RoomCount < 2 then
-            begin
-              GroupReservation := 0;
-              GroupReservationName := 'One Room Reservations';
-              ResInfo := inttostr(GroupReservation) + ' | ' + GroupReservationName;
-            end
-            else
-            begin
-              GroupReservation := Reservation;
-              GroupReservationName := ReservationName;
-              ResInfo := inttostr(GroupReservation) + ' | ' + GroupReservationName + ' (' + inttostr(RvGuestCount) +
-                ' guests in ' + inttostr(RoomCount) +
-                ' rooms)';
-            end;
-
-            mAllReservations.FieldByName('RoomReservation').asinteger := RoomReservation;
-            mAllReservations.FieldByName('Reservation').asinteger := Reservation;
-            mAllReservations.FieldByName('ReservationName').asString := ReservationName;
-            mAllReservations.FieldByName('ArrivalDate').AsDateTime := ArrivalDate;
-            mAllReservations.FieldByName('DepartureDate').AsDateTime := DepartureDate;
-            mAllReservations.FieldByName('Room').asString := Room;
-            mAllReservations.FieldByName('RoomType').asString := RoomType;
-            mAllReservations.FieldByName('Status').asString := status;
-            mAllReservations['Breakfast'] := Breakfast.AsReadableString;
-            mAllReservations.FieldByName('BreakfastGuests').asinteger := breakfastguests;
-            mAllReservations['NoRoom'] := noRoom;
-            mAllReservations.FieldByName('RoomDescription').asString := RoomDescription;
-            mAllReservations['Bookable'] := Bookable;
-            mAllReservations['hidden'] := hidden;
-            mAllReservations.FieldByName('Location').asString := Location;
-            mAllReservations.FieldByName('Floor').asinteger := Floor;
-            mAllReservations.FieldByName('Equipments').asString := Equipments;
-            mAllReservations.FieldByName('LocationDescription').asString := LocationDescription;
-            mAllReservations['GroupAccount'] := GroupAccount;
-            mAllReservations.FieldByName('marketSegment').asString := marketSegment;
-            mAllReservations.FieldByName('marketSegmentDescription').asString := marketSegmentDescription;
-            mAllReservations.FieldByName('Email').asString := Email;
-            mAllReservations.FieldByName('Website').asString := Website;
-            mAllReservations.FieldByName('Customer').asString := customer;
-            mAllReservations.FieldByName('CustomerName').asString := CustomerName;
-            mAllReservations.FieldByName('PersonalID').asString := PersonalID;
-            mAllReservations.FieldByName('Statustext').asString := Statustext;
-            mAllReservations.FieldByName('ResInfo').asString := ResInfo;
-            mAllReservations.FieldByName('RoomCount').asinteger := RoomCount;
-            mAllReservations.FieldByName('RvGuestCount').asinteger := RvGuestCount;
-            mAllReservations.FieldByName('RRGuestCount').asinteger := RRGuestCount;
-            mAllReservations.FieldByName('MainGuests').asString := Copy(mainGuests, 1, 100);
-            mAllReservations.FieldByName('ResLine').asString := Copy(ResLine, 1, 100);
-            mAllReservations.FieldByName('GroupReservation').asinteger := GroupReservation;
-            mAllReservations.FieldByName('GroupReservationName').asString := GroupReservationName;
-
-            mAllReservations.FieldByName('Currency').asString := Currency;
-            mAllReservations.FieldByName('AverageRate').AsFloat := AverageRate;
-            mAllReservations.FieldByName('Nights').asinteger := numDays;
-            mAllReservations.FieldByName('TotalStayRate').AsFloat := TotalRate;
-            mAllReservations.FieldByName('Adults').asinteger := Adults;
-            mAllReservations.FieldByName('Children').asinteger := Children;
-            mAllReservations.FieldByName('Infants').asinteger := Infants;
-            mAllReservations.FieldByName('RoomNotes').AsString := rSet.FieldByName('Hiddeninfo').AsString;
-
-            mAllReservations.Post;
-            rSet.next;
-          end;
-
-          mAllReservations.first;
-        finally
-          Screen.Cursor := crDefault;
-          mAllReservations.EnableControls;
-          // mAllReservations.SortFields := 'GroupReservation:D;customer;room';
-          // mAllReservations.Sort([]);
-          tvAllReservations.DataController.Groups.FullExpand;
-        end;
-      finally
-        freeandNil(rSet);
-      end;
-      if ViewMode = vmGuestList then
-        gAllReservations.SetFocus;
-    finally
-      frmDateStatistics.Date:= trunc(dtDate.Date);
-      frmDateStatistics.RefreshData;
-    end;
-end;
-
-procedure TfrmMain.rgrGroupReportDateTypeClick(Sender: TObject);
-begin
-  refreshGuestList;
-  zGuestListFirstTime := false;
-end;
-
-procedure TfrmMain.rgrGroupreportStayTypeClick(Sender: TObject);
-begin
-  refreshGuestList;
-  zGuestListFirstTime := false;
-end;
-
-procedure TfrmMain.rgrTypePropertiesEditValueChanged(Sender: TObject);
-begin
-  if ViewMode <> vmGuestList then
-    exit;
-
-  if not zGuestListFirstTime then
-  begin
-    refreshGuestList;
-  end;
-end;
-
-procedure TfrmMain.rgrUsePropertiesEditValueChanged(Sender: TObject);
-begin
-  if ViewMode <> vmGuestList then
-    exit;
-
-  if not zGuestListFirstTime then
-  begin
-    refreshGuestList;
-  end;
-end;
-
-procedure TfrmMain.btnGroupreportCollapseAllClick(Sender: TObject);
-begin
-  tvAllReservations.DataController.Groups.FullCollapse;
-end;
-
-procedure TfrmMain.btnGroupReportExpandAllClick(Sender: TObject);
-begin
-  tvAllReservations.DataController.Groups.FullExpand;
-end;
-
-procedure TfrmMain.btnGuestListExcelClick(Sender: TObject);
-var
-  sFilename: string;
-  s: string;
-begin
-  dateTimeToString(s, 'yyyymmddhhnn', now);
-  sFilename := g.qProgramPath + s + '_Groups';
-  ExportGridToExcel(sFilename, gAllReservations, true, true, true);
-  ShellExecute(handle, 'OPEN', PChar(sFilename + '.xls'), nil, nil, SW_SHOWNORMAL);
-end;
-
-procedure TfrmMain.btnGuestProfilesClick(Sender: TObject);
-begin
-  LogUserClickedButton(Sender);
-  GuestProfiles(actNone);
-end;
-
-procedure TfrmMain.btnGuestsClick(Sender: TObject);
-begin
-  LogUserClickedButton(Sender);
-  rptGuests;
-end;
-
-procedure TfrmMain.GuestListReport;
-var
-  sFilter: string;
-  s: string;
-  sortField: string;
-  isDescending: boolean;
-begin
-  rptbGroups.Groups[0].NewPage := chkNewPage.Checked;
-
-  if mAllReservations.RecordCount = 0 then
-    exit;
-
-  sFilter := tvAllReservations.DataController.Filter.FilterText;
-  if m.active then
-    m.Close;
-  m.LoadFromDataSet(tvAllReservations.DataController.DataSource.DataSet, [mtcpoStructure]);
-
-  m.Filtered := false;
-
-  if sFilter <> '' then
-  begin
-    m.Filter := sFilter;
-    m.Filtered := true;
-    m.first;
-  end;
-
-  s := getSortField;
-
-  sortField := 'Room';
-  isDescending := false;
-
-  if s <> '' then
-  begin
-    sortField := _strTokenAT(s, ';', 0);
-    isDescending := (_strTokenAT(s, ';', 1) = 'd');
-  end;
-
-  m.SortFields := sortField;
-  if not isDescending then
-  begin
-    m.Sort([]);
-  end
-  else
-  begin
-    m.Sort([mtcoDescending]);
-  end;
-
-  if frmRptbViewer <> nil then
-    freeandNil(frmRptbViewer);
-  frmRptbViewer := TfrmRptbViewer.Create(frmRptbViewer);
-  try
-    frmRptbViewer.Report := rptbGroups;
-    frmRptbViewer.ShowModal;
-  finally
-    FreeAndNil(frmRptbViewer);
-  end;
-
-end;
 
 procedure TfrmMain.ShowTimelyMessage(const sMessage: string);
 begin
@@ -13016,58 +12263,6 @@ begin
   iLastPeriodHintCol := 0;
 end;
 
-procedure TfrmMain.btnGroupReportShowClick(Sender: TObject);
-begin
-  GuestListReport;
-end;
-
-procedure TfrmMain.ppGroupHeaderBand1BeforePrint(Sender: TObject);
-var
-  Reservation: integer;
-  Information, PMInfo: string;
-begin
-  if chkPrintMemo.Checked then
-  begin
-    Reservation := m.FieldByName('reservation').asinteger;
-    d.RV_getMemos(Reservation, Information, PMInfo);
-    mem.Text := Information;
-  end;
-end;
-
-procedure TfrmMain.ppHeaderBand1BeforePrint(Sender: TObject);
-var
-  s: string;
-begin
-  dateTimeToString(s, 'dd.mm.yyyy', dtDate.Date);
-  rlabFrom.Caption := s;
-
-  s := g.qHotelName;
-  rLabHotelName.Caption := s;
-
-  dateTimeToString(s, 'dd mmm yyyy hh:nn', now);
-
-  s := { 1098 } GetTranslatedText('shCreated') + ' : ' + s;
-  rLabTimeCreated.Caption := s;
-
-  s := { 1099 } GetTranslatedText('shUser') + ' : ' + g.qUser;
-  if g.qUserName <> '' then
-    s := s + ' - ' + g.qUserName;
-  rlabUser.Caption := s;
-
-  s := { 2000 } GetTranslatedText('shGroups') + ' ';
-
-  case rgrGroupreportStayType.ItemIndex of
-    0:
-      s := { 2002 } GetTranslatedText('shArriving') + ' ' + s;
-    1:
-      s := { 2001 } GetTranslatedText('shDeparting') + ' ' + s;
-    2:
-      s := { 2003 } GetTranslatedText('shAll') + ' ' + s;
-  end;
-
-  rLabReportName.Caption := s;
-end;
-
 procedure TfrmMain.CopyReservation(reservationId: integer);
 begin
   ClipboardCopy(Format(ROOMER_COPY_RESERVATION_ID, [d.roomerMainDataSet.hotelId, reservationId]));
@@ -13084,6 +12279,19 @@ begin
   Self.EnableAlign;
   Invalidate;
 end;
+
+procedure TfrmMain.btnGuestsClick(Sender: TObject);
+begin
+  LogUserClickedButton(Sender);
+  rptGuests;
+end;
+
+procedure TfrmMain.btnGuestProfilesClick(Sender: TObject);
+begin
+  LogUserClickedButton(Sender);
+  GuestProfiles(actNone);
+end;
+
 
 initialization
   WM_FORCE_CLOSE_ROOMER := RegisterWindowMessage('WM_FORCE_CLOSE_ROOMER');

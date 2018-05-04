@@ -41,9 +41,6 @@ uses
   cmpRoomerDataset,
   uViewDailyRates, sLabel;
 
-const
-  WM_SET_DATE_FROM_MAIN = WM_User + 31;
-
 type
 
   TRateEntity = class
@@ -181,11 +178,8 @@ uses
   , PrjConst
   , uRoomerCurrencymanager, uAmount
   , uRoomerLanguage
-  ;
+  , uRoomerDefinitions;
 
-const
-  WM_REFRESH_ARRIVAL_DATE = WM_User + 32;
-  WM_REFRESH_DEPARTURE_DATE = WM_User + 33;
 
   { TRoomTypeEntity }
 
