@@ -1,7 +1,7 @@
 object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
   Left = 0
   Top = 0
-  Width = 947
+  Width = 1142
   Height = 67
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,7 +15,7 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
   object pnlStatistics: TsPanel
     Left = 0
     Top = 0
-    Width = 947
+    Width = 1142
     Height = 67
     Align = alClient
     BevelOuter = bvNone
@@ -83,6 +83,20 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
       Margins.Top = 5
       Align = alLeft
       Caption = 'Rooms Sold:'
+      Layout = tlCenter
+      UseSkinColor = False
+      ExplicitHeight = 20
+    end
+    object lblStatTotalGuests: TsLabel
+      AlignWithMargins = True
+      Left = 885
+      Top = 5
+      Width = 83
+      Height = 59
+      Margins.Left = 40
+      Margins.Top = 5
+      Align = alLeft
+      Caption = 'Total Guests:'
       Layout = tlCenter
       UseSkinColor = False
       ExplicitHeight = 20
@@ -241,6 +255,36 @@ object fraHotelStatisticsFooter: TfraHotelStatisticsFooter
       Items.Strings = (
         'Today'
         'Tomorrow')
+    end
+    object edtTotalGuests: TsCalcEdit
+      AlignWithMargins = True
+      Left = 974
+      Top = 5
+      Width = 50
+      Height = 59
+      Margins.Top = 5
+      Align = alLeft
+      AutoSize = False
+      BevelInner = bvNone
+      BevelOuter = bvNone
+      BorderStyle = bsNone
+      Color = clBackground
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInfoBk
+      Font.Height = -15
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 5
+      BoundLabel.Caption = 'Rooms Sold:'
+      SkinData.CustomColor = True
+      SkinData.CustomFont = True
+      SkinData.ColorTone = clHotLight
+      GlyphMode.Blend = 0
+      GlyphMode.Grayed = False
+      ShowButton = False
+      DisplayFormat = '0'
     end
   end
 end

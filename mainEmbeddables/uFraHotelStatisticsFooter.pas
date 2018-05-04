@@ -22,6 +22,8 @@ type
     lblStatAdr: TsLabel;
     lblStatRevPar: TsLabel;
     lblStatRoomsSold: TsLabel;
+    lblStatTotalGuests: TsLabel;
+    edtTotalGuests: TsCalcEdit;
     procedure cbxStatDayChange(Sender: TObject);
   private
     FDate: TDateTime;
@@ -76,22 +78,13 @@ var
   lDayStats: TSingleDateStatistics;
 begin
   lDayStats := aStats.StatisticsForDate[FDate + cbxStatDay.ItemIndex];
-  if assigned(lDayStats) then
-  begin
-    edtOccupancy.Value := lDayStats.Statistic['OCCUPANCY'].Value;
-    edtADR.CurrencyCode := RoomerCurrencyManager.DefaultCurrency;
-    edtADR.VAlue := lDayStats.Statistic['ADR'].Value;
-    edtRevPar.CurrencyCode := RoomerCurrencyManager.DefaultCurrency;
-    edtRevPar.Value := lDayStats.Statistic['REVPAR'].Value;
-    edtRoomsSold.Value := lDayStats.Statistic['ROOMS_SOLD'].Value;
-  end
-  else
-  begin
-    edtOccupancy.Value := 0;
-    edtADR.VAlue := 0;
-    edtRevPar.Value := 0;
-    edtRoomsSold.Value := 0;
-  end;
+  edtOccupancy.Value := lDayStats.Statistic['OCCUPANCY'].Value;
+  edtADR.CurrencyCode := RoomerCurrencyManager.DefaultCurrency;
+  edtADR.VAlue := lDayStats.Statistic['ADR'].Value;
+  edtRevPar.CurrencyCode := RoomerCurrencyManager.DefaultCurrency;
+  edtRevPar.Value := lDayStats.Statistic['REVPAR'].Value;
+  edtRoomsSold.Value := lDayStats.Statistic['ROOMS_SOLD'].Value;
+  edtTotalGuests.Value := lDayStats.Statistic['TOTAL_GUESTS'].Value;
 end;
 
 procedure TfraHotelStatisticsFooter.RefreshStats;
@@ -112,6 +105,7 @@ begin
   edtADR.Color := aColor;
   edtRevPar.Color := aColor;
   edtRoomsSold.Color := aColor;
+  edtTotalGuests.Color := aColor;
 end;
 
 procedure TfraHotelStatisticsFooter.SetDate(const Value: TDate);
@@ -135,6 +129,7 @@ begin
   edtADR.Font.Color := aColor;
   edtRevPar.Font.Color := aColor;
   edtRoomsSold.Font.Color := aColor;
+  edtTotalGuests.Font.Color := aColor;
 end;
 
 end.
