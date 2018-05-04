@@ -1937,7 +1937,7 @@ var
   iReservation: integer;
   iRoomReservation: integer;
 begin
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
@@ -1950,7 +1950,7 @@ procedure TfrmMain.R3Click(Sender: TObject);
 var
   theData: recPersonHolder;
 begin
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
 
   initPersonHolder(theData);
@@ -2684,7 +2684,7 @@ begin
   C5.Enabled := false;
   I1.Enabled := false;
   G4.Enabled := false;
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
 
   C4.Enabled := mAllReservations['Status'] = 'P';
@@ -4387,7 +4387,7 @@ var
   RoomResArray: IntegerArray;
   iRoomReservation: integer;
 begin
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   SetLength(RoomResArray, 1);
@@ -4638,7 +4638,7 @@ var
   iRoomReservation: integer;
   iReservation: integer;
 begin
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
@@ -4651,7 +4651,7 @@ var
   iRoomReservation, iReservation: integer;
   Room: String;
 begin
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
@@ -4670,7 +4670,7 @@ procedure TfrmMain.I1Click(Sender: TObject);
 var
   iReservation, iRoomReservation: integer;
 begin
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
   iRoomReservation := mAllReservations['RoomReservation'];
   iReservation := mAllReservations['Reservation'];
@@ -4682,7 +4682,7 @@ procedure TfrmMain.G4Click(Sender: TObject);
 var
   iReservation: integer;
 begin
-  if mAllReservations.eof OR mAllReservations.BOF then
+  if mAllReservations.IsEmpty then
     exit;
   iReservation := mAllReservations['Reservation'];
   EditInvoice(iReservation, 0, TInvoiceType.itDebitInvoice, 0, false);
@@ -12635,25 +12635,19 @@ begin
   case aType of
     0:
       begin
-        result := Format(GetListOfRoomReservationsPerArrivalDate, [_db(dtDate.Date, true),
-          _db(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsPerArrivalDate, [_db(dtDate.Date, true)]);
       end;
     1:
       begin
-        result := Format(GetListOfRoomReservationsPerDepartureDate, [_db(dtDate.Date, true),
-          _db(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsPerDepartureDate, [_db(dtDate.Date, true)]);
       end;
     2:
       begin
-        result := Format(GetListOfRoomReservationsFromToDate, [_db(dtDate.Date, true),
-          _db(dtDate.Date, true)]);
+        result := Format(GetListOfRoomReservationsFromToDate, [_db(dtDate.Date, true), _db(dtDate.Date, true)]);
       end;
-  else
-    begin
-      exit;
-    end;
   end;
-
+  if not Result.IsEmpty then
+    Result := result + ' ORDER BY Roomreservation';
 end;
 
 procedure TfrmMain.refreshGuestList;

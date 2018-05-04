@@ -5597,66 +5597,47 @@ function GetListOfRoomReservationsPerDepartureDate : string;
 begin
 
   result :=
-
-      '  SELECT'+
-
-      '    DISTINCT'+
-      '    RoomReservation'+
-      '  FROM'+
-      '    roomreservations'+
-      '  WHERE'+
-      '        (Departure >=  %s )'+
-      '    AND (Departure <=  %s )'+
-      '    AND (status <> '+_db(STATUS_DELETED)+' ) '+ //**zxhj
-      '    AND (status <> '+_db(STATUS_CANCELED)+' ) '+ //**zxhj
-
-      '  ORDER BY RoomReservation';
-end;
-
-function GetListOfRoomReservationsFromToDate : string;
-begin
-
-  result :=
-
-      '  SELECT'+
-
-      '    DISTINCT'+
-      '    RoomReservation'+
-      '  FROM'+
-      '    roomsdate'+
-      '  WHERE'+
-      '        (ADate >=  %s )'+
-      '    AND (ADate <=  %s )'+
-      '   AND (ResFlag <> '+_db(STATUS_DELETED)+' ) '+ //**zxhj line added
-      '   AND (ResFlag <> '+_db(STATUS_CANCELED)+' ) '+ //**zxhj line added
-
-      '  ORDER BY RoomReservation';
+      '  SELECT '#10+
+      '    DISTINCT '#10+
+      '    RoomReservation '#10+
+      '  FROM '#10+
+      '    roomsdate  '#10+
+      '  WHERE '#10+
+      '        (aDate = DATE_ADD(%s, INTERVAL -1 DAY)) '#10+
+      '    AND (Resflag not in (''X'', ''C'')) '#10+
+      '    AND RR_Departure(roomreservation, false) = DATE_ADD(aDate, INTERVAL 1 DAY)';
 end;
 
 function GetListOfRoomReservationsPerArrivalDate : string;
 begin
 
   result :=
-
-      '  SELECT'+
-
-      '    DISTINCT'+
-      '    RoomReservation'+
-      '  FROM'+
-      '    roomreservations'+
-      '  WHERE'+
-      '        (Arrival >=  %s )'+
-      '    AND (Arrival <=  %s )'+
-      '    AND (status <> '+_db(STATUS_DELETED)+' ) '+ //**zxhj
-      '    AND (status <> '+_db(STATUS_CANCELED)+' ) '+ //**zxhj
-
-      '  ORDER BY RoomReservation';
+      '  SELECT '#10+
+      '    DISTINCT '#10+
+      '    RoomReservation '#10+
+      '  FROM '#10+
+      '    roomsdate  '#10+
+      '  WHERE '#10+
+      '        (aDate = %s) '#10+
+      '    AND (Resflag not in (''X'', ''C'')) '#10+
+      '    AND RR_Arrival(roomreservation, false) = aDate ';
 end;
 
+function GetListOfRoomReservationsFromToDate : string;
+begin
+  result :=
+      '  SELECT '#10+
+      '    DISTINCT '#10+
+      '    RoomReservation '#10+
+      '  FROM '#10+
+      '  ( '#10 +
+      GetListOfRoomReservationsPerArrivalDate +
+      '  UNION ALL '#10 +
+      GetListOfRoomReservationsPerDepartureDate +
+      ' '#10 +
+      '  ) xxx ';
+end;
 
-//TESTED OK
-
-//TESTED NOT
 function select_FinishedInvoices2_Display(itType : TInvoiceTypes) : string;
 var
   s : string;

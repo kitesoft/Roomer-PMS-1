@@ -55,6 +55,7 @@ object frmMain: TfrmMain
     SunkenBorder = True
     UseOwnColor = True
     UseOwnSunkenBorder = True
+    ExplicitTop = 122
   end
   object panMain: TsPanel
     Left = 0
@@ -95,18 +96,15 @@ object frmMain: TfrmMain
         Top = 1
         Width = 1219
         Height = 312
-        ActivePage = tabPeriod
+        ActivePage = tabGuestList
         Align = alClient
         TabOrder = 1
         OnChange = pageMainGridsChange
         SkinData.SkinSection = 'PAGECONTROL'
+        ExplicitHeight = 345
         object tabOneDayView: TsTabSheet
           Caption = 'tabOneDayView'
           ImageIndex = 8
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grOneDayRooms: TAdvStringGrid
             Left = 0
             Top = 0
@@ -414,7 +412,7 @@ object frmMain: TfrmMain
               object lblNoRoom: TsLabel
                 Left = 3
                 Top = 59
-                Width = 50
+                Width = 76
                 Height = 13
                 Align = alBottom
                 Alignment = taCenter
@@ -425,6 +423,7 @@ object frmMain: TfrmMain
                 Font.Height = -11
                 Font.Name = 'Tahoma'
                 Font.Style = [fsBold]
+                ExplicitWidth = 50
               end
             end
           end
@@ -1603,10 +1602,6 @@ object frmMain: TfrmMain
         end
         object tabFreeRooms: TsTabSheet
           Caption = 'tabFreeRooms'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabDashboard: TsTabSheet
           Caption = 'tabDashboard'
@@ -1693,17 +1688,9 @@ object frmMain: TfrmMain
         end
         object tabRateQuery: TsTabSheet
           Caption = 'tabRateQuery'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object tabFrontDesk: TsTabSheet
           Caption = 'tabFrontDesk'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object sbFrontDesk: TsScrollBox
             Left = 0
             Top = 0
@@ -1878,7 +1865,7 @@ object frmMain: TfrmMain
           Tabs.Strings = (
             'Dayview'
             'Period'
-            'Groups'
+            'Guests'
             'Dashboard'
             'Rates'
             'Frontdesk')
@@ -3003,6 +2990,9 @@ object frmMain: TfrmMain
         inherited lblStatRoomsSold: TsLabel
           Height = 22
         end
+        inherited lblStatTotalGuests: TsLabel
+          Height = 22
+        end
         inherited edtOccupancy: TsCalcEdit
           Height = 22
           ExplicitHeight = 22
@@ -3017,6 +3007,12 @@ object frmMain: TfrmMain
         end
         inherited edtRoomsSold: TsCalcEdit
           Height = 22
+          ExplicitLeft = 792
+          ExplicitHeight = 22
+        end
+        inherited edtTotalGuests: TsCalcEdit
+          Height = 22
+          ExplicitLeft = 974
           ExplicitHeight = 22
         end
       end
@@ -24190,7 +24186,7 @@ object frmMain: TfrmMain
   end
   object pupSelectHomePage: TPopupMenu
     Left = 64
-    Top = 328
+    Top = 352
     object H1: TMenuItem
       Caption = 'Home'
       Default = True
